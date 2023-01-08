@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <!-- 使用已有的配置文件 -->
+    <properties resource="gen.properties"/>
+    <!-- 数据库驱动 -->
+    <classPathEntry
+            location="/Users/tutu/.m2/repository/mysql/mysql-connector-java/8.0.19/mysql-connector-java-8.0.19.jar"/>
+
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
+                        connectionURL="${spring.datasource.url}"
+                        userId="${spring.datasource.username}"
+                        password="${spring.datasource.password}">
+        </jdbcConnection>
+
+        <!-- 非必须，类型处理器，在数据库类型和java类型之间的转换控制 -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- Entity Java Class -->
+        <javaModelGenerator targetPackage="com.rany.cake.devops.base.dao.po" targetProject="./src/main/java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- Mapper Java Class -->
+        <sqlMapGenerator targetPackage="com.rany.cake.devops.base.dao.mapper" targetProject="./src/main/resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- Mapper XML File -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.rany.cake.devops.base.dao.mapper"
+                             targetProject="./src/main/java">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!-- 需要生成的数据库表 -->
+        <table schema="rany_uic" tableName="app" domainObjectName="AppPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+    </context>
+</generatorConfiguration>
