@@ -35,6 +35,16 @@
             <artifactId>mapstruct</artifactId>
             <version>1.5.3.Final</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.rany.cake.devops</groupId>
+            <artifactId>cake-devops-base-api</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
