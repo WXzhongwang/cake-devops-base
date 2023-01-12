@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.api.enums.CodeLanguageEnum;
+import com.rany.cake.devops.base.api.enums.DevelopMode;
 import com.rany.cake.devops.base.domain.entity.AppExtend;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.type.AppName;
@@ -30,6 +31,9 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      */
     private AppId id;
 
+    /**
+     * 应用名
+     */
     private AppName appName;
 
     private String uniqueNo;
@@ -40,6 +44,7 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
     private CodeRepository codeRepository;
     private CodeLanguageEnum codeLanguageEnum;
     private AppExtend appExtend;
+    private DevelopMode developMode;
     private Long owner;
 
     public App(AppId appId, AppName appName) {
