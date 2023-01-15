@@ -47,7 +47,7 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      */
     private String description;
     private CodeRepository codeRepository;
-    private CodeLanguageEnum codeLanguageEnum;
+    private CodeLanguageEnum language;
     private AppExtend appExtend;
     private DevelopMode developMode;
     /**
