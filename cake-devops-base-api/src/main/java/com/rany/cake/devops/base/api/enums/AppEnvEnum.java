@@ -3,21 +3,23 @@ package com.rany.cake.devops.base.api.enums;
 import lombok.Getter;
 
 /**
- * TODO
+ * 应用开发环境
  *
  * @author zhongshengwang
- * @description TODO
- * @date 2023/1/12 23:25
+ * @description 应用开发环境
+ * @date 2023/1/15 15:47
  * @email 18668485565163.com
  */
 @Getter
-public enum CodeLanguageEnum {
+public enum AppEnvEnum {
 
-    JAVA(0, "JAVA"),
-    PYTHON(1, "PYTHON"),
-    GO(2, "GO");
+    TEST(0, "测试"),
 
-    CodeLanguageEnum(Integer code, String value) {
+    PRE(1, "预发"),
+
+    PROD(2, "线上");
+
+    AppEnvEnum(Integer code, String value) {
         this.code = code;
         this.value = value;
     }
@@ -25,4 +27,5 @@ public enum CodeLanguageEnum {
     private Integer code;
 
     private String value;
+
 }

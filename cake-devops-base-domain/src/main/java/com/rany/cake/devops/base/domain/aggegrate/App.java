@@ -11,6 +11,8 @@ import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import lombok.*;
 
+import java.util.List;
+
 /**
  * TODO
  *
@@ -36,6 +38,9 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      */
     private AppName appName;
 
+    /**
+     * 唯一标识
+     */
     private String uniqueNo;
     /**
      * 应用描述
@@ -45,10 +50,16 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
     private CodeLanguageEnum codeLanguageEnum;
     private AppExtend appExtend;
     private DevelopMode developMode;
+    /**
+     * 应用成员
+     */
+    private List<AppMember> appMembers;
     private Long owner;
 
-    public App(AppId appId, AppName appName) {
+    public App(AppId appId, AppName appName, Long owner) {
         this.id = appId;
+        this.owner = owner;
+        this.appName = appName;
     }
 
     public void sava() {
