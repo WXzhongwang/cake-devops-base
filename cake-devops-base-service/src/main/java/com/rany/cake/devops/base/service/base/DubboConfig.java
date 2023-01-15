@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.service;
+package com.rany.cake.devops.base.service.base;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.rany.uic.api.facade.account.AccountFacade;
