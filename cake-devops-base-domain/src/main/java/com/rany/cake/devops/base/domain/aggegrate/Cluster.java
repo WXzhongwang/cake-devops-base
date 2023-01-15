@@ -31,6 +31,11 @@ public class Cluster extends BaseAggregateRoot implements IAggregate<ClusterId> 
     private String version;
     private ClusterTypeEnum clusterType;
     private ClusterExtend clusterExtend;
+    /**
+     * 命名空间
+     */
+    private List<NameSpace> nameSpaces;
+
 
     public Cluster(ClusterId id, ClusterName clusterName, ClusterTypeEnum clusterType) {
         this.id = id;
