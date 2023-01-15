@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.domain.entity;
 
 import com.cake.framework.common.base.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * TODO
@@ -12,5 +13,6 @@ import lombok.Data;
  * @email 18668485565163.com
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ClusterExtend extends BaseEntity<Long> {
 }

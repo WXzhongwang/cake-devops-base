@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.domain.entity;
 
 import com.cake.framework.common.base.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * TODO
@@ -13,5 +14,6 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class AppExtend extends BaseEntity<Long> {
 }

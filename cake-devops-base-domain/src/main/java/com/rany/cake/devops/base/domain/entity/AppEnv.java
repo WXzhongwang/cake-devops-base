@@ -2,6 +2,9 @@ package com.rany.cake.devops.base.domain.entity;
 
 import com.cake.framework.common.base.BaseEntity;
 import com.rany.cake.devops.base.api.enums.AppEnvEnum;
+import com.rany.cake.devops.base.domain.pk.AppId;
+import com.rany.cake.devops.base.domain.pk.ClusterId;
+import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import lombok.Getter;
 
 import java.util.List;
@@ -18,8 +21,19 @@ import java.util.List;
 @Getter
 public class AppEnv extends BaseEntity<Long> {
 
+    private AppId appId;
+    private ClusterId clusterId;
     private AppEnvEnum envEnum;
-
     private List<String> domain;
+    private ResourceStrategy resourceStrategy;
+
+    /**
+     * 是否自动扩容
+     */
+    private Boolean autoScaling;
+    /**
+     * 是否开启部署 需要审批
+     */
+    private Boolean needApproval;
 
 }

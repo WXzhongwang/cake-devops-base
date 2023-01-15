@@ -5,19 +5,27 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * TODO
+ * 副本资源略
  *
  * @author zhongshengwang
  * @description TODO
- * @date 2023/1/12 23:04
+ * @date 2023/1/15 16:58
  * @email 18668485565163.com
  */
-
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CodeRepository extends BaseValueObject {
+public class ResourceStrategy extends BaseValueObject {
 
-    private String repo;
-
-    private String defaultBranch;
+    /**
+     * 最大副本数
+     */
+    private Integer maxReplicas;
+    /**
+     * cpu资源
+     */
+    private Double cpu;
+    /**
+     * 内存资源
+     */
+    private Double memory;
 }
