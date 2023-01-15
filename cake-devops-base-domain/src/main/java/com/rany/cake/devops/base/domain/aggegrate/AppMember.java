@@ -21,7 +21,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId> {
 
-
     private MemberId id;
 
     private AppId appId;
@@ -30,11 +29,11 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
      * uic accountId
      */
     private Long accountId;
-
+    
     /**
-     * 员工状态
+     * 角色列表
      */
-    private String status;
+    private String roles;
 
     public AppMember(MemberId memberId,
                      AppId appId,

@@ -54,7 +54,11 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      * 应用成员
      */
     private List<AppMember> appMembers;
+    /**
+     * 拥有者
+     */
     private Long owner;
+    private String healthCheck;
 
     public App(AppId appId, AppName appName, Long owner) {
         this.id = appId;
