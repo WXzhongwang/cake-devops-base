@@ -6,17 +6,14 @@ import com.offbytwo.jenkins.client.JenkinsHttpClient;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 /**
- * TODO
+ * 连接 Jenkins
  *
  * @author zhongshengwang
  * @description TODO
  * @date 2023/1/17 19:17
  * @email 18668485565163.com
- */
-
-/**
- * 连接 Jenkins
  */
 public class JenkinsConnect {
 
