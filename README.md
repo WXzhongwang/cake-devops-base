@@ -21,3 +21,8 @@ https://github.com/0xl2oot/harbor-java-client
             <artifactId>jenkins-client</artifactId>
             <version>0.3.8</version>
         </dependency>
+
+```
+docker run -d -p 9999:8080 -p 50000:50000 --name jenkins --env JAVA_OPTS=-Dhudson.model.DownloadService.noSignatureCheck=true \
+--privileged=true -v /Users/tutu/jenkins_home:/var/jenkins_home jenkins/jenkins
+```

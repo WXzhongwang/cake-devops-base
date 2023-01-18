@@ -56,7 +56,7 @@ public class JobApi {
                     "</definition>\n" +
                     "</flow-definition>";
             // 创建 Job
-            jenkinsServer.createJob("test-job", xml);
+            jenkinsServer.createJob("test-job", xml, true);
         } catch (IOException e) {
             e.printStackTrace();
         }

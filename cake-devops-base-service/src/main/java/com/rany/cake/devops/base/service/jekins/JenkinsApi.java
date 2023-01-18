@@ -158,7 +158,7 @@ public class JenkinsApi {
         // 安全重启 Jenkins
         //jenkinsApi.safeRestart();
         // 获取节点信息
-        //jenkinsApi.getComputerInfo();
+        // jenkinsApi.getComputerInfo();
         // 安全结束 Jenkins
         //jenkinsApi.safeExit();
         // 关闭 Jenkins 连接
@@ -166,9 +166,9 @@ public class JenkinsApi {
         // 获取 Label 节点信息
         //jenkinsApi.getLabelNodeInfo();
         // 查看 Jenkins 是否允许
-        //jenkinsApi.isRunning();
+        jenkinsApi.isRunning();
         // 获取 Jenkins 插件信息
-        //jenkinsApi.getPluginInfo();
+        jenkinsApi.getPluginInfo();
     }
 
 }

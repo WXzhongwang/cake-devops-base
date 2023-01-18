@@ -23,9 +23,13 @@ public class JenkinsConnect {
     /**
      * 连接 Jenkins 需要设置的信息
      */
-    static final String JENKINS_URL = "http://192.168.2.11:8080/jenkins/";
+    static final String JENKINS_URL = "http://127.0.0.1:9999/";
+    /**
+     * 推荐使用token
+     */
+    static final String JENKINS_TOKEN = "11bc412225b0d4d677cb6a29f19e751e3a";
     static final String JENKINS_USERNAME = "admin";
-    static final String JENKINS_PASSWORD = "123456";
+    static final String JENKINS_PASSWORD = "admin";
 
     /**
      * Http 客户端工具
@@ -37,7 +41,7 @@ public class JenkinsConnect {
     public static JenkinsHttpClient getClient() {
         JenkinsHttpClient jenkinsHttpClient = null;
         try {
-            jenkinsHttpClient = new JenkinsHttpClient(new URI(JENKINS_URL), JENKINS_USERNAME, JENKINS_PASSWORD);
+            jenkinsHttpClient = new JenkinsHttpClient(new URI(JENKINS_URL), JENKINS_USERNAME, JENKINS_TOKEN);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -50,7 +54,7 @@ public class JenkinsConnect {
     public static JenkinsServer connection() {
         JenkinsServer jenkinsServer = null;
         try {
-            jenkinsServer = new JenkinsServer(new URI(JENKINS_URL), JENKINS_USERNAME, JENKINS_PASSWORD);
+            jenkinsServer = new JenkinsServer(new URI(JENKINS_URL), JENKINS_USERNAME, JENKINS_TOKEN);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
