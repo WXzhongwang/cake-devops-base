@@ -26,3 +26,7 @@ https://github.com/0xl2oot/harbor-java-client
 docker run -d -p 9999:8080 -p 50000:50000 --name jenkins --env JAVA_OPTS=-Dhudson.model.DownloadService.noSignatureCheck=true \
 --privileged=true -v /Users/tutu/jenkins_home:/var/jenkins_home jenkins/jenkins
 ```
+
+```
+docker run -it -d --name=socat -p 2375:2375 -v    /var/run/docker.sock:/var/run/docker.sock bobrik/socat TCP4-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock
+```
