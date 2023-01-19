@@ -30,3 +30,8 @@ docker run -d -p 9999:8080 -p 50000:50000 --name jenkins --env JAVA_OPTS=-Dhudso
 ```
 docker run -it -d --name=socat -p 2375:2375 -v    /var/run/docker.sock:/var/run/docker.sock bobrik/socat TCP4-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock
 ```
+
+```text
+2、JaCoCo(使用最多)
+DevOps流水线上用的 SonarQube就是用的这个插件。idea自带插件，计算单元测试覆盖率 开启方式：idea 使用JaCoCo插件测试覆盖率并展示Branch,%(分支覆盖率) jacoco插件
+```
