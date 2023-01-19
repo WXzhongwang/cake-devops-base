@@ -9,6 +9,7 @@ import com.rany.cake.devops.base.domain.entity.AppExtend;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
+import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
 import lombok.*;
 
 import java.util.List;
@@ -58,7 +59,17 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      * 拥有者
      */
     private Long owner;
+    /**
+     * 健康检查
+     * 健康检查路径，端口后的uri，如：/health
+     * 若未配置，将使用tcp检查
+     */
     private String healthCheck;
+    
+    /**
+     * 挂载
+     */
+    private List<VolumeMount> volumeMounts;
 
     public App(AppId appId, AppName appName, Long owner) {
         this.id = appId;
