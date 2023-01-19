@@ -20,4 +20,13 @@ public class DeployContext implements Serializable {
     private App app;
 
     private DeployStageEnum stage;
+
+    /**
+     * 实际部署物镜像地址
+     */
+    private String deploymentImage;
+    /**
+     * agentImage
+     */
+    private String agentImage;
 }
