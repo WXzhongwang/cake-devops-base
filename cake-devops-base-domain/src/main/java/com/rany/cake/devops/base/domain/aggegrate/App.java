@@ -9,6 +9,7 @@ import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.entity.AppExtend;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.type.AppName;
+import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
 import lombok.*;
@@ -70,6 +71,11 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      * 若未配置，将使用tcp检查
      */
     private String healthCheck;
+
+    /**
+     * 业务归属
+     */
+    private BusinessOwnership businessOwnership;
 
     /**
      * 挂载

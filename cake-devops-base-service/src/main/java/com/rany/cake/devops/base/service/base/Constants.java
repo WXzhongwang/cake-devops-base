@@ -21,6 +21,8 @@ public final class Constants {
      * 默认端口
      */
     public static final Integer DEFAULT_SERVER_PORT = 7100;
+    public static final String DEFAULT_NAMESPACE_PREFIX = "cake-";
+    public static final String USER_HOME_DIR = "/home/admin";
 
 
 }
