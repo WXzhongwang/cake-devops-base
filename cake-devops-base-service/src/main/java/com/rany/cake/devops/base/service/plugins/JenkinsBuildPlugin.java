@@ -17,4 +17,9 @@ public class JenkinsBuildPlugin implements Plugin {
     public boolean execute(DeployContext context) {
         return true;
     }
+
+    @Override
+    public boolean stopWhenFailure() {
+        return true;
+    }
 }

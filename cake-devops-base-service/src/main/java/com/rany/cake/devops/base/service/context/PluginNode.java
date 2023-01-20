@@ -36,7 +36,7 @@ public class PluginNode implements Plugin {
     public boolean execute(DeployContext context) {
         context.setCurrentPluginName(this.plugin.getName());
         context.getPluginNames().add(this.plugin.getName());
-        if (!plugin.execute(context)) {
+        if (!plugin.execute(context) && stopWhenFailure()) {
             log.info("{}执行结束", this.plugin.getName());
             return false;
         }
