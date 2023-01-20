@@ -18,14 +18,16 @@ public class DefaultDeployPipeline implements DeployPipeline {
 
     public DefaultDeployPipeline(DeployContext deployContext) {
         this.deployContext = deployContext;
+        tail = head;
     }
 
     @Override
     public void start() {
+        log.info("pipeline begin to start...");
         try {
             head.getNext().execute(getDeployContext());
         } catch (Exception ex) {
-            log.error("pipeline系统运行异常.", ex);
+            log.error("pipeline occur an error.", ex);
             throw ex;
         }
     }

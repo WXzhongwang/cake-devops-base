@@ -5,6 +5,8 @@ import com.rany.cake.devops.base.domain.aggegrate.App;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 上下文参数
@@ -34,4 +36,9 @@ public class DeployContext implements Serializable {
      * 当前插件名
      */
     private String currentPluginName;
+
+    /**
+     * 执行过的插件列表
+     */
+    private List<String> pluginNames = new ArrayList<>();
 }
