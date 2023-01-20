@@ -36,6 +36,11 @@ public class DeployContext implements Serializable {
     private String branch;
 
     /**
+     * 实际审批执行人
+     */
+    private String approval;
+
+    /**
      * 实际部署物镜像地址
      */
     private String deploymentImage;
