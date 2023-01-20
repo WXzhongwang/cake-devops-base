@@ -4,7 +4,7 @@ import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.context.Plugin;
 
 /**
- * TODO
+ * 单元覆盖
  *
  * @author zhongshengwang
  * @description TODO
@@ -12,7 +12,7 @@ import com.rany.cake.devops.base.service.context.Plugin;
  * @email 18668485565163.com
  */
 public class UtCoveragePlugin implements Plugin {
-    
+
     @Override
     public boolean execute(DeployContext context) {
         return true;
