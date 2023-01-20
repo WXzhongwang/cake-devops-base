@@ -22,7 +22,13 @@ public class DeployContext implements Serializable {
 
     private App app;
 
+    /**
+     * 发布阶段
+     */
     private DeployStageEnum stage;
+    /**
+     * 发布环境
+     */
     private AppEnv appEnv;
     /**
      * 预计部署分支
