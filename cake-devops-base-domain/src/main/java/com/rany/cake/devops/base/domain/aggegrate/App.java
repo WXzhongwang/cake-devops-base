@@ -5,6 +5,7 @@ import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.api.enums.CodeLanguageEnum;
 import com.rany.cake.devops.base.api.enums.DevelopMode;
+import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.entity.AppExtend;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.type.AppName;
@@ -56,6 +57,10 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      */
     private List<AppMember> appMembers;
     /**
+     * 应用环境
+     */
+    private List<AppEnv> appEnvList;
+    /**
      * 拥有者
      */
     private Long owner;
@@ -65,7 +70,7 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      * 若未配置，将使用tcp检查
      */
     private String healthCheck;
-    
+
     /**
      * 挂载
      */

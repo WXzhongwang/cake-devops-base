@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.service.context;
 
 import com.rany.cake.devops.base.api.enums.DeployStageEnum;
 import com.rany.cake.devops.base.domain.aggegrate.App;
+import com.rany.cake.devops.base.domain.entity.AppEnv;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,6 +23,11 @@ public class DeployContext implements Serializable {
     private App app;
 
     private DeployStageEnum stage;
+    private AppEnv appEnv;
+    /**
+     * 预计部署分支
+     */
+    private String branch;
 
     /**
      * 实际部署物镜像地址
