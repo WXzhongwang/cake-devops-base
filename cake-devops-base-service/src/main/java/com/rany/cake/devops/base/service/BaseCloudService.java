@@ -37,4 +37,13 @@ public abstract class BaseCloudService {
      */
     public abstract boolean createService(DeployContext context);
 
+
+    /**
+     * updateService
+     *
+     * @param context
+     * @return
+     */
+    public abstract boolean updateService(DeployContext context);
+
 }
