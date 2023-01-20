@@ -15,6 +15,17 @@ public interface Plugin {
      * 执行
      *
      * @param context
+     * @return 是否继续执行
      */
-    void execute(DeployContext context);
+    boolean execute(DeployContext context);
+
+
+    /**
+     * 获取插件名称
+     *
+     * @return
+     */
+    default String getName() {
+        return this.getClass().getName();
+    }
 }

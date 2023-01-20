@@ -14,7 +14,7 @@ import com.rany.cake.devops.base.service.context.Plugin;
 public class JenkinsBuildPlugin implements Plugin {
 
     @Override
-    public void execute(DeployContext context) {
-
+    public boolean execute(DeployContext context) {
+        return true;
     }
 }

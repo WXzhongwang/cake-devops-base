@@ -29,4 +29,9 @@ public class DeployContext implements Serializable {
      * agentImage
      */
     private String agentImage;
+
+    /**
+     * 当前插件名
+     */
+    private String currentPluginName;
 }

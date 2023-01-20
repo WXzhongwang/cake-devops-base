@@ -12,8 +12,9 @@ import com.rany.cake.devops.base.service.context.Plugin;
  * @email 18668485565163.com
  */
 public class UtCoveragePlugin implements Plugin {
+    
     @Override
-    public void execute(DeployContext context) {
-
+    public boolean execute(DeployContext context) {
+        return true;
     }
 }

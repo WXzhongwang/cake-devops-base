@@ -30,7 +30,8 @@ public class PluginNode implements Plugin {
     }
 
     @Override
-    public void execute(DeployContext context) {
-        plugin.execute(context);
+    public boolean execute(DeployContext context) {
+        context.setCurrentPluginName(this.plugin.getName());
+        return plugin.execute(context);
     }
 }
