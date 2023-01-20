@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.plugins;
 
+import com.rany.cake.devops.base.api.enums.AppEnvEnum;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.context.Plugin;
 
@@ -15,6 +16,11 @@ public class DeploymentForbiddenPlugin implements Plugin {
 
     @Override
     public boolean execute(DeployContext context) {
+        // 线上应用处理存在封网校验
+        if (context.getAppEnv().getEnvEnum() != AppEnvEnum.PROD) {
+            // 时间校验
+            return false;
+        }
         return true;
     }
 }
