@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * volumn挂载
+ * volume挂载
  *
  * @author zhongshengwang
  * @description TODO

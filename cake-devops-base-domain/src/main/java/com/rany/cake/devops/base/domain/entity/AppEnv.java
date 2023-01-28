@@ -25,6 +25,9 @@ public class AppEnv extends BaseEntity<Long> {
     private ClusterId clusterId;
     private AppEnvEnum envEnum;
     private List<String> domain;
+    /**
+     * 环境资源策略
+     */
     private ResourceStrategy resourceStrategy;
 
     /**
