@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.domain.aggegrate;
 
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
+import com.rany.cake.devops.base.api.enums.AppEnvEnum;
 import com.rany.cake.devops.base.api.enums.ClusterTypeEnum;
 import com.rany.cake.devops.base.domain.entity.ClusterExtend;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
@@ -27,6 +28,10 @@ public class Cluster extends BaseAggregateRoot implements IAggregate<ClusterId> 
 
     private ClusterId id;
     private ClusterName clusterName;
+    /**
+     * 环境标
+     */
+    private AppEnvEnum envEnum;
     private List<String> tags;
     private String version;
     private ClusterTypeEnum clusterType;
