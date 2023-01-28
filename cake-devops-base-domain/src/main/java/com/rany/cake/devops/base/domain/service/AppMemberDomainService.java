@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @email 18668485565163.com
  */
 @Component
-public class MemberDomainService {
+public class AppMemberDomainService {
 
     private AccountFacade accountFacade;
 }

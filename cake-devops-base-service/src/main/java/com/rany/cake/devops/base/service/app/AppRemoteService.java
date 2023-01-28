@@ -6,6 +6,7 @@ import com.rany.cake.devops.base.api.command.CreateAppCommand;
 import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggegrate.App;
 import com.rany.cake.devops.base.domain.pk.AppId;
+import com.rany.cake.devops.base.domain.service.AppMemberDomainService;
 import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.service.base.SnowflakeIdWorker;
@@ -28,6 +29,7 @@ public class AppRemoteService implements AppService {
 
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final AccountFacade accountFacade;
+    private final AppMemberDomainService appMemberDomainService;
 
     @Override
     public PojoResult<Long> createApp(CreateAppCommand createAppCommand) {
