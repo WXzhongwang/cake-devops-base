@@ -82,10 +82,11 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      */
     private List<VolumeMount> volumeMounts;
 
-    public App(AppId appId, AppName appName, Long owner) {
+    public App(AppId appId, AppName appName, Long owner, String description) {
         this.id = appId;
         this.owner = owner;
         this.appName = appName;
+        this.description = description;
     }
 
     public void sava() {

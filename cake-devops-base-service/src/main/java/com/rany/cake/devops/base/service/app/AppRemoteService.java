@@ -28,7 +28,10 @@ public class AppRemoteService implements AppService {
 
     @Override
     public PojoResult<Long> createApp(CreateAppCommand createAppCommand) {
-        App app = new App(new AppId(snowflakeIdWorker.nextId()), new AppName(createAppCommand.getAppName()), createAppCommand.getOwner());
+        App app = new App(new AppId(snowflakeIdWorker.nextId()),
+                new AppName(createAppCommand.getAppName()),
+                createAppCommand.getOwner(),
+                createAppCommand.getDescription());
         return null;
     }
 }
