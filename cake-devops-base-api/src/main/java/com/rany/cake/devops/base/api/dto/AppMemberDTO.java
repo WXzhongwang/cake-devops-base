@@ -3,6 +3,8 @@ package com.rany.cake.devops.base.api.dto;
 import com.rany.cake.devops.base.api.common.base.DTO;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * TODO
  *
@@ -14,6 +16,6 @@ import lombok.Data;
 @Data
 public class AppMemberDTO extends DTO {
 
-    private Long accountId;
-    private String roles;
+    private List<Long> accountIds;
+    private String role;
 }
