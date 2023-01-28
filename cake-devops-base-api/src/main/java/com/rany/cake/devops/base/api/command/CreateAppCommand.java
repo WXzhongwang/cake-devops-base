@@ -19,7 +19,6 @@ import java.util.List;
 @Data
 public class CreateAppCommand extends DTO {
     private String appName;
-    private Long clusterId;
     private String description;
     private String repo;
     private String defaultBranch;
@@ -29,4 +28,5 @@ public class CreateAppCommand extends DTO {
     private String businessUnit;
     private String department;
     private List<AppMemberDTO> appMembers;
+    private String healthCheck;
 }
