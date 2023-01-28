@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.api.command;
 
 import com.rany.cake.devops.base.api.common.base.DTO;
+import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.enums.CodeLanguageEnum;
 import com.rany.cake.devops.base.api.enums.DevelopMode;
@@ -28,5 +29,6 @@ public class CreateAppCommand extends DTO {
     private String businessUnit;
     private String department;
     private List<AppMemberDTO> appMembers;
+    private List<AppEnvDTO> appEnvs;
     private String healthCheck;
 }
