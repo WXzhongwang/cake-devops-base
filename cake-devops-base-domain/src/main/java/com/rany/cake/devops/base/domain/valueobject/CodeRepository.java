@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.domain.valueobject;
 
 import com.cake.framework.common.base.BaseValueObject;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 
 @Data
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class CodeRepository extends BaseValueObject {
 

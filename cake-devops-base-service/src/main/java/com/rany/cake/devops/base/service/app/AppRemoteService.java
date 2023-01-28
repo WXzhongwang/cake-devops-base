@@ -7,6 +7,7 @@ import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggegrate.App;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.type.AppName;
+import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.service.base.SnowflakeIdWorker;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,10 @@ public class AppRemoteService implements AppService {
         App app = new App(new AppId(snowflakeIdWorker.nextId()),
                 new AppName(createAppCommand.getAppName()),
                 createAppCommand.getOwner(),
-                createAppCommand.getDescription());
+                createAppCommand.getDescription(),
+                new CodeRepository(createAppCommand.getRepo(), createAppCommand.getDefaultBranch()),
+                createAppCommand.getLanguage(),
+                createAppCommand.getDevelopMode());
         return null;
     }
 }
