@@ -45,7 +45,10 @@
             <groupId>com.rany.cake.devops</groupId>
             <artifactId>cake-devops-base-api</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.rany.cake.devops</groupId>
+            <artifactId>cake-devops-base-infrastructure</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.rany.uic</groupId>
             <artifactId>uic-api</artifactId>
