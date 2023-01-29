@@ -23,7 +23,7 @@ public class AppEnv extends BaseEntity<Long> {
 
     private AppId appId;
     private ClusterId clusterId;
-    private AppEnvEnum envEnum;
+    private AppEnvEnum env;
     private List<String> domain;
     /**
      * 环境资源策略
@@ -38,5 +38,9 @@ public class AppEnv extends BaseEntity<Long> {
      * 是否开启部署 需要审批
      */
     private Boolean needApproval;
+    /**
+     * 状态
+     */
+    private String status;
 
 }
