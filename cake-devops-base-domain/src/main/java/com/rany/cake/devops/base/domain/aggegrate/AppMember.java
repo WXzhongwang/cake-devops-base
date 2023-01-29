@@ -29,11 +29,15 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
      * uic accountId
      */
     private Long accountId;
-    
+
     /**
      * 角色列表
      */
     private String roles;
+    /**
+     * 状态
+     */
+    private String status;
 
     public AppMember(MemberId memberId,
                      AppId appId,

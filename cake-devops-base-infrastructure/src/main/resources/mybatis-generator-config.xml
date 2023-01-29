@@ -42,7 +42,11 @@
         </javaClientGenerator>
 
         <!-- 需要生成的数据库表 -->
-        <table schema="rany_uic" tableName="app" domainObjectName="AppPO" enableCountByExample="false"
+        <table schema="cake_devops" tableName="app" domainObjectName="AppPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="app_member" domainObjectName="AppMemberPO" enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
