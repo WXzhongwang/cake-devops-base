@@ -73,6 +73,11 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
     private String healthCheck;
 
     /**
+     * 状态
+     */
+    private String status;
+
+    /**
      * 业务归属
      */
     private BusinessOwnership businessOwnership;
