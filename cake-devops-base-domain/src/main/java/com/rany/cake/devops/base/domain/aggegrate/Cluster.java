@@ -31,7 +31,7 @@ public class Cluster extends BaseAggregateRoot implements IAggregate<ClusterId> 
     /**
      * 环境标
      */
-    private AppEnvEnum envEnum;
+    private AppEnvEnum env;
     private List<String> tags;
     private String version;
     private ClusterTypeEnum clusterType;
@@ -41,6 +41,7 @@ public class Cluster extends BaseAggregateRoot implements IAggregate<ClusterId> 
      */
     private List<NameSpace> nameSpaces;
 
+    private String status;
 
     public Cluster(ClusterId id, ClusterName clusterName, ClusterTypeEnum clusterType) {
         this.id = id;

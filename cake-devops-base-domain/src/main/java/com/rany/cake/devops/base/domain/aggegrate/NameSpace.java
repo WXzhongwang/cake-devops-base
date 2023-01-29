@@ -54,6 +54,8 @@ public class NameSpace extends BaseAggregateRoot implements IAggregate<NameSpace
      * 最多创建x个services
      */
     private Integer maxServices;
+    
+    private String status;
 
     public NameSpace(NameSpaceId id, NameSpaceName name) {
         this.id = id;
