@@ -13,9 +13,8 @@ import lombok.Getter;
 @Getter
 public enum DeployStageEnum {
     TEST(0, "测试阶段"),
-    COMPILE(1, "编译阶段"),
-    PACKAGE(2, "打包阶段"),
-    IMAGE(3, "镜像上传"),
+    BUILD(1, "构建阶段"),
+    IMAGE(2, "镜像上传"),
     DEPLOY(4, "部署阶段"),
     NOTIFY(5, "通知阶段"),
     PUSH_MASTER(5, "合并主干");

@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.service;
+package com.rany.cake.devops.base.service.cloud;
 
 import com.rany.cake.devops.base.service.context.DeployContext;
 

@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.plugins.notify;
 
 import com.rany.cake.devops.base.service.context.DeployContext;
-import com.rany.cake.devops.base.service.context.Plugin;
+import com.rany.cake.devops.base.service.plugins.BasePlugin;
 
 /**
  * webhook通知插件
@@ -11,7 +11,12 @@ import com.rany.cake.devops.base.service.context.Plugin;
  * @date 2023/1/19 18:27
  * @email 18668485565163.com
  */
-public class WebHookNotifyPlugin implements Plugin {
+public class WebHookNotifyPlugin extends BasePlugin {
+
+    @Override
+    public boolean init(DeployContext context) {
+        return false;
+    }
 
     @Override
     public boolean execute(DeployContext context) {

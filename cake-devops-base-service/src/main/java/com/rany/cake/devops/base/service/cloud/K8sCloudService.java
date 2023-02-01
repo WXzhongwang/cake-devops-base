@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.service.cloud;
 
-import com.rany.cake.devops.base.service.BaseCloudService;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

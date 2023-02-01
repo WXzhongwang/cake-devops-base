@@ -43,4 +43,9 @@ public class PluginNode implements Plugin {
         log.info("{}执行结束", this.plugin.getName());
         return next != null && next.execute(context);
     }
+
+    @Override
+    public boolean init(DeployContext context) {
+        return plugin.init(context);
+    }
 }

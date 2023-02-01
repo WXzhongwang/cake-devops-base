@@ -12,9 +12,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class DefaultDeployPipeline implements DeployPipeline {
-    private PluginNode head = new PluginNode();
+    private final PluginNode head = new PluginNode();
     private PluginNode tail;
-    private DeployContext deployContext;
+    private final DeployContext deployContext;
 
     public DefaultDeployPipeline(DeployContext deployContext) {
         this.deployContext = deployContext;

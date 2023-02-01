@@ -12,6 +12,15 @@ public interface Plugin {
 
 
     /**
+     * init
+     *
+     * @param context
+     * @return 是否继续执行
+     */
+    boolean init(DeployContext context);
+
+
+    /**
      * 执行
      *
      * @param context

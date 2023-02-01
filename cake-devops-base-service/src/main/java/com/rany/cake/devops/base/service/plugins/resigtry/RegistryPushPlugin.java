@@ -1,20 +1,25 @@
-package com.rany.cake.devops.base.service.plugins.approval;
+package com.rany.cake.devops.base.service.plugins.resigtry;
 
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 
 /**
- * 发布审批插件
+ * TODO
  *
  * @author zhongshengwang
  * @description TODO
- * @date 2023/1/20 19:41
+ * @date 2023/2/1 21:01
  * @email 18668485565163.com
  */
-public class ApprovalPlugin extends BasePlugin {
+public class RegistryPushPlugin extends BasePlugin {
+    
+    @Override
+    public boolean init(DeployContext context) {
+        return false;
+    }
 
     @Override
     public boolean execute(DeployContext context) {
-        return true;
+        return false;
     }
 }

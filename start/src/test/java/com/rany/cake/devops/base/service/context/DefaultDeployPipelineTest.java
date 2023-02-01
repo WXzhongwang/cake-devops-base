@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.service.context;
 
 
+import com.rany.cake.devops.base.service.plugins.build.JavaBuildPlugin;
 import org.junit.Test;
 
 /**
@@ -16,6 +17,7 @@ public class DefaultDeployPipelineTest {
     @Test
     public void start() {
         DeployPipeline pipeline = new DefaultDeployPipeline(new DeployContext());
+        pipeline.addLast(new JavaBuildPlugin());
         pipeline.start();
     }
 }

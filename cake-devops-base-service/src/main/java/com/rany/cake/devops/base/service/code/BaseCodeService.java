@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.service;
+package com.rany.cake.devops.base.service.code;
 
 /**
  * 代码托管服务
