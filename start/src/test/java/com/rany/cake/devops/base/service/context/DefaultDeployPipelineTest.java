@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.service.context;
 
 
-import com.rany.cake.devops.base.service.plugins.JenkinsBuildPlugin;
-import com.rany.cake.devops.base.service.plugins.UtCoveragePlugin;
 import org.junit.Test;
 
 /**
@@ -18,8 +16,6 @@ public class DefaultDeployPipelineTest {
     @Test
     public void start() {
         DeployPipeline pipeline = new DefaultDeployPipeline(new DeployContext());
-        pipeline.addLast(new UtCoveragePlugin());
-        pipeline.addLast(new JenkinsBuildPlugin());
         pipeline.start();
     }
 }

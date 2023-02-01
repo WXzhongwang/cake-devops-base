@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.service.plugins;
+package com.rany.cake.devops.base.service.plugins.approval;
 
 import com.rany.cake.devops.base.api.enums.AppEnvEnum;
 import com.rany.cake.devops.base.service.context.DeployContext;
