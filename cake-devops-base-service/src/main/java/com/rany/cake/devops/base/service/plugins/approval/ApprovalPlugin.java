@@ -14,6 +14,11 @@ import com.rany.cake.devops.base.service.plugins.BasePlugin;
 public class ApprovalPlugin extends BasePlugin {
 
     @Override
+    public boolean init(DeployContext context) {
+        return false;
+    }
+
+    @Override
     public boolean execute(DeployContext context) {
         return true;
     }

@@ -13,7 +13,12 @@ import com.rany.cake.devops.base.service.plugins.BasePlugin;
  * @email 18668485565163.com
  */
 public class DeploymentForbiddenPlugin extends BasePlugin {
-    
+
+    @Override
+    public boolean init(DeployContext context) {
+        return false;
+    }
+
     @Override
     public boolean execute(DeployContext context) {
         // 线上应用处理存在封网校验

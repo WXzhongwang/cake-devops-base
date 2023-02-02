@@ -13,4 +13,14 @@ import com.rany.cake.devops.base.domain.pk.MemberId;
  * @email 18668485565163.com
  */
 public interface AppMemberRepository extends Repository<AppMember, MemberId> {
+
+
+    /**
+     * 通过accountId找到member
+     *
+     * @param accountId
+     * @return
+     */
+    AppMember findByAccountId(Long accountId);
+
 }

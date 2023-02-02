@@ -7,9 +7,12 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.CreateAppCommand;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
+import com.rany.cake.devops.base.api.enums.AppRoleEnum;
 import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggegrate.App;
+import com.rany.cake.devops.base.domain.aggegrate.AppMember;
 import com.rany.cake.devops.base.domain.pk.AppId;
+import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
 import com.rany.cake.devops.base.domain.service.AppMemberDomainService;
 import com.rany.cake.devops.base.domain.type.AppName;
@@ -20,6 +23,7 @@ import com.rany.cake.devops.base.service.base.bean.TenantConfig;
 import com.rany.uic.api.facade.account.AccountFacade;
 import com.rany.uic.api.query.account.AccountQuery;
 import com.rany.uic.common.dto.account.AccountDTO;
+import com.rany.uic.common.enums.CommonStatusEnum;
 import com.rany.uic.common.exception.BusinessException;
 import com.rany.uic.common.exception.enums.BusinessErrorMessage;
 import lombok.AllArgsConstructor;
@@ -76,12 +80,21 @@ public class AppRemoteService implements AppService {
             throw new BusinessException(BusinessErrorMessage.ACCOUNT_NOT_FOUND);
         }
 
+
         List<AccountDTO> content = accounts.getContent();
         Map<Long, AccountDTO> accountMap = Maps.uniqueIndex(content, AccountDTO::getId);
+        ArrayList<AppMember> appMembers = new ArrayList<>();
         for (Map.Entry<Long, AccountDTO> entry : accountMap.entrySet()) {
-            // AppMember appMember = new AppMember(new MemberId(snowflakeIdWorker.nextId()), entry.getKey(), )
-            if (createAppCommand.getOwner().equals(entry.getKey())) {
+            AppMember member = appMemberDomainService.findByAccountId(entry.getKey());
+            if (member == null) {
+                member = new AppMember(new MemberId(snowflakeIdWorker.nextId()), app.getId(), entry.getKey());
+                member.setStatus(CommonStatusEnum.ENABLE.getValue());
             }
+            if (createAppCommand.getOwner().equals(entry.getKey())) {
+                member.authorize(AppRoleEnum.OWNER.name());
+            }
+            appMembers.add(member);
+            app.setAppMembers(appMembers);
         }
         app.sava();
         return null;
