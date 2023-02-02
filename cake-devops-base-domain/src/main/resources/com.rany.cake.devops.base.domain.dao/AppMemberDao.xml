@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rany.cake.devops.base.dao.AppMemberDao">
+<mapper namespace="com.rany.cake.devops.base.domain.dao.AppMemberDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.po.AppMemberPO">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="account_id" jdbcType="BIGINT" property="accountId"/>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rany.cake.devops.base.domain.dao.AppDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.po.AppPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="app_name" property="appName" jdbcType="VARCHAR"/>
+        <result column="unique_no" property="uniqueNo" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="repo" property="repo" jdbcType="VARCHAR"/>
+        <result column="default_branch" property="defaultBranch" jdbcType="VARCHAR"/>
+        <result column="language" property="language" jdbcType="VARCHAR"/>
+        <result column="develop_mode" property="developMode" jdbcType="VARCHAR"/>
+        <result column="owner" property="owner" jdbcType="BIGINT"/>
+        <result column="health_check" property="healthCheck" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="business_unit" property="businessUnit" jdbcType="VARCHAR"/>
+        <result column="bu" property="bu" jdbcType="VARCHAR"/>
+        <result column="department" property="department" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, app_name, unique_no, description, repo, default_branch, language, develop_mode,
+        owner, health_check, status, is_deleted, gmt_create, gmt_modified, business_unit,
+        bu, department
+    </sql>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.App">
+        insert into app (id, app_name, unique_no,
+        description, repo, default_branch,
+        language, develop_mode, owner,
+        health_check, status, is_deleted,
+        gmt_create, gmt_modified, business_unit,
+        bu, department)
+        values (
+        #{id.id,jdbcType=BIGINT},
+        #{appName.name,jdbcType=VARCHAR},
+        #{uniqueNo,jdbcType=VARCHAR},
+        #{description,jdbcType=VARCHAR},
+        #{codeRepository.repo,jdbcType=VARCHAR},
+        #{codeRepository.defaultBranch,jdbcType=VARCHAR},
+        #{language,jdbcType=VARCHAR},
+        #{developMode,jdbcType=VARCHAR},
+        #{owner,jdbcType=BIGINT},
+        #{healthCheck,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{isDeleted,jdbcType=VARCHAR},
+        #{gmtCreate,jdbcType=TIMESTAMP},
+        #{gmtModified,jdbcType=TIMESTAMP},
+        #{businessOwnership.businessUnit,jdbcType=VARCHAR},
+        #{businessOwnership.bu,jdbcType=VARCHAR},
+        #{businessOwnership.department,jdbcType=VARCHAR})
+    </insert>
+</mapper>

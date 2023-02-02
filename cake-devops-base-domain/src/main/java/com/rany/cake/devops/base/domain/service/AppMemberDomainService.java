@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.domain.service;
 
-import com.rany.cake.devops.base.domain.aggegrate.AppMember;
+import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.repository.AppMemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

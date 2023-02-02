@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.domain.repository;
 
 import com.cake.framework.ddd.repository.Repository;
-import com.rany.cake.devops.base.domain.aggegrate.AppMember;
+import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 
 /**

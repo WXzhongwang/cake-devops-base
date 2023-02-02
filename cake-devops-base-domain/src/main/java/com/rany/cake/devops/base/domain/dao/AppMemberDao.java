@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.dao;
+package com.rany.cake.devops.base.domain.dao;
 
 import com.rany.cake.devops.base.po.AppMemberPO;
 import org.apache.ibatis.annotations.Param;

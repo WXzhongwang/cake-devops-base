@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.domain.aggegrate;
+package com.rany.cake.devops.base.domain.aggregate;
 
 import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
@@ -12,6 +12,8 @@ import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
+import com.rany.uic.common.enums.CommonStatusEnum;
+import com.rany.uic.common.enums.DeleteStatusEnum;
 import lombok.*;
 
 import java.util.List;
@@ -114,5 +116,7 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
     public void sava() {
         this.gmtCreate = DateUtil.date();
         this.gmtModified = DateUtil.date();
+        this.status = CommonStatusEnum.ENABLE.getValue();
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
     }
 }

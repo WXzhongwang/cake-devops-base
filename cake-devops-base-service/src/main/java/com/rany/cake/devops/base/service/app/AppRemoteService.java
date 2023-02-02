@@ -9,8 +9,8 @@ import com.rany.cake.devops.base.api.command.CreateAppCommand;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.enums.AppRoleEnum;
 import com.rany.cake.devops.base.api.service.AppService;
-import com.rany.cake.devops.base.domain.aggegrate.App;
-import com.rany.cake.devops.base.domain.aggegrate.AppMember;
+import com.rany.cake.devops.base.domain.aggregate.App;
+import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
@@ -97,6 +97,7 @@ public class AppRemoteService implements AppService {
             app.setAppMembers(appMembers);
         }
         app.sava();
-        return null;
+        appDomainService.createApp(app);
+        return PojoResult.succeed(app.getId().getId());
     }
 }

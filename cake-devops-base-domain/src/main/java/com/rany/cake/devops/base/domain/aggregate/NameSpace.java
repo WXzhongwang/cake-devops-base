@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.domain.aggegrate;
+package com.rany.cake.devops.base.domain.aggregate;
 
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
@@ -54,7 +54,7 @@ public class NameSpace extends BaseAggregateRoot implements IAggregate<NameSpace
      * 最多创建x个services
      */
     private Integer maxServices;
-    
+
     private String status;
 
     public NameSpace(NameSpaceId id, NameSpaceName name) {

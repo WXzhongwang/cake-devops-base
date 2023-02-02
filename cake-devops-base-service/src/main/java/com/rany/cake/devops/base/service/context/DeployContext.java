@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.context;
 
 import com.rany.cake.devops.base.api.enums.DeployStageEnum;
-import com.rany.cake.devops.base.domain.aggegrate.App;
+import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import lombok.Data;
 

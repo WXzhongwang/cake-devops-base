@@ -1,8 +1,9 @@
 package com.rany.cake.devops.base.domain.repository.impl;
 
 import com.rany.cake.devops.base.dao.mapper.AppPOMapper;
-import com.rany.cake.devops.base.domain.aggegrate.App;
+import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.convertor.AppDataConvertor;
+import com.rany.cake.devops.base.domain.dao.AppDao;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotNull;
 public class AppRepositoryImpl implements AppRepository {
 
     private final AppPOMapper appPOMapper;
+    private final AppDao appDao;
     private final AppDataConvertor appDataConvertor;
 
     @Override
@@ -37,6 +39,6 @@ public class AppRepositoryImpl implements AppRepository {
 
     @Override
     public void save(@NotNull App app) {
-
+        appDao.save(app);
     }
 }

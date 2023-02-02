@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.domain.aggegrate;
+package com.rany.cake.devops.base.domain.aggregate;
 
 import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;

@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.domain.convertor;
 
-import com.rany.cake.devops.base.domain.aggegrate.App;
+import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.po.AppPO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

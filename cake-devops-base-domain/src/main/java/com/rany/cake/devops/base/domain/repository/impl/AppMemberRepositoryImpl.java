@@ -1,9 +1,9 @@
 package com.rany.cake.devops.base.domain.repository.impl;
 
-import com.rany.cake.devops.base.dao.AppMemberDao;
 import com.rany.cake.devops.base.dao.mapper.AppMemberPOMapper;
-import com.rany.cake.devops.base.domain.aggegrate.AppMember;
+import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.convertor.AppMemberDataConvertor;
+import com.rany.cake.devops.base.domain.dao.AppMemberDao;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.repository.AppMemberRepository;
 import com.rany.cake.devops.base.po.AppMemberPO;
