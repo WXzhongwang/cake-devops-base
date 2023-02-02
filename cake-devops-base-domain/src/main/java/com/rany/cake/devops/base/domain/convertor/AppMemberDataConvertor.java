@@ -24,7 +24,7 @@ public interface AppMemberDataConvertor extends BaseConvertor<AppMember, AppMemb
      * @return
      */
     @Mapping(source = "id.id", target = "id")
-    @Mapping(source = "appId.id", target = "app_id")
+    @Mapping(source = "appId.id", target = "appId")
     @Override
     AppMemberPO sourceToTarget(AppMember appMember);
 

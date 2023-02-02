@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.domain.repository.impl;
 
 import com.rany.cake.devops.base.dao.mapper.AppPOMapper;
 import com.rany.cake.devops.base.domain.aggegrate.App;
+import com.rany.cake.devops.base.domain.convertor.AppDataConvertor;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import javax.validation.constraints.NotNull;
 public class AppRepositoryImpl implements AppRepository {
 
     private final AppPOMapper appPOMapper;
+    private final AppDataConvertor appDataConvertor;
 
     @Override
     public App find(@NotNull AppId appId) {

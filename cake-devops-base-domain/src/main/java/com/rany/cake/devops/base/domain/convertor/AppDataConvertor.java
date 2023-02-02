@@ -24,10 +24,10 @@ public interface AppDataConvertor extends BaseConvertor<App, AppPO> {
      * @return
      */
     @Mapping(source = "id.id", target = "id")
-    @Mapping(source = "appName.name", target = "app_name")
+    @Mapping(source = "appName.name", target = "appName")
     @Mapping(source = "codeRepository.repo", target = "repo")
-    @Mapping(source = "codeRepository.defaultBranch", target = "default_branch")
-    @Mapping(source = "businessOwnership.businessUnit", target = "business_unit")
+    @Mapping(source = "codeRepository.defaultBranch", target = "defaultBranch")
+    @Mapping(source = "businessOwnership.businessUnit", target = "businessUnit")
     @Mapping(source = "businessOwnership.bu", target = "bu")
     @Mapping(source = "businessOwnership.department", target = "department")
     @Override
@@ -42,10 +42,10 @@ public interface AppDataConvertor extends BaseConvertor<App, AppPO> {
 
     @Override
     @Mapping(target = "id.id", source = "id")
-    @Mapping(target = "appName.name", source = "app_name")
+    @Mapping(target = "appName.name", source = "appName")
     @Mapping(target = "codeRepository.repo", source = "repo")
-    @Mapping(target = "codeRepository.defaultBranch", source = "default_branch")
-    @Mapping(target = "businessOwnership.businessUnit", source = "business_unit")
+    @Mapping(target = "codeRepository.defaultBranch", source = "defaultBranch")
+    @Mapping(target = "businessOwnership.businessUnit", source = "businessUnit")
     @Mapping(target = "businessOwnership.bu", source = "bu")
     @Mapping(target = "businessOwnership.department", source = "department")
     App targetToSource(AppPO appPO);
