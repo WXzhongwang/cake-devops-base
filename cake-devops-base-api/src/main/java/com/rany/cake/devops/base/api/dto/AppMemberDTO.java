@@ -16,6 +16,6 @@ import java.util.List;
 @Data
 public class AppMemberDTO extends DTO {
 
-    private List<Long> accountIds;
-    private String role;
+    private Long accountIds;
+    private List<String> role;
 }

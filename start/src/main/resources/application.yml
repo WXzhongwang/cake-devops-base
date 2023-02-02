@@ -55,3 +55,6 @@ warn:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.rany.cake.devops.base.dao
+
+uic:
+  tenantId: 768821467507994624

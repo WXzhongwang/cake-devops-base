@@ -23,6 +23,7 @@ public class AppEnv extends BaseEntity<Long> {
 
     private AppId appId;
     private ClusterId clusterId;
+    private String envName;
     private AppEnvEnum env;
     private List<String> domain;
     /**

@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.domain.service;
 
-import com.rany.uic.api.facade.account.AccountFacade;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,6 +12,4 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AppMemberDomainService {
-
-    private AccountFacade accountFacade;
 }
