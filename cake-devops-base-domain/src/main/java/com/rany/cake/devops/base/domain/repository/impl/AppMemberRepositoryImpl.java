@@ -1,12 +1,12 @@
 package com.rany.cake.devops.base.domain.repository.impl;
 
-import com.rany.cake.devops.base.dao.mapper.AppMemberPOMapper;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.convertor.AppMemberDataConvertor;
 import com.rany.cake.devops.base.domain.dao.AppMemberDao;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.repository.AppMemberRepository;
-import com.rany.cake.devops.base.po.AppMemberPO;
+import com.rany.cake.devops.base.infra.mapper.AppMemberPOMapper;
+import com.rany.cake.devops.base.infra.po.AppMemberPO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +46,14 @@ public class AppMemberRepositoryImpl implements AppMemberRepository {
     @Override
     public AppMember findByAccountId(Long accountId) {
         AppMemberPO appMemberPO = appMemberDao.selectByAccountId(accountId);
+        if (appMemberPO == null) {
+            return null;
+        }
         return appMemberDataConvertor.targetToSource(appMemberPO);
+    }
+
+    @Override
+    public int saveUpdate(AppMember appMember) {
+        return appMemberDao.saveUpdate(appMember);
     }
 }

@@ -51,6 +51,7 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
         this.id = memberId;
         this.appId = appId;
         this.accountId = accountId;
+        this.roles = StringUtils.EMPTY;
     }
 
 
@@ -63,8 +64,7 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
         if (StringUtils.isEmpty(roles)) {
             return;
         }
-        List<String> finalRoles = StringUtils.isNotEmpty(this.roles) ?
-                Lists.newArrayList(this.roles.split(",")) : new ArrayList<>();
+        List<String> finalRoles = StringUtils.isNotEmpty(this.roles) ? Lists.newArrayList(this.roles.split(",")) : new ArrayList<>();
         String[] newRoles = roles.split(",");
         for (String newRole : newRoles) {
             if (!this.roles.contains(newRole)) {

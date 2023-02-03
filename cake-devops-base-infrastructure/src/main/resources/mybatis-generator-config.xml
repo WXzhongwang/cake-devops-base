@@ -25,18 +25,18 @@
         </javaTypeResolver>
 
         <!-- Entity Java Class -->
-        <javaModelGenerator targetPackage="com.rany.cake.devops.base.po" targetProject="./src/main/java">
+        <javaModelGenerator targetPackage="com.rany.cake.devops.base.infra.po" targetProject="./src/main/java">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- Mapper Java Class -->
-        <sqlMapGenerator targetPackage="com.rany.cake.devops.base.dao.mapper" targetProject="./src/main/resources">
+        <sqlMapGenerator targetPackage="com.rany.cake.devops.base.infra.mapper" targetProject="./src/main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- Mapper XML File -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.rany.cake.devops.base.dao.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.rany.cake.devops.base.infra.mapper"
                              targetProject="./src/main/java">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>

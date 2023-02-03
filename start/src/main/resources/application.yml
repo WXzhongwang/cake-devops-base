@@ -1,3 +1,5 @@
+server:
+  port: 8300
 dubbo:
   application:
     id: cake-devops-service
@@ -5,7 +7,7 @@ dubbo:
   protocol:
     id: dubbo
     name: dubbo
-    port: 20880
+    port: 20881
   registry:
     protocol: zookeeper
     id: my-registry
@@ -53,8 +55,8 @@ warn:
     time: 300
 
 mybatis:
-  mapper-locations: classpath:**/*.xml
-  type-aliases-package: com.rany.cake.devops.base.dao
+  mapper-locations: classpath:com/rany/cake/devops/base/infra/mapper/*.xml, classpath:com/rany/cake/devops/base/domain/dao/*.xml
+  type-aliases-package: com.rany.cake.devops.base.infra, com.rany.cake.devops.base.domain
 
 uic:
   tenantId: 768821467507994624

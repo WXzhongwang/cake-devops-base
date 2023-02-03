@@ -4,6 +4,7 @@ import com.cake.framework.common.base.BaseValueObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * 业务归属
@@ -14,6 +15,7 @@ import lombok.EqualsAndHashCode;
  * @email 18668485565163.com
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class BusinessOwnership extends BaseValueObject {

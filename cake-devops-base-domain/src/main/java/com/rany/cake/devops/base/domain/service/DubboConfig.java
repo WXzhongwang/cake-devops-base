@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.domain.service;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.rany.uic.api.facade.account.AccountFacade;
-import jdk.nashorn.internal.ir.annotations.Reference;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,12 +16,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DubboConfig {
 
-
     @Reference
     private AccountFacade accountFacade;
-    
+
     @Bean
-    private AccountFacade accountFacade() {
+    public AccountFacade accountFacade() {
         return accountFacade;
     }
 }

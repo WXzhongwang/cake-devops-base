@@ -23,4 +23,13 @@ public interface AppMemberRepository extends Repository<AppMember, MemberId> {
      */
     AppMember findByAccountId(Long accountId);
 
+
+    /**
+     * 保存更新
+     *
+     * @param appMember
+     * @return
+     */
+    int saveUpdate(AppMember appMember);
+
 }

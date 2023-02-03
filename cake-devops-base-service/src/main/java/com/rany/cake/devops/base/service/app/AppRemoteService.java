@@ -11,6 +11,8 @@ import com.rany.cake.devops.base.api.enums.AppRoleEnum;
 import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
+import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
+import com.rany.cake.devops.base.domain.base.TenantConfig;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
@@ -18,8 +20,6 @@ import com.rany.cake.devops.base.domain.service.AppMemberDomainService;
 import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
-import com.rany.cake.devops.base.service.base.SnowflakeIdWorker;
-import com.rany.cake.devops.base.service.base.bean.TenantConfig;
 import com.rany.uic.api.facade.account.AccountFacade;
 import com.rany.uic.api.query.account.AccountQuery;
 import com.rany.uic.common.dto.account.AccountDTO;
@@ -48,8 +48,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @AllArgsConstructor
 public class AppRemoteService implements AppService {
-
-    private TenantConfig tenantConfig;
+    private final TenantConfig tenantConfig;
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final AccountFacade accountFacade;
     private final AppMemberDomainService appMemberDomainService;
@@ -71,7 +70,7 @@ public class AppRemoteService implements AppService {
         app.setHealthCheck(createAppCommand.getHealthCheck());
 
         Set<Long> accountIds = Sets.newHashSet(createAppCommand.getOwner());
-        accountIds.addAll(createAppCommand.getAppMembers().stream().map(AppMemberDTO::getAccountIds).collect(Collectors.toSet()));
+        accountIds.addAll(createAppCommand.getAppMembers().stream().map(AppMemberDTO::getAccountId).collect(Collectors.toSet()));
         AccountQuery accountQuery = new AccountQuery();
         accountQuery.setAccountIds(new ArrayList<>(accountIds));
         accountQuery.setTenantId(tenantConfig.getTenantId());
@@ -83,15 +82,22 @@ public class AppRemoteService implements AppService {
 
         List<AccountDTO> content = accounts.getContent();
         Map<Long, AccountDTO> accountMap = Maps.uniqueIndex(content, AccountDTO::getId);
+        Map<Long, AppMemberDTO> accountRoleMap = Maps.uniqueIndex(createAppCommand.getAppMembers(), AppMemberDTO::getAccountId);
         ArrayList<AppMember> appMembers = new ArrayList<>();
         for (Map.Entry<Long, AccountDTO> entry : accountMap.entrySet()) {
             AppMember member = appMemberDomainService.findByAccountId(entry.getKey());
             if (member == null) {
                 member = new AppMember(new MemberId(snowflakeIdWorker.nextId()), app.getId(), entry.getKey());
-                member.setStatus(CommonStatusEnum.ENABLE.getValue());
             }
+            member.setStatus(CommonStatusEnum.ENABLE.getValue());
+            // 如果是owner
             if (createAppCommand.getOwner().equals(entry.getKey())) {
                 member.authorize(AppRoleEnum.OWNER.name());
+            } else {
+                AppMemberDTO accountRoleItem = accountRoleMap.getOrDefault(entry.getKey(), null);
+                if (accountRoleItem != null && CollectionUtils.isNotEmpty(accountRoleItem.getRoles())) {
+                    member.authorize(String.join(",", accountRoleItem.getRoles()));
+                }
             }
             appMembers.add(member);
             app.setAppMembers(appMembers);

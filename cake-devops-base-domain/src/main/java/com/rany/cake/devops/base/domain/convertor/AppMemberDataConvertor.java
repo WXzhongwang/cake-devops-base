@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.domain.convertor;
 
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
-import com.rany.cake.devops.base.po.AppMemberPO;
+import com.rany.cake.devops.base.infra.po.AppMemberPO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

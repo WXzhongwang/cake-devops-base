@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.domain.dao;
 
-import com.rany.cake.devops.base.po.AppMemberPO;
+import com.rany.cake.devops.base.domain.aggregate.AppMember;
+import com.rany.cake.devops.base.infra.po.AppMemberPO;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -21,5 +22,13 @@ public interface AppMemberDao {
      * @return
      */
     AppMemberPO selectByAccountId(@Param("id") Long accountId);
+
+    /**
+     * 保存更新
+     *
+     * @param appMember
+     * @return
+     */
+    int saveUpdate(AppMember appMember);
 
 }

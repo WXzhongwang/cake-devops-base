@@ -4,6 +4,7 @@ import com.cake.framework.common.base.BaseValueObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * TODO
@@ -15,6 +16,7 @@ import lombok.EqualsAndHashCode;
  */
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class CodeRepository extends BaseValueObject {
