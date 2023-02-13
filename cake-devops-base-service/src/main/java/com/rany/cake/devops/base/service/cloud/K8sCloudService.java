@@ -2,7 +2,6 @@ package com.rany.cake.devops.base.service.cloud;
 
 import com.rany.cake.devops.base.service.context.DeployContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 /**
  * K8sCloudService
@@ -13,8 +12,12 @@ import org.springframework.stereotype.Service;
  * @email 18668485565163.com
  */
 @Slf4j
-@Service
 public class K8sCloudService extends BaseCloudService {
+
+    public K8sCloudService(String connectString, String token) {
+        build(connectString, token);
+    }
+
     @Override
     public boolean createDeployment(DeployContext context) {
         return false;

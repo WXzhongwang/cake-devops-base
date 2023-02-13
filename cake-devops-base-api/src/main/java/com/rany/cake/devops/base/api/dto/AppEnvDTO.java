@@ -19,6 +19,7 @@ public class AppEnvDTO extends DTO {
 
     private Long clusterId;
     private AppEnvEnum envEnum;
+    private String envName;
     private List<String> domains;
     private ResourceStrategyDTO resourceStrategyDTO;
 

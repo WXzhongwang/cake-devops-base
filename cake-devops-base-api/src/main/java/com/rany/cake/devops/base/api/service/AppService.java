@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.CreateAppCommand;
+import com.rany.cake.devops.base.api.command.CreateAppEnvCommand;
 
 /**
  * TODO
@@ -20,5 +21,14 @@ public interface AppService {
      * @return
      */
     PojoResult<Long> createApp(CreateAppCommand createAppCommand);
+
+
+    /**
+     * 创建应用环境
+     *
+     * @param createAppEnvCommand
+     * @return
+     */
+    PojoResult<Long> createAppEnv(CreateAppEnvCommand createAppEnvCommand);
 
 }

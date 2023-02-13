@@ -6,6 +6,7 @@ import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.CreateAppCommand;
+import com.rany.cake.devops.base.api.command.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.enums.AppRoleEnum;
 import com.rany.cake.devops.base.api.service.AppService;
@@ -105,5 +106,10 @@ public class AppRemoteService implements AppService {
         app.sava();
         appDomainService.createApp(app);
         return PojoResult.succeed(app.getId().getId());
+    }
+
+    @Override
+    public PojoResult<Long> createAppEnv(CreateAppEnvCommand createAppEnvCommand) {
+        return null;
     }
 }
