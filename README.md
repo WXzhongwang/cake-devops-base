@@ -39,3 +39,5 @@ DevOps流水线上用的 SonarQube就是用的这个插件。idea自带插件，
 ```
 注意挂载-v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/usr/bin/docker，才可以共享宿主机的docker资源
 ```
+
+Jenkins slave agent 

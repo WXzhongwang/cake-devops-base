@@ -16,4 +16,10 @@ public class TestClusterConnectCommand extends DTO {
     private String connectString;
     private String token;
     private String clusterType;
+
+    public TestClusterConnectCommand(String connectString, String token, String clusterType) {
+        this.connectString = connectString;
+        this.token = token;
+        this.clusterType = clusterType;
+    }
 }
