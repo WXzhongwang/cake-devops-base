@@ -26,7 +26,7 @@ import org.apache.commons.lang3.EnumUtils;
 @Slf4j
 @AllArgsConstructor
 public class ClusterRemoteService implements ClusterService {
-    
+
     private final ClusterDomainService clusterDomainService;
 
     @Override
@@ -35,7 +35,7 @@ public class ClusterRemoteService implements ClusterService {
         if (clusterTypeEnum == null) {
             throw new DevOpsException(DevOpsErrorMessage.OPS_SUPPORTED_ERROR);
         }
-        return null;
+        return PojoResult.succeed(Boolean.TRUE);
     }
 
     @Override
