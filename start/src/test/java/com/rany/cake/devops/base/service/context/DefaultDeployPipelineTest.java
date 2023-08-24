@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.context;
 
 
-import com.rany.cake.devops.base.service.plugins.build.JavaBuildPlugin;
+import com.rany.cake.devops.base.service.plugins.builds.JavaBuildPlugin;
 import org.junit.Test;
 
 /**
