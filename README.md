@@ -6,7 +6,8 @@
 
 ## 依赖工具链
 
-- [x] **sonarqube**: 缺陷检测https://www.sonarsource.com/products/sonarqube/downloads/
+- [x] **sonarqube**: 质量检测https://www.sonarsource.com/products/sonarqube/downloads/
+- [x] **sonar-scan-cli**: sonarqube提供的缺陷检测扫描工具
 - [x] **Jenkins**: 构建工具 https://jenkins.io/
 - [x] **GitLab**: 代码管理 https://docs.gitlab.cn/jh/api/api_resources.html
 - [x] **Harbor**: 容器镜像仓库 https://goharbor.io/
