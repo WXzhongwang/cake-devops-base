@@ -21,3 +21,5 @@
 ![核心业务](https://github.com/WXzhongwang/cake-devops-base/blob/main/image-20211125154112097.png)
 
 ![DEVOPS](https://github.com/WXzhongwang/cake-devops-base/blob/main/devops.jpg)
+
+![K8S](https://github.com/WXzhongwang/cake-devops-base/blob/main/k8s%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3.jpg)
