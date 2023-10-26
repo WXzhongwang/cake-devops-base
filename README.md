@@ -3,6 +3,7 @@
 **cake-devops-base** JavaDevops实现。
 
 1. SpringBoot 2.2.6.RELEASE
+2. K8S 1.19.2
 
 ## 依赖工具链
 
@@ -15,6 +16,7 @@
 - [x] **Docker**: 容器技术、虚拟化 https://www.docker.com/
 - [x] **Docker Compose**: docker工具 https://github.com/docker/compose
 - [x] **kubernetes**: 容器集群管理系统 http://docs.kubernetes.org.cn/
+- [x] **kuboard**: 图形化管理工具 http://kuboard.cn
 
 ![CICD](https://github.com/WXzhongwang/cake-devops-base/blob/main/2021-11-23_175935.png)
 
