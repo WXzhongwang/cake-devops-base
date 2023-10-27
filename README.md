@@ -18,10 +18,14 @@
 - [x] **kubernetes**: 容器集群管理系统 http://docs.kubernetes.org.cn/
 - [x] **kuboard**: 图形化管理工具 http://kuboard.cn
 
-![CICD](https://github.com/WXzhongwang/cake-devops-base/blob/main/2021-11-23_175935.png)
+## 向导
 
-![核心业务](https://github.com/WXzhongwang/cake-devops-base/blob/main/image-20211125154112097.png)
+![CICD](https://github.com/WXzhongwang/cake-devops-base/README_GUIDE.md)
 
-![DEVOPS](https://github.com/WXzhongwang/cake-devops-base/blob/main/devops.jpg)
+![CICD](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/2021-11-23_175935.png)
 
-![K8S](https://github.com/WXzhongwang/cake-devops-base/blob/main/k8s%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3.jpg)
+![核心业务](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/image-20211125154112097.png)
+
+![DEVOPS](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/devops.jpg)
+
+![K8S](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/k8s%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3.jpg)
