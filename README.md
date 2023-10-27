@@ -20,7 +20,7 @@
 
 ## 向导
 
-![CICD](https://github.com/WXzhongwang/cake-devops-base/README_GUIDE.md)
+![向导入口](https://github.com/WXzhongwang/cake-devops-base/README_GUIDE.md)
 
 ![CICD](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/2021-11-23_175935.png)
 
