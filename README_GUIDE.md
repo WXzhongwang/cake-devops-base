@@ -69,3 +69,56 @@ docker-compose.yml启动jenkins，docker-compose下载https://github.com/docker/
 docker-compose up -d # 启动jenkins，初次启动比较慢
 docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
+
+## SonarQube
+
+docker-compose.yml启动sonarqube,依赖postgres数据库，所以这里可以通过stack的方式启动两个容器
+
+```yaml
+version: "3.1"
+services:
+  db:
+    image: postgres
+    container_name: db
+    ports:
+      - 5432:5432
+    networks:
+      - sonarnet
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+  sonarqube:
+    image: sonarqube
+    container_name: sonarqube
+    depends_on:
+      - db
+    ports:
+      - "6000:9000"
+    networks:
+      - sonarnet
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
+networks:
+  sonarnet:
+    driver: bridge
+```
+
+配置本地环境，因为使用的是M1，sonar镜像支持M1，最低版本已经是10了，所以对java8已经放弃支持了。
+
+```shell
+export MAVEN_HOME=/usr/local/src/apache-maven-3.6.3
+export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
+export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+#默认JDK11
+export JAVA_HOME=$JAVA_8_HOME
+#alias命令动态切换JDK版本
+alias jdk11="export JAVA_HOME=$JAVA_11_HOME"
+alias jdk8="export JAVA_HOME=$JAVA_8_HOME"
+
+export PATH=$MAVEN_HOME/bin:$JAVA_HOME/bin:$PATH
+```
+
+但是不影响使用，可以考虑通过本地IDEA的maven，关联JDK11来进行sonar扫描，后续jenkins自动化可以使用。
+![本地开启扫描方式](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/images%2FWX20231027-223736%402x.png)
