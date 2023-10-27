@@ -37,3 +37,35 @@ docker容器启动成功后，还是老样子安装个人认为比较好的docke
 ```shell
 docker run -d -p 6000:9000 -v /var/run/docker.sock:/var/run/docker.sock --restart=always --name portainer portainer/portainer
 ```
+
+## jekins
+
+docker-compose.yml启动jenkins，docker-compose下载https://github.com/docker/compose
+
+```yaml
+  version: "3.1"
+  services:
+    jenkins:
+      image: jenkins/jenkins
+      container_name: jenkins
+      ports:
+        - 8080:8080
+        - 50000:50000
+      volumes:
+        - /usr/local/app:/var/jenkins_home/
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /usr/local/bin/docker:/usr/local/bin/docker
+        - /etc/docker/daemon.json:/etc/docker/daemon.json
+```
+
+这里做个一个偷攻的做法，就是事先我本地就下载好了后续构建所需的一些工具，我将其放置解压在了 /usr/local/app路径下，包括
+
+1. apache maven
+2. jdk8等一系列工具
+3. 包括宿主机docker的映射
+   通过数据卷的方式，这样方便在后续jenkins使用工具链时很好的帮助在容器内配置对应的工具全局路径
+
+```shell
+docker-compose up -d # 启动jenkins，初次启动比较慢
+docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
