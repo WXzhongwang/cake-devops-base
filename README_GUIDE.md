@@ -58,7 +58,7 @@ docker-compose.yml启动jenkins，docker-compose下载https://github.com/docker/
         - /etc/docker/daemon.json:/etc/docker/daemon.json
 ```
 
-这里做个一个偷攻的做法，就是事先我本地就下载好了后续构建所需的一些工具，我将其放置解压在了 /usr/local/app路径下，包括
+这里做个一个需要关注的做法，就是事先我本地就下载好了后续构建所需的一些工具，我将其放置解压在了 /usr/local/app路径下，包括
 
 1. apache maven
 2. jdk8等一系列工具
