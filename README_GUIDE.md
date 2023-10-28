@@ -124,3 +124,12 @@ export PATH=$MAVEN_HOME/bin:$JAVA_HOME/bin:$PATH
 ![本地开启扫描方式](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/images%2FWX20231027-223736%402x.png)
 运行结果截图：
 ![sonar运行结果截图](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/images%2Fsonar.png)
+
+# DUBBO-ADMIN && Zookeeper
+
+启动zk&&dubbo-admin用于服务测试
+
+```shell
+docker run -itd --name zookeeper --network zk -p 2181:2181 -p 2888:2888 -p 3888:3888 zookeeper
+docker run -d --name dubbo-admin --network zk -p 8088:8080 -e admin.registry.address=zookeeper://172.18.0.1:2181 -e admin.config-center=zookeeper://172.18.0.1:2181 -e admin.metadata-report.address=zookeeper://172.18.0.1:2181 apache/dubbo-admin
+```
