@@ -17,6 +17,7 @@
 - [x] **Docker Compose**: docker工具 https://github.com/docker/compose
 - [x] **kubernetes**: 容器集群管理系统 http://docs.kubernetes.org.cn/
 - [x] **kuboard**: 图形化管理工具 http://kuboard.cn
+- [x] **AliYun ACR容器镜像服务**: 图形化管理工具 https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
 
 ## 向导
 [手把手踩坑向导](https://github.com/WXzhongwang/cake-devops-base/blob/main/README_GUIDE.md)
