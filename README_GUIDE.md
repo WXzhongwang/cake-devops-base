@@ -38,6 +38,8 @@ docker容器启动成功后，还是老样子安装个人认为比较好的docke
 docker run -d -p 6000:9000 -v /var/run/docker.sock:/var/run/docker.sock --restart=always --name portainer portainer/portainer
 ```
 
+![UIC](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/portainer.png)
+
 ## jekins
 
 docker-compose.yml启动jenkins，docker-compose下载https://github.com/docker/compose
