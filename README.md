@@ -19,8 +19,7 @@
 - [x] **kuboard**: 图形化管理工具 http://kuboard.cn
 
 ## 向导
-
-![向导入口](https://github.com/WXzhongwang/cake-devops-base/blob/main/README_GUIDE.md)
+[手把手踩坑向导](https://github.com/WXzhongwang/cake-devops-base/blob/main/README_GUIDE.md)
 
 ![CICD](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/2021-11-23_175935.png)
 
