@@ -123,9 +123,9 @@ export PATH=$MAVEN_HOME/bin:$JAVA_HOME/bin:$PATH
 ```
 
 但是不影响使用，可以考虑通过本地IDEA的maven，关联JDK11来进行sonar扫描，后续jenkins自动化可以使用。
-![本地开启扫描方式](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/images%2FWX20231027-223736%402x.png)
+![本地开启扫描方式](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/WX20231027-223736@2x.png)
 运行结果截图：
-![sonar运行结果截图](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/images%2Fsonar.png)
+![sonar运行结果截图](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/sonar.png)
 
 # DUBBO-ADMIN && Zookeeper
 
