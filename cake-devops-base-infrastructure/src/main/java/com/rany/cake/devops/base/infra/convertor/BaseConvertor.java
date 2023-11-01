@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.domain.convertor;
+package com.rany.cake.devops.base.infra.convertor;
 
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.InheritInverseConfiguration;

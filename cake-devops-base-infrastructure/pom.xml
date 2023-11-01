@@ -39,7 +39,11 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.rany.cake.devops</groupId>
+            <artifactId>cake-devops-base-domain</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!--K8S-->
         <dependency>
             <groupId>io.kubernetes</groupId>

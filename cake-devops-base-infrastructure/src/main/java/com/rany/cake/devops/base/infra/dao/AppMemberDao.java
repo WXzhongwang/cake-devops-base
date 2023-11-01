@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.domain.dao;
+package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.infra.po.AppMemberPO;

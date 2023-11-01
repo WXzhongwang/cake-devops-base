@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.domain.convertor;
+package com.rany.cake.devops.base.infra.convertor;
 
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.infra.po.AppMemberPO;

@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.domain.repository.impl;
+package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.pk.ClusterId;

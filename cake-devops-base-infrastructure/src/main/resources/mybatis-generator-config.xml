@@ -9,7 +9,7 @@
     <properties resource="gen.properties"/>
     <!-- 数据库驱动 -->
     <classPathEntry
-            location="/Users/tutu/.m2/repository/mysql/mysql-connector-java/8.0.19/mysql-connector-java-8.0.19.jar"/>
+            location="/Users/yuanjinxiu/.m2/repository/mysql/mysql-connector-java/8.0.19/mysql-connector-java-8.0.19.jar"/>
 
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <!-- 数据库连接 -->

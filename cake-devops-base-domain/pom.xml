@@ -13,12 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.rany.cake.devops</groupId>
-            <artifactId>cake-devops-base-infrastructure</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.rany</groupId>
             <artifactId>cake-framework-ddd</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -44,10 +38,6 @@
         <dependency>
             <groupId>com.rany.cake.devops</groupId>
             <artifactId>cake-devops-base-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.rany.cake.devops</groupId>
-            <artifactId>cake-devops-base-infrastructure</artifactId>
         </dependency>
         <dependency>
             <groupId>com.rany.uic</groupId>
