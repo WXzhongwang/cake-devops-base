@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.domain.entity;
 
 import com.cake.framework.common.base.BaseEntity;
-import com.rany.cake.devops.base.api.enums.AppEnvEnum;
+import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;

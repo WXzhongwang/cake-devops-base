@@ -8,12 +8,14 @@ import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
-import com.rany.cake.devops.base.api.enums.AppRoleEnum;
 import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.base.TenantConfig;
+import com.rany.cake.devops.base.domain.enums.AppRoleEnum;
+import com.rany.cake.devops.base.domain.enums.CodeLanguageEnum;
+import com.rany.cake.devops.base.domain.enums.DevelopMode;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
@@ -30,6 +32,7 @@ import com.rany.uic.common.exception.enums.BusinessErrorMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.EnumUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +65,8 @@ public class AppRemoteService implements AppService {
                 createAppCommand.getOwner(),
                 createAppCommand.getDescription(),
                 new CodeRepository(createAppCommand.getRepo(), createAppCommand.getDefaultBranch()),
-                createAppCommand.getLanguage(),
-                createAppCommand.getDevelopMode());
+                EnumUtils.getEnum(CodeLanguageEnum.class, createAppCommand.getLanguage()),
+                EnumUtils.getEnum(DevelopMode.class, createAppCommand.getDevelopMode()));
 
         app.setBusinessOwnership(new BusinessOwnership(createAppCommand.getBusinessUnit(),
                 createAppCommand.getBusinessUnit(),

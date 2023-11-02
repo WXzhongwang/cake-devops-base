@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @SpringBootApplication(exclude = {ParamLimitInterceptor.class})
 @MapperScan(basePackages = {"com.rany.cake.devops.base.infra"})
-@ComponentScan(basePackages = {"com.rany.cake.devops.base.web",
-        "com.rany.cake.devops.base.domain",
-        "com.rany.cake.devops.base.service"})
+@ComponentScan(basePackages = {"com.rany.cake.devops"})
 public class CakeDevopsBaseApplication {
 
     public static void main(String[] args) {

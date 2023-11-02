@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.service.cloud;
 
-import com.rany.cake.devops.base.api.enums.ClusterTypeEnum;
+import com.rany.cake.devops.base.domain.enums.ClusterTypeEnum;
 import com.rany.cake.devops.base.service.exception.K8sErrorMessage;
 import com.rany.cake.devops.base.service.exception.K8sException;
 import org.springframework.stereotype.Component;

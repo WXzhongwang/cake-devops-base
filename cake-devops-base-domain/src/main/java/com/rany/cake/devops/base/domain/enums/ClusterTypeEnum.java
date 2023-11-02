@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.api.enums;
+package com.rany.cake.devops.base.domain.enums;
 
 import lombok.Getter;
 

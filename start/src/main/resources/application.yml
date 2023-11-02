@@ -1,20 +1,23 @@
 server:
   port: 8300
+
 dubbo:
   application:
-    id: cake-devops-service
-    name: cake-devops-service
+    id: rany-uic-service
+    name: rany-uic-service
   protocol:
-    id: dubbo
     name: dubbo
-    port: 20881
+    port: -1
   registry:
-    protocol: zookeeper
-    id: my-registry
-    address: 127.0.0.1:2181
+    address: zookeeper://127.0.0.1:2181
+  metadata-report:
+    address: zookeeper://127.0.0.1:2181
   scan:
-    basePackages: com.rany.cake.devops.base.api
+    basePackages: com.rany.cake.devops
+
 spring:
+  profiles:
+    active: dev
   datasource:
     druid:
       type: com.alibaba.druid.pool.DruidDataSource

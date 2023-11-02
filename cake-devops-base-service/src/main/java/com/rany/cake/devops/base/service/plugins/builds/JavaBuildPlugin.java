@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.service.plugins.builds;
 
-import com.rany.cake.devops.base.api.enums.DeployStageEnum;
+import com.rany.cake.devops.base.domain.enums.DeployStageEnum;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 

@@ -35,22 +35,12 @@
             <artifactId>hutool-all</artifactId>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>com.rany.cake.devops</groupId>
-            <artifactId>cake-devops-base-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.rany.uic</groupId>
-            <artifactId>uic-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.boot</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+        
     </dependencies>
 
     <build>

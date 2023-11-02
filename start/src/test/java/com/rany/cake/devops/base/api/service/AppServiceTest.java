@@ -5,10 +5,10 @@ import com.google.common.collect.Lists;
 import com.rany.cake.devops.base.BaseTests;
 import com.rany.cake.devops.base.api.command.CreateAppCommand;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
-import com.rany.cake.devops.base.api.enums.AppRoleEnum;
-import com.rany.cake.devops.base.api.enums.CodeLanguageEnum;
-import com.rany.cake.devops.base.api.enums.DevelopMode;
 import com.rany.cake.devops.base.domain.base.TenantConfig;
+import com.rany.cake.devops.base.domain.enums.AppRoleEnum;
+import com.rany.cake.devops.base.domain.enums.CodeLanguageEnum;
+import com.rany.cake.devops.base.domain.enums.DevelopMode;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.dto;
 
 import com.rany.cake.devops.base.api.common.base.DTO;
-import com.rany.cake.devops.base.api.enums.AppEnvEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 public class AppEnvDTO extends DTO {
 
     private Long clusterId;
-    private AppEnvEnum envEnum;
+    private String envEnum;
     private String envName;
     private List<String> domains;
     private ResourceStrategyDTO resourceStrategyDTO;
