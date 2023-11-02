@@ -41,8 +41,8 @@ public class AppServiceTest extends BaseTests {
         createAppCommand.setDescription("测试应用001");
         createAppCommand.setRepo("https://github.com/WXzhongwang/cake-devops-base.git");
         createAppCommand.setDefaultBranch("origin/main");
-        createAppCommand.setLanguage(CodeLanguageEnum.JAVA);
-        createAppCommand.setDevelopMode(DevelopMode.FREEDOM);
+        createAppCommand.setLanguage(CodeLanguageEnum.JAVA.name());
+        createAppCommand.setDevelopMode(DevelopMode.FREEDOM.name());
         createAppCommand.setOwner(768821468053254144L);
         createAppCommand.setBusinessUnit("Honda");
         createAppCommand.setDepartment("motorcycles");
