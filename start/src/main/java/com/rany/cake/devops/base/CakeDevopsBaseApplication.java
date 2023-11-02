@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableDubbo
 @EnableTransactionManagement
 @SpringBootApplication(exclude = {ParamLimitInterceptor.class})
-@MapperScan(basePackages = {"com.rany.cake.devops.base.domain.dao", "com.rany.cake.devops.base.infra.mapper"})
+@MapperScan(basePackages = {"com.rany.cake.devops.base.infra"})
 @ComponentScan(basePackages = {"com.rany.cake.devops.base.web",
         "com.rany.cake.devops.base.domain",
         "com.rany.cake.devops.base.service"})
