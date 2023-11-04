@@ -135,3 +135,31 @@ export PATH=$MAVEN_HOME/bin:$JAVA_HOME/bin:$PATH
 docker run -itd --name zookeeper --network zk -p 2181:2181 -p 2888:2888 -p 3888:3888 zookeeper
 docker run -d --name dubbo-admin --network zk -p 8088:8080 -e admin.registry.address=zookeeper://172.18.0.1:2181 -e admin.config-center=zookeeper://172.18.0.1:2181 -e admin.metadata-report.address=zookeeper://172.18.0.1:2181 apache/dubbo-admin
 ```
+
+## Shenyu
+
+```shell
+
+docker network create shenyu
+docker run --name shenyu-admin \
+-v /Users/yuanjinxiu/shenyu-v2.6.0/shenyu-admin/ext-lib:/opt/shenyu-admin/ext-lib \
+-v /Users/yuanjinxiu/shenyu-v2.6.0/shenyu-admin/logs:/opt/shenyu-admin/logs \
+-e "SPRING_PROFILES_ACTIVE=mysql"\
+ -e "spring.datasource.url=jdbc:mysql://host.docker.internal:3306/shenyu?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull" \
+ -e "spring.datasource.username=root" \
+ -e "spring.datasource.password=xxx" \
+ -d -p 9095:9095 \
+ --net shenyu \
+ apache/shenyu-admin:2.6.0
+
+
+
+docker run -d \
+  -p 9195:9195 \
+  --name shenyu-bootstrap \
+  -v /Users/yuanjinxiu/shenyu-v2.6.0/shenyu-bootstrap/logs/:/opt/shenyu-bootstrap/logs \
+  -v /Users/yuanjinxiu/shenyu-v2.6.0/shenyu-bootstrap/conf/:/opt/shenyu-bootstrap/conf \
+  --net shenyu \
+  --env SHENYU_SYNC_WEBSOCKET_URLS=ws://shenyu-admin:9095/websocket \
+  apache/shenyu-bootstrap:2.6.0
+```
