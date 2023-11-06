@@ -42,13 +42,17 @@ docker run -d -p 6000:9000 -v /var/run/docker.sock:/var/run/docker.sock --restar
 
 ## jekins
 
+```shell
+docker pull jenkins/jenkins:2.319.1-lts
+```
+
 docker-compose.yml启动jenkins，docker-compose下载https://github.com/docker/compose
 
 ```yaml
   version: "3.1"
   services:
     jenkins:
-      image: jenkins/jenkins
+      image: jenkins/jenkins:2.319.1-lts
       container_name: jenkins
       ports:
         - 8080:8080
@@ -163,3 +167,4 @@ docker run -d \
   --env SHENYU_SYNC_WEBSOCKET_URLS=ws://shenyu-admin:9095/websocket \
   apache/shenyu-bootstrap:2.6.0
 ```
+
