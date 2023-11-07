@@ -58,4 +58,15 @@ public class DeployContext implements Serializable {
      * 执行过的插件列表
      */
     private List<String> pluginNames = new ArrayList<>();
+
+
+    /**
+     * 审批单，线上发布需要审批单
+     */
+    private String approvalNumber;
+
+    /**
+     * 构建结构dingtalk通知
+     */
+    private String dingtalkWebhook;
 }

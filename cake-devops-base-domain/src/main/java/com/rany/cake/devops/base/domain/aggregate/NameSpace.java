@@ -7,10 +7,10 @@ import com.rany.cake.devops.base.domain.type.NameSpaceName;
 import lombok.*;
 
 /**
- * TODO
+ * 命名空间
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 命名空间
  * @date 2023/1/15 17:15
  * @email 18668485565163.com
  */

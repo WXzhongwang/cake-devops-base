@@ -63,7 +63,7 @@ fi
 if [ "$sonar_scan" == "true" ]; then
   # 执行SonarQube扫描任务
   sonar-scanner \
-    -Dsonar.projectKey=your-project-key \
+    -Dsonar.projectKey=$repo_name \
     -Dsonar.sources=. \
     -Dsonar.host.url=$sonar_url \
     -Dsonar.login=$sonar_token
