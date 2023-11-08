@@ -1,111 +1,190 @@
 #!/bin/bash
+# set -e
 
-
+source conf/cake-sample.conf
 
 # 发送钉钉通知
 function send_dingding_notification {
-  message=$1
-  webhook_url=$2
-
+  local message=$1
+  local webhook_url=$2
+  local status=$3
+  local app_name=$4
+  local date_suffix=$(date "+%Y-%m-%d %H:%M:%S")
   # 使用Markdown格式发送钉钉通知
   curl -H "Content-Type: application/json" -X POST -d '{
     "msgtype": "markdown",
     "markdown": {
-      "title": "构建通知",
-      "text": "'"$message"'"
+      "title": "【COVA】构建通知",
+      "text": "# 构建通知\n\n <font color=\"#FF0000\"> Cova </font>提醒您:\n\n - 应用名称：['"$app_name"']\n- 时间：['"$date_suffix"']\n- 状态：['"$status"']\n- 备注：['"$message"']"
     }
-  }' $webhook_url
+  }' "$webhook_url"
 }
 
-# 设置日期格式
-date_suffix=$(date "+%Y%m%d_%H%M%S")
+# 拉取代码
+function checkout {
+  local repo_url=$1
+  local branch_name=$2
+  local folder_name=$3
 
-# 将所有参数存储到变量中
-repo_url=$1
-branch_name=$2
-sonar_scan=$3
-sonar_url=$4
-sonar_token=$5
-image_name=$6
-harbor_url=$7
-harbor_username=$8
-harbor_password=${9}
-dingding_webhook=${10}
+  # 拉取远程Git仓库代码
+  git clone -b "$branch_name" "$repo_url" "$folder_name"
+}
 
-# 从仓库URL中提取仓库名称
-repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
+# 编译打包
+function mvn_build {
+  local folder_name=$1
 
-# 创建带有仓库名称和日期后缀的文件夹
-folder_name="${repo_name}/${date_suffix}"
-echo $folder_name
-mkdir -p $folder_name
+  cd "$folder_name"
+  # 编译构建
+  $MAVEN_HOME_363 clean package -U -DskipTests=true
 
-# 进入文件夹
-cd $folder_name
+  # 判断编译是否成功
+  if [ $? -ne 0 ]; then
+    echo "Compilation failed"
+    return 1
+  fi
+}
 
-# 拉取远程Git仓库代码
-git clone -b "$branch_name" "$repo_url" .
+# SonarQube扫描
+function sonar_scan {
+  local sonar_scan=$1
+  local sonar_url=$2
+  local sonar_token=$3
+  local repo_name=$4
 
-# 切换到仓库目录
-cd $repo_name
+  # 判断是否执行SonarQube扫描任务
+  if [ "$sonar_scan" == "true" ]; then
+    # 执行SonarQube扫描任务
+    $SONAR_SCAN_HOME \
+      -Dsonar.projectKey="$repo_name" \
+      -Dsonar.sources=. \
+      -Dsonar.host.url="$SONAR_URL" \
+      -Dsonar.login="$SONAR_TOKEN" \
+      -Dsonar.java.binaries=*/*/classes
 
-# 编译构建
-/usr/local/software/apache-maven-3.6.3/bin/mvn clean package -U -DskipTests=true
+    # 判断SonarQube扫描是否成功
+    if [ $? -ne 0 ]; then
+      echo "SonarQube scan failed"
+      return 1
+    fi
+  fi
+}
 
-# 判断编译是否成功
-if [ $? -ne 0 ]; then
-  echo "Compilation failed"
-  send_dingding_notification "构建失败" $dingding_webhook
-  exit 1
-fi
+# 构建镜像
+function build_image {
+  local image_name=$1
 
-# 判断是否执行SonarQube扫描任务
-if [ "$sonar_scan" == "true" ]; then
-  # 执行SonarQube扫描任务
-  sonar-scanner \
-    -Dsonar.projectKey=$repo_name \
-    -Dsonar.sources=. \
-    -Dsonar.host.url=$sonar_url \
-    -Dsonar.login=$sonar_token
+  # 生成镜像
+  $DOCKER_HOME build -t "$image_name" .
+
+  # 判断
+  # 判断镜像生成是否成功
+  if [ $? -ne 0 ]; then
+    echo "Failed to build image"
+    return 1
+  fi
+}
+
+# 推送镜像到Harbor
+function push_image {
+  local harbor_url=$1
+  local harbor_username=$2
+  local harbor_password=$3
+  local image_name=$4
+
+  # 登录Harbor
+  $DOCKER_HOME login -u "$HARBOR_URER" -p "$HARBOR_PASSWORD" "$HARBOR_URL"
+
+  # 标记镜像
+  $DOCKER_HOME tag "$image_name" "$HARBOR_URL/$image_name"
+
+  # 推送镜像到Harbor
+  $DOCKER_HOME push "$HARBOR_URL/$image_name"
+
+  # 判断镜像推送是否成功
+  if [ $? -ne 0 ]; then
+    echo "Failed to push image"
+    return 1
+  fi
+}
+
+# 主函数
+function main {
+  local repo_url=$1
+  local branch_name=$2
+  local sonar_scan=$3
+  local image_name=$4
+  local dingtalk_webhook_url=$5
+
+  # 发送钉钉通知
+  function send_notification {
+    local message=$1
+    local status=$2
+    local app_name=$3
+
+    send_dingding_notification "$message" "$dingtalk_webhook_url" "$status" "$app_name"
+  }
+
+  # 设置日期格式
+  date_suffix=$(date "+%Y%m%d_%H%M%S")
+  # 创建文件夹，解析出仓库名称
+  repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
+  folder_name="${repo_name}/${date_suffix}"
+  echo "$folder_name"
+  mkdir -p "$folder_name"
+
+  # 拉取代码
+  checkout "$repo_url" "$branch_name" "$folder_name"
+
+  # 判断拉取代码是否成功
+  if [ $? -ne 0 ]; then
+    send_notification "拉取代码失败" "failed" "$repo_name"
+    exit 1
+  fi
+
+  # 编译打包
+  mvn_build "$folder_name"
+
+  # 判断编译打包是否成功
+  if [ $? -ne 0 ]; then
+    send_notification "编译打包失败" "failed" "$repo_name"
+    exit 1
+  fi
+
+  # SonarQube扫描
+  sonar_scan "$sonar_scan" "$sonar_url" "$sonar_token" "$repo_name"
 
   # 判断SonarQube扫描是否成功
   if [ $? -ne 0 ]; then
-    echo "SonarQube scan failed"
-    send_dingding_notification "SonarQube扫描失败" $dingding_webhook
+    send_notification "SonarQube扫描失败" "failed" "$repo_name"
     exit 1
   fi
-fi
 
-# 生成镜像
-docker build -t $image_name .
+  # 构建镜像
+  build_image "$image_name"
 
-# 判断镜像生成是否成功
-if [ $? -ne 0 ]; then
-  echo "Failed to build image"
-  send_dingding_notification "镜像生成失败" $dingding_webhook
-  exit 1
-fi
+  # 判断构建镜像是否成功
+  if [ $? -ne 0 ]; then
+    send_notification "构建镜像失败" "failed" "$repo_name"
+    exit 1
+  fi
 
-# 登录Harbor
-docker login -u $harbor_username -p $harbor_password $harbor_url
+  # 推送镜像到Harbor
+  push_image "$harbor_url" "$harbor_username" "$harbor_password" "$image_name"
 
-# 标记镜像
-docker tag $image_name $harbor_url/$image_name
+  # 判断推送镜像是否成功
+  if [ $? -ne 0 ]; then
+    send_notification "推送镜像失败" "failed" "$repo_name"
+    exit 1
+  fi
 
-# 推送镜像到Harbor
-docker push $harbor_url/$image_name
+  # 发送钉钉通知
+  send_notification "构建和推送成功" "succeed" "$repo_name"
 
-# 判断镜像推送是否成功
-if [ $? -ne 0 ]; then
-  echo "Failed to push image"
-  send_dingding_notification "镜像推送失败" $dingding_webhook
-  exit 1
-fi
+  # 成功退出
+  echo "Build and push completed successfully"
+  exit 0
+}
 
-# 发送钉钉通知
-send_dingding_notification "构建和推送成功" $dingding_webhook
-
-# 成功退出
-echo "Build and push completed successfully"
-
-exit 0
+# 启动
+main "$1" "$2" "$3" "$4" "$5"
