@@ -20,6 +20,9 @@
 - [x] **AliYun ACR容器镜像服务**: 容器镜像服务(镜像加速中心)https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
 
 ## 向导
+
+![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/img.png)
+
 [手把手踩坑向导](https://github.com/WXzhongwang/cake-devops-base/blob/main/README_GUIDE.md)
 
 ![CICD](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/2021-11-23_175935.png)
