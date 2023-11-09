@@ -6,10 +6,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /**
- * TODO
+ * 应用成员
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 应用成员
  * @date 2022/11/26 00:27
  * @email 18668485565163.com
  */
@@ -20,8 +20,8 @@ public interface AppMemberDataConvertor extends BaseConvertor<AppMember, AppMemb
     /**
      * 聚合根转PO
      *
-     * @param appMember
-     * @return
+     * @param appMember 聚合根
+     * @return PO
      */
     @Mapping(source = "id.id", target = "id")
     @Mapping(source = "appId.id", target = "appId")
@@ -31,8 +31,8 @@ public interface AppMemberDataConvertor extends BaseConvertor<AppMember, AppMemb
     /**
      * PO转聚合根
      *
-     * @param appMemberPO
-     * @return
+     * @param appMemberPO PO
+     * @return 聚合根
      */
 
     @Override

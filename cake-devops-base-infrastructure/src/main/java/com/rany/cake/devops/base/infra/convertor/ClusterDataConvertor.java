@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * TODO
+ * 集群转换器
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 集群转换器
  * @date 2022/11/26 00:27
  * @email 18668485565163.com
  */
@@ -26,8 +26,8 @@ public interface ClusterDataConvertor extends BaseConvertor<Cluster, ClusterPO> 
     /**
      * 聚合根转PO
      *
-     * @param cluster
-     * @return
+     * @param cluster 聚合根
+     * @return PO
      */
     @Mapping(source = "id.id", target = "id")
     @Mapping(source = "clusterName.name", target = "name")
@@ -38,8 +38,8 @@ public interface ClusterDataConvertor extends BaseConvertor<Cluster, ClusterPO> 
     /**
      * PO转聚合根
      *
-     * @param clusterPO
-     * @return
+     * @param clusterPO PO
+     * @return 聚合根
      */
 
     @Override
