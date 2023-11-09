@@ -25,11 +25,11 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
     private HostId id;
     private String name;
     private String hostName;
-    private String port;
+    private Integer port;
     private String username;
     private String pkey;
     private String desc;
-    private Boolean isVerified;
+    private Boolean verified;
     /**
      * 主机小组
      */

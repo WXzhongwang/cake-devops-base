@@ -62,5 +62,17 @@
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
+        <table schema="cake_devops" tableName="host" domainObjectName="HostPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="host_group" domainObjectName="HostGroupPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="group_host" domainObjectName="GroupHostPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
     </context>
 </generatorConfiguration>

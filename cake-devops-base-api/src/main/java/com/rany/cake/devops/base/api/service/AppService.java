@@ -17,7 +17,7 @@ public interface AppService {
     /**
      * 创建应用
      *
-     * @param createAppCommand
+     * @param createAppCommand 创建应用
      * @return
      */
     PojoResult<Long> createApp(CreateAppCommand createAppCommand);
@@ -26,7 +26,7 @@ public interface AppService {
     /**
      * 创建应用环境
      *
-     * @param createAppEnvCommand
+     * @param createAppEnvCommand 创建应用环境
      * @return
      */
     PojoResult<Long> createAppEnv(CreateAppEnvCommand createAppEnvCommand);

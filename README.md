@@ -4,6 +4,7 @@
 
 1. SpringBoot 2.2.6.RELEASE
 2. K8S 1.19.2
+3. shell
 
 ## 依赖工具链
 

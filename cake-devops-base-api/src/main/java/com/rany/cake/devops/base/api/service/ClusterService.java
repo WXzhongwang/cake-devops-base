@@ -18,16 +18,16 @@ public interface ClusterService {
     /**
      * 测试链接k8s集群
      *
-     * @param testClusterConnectCommand
-     * @return
+     * @param testClusterConnectCommand 测试连接集群
+     * @return 是否连接成功
      */
     PojoResult<Boolean> testConnect(TestClusterConnectCommand testClusterConnectCommand);
 
     /**
      * 创建集群
      *
-     * @param createClusterCommand
-     * @return
+     * @param createClusterCommand 创建集群
+     * @return 创建是否成功
      */
     PojoResult<Long> createCluster(CreateClusterCommand createClusterCommand);
 
