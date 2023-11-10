@@ -2,8 +2,8 @@ package com.rany.cake.devops.base.service.app;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.CreateClusterCommand;
-import com.rany.cake.devops.base.api.command.TestClusterConnectCommand;
+import com.rany.cake.devops.base.api.command.cluster.CreateClusterCommand;
+import com.rany.cake.devops.base.api.command.cluster.TestClusterConnectCommand;
 import com.rany.cake.devops.base.api.service.ClusterService;
 import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
 import com.rany.cake.devops.base.domain.enums.ClusterTypeEnum;

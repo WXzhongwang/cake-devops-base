@@ -1,18 +1,20 @@
-package com.rany.cake.devops.base.api.command;
+package com.rany.cake.devops.base.api.command.app;
 
 import com.rany.cake.devops.base.api.common.base.DTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
- * TODO
+ * 创建应用环境
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 创建应用环境
  * @date 2023/1/28 20:10
  * @email 18668485565163.com
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class CreateAppEnvCommand extends DTO {
     private Long appId;
     private AppEnvDTO env;

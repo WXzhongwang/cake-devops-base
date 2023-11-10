@@ -1,11 +1,11 @@
 package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.CreateAppCommand;
-import com.rany.cake.devops.base.api.command.CreateAppEnvCommand;
+import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
+import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 
 /**
- * TODO
+ * 应用服务
  *
  * @author zhongshengwang
  * @description TODO

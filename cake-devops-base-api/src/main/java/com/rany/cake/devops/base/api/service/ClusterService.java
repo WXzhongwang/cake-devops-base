@@ -1,8 +1,8 @@
 package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.CreateClusterCommand;
-import com.rany.cake.devops.base.api.command.TestClusterConnectCommand;
+import com.rany.cake.devops.base.api.command.cluster.CreateClusterCommand;
+import com.rany.cake.devops.base.api.command.cluster.TestClusterConnectCommand;
 
 /**
  * TODO

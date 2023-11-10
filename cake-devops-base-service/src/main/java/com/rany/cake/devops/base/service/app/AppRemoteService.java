@@ -5,8 +5,8 @@ import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.rany.cake.devops.base.api.command.CreateAppCommand;
-import com.rany.cake.devops.base.api.command.CreateAppEnvCommand;
+import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
+import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggregate.App;
@@ -41,10 +41,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * TODO
+ * 应用服务
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 应用服务
  * @date 2023/1/28 20:40
  * @email 18668485565163.com
  */

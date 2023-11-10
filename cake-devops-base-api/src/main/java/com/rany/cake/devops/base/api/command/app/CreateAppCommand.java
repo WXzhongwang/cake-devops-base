@@ -1,21 +1,23 @@
-package com.rany.cake.devops.base.api.command;
+package com.rany.cake.devops.base.api.command.app;
 
 import com.rany.cake.devops.base.api.common.base.DTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
- * TODO
+ * 创建应用
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 创建应用
  * @date 2023/1/28 20:10
  * @email 18668485565163.com
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class CreateAppCommand extends DTO {
     private String appName;
     private String description;

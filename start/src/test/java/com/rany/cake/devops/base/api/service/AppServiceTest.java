@@ -3,7 +3,7 @@ package com.rany.cake.devops.base.api.service;
 import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Lists;
 import com.rany.cake.devops.base.BaseTests;
-import com.rany.cake.devops.base.api.command.CreateAppCommand;
+import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.domain.base.TenantConfig;
 import com.rany.cake.devops.base.domain.enums.AppRoleEnum;
