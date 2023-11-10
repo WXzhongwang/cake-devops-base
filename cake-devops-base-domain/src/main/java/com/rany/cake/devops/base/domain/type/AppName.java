@@ -4,10 +4,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * TODO
+ * APP名称
  *
  * @author zhongshengwang
- * @description TODO
+ * @description APP名称
  * @date 2023/1/12 22:55
  * @email 18668485565163.com
  */

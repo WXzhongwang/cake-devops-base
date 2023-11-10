@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
+import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.repository.AppMemberRepository;
 import com.rany.cake.devops.base.infra.convertor.AppMemberDataConvertor;
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotNull;
 
 /**
- * TODO
+ * 应用成员
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 应用成员
  * @date 2023/1/28 21:02
  * @email 18668485565163.com
  */
@@ -30,17 +31,20 @@ public class AppMemberRepositoryImpl implements AppMemberRepository {
 
     @Override
     public AppMember find(@NotNull MemberId memberId) {
-        return null;
+        AppMemberPO memberPO = appMemberPOMapper.selectByPrimaryKey(memberId.getId());
+        return appMemberDataConvertor.targetToSource(memberPO);
     }
 
     @Override
     public void remove(@NotNull AppMember appMember) {
-
+        AppMemberPO appMemberPO = appMemberDataConvertor.sourceToTarget(appMember);
+        appMemberPO.setIsDeleted(DeleteStatusEnum.YES.getValue());
+        appMemberPOMapper.updateByPrimaryKey(appMemberPO);
     }
 
     @Override
     public void save(@NotNull AppMember appMember) {
-
+        appMemberDao.saveUpdate(appMember);
     }
 
     @Override

@@ -19,12 +19,10 @@
         <dependency>
             <groupId>com.rany.cake.devops</groupId>
             <artifactId>cake-devops-base-service</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rany.cake.devops</groupId>
             <artifactId>cake-devops-base-web</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

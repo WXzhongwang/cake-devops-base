@@ -5,10 +5,10 @@ import com.rany.cake.devops.base.infra.po.AppMemberPO;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * TODO
+ * 成员
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 成员
  * @date 2023/2/2 21:24
  * @email 18668485565163.com
  */
@@ -16,7 +16,7 @@ public interface AppMemberDao {
 
 
     /**
-     * 根据账号获取member
+     * 新增成员
      *
      * @param accountId
      * @return

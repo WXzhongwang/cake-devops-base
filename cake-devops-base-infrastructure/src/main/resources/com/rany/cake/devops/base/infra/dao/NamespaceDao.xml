@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.NamespaceDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.NamespacePO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="cluster_id" jdbcType="BIGINT" property="clusterId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="request_cpu" jdbcType="DECIMAL" property="requestCpu"/>
+        <result column="request_memory" jdbcType="DECIMAL" property="requestMemory"/>
+        <result column="limit_cpu" jdbcType="DECIMAL" property="limitCpu"/>
+        <result column="limit_memory" jdbcType="DECIMAL" property="limitMemory"/>
+        <result column="max_pods" jdbcType="INTEGER" property="maxPods"/>
+        <result column="max_gpu" jdbcType="DECIMAL" property="maxGpu"/>
+        <result column="max_services" jdbcType="INTEGER" property="maxServices"/>
+        <result column="status" jdbcType="CHAR" property="status"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+        id
+        , cluster_id, name, request_cpu, request_memory, limit_cpu, limit_memory, max_pods,
+    max_gpu, max_services, status, is_deleted, gmt_create, gmt_modified, creator, modifier
+    </sql>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.Namespace">
+
+        insert into namespace (id, cluster_id, name,
+                               request_cpu, request_memory, limit_cpu,
+                               limit_memory, max_pods, max_gpu,
+                               max_services, status, is_deleted,
+                               gmt_create, gmt_modified, creator,
+                               modifier)
+        values (#{id.id,jdbcType=BIGINT}, #{clusterId.id,jdbcType=BIGINT}, #{name.name,jdbcType=VARCHAR},
+                #{requestCpu,jdbcType=DECIMAL}, #{requestMemory,jdbcType=DECIMAL}, #{limitCpu,jdbcType=DECIMAL},
+                #{limitMemory,jdbcType=DECIMAL}, #{maxPods,jdbcType=INTEGER}, #{maxGpu,jdbcType=DECIMAL},
+                #{maxServices,jdbcType=INTEGER}, #{status,jdbcType=CHAR}, #{isDeleted,jdbcType=VARCHAR},
+                #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
+                #{modifier,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Namespace">
+        update namespace
+        <set>
+            <if test="clusterId != null">
+                cluster_id = #{clusterId.id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                name = #{name.name,jdbcType=VARCHAR},
+            </if>
+            <if test="requestCpu != null">
+                request_cpu = #{requestCpu,jdbcType=DECIMAL},
+            </if>
+            <if test="requestMemory != null">
+                request_memory = #{requestMemory,jdbcType=DECIMAL},
+            </if>
+            <if test="limitCpu != null">
+                limit_cpu = #{limitCpu,jdbcType=DECIMAL},
+            </if>
+            <if test="limitMemory != null">
+                limit_memory = #{limitMemory,jdbcType=DECIMAL},
+            </if>
+            <if test="maxPods != null">
+                max_pods = #{maxPods,jdbcType=INTEGER},
+            </if>
+            <if test="maxGpu != null">
+                max_gpu = #{maxGpu,jdbcType=DECIMAL},
+            </if>
+            <if test="maxServices != null">
+                max_services = #{maxServices,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id.id,jdbcType=BIGINT}
+    </update>
+</mapper>

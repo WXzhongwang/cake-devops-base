@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.domain.service;
 
+import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.repository.ClusterRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,4 +17,14 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class ClusterDomainService {
     private final ClusterRepository clusterRepository;
+
+
+    /**
+     * 创建集群
+     *
+     * @param cluster
+     */
+    public void createCluster(Cluster cluster) {
+        clusterRepository.save(cluster);
+    }
 }

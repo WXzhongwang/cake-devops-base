@@ -2,8 +2,9 @@ package com.rany.cake.devops.base.domain.aggregate;
 
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
-import com.rany.cake.devops.base.domain.pk.NameSpaceId;
-import com.rany.cake.devops.base.domain.type.NameSpaceName;
+import com.rany.cake.devops.base.domain.pk.ClusterId;
+import com.rany.cake.devops.base.domain.pk.NamespaceId;
+import com.rany.cake.devops.base.domain.type.NamespaceName;
 import lombok.*;
 
 /**
@@ -19,11 +20,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class NameSpace extends BaseAggregateRoot implements IAggregate<NameSpaceId> {
+public class Namespace extends BaseAggregateRoot implements IAggregate<NamespaceId> {
 
-    private NameSpaceId id;
+    private NamespaceId id;
+    
+    private ClusterId clusterId;
 
-    private NameSpaceName name;
+    private NamespaceName name;
 
     /**
      * 所有容器的 CPU 请求总额不得超过 x CPU。
@@ -57,7 +60,7 @@ public class NameSpace extends BaseAggregateRoot implements IAggregate<NameSpace
 
     private String status;
 
-    public NameSpace(NameSpaceId id, NameSpaceName name) {
+    public Namespace(NamespaceId id, NamespaceName name) {
         this.id = id;
         this.name = name;
     }

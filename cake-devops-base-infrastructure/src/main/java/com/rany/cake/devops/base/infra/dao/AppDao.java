@@ -14,11 +14,19 @@ public interface AppDao {
 
 
     /**
-     * 根据账号获取member
+     * 保存
      *
      * @param app
      * @return
      */
     int save(App app);
+
+    /**
+     * 更新
+     *
+     * @param app
+     * @return
+     */
+    int update(App app);
 
 }

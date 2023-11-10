@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base;
 
-import com.alibaba.dubbo.config.spring.context.annotation.EnableDubbo;
 import com.cake.framework.mybatis.ParamLimitInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *
  * @author zhongshengwang
  */
-@EnableDubbo
 @EnableTransactionManagement
 @SpringBootApplication(exclude = {ParamLimitInterceptor.class})
 @MapperScan(basePackages = {"com.rany.cake.devops.base.infra"})

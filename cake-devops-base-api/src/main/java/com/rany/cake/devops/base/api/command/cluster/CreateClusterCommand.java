@@ -21,6 +21,5 @@ public class CreateClusterCommand extends DTO {
     private String token;
     private String name;
     private String clusterType;
-    private String env;
     private List<String> tags;
 }

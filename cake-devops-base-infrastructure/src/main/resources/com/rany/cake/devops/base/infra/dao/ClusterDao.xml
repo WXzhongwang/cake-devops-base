@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rany.cake.devops.base.infra.dao.ClusterDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.ClusterPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="tags" jdbcType="VARCHAR" property="tags"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="cluster_type" jdbcType="CHAR" property="clusterType"/>
+        <result column="status" jdbcType="CHAR" property="status"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , name, tags, version, cluster_type, status, is_deleted, gmt_create, gmt_modified,
+        creator, modifier
+    </sql>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.Cluster">
+
+        insert into cluster (id, name,
+                             tags, version, cluster_type,
+                             status, is_deleted, gmt_create,
+                             gmt_modified, creator, modifier)
+        values (#{id.id,jdbcType=BIGINT}, #{clusterName.name,jdbcType=VARCHAR},
+                #{tags,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
+                #{version,jdbcType=VARCHAR}, #{clusterType,jdbcType=CHAR},
+                #{status,jdbcType=CHAR}, #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
+                #{gmtModified,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Cluster">
+        update cluster
+        <set>
+            <if test="name != null">
+                name = #{clusterName.name,jdbcType=VARCHAR},
+            </if>
+
+            <if test="tags != null">
+                tags = #{tags,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=VARCHAR},
+            </if>
+            <if test="clusterType != null">
+                cluster_type = #{clusterType,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id.id,jdbcType=BIGINT}
+    </update>
+</mapper>

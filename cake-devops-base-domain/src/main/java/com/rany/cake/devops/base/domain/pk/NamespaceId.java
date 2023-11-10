@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class NameSpaceId implements Identifier {
+public class NamespaceId implements Identifier {
 
     Long id;
 
-    public NameSpaceId(Long id) {
+    public NamespaceId(Long id) {
         if (id < 0) {
             throw new IllegalArgumentException();
         }

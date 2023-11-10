@@ -52,4 +52,27 @@
                 #{businessOwnership.bu,jdbcType=VARCHAR},
                 #{businessOwnership.department,jdbcType=VARCHAR})
     </insert>
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.App">
+        update app
+        set app_name       = #{appName.name,jdbcType=VARCHAR},
+            unique_no      = #{uniqueNo,jdbcType=VARCHAR},
+            description    = #{description,jdbcType=VARCHAR},
+            repo           = #{repo,jdbcType=VARCHAR},
+            default_branch = #{defaultBranch,jdbcType=VARCHAR},
+            language       = #{language,jdbcType=VARCHAR},
+            develop_mode   = #{developMode,jdbcType=VARCHAR},
+            owner          = #{owner,jdbcType=BIGINT},
+            health_check   = #{healthCheck,jdbcType=VARCHAR},
+            status         = #{status,jdbcType=VARCHAR},
+            is_deleted     = #{isDeleted,jdbcType=VARCHAR},
+            gmt_create     = #{gmtCreate,jdbcType=TIMESTAMP},
+            gmt_modified   = #{gmtModified,jdbcType=TIMESTAMP},
+            business_unit  = #{businessOwnership.businessUnit,jdbcType=VARCHAR},
+            bu             = #{businessOwnership.bu,jdbcType=VARCHAR},
+            department     = #{businessOwnership.department,jdbcType=VARCHAR},
+            creator        = #{creator,jdbcType=VARCHAR},
+            modifier       = #{modifier,jdbcType=VARCHAR}
+        where id = #{id.id,jdbcType=BIGINT}
+    </update>
 </mapper>

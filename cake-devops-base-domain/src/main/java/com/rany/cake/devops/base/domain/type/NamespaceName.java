@@ -4,19 +4,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * TODO
+ * 命名空间名称
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 命名空间名称
  * @date 2023/1/15 16:23
  * @email 18668485565163.com
  */
 @Data
 @NoArgsConstructor
-public class NameSpaceName {
+public class NamespaceName {
     String name;
 
-    public NameSpaceName(String name) {
+    public NamespaceName(String name) {
         if (name == null || name.length() < 8) {
             throw new IllegalArgumentException();
         }

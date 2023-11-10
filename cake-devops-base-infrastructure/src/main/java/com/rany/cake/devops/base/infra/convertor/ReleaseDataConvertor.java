@@ -6,10 +6,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /**
- * 审批转换器
+ * 发布转换器
  *
  * @author zhongshengwang
- * @description 审批转换器
+ * @description 发布转换器
  * @date 2022/11/26 00:27
  * @email 18668485565163.com
  */

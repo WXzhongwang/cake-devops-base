@@ -4,10 +4,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * TODO
+ * 集群名称
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 集群名称
  * @date 2023/1/15 16:23
  * @email 18668485565163.com
  */

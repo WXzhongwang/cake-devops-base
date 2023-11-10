@@ -29,7 +29,7 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
     private String username;
     private String pkey;
     private String desc;
-    private Boolean verified;
+    private String verified;
     /**
      * 主机小组
      */
