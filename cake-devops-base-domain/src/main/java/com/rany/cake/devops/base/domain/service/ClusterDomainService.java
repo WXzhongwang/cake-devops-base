@@ -1,15 +1,16 @@
 package com.rany.cake.devops.base.domain.service;
 
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
+import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.repository.ClusterRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO
+ * 集群
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 集群
  * @date 2023/2/18 22:40
  * @email 18668485565163.com
  */
@@ -24,7 +25,15 @@ public class ClusterDomainService {
      *
      * @param cluster
      */
-    public void createCluster(Cluster cluster) {
+    public void save(Cluster cluster) {
         clusterRepository.save(cluster);
+    }
+
+    public void update(Cluster cluster) {
+        clusterRepository.update(cluster);
+    }
+
+    public Cluster getCluster(ClusterId clusterId) {
+        return clusterRepository.find(clusterId);
     }
 }

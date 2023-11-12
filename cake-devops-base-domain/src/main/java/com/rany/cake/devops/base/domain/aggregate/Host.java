@@ -1,8 +1,10 @@
 package com.rany.cake.devops.base.domain.aggregate;
 
+import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.entity.HostExtend;
+import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import lombok.*;
 
@@ -38,5 +40,23 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
      * 拓展补充信息
      */
     private HostExtend hostExtend;
+
+    public Host(HostId id, String name, String hostName, Integer port) {
+        this.id = id;
+        this.name = name;
+        this.hostName = hostName;
+        this.port = port;
+    }
+
+    public Boolean delete() {
+        this.gmtModified = DateUtil.date();
+        this.isDeleted = DeleteStatusEnum.YES.getValue();
+        return Boolean.TRUE;
+    }
+
+    public Boolean modify() {
+        this.gmtModified = DateUtil.date();
+        return Boolean.TRUE;
+    }
 }
 

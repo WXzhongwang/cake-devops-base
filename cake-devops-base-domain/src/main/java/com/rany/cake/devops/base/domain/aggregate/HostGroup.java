@@ -1,7 +1,9 @@
 package com.rany.cake.devops.base.domain.aggregate;
 
+import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
+import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.HostGroupId;
 import lombok.*;
 
@@ -29,5 +31,24 @@ public class HostGroup extends BaseAggregateRoot implements IAggregate<HostGroup
      * 小组主机列表
      */
     private List<Host> hosts;
+
+
+    public HostGroup(HostGroupId id, String name, Long parentId, Integer sort) {
+        this.id = id;
+        this.name = name;
+        this.parentId = parentId;
+        this.sort = sort;
+    }
+
+    public Boolean delete() {
+        this.gmtModified = DateUtil.date();
+        this.isDeleted = DeleteStatusEnum.YES.getValue();
+        return Boolean.TRUE;
+    }
+
+    public Boolean modify() {
+        this.gmtModified = DateUtil.date();
+        return Boolean.TRUE;
+    }
 }
 

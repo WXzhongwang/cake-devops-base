@@ -28,4 +28,10 @@ public class ResourceStrategy extends BaseValueObject {
      * 内存资源
      */
     private Double memory;
+
+    public ResourceStrategy(Integer maxReplicas, Double cpu, Double memory) {
+        this.maxReplicas = maxReplicas;
+        this.cpu = cpu;
+        this.memory = memory;
+    }
 }

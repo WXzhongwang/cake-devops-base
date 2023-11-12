@@ -1,10 +1,14 @@
 package com.rany.cake.devops.base.infra.convertor;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.MapperConfig;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -68,4 +72,19 @@ public interface BaseConvertor<SOURCE, TARGET> {
      * @return
      */
     List<SOURCE> targetToSource(Stream<TARGET> stream);
+
+    default String convertString(List<String> items) {
+        if (items != null && !items.isEmpty()) {
+            return StringUtils.join(items, ",");
+        }
+        return null;
+    }
+
+    default List<String> convertList(String value) {
+        if (StringUtils.isNotBlank(value)) {
+            String[] split = value.split(",");
+            return Arrays.stream(split).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
 }

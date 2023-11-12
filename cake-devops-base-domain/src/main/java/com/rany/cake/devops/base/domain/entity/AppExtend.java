@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * TODO
+ * 应用拓展
  *
  * @author zhongshengwang
  * @description TODO

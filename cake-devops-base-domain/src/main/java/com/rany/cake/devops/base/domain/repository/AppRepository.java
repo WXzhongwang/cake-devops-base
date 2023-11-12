@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.domain.repository;
 
 import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.App;
+import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.pk.AppId;
 
 /**
@@ -13,4 +14,7 @@ import com.rany.cake.devops.base.domain.pk.AppId;
  * @email 18668485565163.com
  */
 public interface AppRepository extends Repository<App, AppId> {
+    int update(App app);
+
+    int saveAppEnv(AppEnv appEnv);
 }

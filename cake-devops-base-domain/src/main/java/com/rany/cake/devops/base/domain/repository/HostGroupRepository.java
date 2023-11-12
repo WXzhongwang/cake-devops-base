@@ -13,4 +13,6 @@ import com.rany.cake.devops.base.domain.pk.HostGroupId;
  * @email 18668485565163.com
  */
 public interface HostGroupRepository extends Repository<HostGroup, HostGroupId> {
+    int update(HostGroup hostGroup);
 }
+

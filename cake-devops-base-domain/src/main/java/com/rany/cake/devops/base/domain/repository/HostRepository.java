@@ -4,6 +4,8 @@ import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.pk.HostId;
 
+import java.util.List;
+
 /**
  * 主机
  *
@@ -13,4 +15,8 @@ import com.rany.cake.devops.base.domain.pk.HostId;
  * @email 18668485565163.com
  */
 public interface HostRepository extends Repository<Host, HostId> {
+
+    int update(Host host);
+
+    List<Host> getHostsByGroupIds(List<Long> groupIds);
 }

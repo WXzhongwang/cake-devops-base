@@ -1,6 +1,9 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.infra.po.HostPO;
+
+import java.util.List;
 
 /**
  * 主机
@@ -29,5 +32,8 @@ public interface HostDao {
      * @return
      */
     int update(Host host);
+
+
+    List<HostPO> selectByPrimaryKeyList(List<Long> hostIds);
 
 }

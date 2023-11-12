@@ -5,10 +5,10 @@ import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 
 /**
- * TODO
+ * 成员
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 成员
  * @date 2023/1/28 21:01
  * @email 18668485565163.com
  */

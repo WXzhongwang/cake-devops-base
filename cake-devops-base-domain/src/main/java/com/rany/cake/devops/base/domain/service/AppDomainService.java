@@ -2,7 +2,9 @@ package com.rany.cake.devops.base.domain.service;
 
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
+import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.repository.AppMemberRepository;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
 import lombok.AllArgsConstructor;
@@ -30,7 +32,8 @@ public class AppDomainService {
      *
      * @param app
      */
-    public void createApp(App app) {
+
+    public void save(App app) {
         appRepository.save(app);
         List<AppMember> appMembers = app.getAppMembers();
         for (AppMember appMember : appMembers) {
@@ -42,5 +45,17 @@ public class AppDomainService {
             }
             appMemberRepository.saveUpdate(appMember);
         }
+    }
+
+    public void createEnv(AppEnv appEnv) {
+        appRepository.saveAppEnv(appEnv);
+    }
+
+    public void update(App app) {
+        appRepository.update(app);
+    }
+
+    public App getApp(AppId appId) {
+        return appRepository.find(appId);
     }
 }

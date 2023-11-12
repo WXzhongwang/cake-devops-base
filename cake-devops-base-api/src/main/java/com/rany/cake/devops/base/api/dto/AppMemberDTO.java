@@ -2,18 +2,20 @@ package com.rany.cake.devops.base.api.dto;
 
 import com.rany.cake.devops.base.api.common.base.DTO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
- * TODO
+ * 应用成员
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 应用成员
  * @date 2023/1/28 20:20
  * @email 18668485565163.com
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class AppMemberDTO extends DTO {
 
     private Long accountId;

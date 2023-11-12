@@ -1,7 +1,8 @@
-package com.rany.cake.devops.base.service.exception;
+package com.rany.cake.devops.base.api.exception;
 
-import cn.hutool.core.util.StrUtil;
-import com.rany.uic.common.exception.enums.ErrorCodeEnum;
+import com.cake.framework.common.exception.ErrorCodeEnum;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * TODO
@@ -13,6 +14,9 @@ import com.rany.uic.common.exception.enums.ErrorCodeEnum;
  */
 public enum DevOpsErrorMessage {
 
+    APP_NOT_FOUND("50000", "应用未找到"),
+    CLUSTER_NOT_FOUND("50000", "集群未找到"),
+    ENV_DUPLICATED("50000", "环境冲突"),
     OPS_SUPPORTED_ERROR("50001", "尚未支持的集群类型"),
     OPS_ENV_SUPPORTED_ERROR("50002", "尚未支持的环境标签"),
     OPS_CONNECTED_ERROR("50003", "连接失败"),
@@ -20,14 +24,11 @@ public enum DevOpsErrorMessage {
     ;
 
     private final String code;
+    @Getter
     private final String message;
 
     public String getCode() {
-        return StrUtil.join("-", new Object[]{ErrorCodeEnum.OUT.getCode(), this.code});
-    }
-
-    public String getMessage() {
-        return this.message;
+        return StringUtils.join("-", new Object[]{ErrorCodeEnum.BIZ.getCode(), this.code});
     }
 
     private DevOpsErrorMessage(String code, String message) {

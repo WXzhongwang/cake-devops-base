@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.AppEnvDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.AppEnvPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="cluster_id" jdbcType="BIGINT" property="clusterId"/>
+        <result column="app_id" jdbcType="BIGINT" property="appId"/>
+        <result column="domains" jdbcType="VARCHAR" property="domains"/>
+        <result column="env_name" jdbcType="VARCHAR" property="envName"/>
+        <result column="env" jdbcType="VARCHAR" property="env"/>
+        <result column="max_replicas" jdbcType="INTEGER" property="maxReplicas"/>
+        <result column="cpu" jdbcType="DECIMAL" property="cpu"/>
+        <result column="memory" jdbcType="DECIMAL" property="memory"/>
+        <result column="auto_scaling" jdbcType="CHAR" property="autoScaling"/>
+        <result column="need_approval" jdbcType="CHAR" property="needApproval"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , cluster_id, app_id, domains, env_name, env, max_replicas, cpu, memory, auto_scaling,
+        need_approval, status, is_deleted, gmt_create, gmt_modified, creator, modifier
+    </sql>
+    <select id="selectByAppId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from app_env
+        where app_id = #{appId,jdbcType=BIGINT}
+    </select>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
+        insert into app_env (cluster_id, app_id,
+                             domains, env_name, env,
+                             max_replicas, cpu, memory,
+                             auto_scaling, need_approval, status,
+                             is_deleted, gmt_create, gmt_modified,
+                             creator, modifier)
+        values (#{clusterId.id,jdbcType=BIGINT}, #{appId.id,jdbcType=BIGINT},
+                #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
+                #{envName,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR},
+                #{maxReplicas,jdbcType=INTEGER}, #{cpu,jdbcType=DECIMAL}, #{memory,jdbcType=DECIMAL},
+                #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
+                #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
+    </insert>
+
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
+
+        update app_env
+        <set>
+            <if test="clusterId != null">
+                cluster_id = #{clusterId.id,jdbcType=BIGINT},
+            </if>
+            <if test="appId != null">
+                app_id = #{appId,jdbcType=BIGINT},
+            </if>
+            <if test="domains != null">
+                domain =
+                #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
+            </if>
+            <if test="envName != null">
+                env_name = #{envName,jdbcType=VARCHAR},
+            </if>
+            <if test="env != null">
+                env = #{env,jdbcType=VARCHAR},
+            </if>
+            <if test="maxReplicas != null">
+                max_replicas = #{maxReplicas,jdbcType=INTEGER},
+            </if>
+            <if test="cpu != null">
+                cpu = #{cpu,jdbcType=DECIMAL},
+            </if>
+            <if test="memory != null">
+                memory = #{memory,jdbcType=DECIMAL},
+            </if>
+            <if test="autoScaling != null">
+                auto_scaling = #{autoScaling,jdbcType=CHAR},
+            </if>
+            <if test="needApproval != null">
+                need_approval = #{needApproval,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

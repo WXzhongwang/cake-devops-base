@@ -1,0 +1,16 @@
+dubbo:
+  config-center:
+    address: zookeeper://zookeeper:2181
+  registry:
+    address: zookeeper://zookeeper:2181
+    timeout: 30000
+  metadata-report:
+    address: zookeeper://zookeeper:2181
+    timeout: 30000
+
+spring:
+  profiles:
+    active: test
+  datasource:
+    druid:
+      url: jdbc:mysql://host.docker.internal:3306/cake_devops?allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false

@@ -1,28 +1,37 @@
 package com.rany.cake.devops.base.service.app;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
+import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
+import com.rany.cake.devops.base.api.dto.ResourceStrategyDTO;
+import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
+import com.rany.cake.devops.base.api.exception.DevOpsException;
 import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
+import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.base.TenantConfig;
+import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
 import com.rany.cake.devops.base.domain.enums.AppRoleEnum;
 import com.rany.cake.devops.base.domain.enums.CodeLanguageEnum;
 import com.rany.cake.devops.base.domain.enums.DevelopMode;
 import com.rany.cake.devops.base.domain.pk.AppId;
+import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
 import com.rany.cake.devops.base.domain.service.AppMemberDomainService;
+import com.rany.cake.devops.base.domain.service.ClusterDomainService;
 import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
+import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.uic.api.facade.account.AccountFacade;
 import com.rany.uic.api.query.account.AccountQuery;
 import com.rany.uic.common.dto.account.AccountDTO;
@@ -33,6 +42,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.dubbo.config.annotation.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +67,7 @@ public class AppRemoteService implements AppService {
     private final AccountFacade accountFacade;
     private final AppMemberDomainService appMemberDomainService;
     private final AppDomainService appDomainService;
+    private final ClusterDomainService clusterDomainService;
 
     @Override
     public PojoResult<Long> createApp(CreateAppCommand createAppCommand) {
@@ -107,12 +118,36 @@ public class AppRemoteService implements AppService {
             app.setAppMembers(appMembers);
         }
         app.sava();
-        appDomainService.createApp(app);
+        appDomainService.save(app);
         return PojoResult.succeed(app.getId().getId());
     }
 
     @Override
     public PojoResult<Long> createAppEnv(CreateAppEnvCommand createAppEnvCommand) {
-        return null;
+        App app = appDomainService.getApp(new AppId(createAppEnvCommand.getAppId()));
+        if (app == null) {
+            throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
+        }
+        AppEnvDTO env = createAppEnvCommand.getEnv();
+        Long clusterId = env.getClusterId();
+        Cluster cluster = clusterDomainService.getCluster(new ClusterId(clusterId));
+        if (cluster == null) {
+            throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
+        }
+        List<AppEnv> appEnvList = app.getAppEnvList();
+        List<String> appEnvNames = appEnvList.stream().map(AppEnv::getEnvName).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(appEnvNames) && appEnvNames.contains(env.getEnvName())) {
+            throw new DevOpsException(DevOpsErrorMessage.ENV_DUPLICATED);
+        }
+        AppEnvEnum appEnvEnum = EnumUtils.getEnum(AppEnvEnum.class, env.getEnvEnum());
+        AppEnv appEnv = new AppEnv(app.getId(), cluster.getId(), env.getEnvName(), appEnvEnum);
+        appEnv.setDomains(env.getDomains());
+        appEnv.setAutoScaling(env.getAutoScaling());
+        appEnv.setNeedApproval(env.getNeedApproval());
+        ResourceStrategyDTO resourceStrategyDTO = env.getResourceStrategyDTO();
+        appEnv.setResourceStrategy(new ResourceStrategy(resourceStrategyDTO.getMaxReplicas(), resourceStrategyDTO.getCpu(),
+                resourceStrategyDTO.getMemory()));
+        appDomainService.createEnv(appEnv);
+        return PojoResult.succeed(appEnv.getId());
     }
 }

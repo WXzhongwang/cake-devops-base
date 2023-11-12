@@ -52,7 +52,7 @@ public class AppServiceTest extends BaseTests {
         memberDTO.setRoles(Lists.newArrayList(AppRoleEnum.DEVELOPER.name()));
         appMembers.add(memberDTO);
         createAppCommand.setAppMembers(appMembers);
-        createAppCommand.setAppEnvs(Lists.newArrayList());
+        // createAppCommand.setAppEnvs(Lists.newArrayList());
         createAppCommand.setHealthCheck("/ok");
         PojoResult<Long> app = appService.createApp(createAppCommand);
         Assert.assertTrue(app.getSuccess());

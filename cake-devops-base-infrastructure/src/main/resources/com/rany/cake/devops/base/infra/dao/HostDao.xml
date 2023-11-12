@@ -27,6 +27,17 @@
     </sql>
 
 
+    <select id="selectByPrimaryKeyList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host
+        where id_deleted = '0' and
+        id in
+        <foreach collection="hostIds" index="index" item="hostId" open="(" separator="," close=")">
+            #{hostId}
+        </foreach>
+    </select>
+
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.Host">
 
         insert into host (id, name, host_name,

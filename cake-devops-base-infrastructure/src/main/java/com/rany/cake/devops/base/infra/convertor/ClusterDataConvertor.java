@@ -2,14 +2,8 @@ package com.rany.cake.devops.base.infra.convertor;
 
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.infra.po.ClusterPO;
-import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 集群转换器
@@ -31,7 +25,7 @@ public interface ClusterDataConvertor extends BaseConvertor<Cluster, ClusterPO> 
      */
     @Mapping(source = "id.id", target = "id")
     @Mapping(source = "clusterName.name", target = "name")
-    @Mapping(expression = "java(com.rany.cake.devops.base.infra.convertor.ClusterDataConvertor.toTagsString(cluster))", target = "tags")
+    @Mapping(expression = "java(this.convertString(cluster.getTags()))", target = "tags")
     @Override
     ClusterPO sourceToTarget(Cluster cluster);
 
@@ -45,23 +39,6 @@ public interface ClusterDataConvertor extends BaseConvertor<Cluster, ClusterPO> 
     @Override
     @Mapping(target = "id.id", source = "id")
     @Mapping(target = "clusterName.name", source = "name")
-    @Mapping(target = "tags", expression = "java(com.rany.cake.devops.base.infra.convertor.ClusterDataConvertor.toTagList(clusterPO))")
+    @Mapping(target = "tags", expression = "java(this.convertList(clusterPO.getTags()))")
     Cluster targetToSource(ClusterPO clusterPO);
-
-
-    static String toTagsString(Cluster cluster) {
-        if (cluster != null) {
-            List<String> tags = cluster.getTags();
-            return StringUtils.join(tags, ",");
-        }
-        return null;
-    }
-
-    static List<String> toTagList(ClusterPO clusterPO) {
-        if (clusterPO != null && StringUtils.isNotBlank(clusterPO.getTags())) {
-            String[] split = clusterPO.getTags().split(",");
-            return Arrays.stream(split).collect(Collectors.toList());
-        }
-        return Collections.emptyList();
-    }
 }

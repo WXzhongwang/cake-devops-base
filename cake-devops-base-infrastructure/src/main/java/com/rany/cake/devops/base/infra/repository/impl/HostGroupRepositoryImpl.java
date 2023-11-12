@@ -46,4 +46,9 @@ public class HostGroupRepositoryImpl implements HostGroupRepository {
     public void save(@NotNull HostGroup host) {
         hostGroupDao.save(host);
     }
+
+    @Override
+    public int update(HostGroup hostGroup) {
+        return hostGroupDao.update(hostGroup);
+    }
 }

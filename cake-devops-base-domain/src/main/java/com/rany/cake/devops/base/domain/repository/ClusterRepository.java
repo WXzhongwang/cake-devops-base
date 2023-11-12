@@ -13,4 +13,6 @@ import com.rany.cake.devops.base.domain.pk.ClusterId;
  * @email 18668485565163.com
  */
 public interface ClusterRepository extends Repository<Cluster, ClusterId> {
+
+    int update(Cluster cluster);
 }

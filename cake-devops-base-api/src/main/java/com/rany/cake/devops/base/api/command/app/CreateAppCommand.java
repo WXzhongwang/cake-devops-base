@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.command.app;
 
 import com.rany.cake.devops.base.api.common.base.DTO;
-import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,6 +28,6 @@ public class CreateAppCommand extends DTO {
     private String businessUnit;
     private String department;
     private List<AppMemberDTO> appMembers;
-    private List<AppEnvDTO> appEnvs;
+    // private List<AppEnvDTO> appEnvs;
     private String healthCheck;
 }

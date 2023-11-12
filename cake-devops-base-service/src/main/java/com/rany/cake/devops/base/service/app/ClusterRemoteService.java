@@ -1,9 +1,10 @@
 package com.rany.cake.devops.base.service.app;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.cluster.CreateClusterCommand;
 import com.rany.cake.devops.base.api.command.cluster.TestClusterConnectCommand;
+import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
+import com.rany.cake.devops.base.api.exception.DevOpsException;
 import com.rany.cake.devops.base.api.service.ClusterService;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
@@ -11,11 +12,10 @@ import com.rany.cake.devops.base.domain.enums.ClusterTypeEnum;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.service.ClusterDomainService;
 import com.rany.cake.devops.base.domain.type.ClusterName;
-import com.rany.cake.devops.base.service.exception.DevOpsErrorMessage;
-import com.rany.cake.devops.base.service.exception.DevOpsException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.dubbo.config.annotation.Service;
 
 /**
  * 集群相关
@@ -54,7 +54,7 @@ public class ClusterRemoteService implements ClusterService {
         cluster.setConnectionString(cluster.getConnectionString());
         cluster.setToken(cluster.getToken());
         cluster.setTags(cluster.getTags());
-        clusterDomainService.createCluster(cluster);
+        clusterDomainService.save(cluster);
         return PojoResult.succeed(cluster.getId().getId());
     }
 }

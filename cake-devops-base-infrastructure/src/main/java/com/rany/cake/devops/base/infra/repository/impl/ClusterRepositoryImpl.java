@@ -46,4 +46,9 @@ public class ClusterRepositoryImpl implements ClusterRepository {
     public void save(@NotNull Cluster app) {
         clusterDao.save(app);
     }
+
+    @Override
+    public int update(Cluster cluster) {
+        return clusterDao.update(cluster);
+    }
 }
