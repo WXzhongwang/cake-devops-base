@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * 封网插件
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 封网插件
  * @date 2023/1/20 20:30
  * @email 18668485565163.com
  */
@@ -19,7 +19,7 @@ public class DeploymentForbiddenPlugin extends BasePlugin {
 
     @Override
     public boolean init(DeployContext context) {
-        return false;
+        return true;
     }
 
     @Override

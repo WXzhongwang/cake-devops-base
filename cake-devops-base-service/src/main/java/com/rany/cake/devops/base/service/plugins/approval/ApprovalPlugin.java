@@ -20,7 +20,7 @@ public class ApprovalPlugin extends BasePlugin {
 
     @Override
     public boolean init(DeployContext context) {
-        return false;
+        return true;
     }
 
     @Override
