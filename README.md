@@ -20,6 +20,10 @@
 - [x] **kuboard**: 图形化管理工具 http://kuboard.cn
 - [x] **AliYun ACR容器镜像服务**: 容器镜像服务(镜像加速中心)https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
 
+## 远景
+
+![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/future.png)
+
 ## 向导
 
 ![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/img.png)
