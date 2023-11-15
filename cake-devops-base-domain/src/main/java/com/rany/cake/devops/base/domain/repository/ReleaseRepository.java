@@ -13,4 +13,7 @@ import com.rany.cake.devops.base.domain.pk.ReleaseId;
  * @email 18668485565163.com
  */
 public interface ReleaseRepository extends Repository<Release, ReleaseId> {
+
+    int update(Release release);
+
 }

@@ -24,7 +24,7 @@ public class ApprovalRemoteService implements ApprovalService {
     private final ApprovalDataAdapter approvalDataAdapter;
 
     @Override
-    public PojoResult<Long> createApprovalCommand(CreateApprovalCommand createApprovalCommand) {
+    public PojoResult<Long> createApproval(CreateApprovalCommand createApprovalCommand) {
         Approval approval = new Approval(new ApprovalId(snowflakeIdWorker.nextId()), createApprovalCommand.getDocAddress(),
                 createApprovalCommand.getChangeDate(),
                 ApprovalStatus.PENDING.name(),

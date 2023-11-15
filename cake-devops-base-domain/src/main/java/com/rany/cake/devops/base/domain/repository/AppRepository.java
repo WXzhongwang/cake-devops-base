@@ -17,4 +17,6 @@ public interface AppRepository extends Repository<App, AppId> {
     int update(App app);
 
     int saveAppEnv(AppEnv appEnv);
+
+    AppEnv getAppEnv(Long envId);
 }

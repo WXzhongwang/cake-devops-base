@@ -46,4 +46,9 @@ public class ReleaseRepositoryImpl implements ReleaseRepository {
     public void save(@NotNull Release release) {
         releaseDao.save(release);
     }
+
+    @Override
+    public int update(Release release) {
+        return releaseDao.update(release);
+    }
 }

@@ -16,6 +16,9 @@ public enum DevOpsErrorMessage {
 
     APP_NOT_FOUND("50000", "应用未找到"),
     CLUSTER_NOT_FOUND("50000", "集群未找到"),
+    ENV_NOT_FOUND("50000", "环境未找到"),
+    APPROVAL_NOT_FOUND("50000", "审批未找到"),
+    RELEASE_NOT_FOUND("50000", "发布未找到"),
     ENV_DUPLICATED("50000", "环境冲突"),
     OPS_SUPPORTED_ERROR("50001", "尚未支持的集群类型"),
     OPS_ENV_SUPPORTED_ERROR("50002", "尚未支持的环境标签"),

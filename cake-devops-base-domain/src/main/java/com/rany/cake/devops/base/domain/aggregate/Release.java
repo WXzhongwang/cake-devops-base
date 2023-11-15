@@ -32,8 +32,16 @@ public class Release extends BaseAggregateRoot implements IAggregate<ReleaseId> 
     private String releaseBranch;
     private String releaseCommitId;
     private String releaseVersion;
-    private String envName;
+    private Long envId;
     private String releaseStatus;
     private String rollback;
     private ReleaseId rollbackId;
+
+    public Release(ReleaseId id, AppId appId, Long envId, String releaseNo, Date releaseDate) {
+        this.id = id;
+        this.appId = appId;
+        this.envId = envId;
+        this.releaseNo = releaseNo;
+        this.releaseDate = releaseDate;
+    }
 }
