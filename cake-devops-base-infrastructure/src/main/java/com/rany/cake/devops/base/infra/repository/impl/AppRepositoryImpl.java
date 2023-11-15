@@ -9,6 +9,7 @@ import com.rany.cake.devops.base.infra.convertor.AppDataConvertor;
 import com.rany.cake.devops.base.infra.convertor.AppEnvDataConvertor;
 import com.rany.cake.devops.base.infra.dao.AppDao;
 import com.rany.cake.devops.base.infra.dao.AppEnvDao;
+import com.rany.cake.devops.base.infra.mapper.AppEnvPOMapper;
 import com.rany.cake.devops.base.infra.mapper.AppPOMapper;
 import com.rany.cake.devops.base.infra.po.AppEnvPO;
 import com.rany.cake.devops.base.infra.po.AppPO;
@@ -33,6 +34,7 @@ public class AppRepositoryImpl implements AppRepository {
     private final AppPOMapper appPOMapper;
     private final AppDao appDao;
     private final AppEnvDao appEnvDao;
+    private final AppEnvPOMapper appEnvPOMapper;
     private final AppDataConvertor appDataConvertor;
     private final AppEnvDataConvertor appEnvDataConvertor;
 
@@ -66,5 +68,11 @@ public class AppRepositoryImpl implements AppRepository {
     @Override
     public int saveAppEnv(AppEnv appEnv) {
         return appEnvDao.save(appEnv);
+    }
+
+    @Override
+    public AppEnv getAppEnv(Long envId) {
+        AppEnvPO appEnvPO = appEnvPOMapper.selectByPrimaryKey(envId);
+        return appEnvDataConvertor.targetToSource(appEnvPO);
     }
 }

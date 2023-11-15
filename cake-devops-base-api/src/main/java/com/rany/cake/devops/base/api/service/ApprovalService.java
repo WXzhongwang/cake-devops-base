@@ -14,7 +14,7 @@ public interface ApprovalService {
      * @param createApprovalCommand
      * @return
      */
-    PojoResult<Long> createApprovalCommand(CreateApprovalCommand createApprovalCommand);
+    PojoResult<Long> createApproval(CreateApprovalCommand createApprovalCommand);
 
     /**
      * 获取审批单信息
