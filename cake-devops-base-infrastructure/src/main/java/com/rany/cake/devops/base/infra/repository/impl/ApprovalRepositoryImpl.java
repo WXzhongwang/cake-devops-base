@@ -46,4 +46,9 @@ public class ApprovalRepositoryImpl implements ApprovalRepository {
     public void save(@NotNull Approval approval) {
         approvalDao.save(approval);
     }
+
+    @Override
+    public int update(Approval approval) {
+        return approvalDao.update(approval);
+    }
 }

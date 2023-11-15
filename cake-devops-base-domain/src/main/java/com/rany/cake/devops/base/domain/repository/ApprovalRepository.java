@@ -13,4 +13,6 @@ import com.rany.cake.devops.base.domain.pk.ApprovalId;
  * @email 18668485565163.com
  */
 public interface ApprovalRepository extends Repository<Approval, ApprovalId> {
+
+    int update(Approval approval);
 }
