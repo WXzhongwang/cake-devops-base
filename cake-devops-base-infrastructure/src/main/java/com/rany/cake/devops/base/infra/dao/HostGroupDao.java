@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
+import com.rany.cake.devops.base.infra.po.HostGroupPO;
 
 /**
  * 主机组
@@ -29,5 +30,7 @@ public interface HostGroupDao {
      * @return
      */
     int update(HostGroup hostGroup);
+
+    HostGroupPO getPackagingGroup();
 
 }

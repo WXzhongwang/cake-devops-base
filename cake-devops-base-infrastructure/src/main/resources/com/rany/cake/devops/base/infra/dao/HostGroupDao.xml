@@ -58,4 +58,12 @@
         </set>
         where id = #{id.id,jdbcType=BIGINT}
     </update>
+
+    <select id="getPackagingGroup" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host_group
+        where name = 'package'
+        limit 1
+    </select>
 </mapper>

@@ -14,5 +14,7 @@ import com.rany.cake.devops.base.domain.pk.HostGroupId;
  */
 public interface HostGroupRepository extends Repository<HostGroup, HostGroupId> {
     int update(HostGroup hostGroup);
+
+    HostGroup getPackagingGroup();
 }
 

@@ -1,11 +1,16 @@
 package com.rany.cake.devops.base.domain.service;
 
 import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.domain.aggregate.HostGroup;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.HostGroupRepository;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 主机
@@ -21,6 +26,15 @@ public class HostDomainService {
     private final HostRepository hostRepository;
     private final HostGroupRepository hostGroupRepository;
 
+    public List<Host> getPackageMachineList() {
+        HostGroup packagingGroup = hostGroupRepository.getPackagingGroup();
+        if (packagingGroup == null) {
+            return Collections.emptyList();
+        }
+        ArrayList<Long> groupIds = new ArrayList<>();
+        groupIds.add(packagingGroup.getId().getId());
+        return hostRepository.getHostsByGroupIds(groupIds);
+    }
 
     /**
      * 创建主机

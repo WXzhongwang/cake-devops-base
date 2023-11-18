@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.service.adapter;
 import com.rany.cake.devops.base.api.dto.HostDTO;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
+import com.rany.cake.devops.base.service.plugins.machine.Machine;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -45,4 +46,10 @@ public interface HostDataAdapter extends BaseConvertor<Host, HostDTO> {
 
     @InheritConfiguration(name = "targetToSource")
     List<Host> targetToSource(List<HostDTO> hostDTO);
+
+
+    Machine sourceToMachine(Host host);
+
+    @InheritConfiguration(name = "sourceToMachine")
+    List<Machine> sourceToMachine(List<Host> hosts);
 }

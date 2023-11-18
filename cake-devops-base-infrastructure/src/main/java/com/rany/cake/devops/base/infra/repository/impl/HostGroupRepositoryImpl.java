@@ -51,4 +51,10 @@ public class HostGroupRepositoryImpl implements HostGroupRepository {
     public int update(HostGroup hostGroup) {
         return hostGroupDao.update(hostGroup);
     }
+
+    @Override
+    public HostGroup getPackagingGroup() {
+        HostGroupPO packagingGroup = hostGroupDao.getPackagingGroup();
+        return hostGroupDataConvertor.targetToSource(packagingGroup);
+    }
 }

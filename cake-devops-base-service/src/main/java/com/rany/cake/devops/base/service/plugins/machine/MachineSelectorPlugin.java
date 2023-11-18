@@ -1,6 +1,8 @@
 package com.rany.cake.devops.base.service.plugins.machine;
 
+import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
+import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 打包机器选择
@@ -23,6 +26,8 @@ public class MachineSelectorPlugin extends BasePlugin {
     @Resource
     private HostDomainService hostDomainService;
     @Resource
+    private HostDataAdapter hostDataAdapter;
+    @Resource
     @Lazy
     @Qualifier("${devops.package.balancer:random}")
     private MachineSelectLoadBalance machineSelector;
@@ -34,11 +39,13 @@ public class MachineSelectorPlugin extends BasePlugin {
 
     @Override
     public boolean execute(DeployContext context) {
-        // machineSelector.doSelect()
-        // TODO: 从打包机器选择最不忙碌的机器
-        this.putArg(RunningConstant.BUILDER_IP, "127.0.0.1");
-        this.putArg(RunningConstant.BUILDER_REMOTE_USER, "zhongshengwang");
-        this.putArg(RunningConstant.BUILDER_REMOTE_PWD, "xxx");
+        List<Host> packageMachineList = hostDomainService.getPackageMachineList();
+        List<Machine> machines = hostDataAdapter.sourceToMachine(packageMachineList);
+        Machine machine = machineSelector.doSelect(machines, context);
+        this.putArg(RunningConstant.BUILDER_IP, machine.getHostName());
+        this.putArg(RunningConstant.BUILDER_PORT, machine.getPort());
+        this.putArg(RunningConstant.BUILDER_REMOTE_USER, machine.getUsername());
+        this.putArg(RunningConstant.BUILDER_REMOTE_PWD, machine.getPkey());
         return true;
     }
 }

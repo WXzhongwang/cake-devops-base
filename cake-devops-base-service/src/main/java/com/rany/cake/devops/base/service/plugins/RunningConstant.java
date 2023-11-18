@@ -6,6 +6,7 @@ public class RunningConstant {
      * 打包机器IP
      */
     public static final String BUILDER_IP = "builder_ip";
+    public static final String BUILDER_PORT = "builder_port";
     public static final String BUILDER_REMOTE_USER = "builder_remote_user";
     public static final String BUILDER_REMOTE_PWD = "builder_remote_password";
     /**
