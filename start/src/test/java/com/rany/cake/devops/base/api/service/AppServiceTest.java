@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.rany.cake.devops.base.BaseTests;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
-import com.rany.cake.devops.base.domain.base.TenantConfig;
+import com.rany.cake.devops.base.domain.base.AppConfig;
 import com.rany.cake.devops.base.domain.enums.AppRoleEnum;
 import com.rany.cake.devops.base.domain.enums.CodeLanguageEnum;
 import com.rany.cake.devops.base.domain.enums.DevelopMode;
@@ -29,7 +29,7 @@ public class AppServiceTest extends BaseTests {
     private AppService appService;
 
     @Resource
-    private TenantConfig tenantConfig;
+    private AppConfig tenantConfig;
 
     public static final Long ACCOUNT_ID = 781488231601549312L;
 

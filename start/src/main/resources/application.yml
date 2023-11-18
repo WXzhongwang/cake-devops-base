@@ -61,5 +61,19 @@ mybatis:
   mapper-locations: classpath:com/rany/cake/devops/base/infra/mapper/*.xml, classpath:com/rany/cake/devops/base/domain/dao/*.xml
   type-aliases-package: com.rany.cake.devops.base.infra, com.rany.cake.devops.base.domain
 
-uic:
-  tenantId: 768821467507994624
+devops:
+  app:
+    tenantId: 768821467507994624
+  cr:
+    channel: harbor # 支持harbor或者阿里云acr
+    harbor:
+      harborUrl:
+      harborUser:
+      harborPassword:
+    aliyun:
+      instanceId:
+      region:
+      accessKey:
+      secretKey:
+
+

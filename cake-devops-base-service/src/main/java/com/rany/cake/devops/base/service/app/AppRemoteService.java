@@ -15,8 +15,8 @@ import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
+import com.rany.cake.devops.base.domain.base.AppConfig;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
-import com.rany.cake.devops.base.domain.base.TenantConfig;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
 import com.rany.cake.devops.base.domain.enums.AppRoleEnum;
@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @AllArgsConstructor
 public class AppRemoteService implements AppService {
-    private final TenantConfig tenantConfig;
+    private final AppConfig tenantConfig;
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final AccountFacade accountFacade;
     private final AppMemberDomainService appMemberDomainService;

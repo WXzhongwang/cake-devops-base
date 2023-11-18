@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.domain.base;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -14,8 +14,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-public class TenantConfig {
-
-    @Value("${uic.tenantId}")
+@ConfigurationProperties(prefix = "devops.app")
+public class AppConfig {
     private Long tenantId;
+
+
 }
