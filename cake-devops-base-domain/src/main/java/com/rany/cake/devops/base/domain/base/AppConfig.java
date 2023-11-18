@@ -17,6 +17,4 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "devops.app")
 public class AppConfig {
     private Long tenantId;
-
-
 }

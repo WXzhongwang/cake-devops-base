@@ -106,6 +106,12 @@
             <artifactId>jsch</artifactId>
             <version>0.1.55</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>alibabacloud-cr20181201</artifactId>
+            <version>0.0.4</version>
+        </dependency>
     </dependencies>
 
 

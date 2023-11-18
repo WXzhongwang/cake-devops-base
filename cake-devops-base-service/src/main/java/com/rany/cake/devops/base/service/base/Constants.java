@@ -23,6 +23,8 @@ public final class Constants {
     public static final Integer DEFAULT_SERVER_PORT = 7100;
     public static final String DEFAULT_NAMESPACE_PREFIX = "cake-";
     public static final String USER_HOME_DIR = "/home/admin";
-
-
+    /**
+     * 打包主机组名称，不存在会创建改组
+     */
+    public static final String DEFAULT_GROUP_NAME = "package";
 }

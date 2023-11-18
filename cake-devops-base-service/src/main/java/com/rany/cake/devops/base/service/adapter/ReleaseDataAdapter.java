@@ -25,6 +25,9 @@ public interface ReleaseDataAdapter extends BaseConvertor<Release, ReleaseDTO> {
      * @return PO
      */
     @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "appId.id", target = "appId")
+    @Mapping(source = "approvalId.id", target = "approvalId")
+    @Mapping(source = "rollbackId.id", target = "rollbackId")
     ReleaseDTO sourceToTarget(Release release);
 
     /**
@@ -35,5 +38,8 @@ public interface ReleaseDataAdapter extends BaseConvertor<Release, ReleaseDTO> {
      */
 
     @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "appId.id", source = "appId")
+    @Mapping(target = "approvalId.id", source = "approvalId")
+    @Mapping(target = "rollbackId.id", source = "rollbackId")
     Release targetToSource(ReleaseDTO releaseDTO);
 }

@@ -24,6 +24,7 @@ public class CrConfig {
     public static class AliyunConf {
         private String instanceId;
         private String region;
+        private String namespace;
         private String accessKey;
         private String secretKey;
     }

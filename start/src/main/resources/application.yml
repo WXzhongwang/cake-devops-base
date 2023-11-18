@@ -64,6 +64,8 @@ mybatis:
 devops:
   app:
     tenantId: 768821467507994624
+  package:
+    balancer: random
   cr:
     channel: harbor # 支持harbor或者阿里云acr
     harbor:
