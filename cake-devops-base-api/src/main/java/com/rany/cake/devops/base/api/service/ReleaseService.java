@@ -2,7 +2,10 @@ package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
+<<<<<<< HEAD
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
+=======
+>>>>>>> origin/main
 
 /**
  * 发布
@@ -17,6 +20,7 @@ public interface ReleaseService {
     /**
      * 创建一次发布
      *
+<<<<<<< HEAD
      * @param createReleaseCommand 创建发布
      * @return 是否成功
      */
@@ -29,4 +33,10 @@ public interface ReleaseService {
      * @return
      */
     PojoResult<Boolean> deploy(DeployCommand deployCommand);
+=======
+     * @param createReleaseCommand
+     * @return
+     */
+    PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand);
+>>>>>>> origin/main
 }
