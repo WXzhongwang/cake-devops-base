@@ -42,11 +42,6 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      * 应用名
      */
     private AppName appName;
-
-    /**
-     * 唯一标识
-     */
-    private String uniqueNo;
     /**
      * 应用描述
      */

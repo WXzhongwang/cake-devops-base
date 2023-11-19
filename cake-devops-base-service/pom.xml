@@ -90,6 +90,13 @@
             <version>16.0.2</version>
         </dependency>
 
+        <!--        <dependency>-->
+        <!--            <groupId>io.fabric8</groupId>-->
+        <!--            <artifactId>kubernetes-client</artifactId>-->
+        <!--            <version>5.3.1</version> &lt;!&ndash; 根据最新版本更新 &ndash;&gt;-->
+        <!--        </dependency>-->
+
+
         <dependency>
             <groupId>com.rany.uic</groupId>
             <artifactId>uic-api</artifactId>

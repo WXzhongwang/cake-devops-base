@@ -1,8 +1,9 @@
 package com.rany.cake.devops.base.service.context;
 
 import com.rany.cake.devops.base.domain.aggregate.App;
+import com.rany.cake.devops.base.domain.aggregate.Cluster;
+import com.rany.cake.devops.base.domain.aggregate.Namespace;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
-import com.rany.cake.devops.base.domain.enums.DeployStageEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -23,32 +24,33 @@ public class DeployContext implements Serializable {
     private App app;
 
     /**
-     * 发布阶段
+     * 发布集群
      */
-    private DeployStageEnum stage;
+    private Cluster cluster;
+    /**
+     * 发布namespace
+     */
+    private Namespace namespace;
+    /**
+     * 发布deploymentName
+     */
+    private String deploymentName;
+    /**
+     * 发布服务名
+     */
+    private String serviceName;
+    private Integer servicePort;
+    private Integer containerPort;
+
     /**
      * 发布环境
      */
     private AppEnv appEnv;
-    /**
-     * 预计部署分支
-     */
-    private String branch;
-
-    /**
-     * 实际审批执行人
-     */
-    private String approval;
 
     /**
      * 实际部署物镜像地址
      */
     private String deploymentImage;
-    /**
-     * agentImage
-     */
-    private String agentImage;
-
     /**
      * 当前插件名
      */
@@ -58,15 +60,4 @@ public class DeployContext implements Serializable {
      * 执行过的插件列表
      */
     private List<String> pluginNames = new ArrayList<>();
-
-
-    /**
-     * 审批单，线上发布需要审批单
-     */
-    private String approvalNumber;
-
-    /**
-     * 构建结构dingtalk通知
-     */
-    private String dingtalkWebhook;
 }

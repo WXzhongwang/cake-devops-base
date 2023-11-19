@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 应用部署环境
@@ -29,6 +30,8 @@ public class AppEnv extends BaseEntity<Long> {
     private String envName;
     private AppEnvEnum env;
     private List<String> domains;
+
+    private Map<String, String> configMap;
     /**
      * 环境资源策略
      */
