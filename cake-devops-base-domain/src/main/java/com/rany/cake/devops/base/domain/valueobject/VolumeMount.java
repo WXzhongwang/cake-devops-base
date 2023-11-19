@@ -16,6 +16,16 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class VolumeMount extends BaseValueObject {
 
+    /**
+     * 数据卷名称
+     */
     private String name;
+    /**
+     * 主机路径
+     */
     private String path;
+    /**
+     * 挂载路径
+     */
+    private String mountPath;
 }

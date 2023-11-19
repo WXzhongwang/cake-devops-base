@@ -17,20 +17,29 @@ import lombok.EqualsAndHashCode;
 public class ResourceStrategy extends BaseValueObject {
 
     /**
-     * 最大副本数
+     * 副本数
      */
-    private Integer maxReplicas;
+    private Integer replicas;
     /**
      * cpu资源
      */
-    private Double cpu;
+    private String cpu;
     /**
      * 内存资源
      */
-    private Double memory;
+    private String memory;
 
-    public ResourceStrategy(Integer maxReplicas, Double cpu, Double memory) {
-        this.maxReplicas = maxReplicas;
+    /**
+     * cpu资源
+     */
+    private String maxCpu;
+    /**
+     * 内存资源
+     */
+    private String maxMemory;
+
+    public ResourceStrategy(Integer replicas, String cpu, String memory) {
+        this.replicas = replicas;
         this.cpu = cpu;
         this.memory = memory;
     }

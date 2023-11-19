@@ -1,7 +1,11 @@
 package com.rany.cake.devops.base.service.cloud;
 
 import com.rany.cake.devops.base.domain.type.AppName;
+import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
+import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
 import com.rany.cake.devops.base.service.context.DeployContext;
+import io.kubernetes.client.custom.IntOrString;
+import io.kubernetes.client.custom.Quantity;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.models.*;
 import io.kubernetes.client.util.ClientBuilder;
@@ -10,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * TODO
@@ -117,11 +118,19 @@ public abstract class BaseCloudService {
      */
     public abstract boolean updateConfigMap(DeployContext context);
 
-    protected V1Deployment createSampleDeployment(DeployContext context) {
+    public abstract boolean createIngress(DeployContext context);
+
+    public abstract boolean deleteIngress(DeployContext context);
+
+    protected V1Deployment createBasicDeployment(DeployContext context) {
         AppName appName = context.getApp().getAppName();
+        String healthCheck = context.getApp().getHealthCheck();
         Map<String, String> configMap = context.getAppEnv().getConfigMap();
+        List<VolumeMount> volumeMounts = context.getApp().getVolumeMounts();
         String envName = context.getAppEnv().getEnvName();
+        ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
         String configMapName = String.format("%s-%s", appName, envName);
+        // 配置configMap
         List<V1EnvVar> configMapValues = new ArrayList<>();
         if (configMap != null && !configMap.isEmpty()) {
             for (Map.Entry<String, String> entry : configMap.entrySet()) {
@@ -134,11 +143,38 @@ public abstract class BaseCloudService {
                 configMapValues.add(envVar);
             }
         }
+        // 设置资源
+        Map<String, Quantity> request = new HashMap<>();
+        request.put("cpu", new Quantity(resourceStrategy.getCpu()));
+        request.put("memory", new Quantity(resourceStrategy.getMemory()));
+        Map<String, Quantity> limit = new HashMap<>();
+        limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
+        limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
+        V1ResourceRequirements requirements = new V1ResourceRequirements()
+                .limits(request)
+                .requests(limit);
+
+        List<V1Volume> dataVolumes = new ArrayList<>();
+        List<V1VolumeMount> dataMounts = new ArrayList<>();
+        for (VolumeMount volumeMount : volumeMounts) {
+            // 创建 Volume 对象
+            V1Volume volume = new V1Volume()
+                    .name(volumeMount.getName())
+                    .hostPath(new V1HostPathVolumeSource().path(volumeMount.getPath()));
+            dataVolumes.add(volume);
+
+            // 创建 VolumeMount 挂载对象
+            V1VolumeMount mount = new V1VolumeMount()
+                    .name(volumeMount.getName())
+                    .mountPath(volumeMount.getMountPath());
+            dataMounts.add(mount);
+        }
+
         // 创建一个简单的 Deployment 对象
         return new V1Deployment()
                 .metadata(new V1ObjectMeta().name(context.getDeploymentName()))
                 .spec(new V1DeploymentSpec()
-                        .replicas(1)
+                        .replicas(resourceStrategy.getReplicas())
                         .selector(new V1LabelSelector().matchLabels(Collections.singletonMap("app", appName.getName())))
                         .template(new V1PodTemplateSpec()
                                 .metadata(new V1ObjectMeta().labels(Collections.singletonMap("app", appName.getName())))
@@ -149,7 +185,24 @@ public abstract class BaseCloudService {
                                                         .name(appName.getName())
                                                         .image(context.getDeploymentImage())
                                                         .env(configMapValues)
-                                        ))
+                                                        .resources(requirements)
+                                                        .ports(Collections.singletonList(new V1ContainerPort().containerPort(context.getContainerPort())))
+                                                        // 存活性探针（Liveness Probe）
+                                                        // 存活性探针用于确定容器是否存活。如果存活性探针失败，Kubernetes 将尝试重新启动容器。
+                                                        .livenessProbe(
+                                                                new V1Probe()
+                                                                        .httpGet(new V1HTTPGetAction()
+                                                                                .path(healthCheck)
+                                                                                // 替换为你的健康检查路径
+                                                                                .port(new IntOrString(context.getContainerPort())))
+                                                                        .initialDelaySeconds(3)  // 初始延迟
+                                                                        .periodSeconds(3)  // 探测周期
+                                                                        .timeoutSeconds(1)  // 超时时间
+                                                                        .successThreshold(1)  // 成功阈值
+                                                                        .failureThreshold(3)  // 失败阈值
+                                                        )
+                                                        .volumeMounts(dataMounts)
+                                        )).volumes(dataVolumes)
                                 )
                         )
                 );

@@ -6,10 +6,13 @@ import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.apis.AppsV1Api;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
+import io.kubernetes.client.openapi.apis.NetworkingV1Api;
 import io.kubernetes.client.openapi.models.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +34,7 @@ public class K8sCloudService extends BaseCloudService {
     public boolean createDeployment(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
         // 创建 Deployment
-        V1Deployment deployment = createSampleDeployment(context);
+        V1Deployment deployment = createBasicDeployment(context);
         try {
             AppsV1Api apiInstance = new AppsV1Api(apiClient);
             apiInstance.createNamespacedDeployment(namespace, deployment, null, null, null, null);
@@ -181,6 +184,64 @@ public class K8sCloudService extends BaseCloudService {
             return true;
         } catch (ApiException e) {
             log.error("Failed to update ConfigMap.", e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean createIngress(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        List<String> domains = context.getAppEnv().getDomains();
+        List<V1IngressRule> rules = new ArrayList<>();
+        for (String domain : domains) {
+            V1IngressRule http = new V1IngressRule()
+                    .host(domain)  // 替换为你的域名
+                    .http(new V1HTTPIngressRuleValue()
+                            .addPathsItem(
+                                    new V1HTTPIngressPath()
+                                            .backend(
+                                                    new V1IngressBackend()
+                                                            .service(
+                                                                    new V1IngressServiceBackend()
+                                                                            .name(context.getServiceName())
+                                                                            .port(new V1ServiceBackendPort()
+                                                                                    .number(context.getServicePort())))
+                                            ).path("/")
+                            )
+
+                    );
+            rules.add(http);
+        }
+        try {
+            NetworkingV1Api networkingV1Api = new NetworkingV1Api(apiClient);
+            // 创建 Ingress 对象
+            V1Ingress ingress = new V1Ingress()
+                    .apiVersion("networking.k8s.io/v1")
+                    .kind("Ingress")
+                    .metadata(new V1ObjectMeta().name(context.getIngressName()))
+                    .spec(new V1IngressSpec().rules(rules));
+
+            // 调用 Kubernetes API 创建 Ingress
+            networkingV1Api.createNamespacedIngress(namespace, ingress, null, null, null, null);
+            log.info("Ingress created successfully.");
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to create Ingress: " + e.getResponseBody());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteIngress(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        try {
+            NetworkingV1Api networkingV1Api = new NetworkingV1Api(apiClient);
+            // 调用 Kubernetes API 删除 Ingress
+            networkingV1Api.deleteNamespacedIngress(context.getIngressName(), namespace, null, null, null, null, null, null);
+            log.info("Ingress deleted successfully.");
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to delete Ingress: " + e.getResponseBody());
             return false;
         }
     }

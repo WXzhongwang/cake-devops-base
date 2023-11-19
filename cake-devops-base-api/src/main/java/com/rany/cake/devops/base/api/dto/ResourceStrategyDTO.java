@@ -23,9 +23,9 @@ public class ResourceStrategyDTO extends DTO {
     /**
      * cpu资源
      */
-    private Double cpu;
+    private String cpu;
     /**
      * 内存资源
      */
-    private Double memory;
+    private String memory;
 }

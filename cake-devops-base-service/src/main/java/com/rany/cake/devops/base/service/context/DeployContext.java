@@ -39,8 +39,18 @@ public class DeployContext implements Serializable {
      * 发布服务名
      */
     private String serviceName;
+    /**
+     * 服务端口
+     */
     private Integer servicePort;
+    /**
+     * 容器端口
+     */
     private Integer containerPort;
+    /**
+     * ingress名称
+     */
+    private String ingressName;
 
     /**
      * 发布环境
