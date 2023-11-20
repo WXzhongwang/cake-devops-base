@@ -53,6 +53,15 @@ public abstract class BaseCloudService {
         this.apiClient = Config.fromToken(connectionString, token, false);
     }
 
+
+    /**
+     * 测试连接
+     *
+     * @param context 上下文信息
+     * @return 是否成功
+     */
+    public abstract boolean testConnection(DeployContext context);
+
     /**
      * createDeployment
      *

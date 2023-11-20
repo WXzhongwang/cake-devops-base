@@ -31,6 +31,34 @@ public class K8sCloudService extends BaseCloudService {
     }
 
     @Override
+    public boolean testConnection(DeployContext context) {
+        try {
+            // 创建 CoreV1Api 实例
+            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+
+            // 获取所有 Pods 列表
+            V1PodList podList = coreV1Api.listPodForAllNamespaces(true,
+                    null, null, null, null, null, null, null, null, null);
+            if (podList == null) {
+                log.error("Failed to list pods.");
+                return false;
+            }
+            // 打印 Pod 信息
+            for (V1Pod pod : podList.getItems()) {
+                System.out.println("Pod Name: " + Objects.requireNonNull(pod.getMetadata()).getName());
+                System.out.println("Namespace: " + pod.getMetadata().getNamespace());
+                System.out.println("Status: " + Objects.requireNonNull(pod.getStatus()).getPhase());
+                System.out.println("--------------------------------");
+            }
+            return !podList.getItems().isEmpty();
+        } catch (ApiException e) {
+            log.error("Failed to list pods.", e);
+            return false;
+        }
+
+    }
+
+    @Override
     public boolean createDeployment(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
         // 创建 Deployment
