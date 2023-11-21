@@ -71,6 +71,14 @@ public abstract class BaseCloudService {
     public abstract boolean createDeployment(DeployContext context);
 
     /**
+     * 扩缩容
+     *
+     * @param context 上下文信息
+     * @return 是否成功
+     */
+    public abstract boolean scaleDeployment(DeployContext context);
+
+    /**
      * deleteDeployment
      *
      * @param context 上下文信息

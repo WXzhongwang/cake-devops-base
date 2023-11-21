@@ -74,6 +74,57 @@ public class K8sCloudService extends BaseCloudService {
         }
     }
 
+
+    @Override
+    public boolean scaleDeployment(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
+        Integer replicas = resourceStrategy.getReplicas();
+        try {
+            AppsV1Api apiInstance = new AppsV1Api(apiClient);
+
+            V1Scale scale = new V1Scale()
+                    .spec(new V1ScaleSpec().replicas(replicas));
+            apiInstance.replaceNamespacedDeploymentScale(context.getDeploymentName(), namespace, scale, null, null, null, null);
+            log.info("Deployment scaled to replicas: " + replicas);
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to scale Deployment.", e);
+            return false;
+        }
+    }
+
+
+    public boolean rollbackDeployment(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        String deploymentName = context.getDeploymentName();
+        AppsV1Api apiInstance = new AppsV1Api(apiClient);
+
+//        try {
+//            // 获取要回滚的 Deployment 的当前版本号
+//            V1Deployment currentDeployment = apiInstance.readNamespacedDeployment(context.getDeploymentName(), namespace, null);
+//            String currentRevision = currentDeployment.getMetadata().getAnnotations().get("deployment.kubernetes.io/revision");
+//
+//            // 创建新的 Deployment 对象，回滚到上一个版本
+//            V1Deployment newDeployment = new V1Deployment()
+//                    .metadata(new V1ObjectMeta().name(deploymentName))
+//                    .spec(new V1DeploymentSpec()
+//                            // 设置其他 Deployment 配置...
+//                            .template(currentDeployment.getSpec().getTemplate())
+//                    );
+//
+//            // 替换现有的 Deployment 对象
+//            apiInstance.replaceNamespacedDeployment(deploymentName, namespace, newDeployment, null, null, null, null);
+//            log.info("Deployment rolled back successfully.");
+//            return true;
+//        } catch (ApiException e) {
+//            log.error("Failed to rollback Deployment.", e);
+//            return false;
+//        }
+        return true;
+    }
+
+
     @Override
     public boolean deleteDeployment(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
