@@ -8,7 +8,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 上下文参数
@@ -70,4 +72,11 @@ public class DeployContext implements Serializable {
      * 执行过的插件列表
      */
     private List<String> pluginNames = new ArrayList<>();
+
+
+    private Map<String, Object> argMap = new HashMap<>();
+
+    public void putArg(String key, Object value) {
+        argMap.put(key, value);
+    }
 }

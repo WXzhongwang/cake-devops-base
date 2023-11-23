@@ -22,9 +22,9 @@ public class SonarQubePlugin extends BasePlugin {
 
     @Override
     public boolean execute(DeployContext context) {
-        this.putArg(RunningConstant.SONAR_ADDRESS_URL, "http://127.0.0.1:9000");
-        this.putArg(RunningConstant.SONAR_LOGIN, "admin");
-        this.putArg(RunningConstant.SONAR_PWD, "123456789");
+        context.putArg(RunningConstant.SONAR_ADDRESS_URL, "http://127.0.0.1:9000");
+        context.putArg(RunningConstant.SONAR_LOGIN, "admin");
+        context.putArg(RunningConstant.SONAR_PWD, "123456789");
         return true;
     }
 }

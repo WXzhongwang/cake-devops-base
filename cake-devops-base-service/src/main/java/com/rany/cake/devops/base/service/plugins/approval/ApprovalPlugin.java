@@ -25,10 +25,10 @@ public class ApprovalPlugin extends BasePlugin {
 
     @Override
     public boolean execute(DeployContext context) {
-        this.putArg(RunningConstant.APPROVAL_CHECK_REQUIRED, Boolean.FALSE);
+        context.putArg(RunningConstant.APPROVAL_CHECK_REQUIRED, Boolean.FALSE);
         if (context.getAppEnv().getEnv().equals(AppEnvEnum.PROD)) {
-            this.putArg(RunningConstant.APPROVAL_CHECK_REQUIRED, Boolean.TRUE);
-            this.putArg(RunningConstant.APPROVAL_CHECK_ADDRESS,
+            context.putArg(RunningConstant.APPROVAL_CHECK_REQUIRED, Boolean.TRUE);
+            context.putArg(RunningConstant.APPROVAL_CHECK_ADDRESS,
                     String.format(RunningConstant.APPROVAL_CURL_ADDRESS,
                             context.getApp().getId().getId()));
         }

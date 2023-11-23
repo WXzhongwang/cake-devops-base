@@ -21,7 +21,7 @@ public class DingtalkNotifyPlugin extends BasePlugin {
 
     @Override
     public boolean execute(DeployContext context) {
-        this.putArg(RunningConstant.DING_WEBHOOK_URL, "http://xxxxx?access_token=xxx");
+        context.putArg(RunningConstant.DING_WEBHOOK_URL, "http://xxxxx?access_token=xxx");
         return true;
     }
 }

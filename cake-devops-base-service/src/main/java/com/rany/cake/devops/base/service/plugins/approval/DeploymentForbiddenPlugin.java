@@ -28,10 +28,10 @@ public class DeploymentForbiddenPlugin extends BasePlugin {
     public boolean execute(DeployContext context) {
         Long appId = context.getApp().getId().getId();
         // 线上应用处理存在封网校验
-        this.putArg(RunningConstant.FORBIDDEN_CHECK_REQUIRED, Boolean.FALSE);
+        context.putArg(RunningConstant.FORBIDDEN_CHECK_REQUIRED, Boolean.FALSE);
         if (Objects.equals(context.getAppEnv().getEnv(), AppEnvEnum.PROD)) {
-            this.putArg(RunningConstant.FORBIDDEN_CHECK_REQUIRED, Boolean.TRUE);
-            this.putArg(RunningConstant.FORBIDDEN_CHECK_ADDRESS,
+            context.putArg(RunningConstant.FORBIDDEN_CHECK_REQUIRED, Boolean.TRUE);
+            context.putArg(RunningConstant.FORBIDDEN_CHECK_ADDRESS,
                     String.format(RunningConstant.FORBIDDEN_CURL_ADDRESS, appId));
         }
         if (context.getAppEnv().getEnv() != AppEnvEnum.PROD) {
