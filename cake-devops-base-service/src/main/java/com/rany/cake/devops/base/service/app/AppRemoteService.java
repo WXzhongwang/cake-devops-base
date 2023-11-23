@@ -79,8 +79,7 @@ public class AppRemoteService implements AppService {
                 EnumUtils.getEnum(CodeLanguageEnum.class, createAppCommand.getLanguage()),
                 EnumUtils.getEnum(DevelopMode.class, createAppCommand.getDevelopMode()));
 
-        app.setBusinessOwnership(new BusinessOwnership(createAppCommand.getBusinessUnit(),
-                createAppCommand.getBusinessUnit(),
+        app.setBusinessOwnership(new BusinessOwnership(createAppCommand.getDepartmentAbbreviation(),
                 createAppCommand.getDepartment()));
         app.setHealthCheck(createAppCommand.getHealthCheck());
 

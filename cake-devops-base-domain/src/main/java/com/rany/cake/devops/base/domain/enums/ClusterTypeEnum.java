@@ -14,8 +14,8 @@ import lombok.Getter;
 public enum ClusterTypeEnum {
 
     K8S(1, "k8s"),
-    ALIYUN(2, "阿里云容器服务"),
-    TENCENT(3, "腾讯云容器服务"),
+    ALIYUN(2, "阿里云"),
+    TENCENT(3, "腾讯云"),
     ;
 
     private Integer code;

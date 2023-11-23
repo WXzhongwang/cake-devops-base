@@ -25,7 +25,7 @@ public class CreateAppCommand extends DTO {
     private String language;
     private String developMode;
     private Long owner;
-    private String businessUnit;
+    private String departmentAbbreviation;
     private String department;
     private List<AppMemberDTO> appMembers;
     // private List<AppEnvDTO> appEnvs;

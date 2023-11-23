@@ -6,6 +6,8 @@ import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 /**
  * 封网插件
  *
@@ -24,17 +26,16 @@ public class DeploymentForbiddenPlugin extends BasePlugin {
 
     @Override
     public boolean execute(DeployContext context) {
+        Long appId = context.getApp().getId().getId();
         // 线上应用处理存在封网校验
         this.putArg(RunningConstant.FORBIDDEN_CHECK_REQUIRED, Boolean.FALSE);
-        if (context.getAppEnv().equals(AppEnvEnum.PROD)) {
+        if (Objects.equals(context.getAppEnv().getEnv(), AppEnvEnum.PROD)) {
             this.putArg(RunningConstant.FORBIDDEN_CHECK_REQUIRED, Boolean.TRUE);
             this.putArg(RunningConstant.FORBIDDEN_CHECK_ADDRESS,
-                    String.format(RunningConstant.FORBIDDEN_CURL_ADDRESS, context.getApprovalNumber()));
+                    String.format(RunningConstant.FORBIDDEN_CURL_ADDRESS, appId));
         }
-
         if (context.getAppEnv().getEnv() != AppEnvEnum.PROD) {
-            // 时间校验
-            return false;
+
         }
         return true;
     }

@@ -21,14 +21,9 @@ import lombok.NoArgsConstructor;
 public class BusinessOwnership extends BaseValueObject {
 
     /**
-     * bu
+     * 部门缩写
      */
-    private String businessUnit;
-
-    /**
-     * bu缩写
-     */
-    private String bu;
+    private String departmentAbbreviation;
 
     /**
      * 部门

@@ -47,7 +47,7 @@ public interface HostDataAdapter extends BaseConvertor<Host, HostDTO> {
     @InheritConfiguration(name = "targetToSource")
     List<Host> targetToSource(List<HostDTO> hostDTO);
 
-
+    @Mapping(source = "id.id", target = "id")
     Machine sourceToMachine(Host host);
 
     @InheritConfiguration(name = "sourceToMachine")

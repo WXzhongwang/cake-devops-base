@@ -19,7 +19,7 @@ import java.util.*;
  * K8sCloudService
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 发布服务
  * @date 2023/1/20 20:51
  * @email 18668485565163.com
  */
@@ -321,6 +321,24 @@ public class K8sCloudService extends BaseCloudService {
             return true;
         } catch (ApiException e) {
             log.error("Failed to delete Ingress: " + e.getResponseBody());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean createNameSpace(DeployContext context) {
+        String namespaceValue = context.getNamespace().getName().getName();
+        try {
+            // 创建 V1Namespace 对象
+            V1Namespace namespace = new V1Namespace()
+                    .metadata(new V1ObjectMeta().name(namespaceValue));
+            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+            // 调用 Kubernetes API 创建 Namespace
+            coreV1Api.createNamespace(namespace, null, null, null, null);
+            log.info("Namespace created successfully.");
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to delete Namespace: " + e.getResponseBody(), e);
             return false;
         }
     }

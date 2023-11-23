@@ -131,4 +131,6 @@ public abstract class BaseCloudService {
     public abstract boolean createIngress(DeployContext context);
 
     public abstract boolean deleteIngress(DeployContext context);
+
+    public abstract boolean createNameSpace(DeployContext context);
 }

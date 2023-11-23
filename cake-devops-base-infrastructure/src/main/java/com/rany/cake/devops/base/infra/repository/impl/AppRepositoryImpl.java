@@ -66,8 +66,8 @@ public class AppRepositoryImpl implements AppRepository {
     }
 
     @Override
-    public int saveAppEnv(AppEnv appEnv) {
-        return appEnvDao.save(appEnv);
+    public void saveAppEnv(AppEnv appEnv) {
+        appEnvDao.save(appEnv);
     }
 
     @Override
