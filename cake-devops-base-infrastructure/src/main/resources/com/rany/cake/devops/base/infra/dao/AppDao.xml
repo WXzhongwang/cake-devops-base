@@ -4,7 +4,6 @@
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.AppPO">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="app_name" property="appName" jdbcType="VARCHAR"/>
-        <result column="unique_no" property="uniqueNo" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="repo" property="repo" jdbcType="VARCHAR"/>
         <result column="default_branch" property="defaultBranch" jdbcType="VARCHAR"/>
@@ -16,27 +15,25 @@
         <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
         <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
         <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
-        <result column="business_unit" property="businessUnit" jdbcType="VARCHAR"/>
-        <result column="bu" property="bu" jdbcType="VARCHAR"/>
+        <result column="department_abbreviation" property="departmentAbbreviation" jdbcType="VARCHAR"/>
         <result column="department" property="department" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
         id
-        , app_name, unique_no, description, repo, default_branch, language, develop_mode,
-        owner, health_check, status, is_deleted, gmt_create, gmt_modified, business_unit,
-        bu, department
+        , app_name, description, repo, default_branch, language, develop_mode, owner, health_check,
+    status, is_deleted, gmt_create, gmt_modified, department_abbreviation, department,
+    creator, modifier
     </sql>
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.App">
-        insert into app (id, app_name, unique_no,
-                         description, repo, default_branch,
-                         language, develop_mode, owner,
-                         health_check, status, is_deleted,
-                         gmt_create, gmt_modified, business_unit,
-                         bu, department)
+        insert into app (id, app_name, description,
+                         repo, default_branch, language,
+                         develop_mode, owner, health_check,
+                         status, is_deleted, gmt_create,
+                         gmt_modified, department_abbreviation,
+                         department)
         values (#{id.id,jdbcType=BIGINT},
                 #{appName.name,jdbcType=VARCHAR},
-                #{uniqueNo,jdbcType=VARCHAR},
                 #{description,jdbcType=VARCHAR},
                 #{codeRepository.repo,jdbcType=VARCHAR},
                 #{codeRepository.defaultBranch,jdbcType=VARCHAR},
@@ -48,31 +45,28 @@
                 #{isDeleted,jdbcType=VARCHAR},
                 #{gmtCreate,jdbcType=TIMESTAMP},
                 #{gmtModified,jdbcType=TIMESTAMP},
-                #{businessOwnership.businessUnit,jdbcType=VARCHAR},
-                #{businessOwnership.bu,jdbcType=VARCHAR},
+                #{businessOwnership.departmentAbbreviation,jdbcType=VARCHAR},
                 #{businessOwnership.department,jdbcType=VARCHAR})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.App">
         update app
-        set app_name       = #{appName.name,jdbcType=VARCHAR},
-            unique_no      = #{uniqueNo,jdbcType=VARCHAR},
-            description    = #{description,jdbcType=VARCHAR},
-            repo           = #{repo,jdbcType=VARCHAR},
-            default_branch = #{defaultBranch,jdbcType=VARCHAR},
-            language       = #{language,jdbcType=VARCHAR},
-            develop_mode   = #{developMode,jdbcType=VARCHAR},
-            owner          = #{owner,jdbcType=BIGINT},
-            health_check   = #{healthCheck,jdbcType=VARCHAR},
-            status         = #{status,jdbcType=VARCHAR},
-            is_deleted     = #{isDeleted,jdbcType=VARCHAR},
-            gmt_create     = #{gmtCreate,jdbcType=TIMESTAMP},
-            gmt_modified   = #{gmtModified,jdbcType=TIMESTAMP},
-            business_unit  = #{businessOwnership.businessUnit,jdbcType=VARCHAR},
-            bu             = #{businessOwnership.bu,jdbcType=VARCHAR},
-            department     = #{businessOwnership.department,jdbcType=VARCHAR},
-            creator        = #{creator,jdbcType=VARCHAR},
-            modifier       = #{modifier,jdbcType=VARCHAR}
+        set app_name                = #{appName.name,jdbcType=VARCHAR},
+            description             = #{description,jdbcType=VARCHAR},
+            repo                    = #{repo,jdbcType=VARCHAR},
+            default_branch          = #{defaultBranch,jdbcType=VARCHAR},
+            language                = #{language,jdbcType=VARCHAR},
+            develop_mode            = #{developMode,jdbcType=VARCHAR},
+            owner                   = #{owner,jdbcType=BIGINT},
+            health_check            = #{healthCheck,jdbcType=VARCHAR},
+            status                  = #{status,jdbcType=VARCHAR},
+            is_deleted              = #{isDeleted,jdbcType=VARCHAR},
+            gmt_create              = #{gmtCreate,jdbcType=TIMESTAMP},
+            gmt_modified            = #{gmtModified,jdbcType=TIMESTAMP},
+            department_abbreviation = #{businessOwnership.departmentAbbreviation,jdbcType=VARCHAR},
+            department              = #{businessOwnership.department,jdbcType=VARCHAR},
+            creator                 = #{creator,jdbcType=VARCHAR},
+            modifier                = #{modifier,jdbcType=VARCHAR}
         where id = #{id.id,jdbcType=BIGINT}
     </update>
 </mapper>

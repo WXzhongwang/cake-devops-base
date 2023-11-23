@@ -58,7 +58,7 @@ warn:
     time: 300
 
 mybatis:
-  mapper-locations: classpath:com/rany/cake/devops/base/infra/mapper/*.xml, classpath:com/rany/cake/devops/base/domain/dao/*.xml
+  mapper-locations: classpath:com/rany/cake/devops/base/infra/mapper/*.xml, classpath:com/rany/cake/devops/base/infra/dao/*.xml
   type-aliases-package: com.rany.cake.devops.base.infra, com.rany.cake.devops.base.domain
 
 devops:

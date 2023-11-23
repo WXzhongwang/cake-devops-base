@@ -20,7 +20,7 @@
         select
         <include refid="Base_Column_List"/>
         from group_host
-        where id_deleted = '0' and
+        where is_deleted = '0' and
         group_id in
         <foreach collection="groupIds" index="index" item="groupId" open="(" separator="," close=")">
             #{groupId}

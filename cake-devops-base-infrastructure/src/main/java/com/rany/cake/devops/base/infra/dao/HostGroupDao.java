@@ -31,6 +31,11 @@ public interface HostGroupDao {
      */
     int update(HostGroup hostGroup);
 
+    /**
+     * 获取打包机器组
+     *
+     * @return
+     */
     HostGroupPO getPackagingGroup();
 
 }

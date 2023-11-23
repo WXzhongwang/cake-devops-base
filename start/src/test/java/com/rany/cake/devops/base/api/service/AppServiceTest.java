@@ -46,8 +46,8 @@ public class AppServiceTest extends BaseTests {
         createAppCommand.setLanguage(CodeLanguageEnum.JAVA.name());
         createAppCommand.setDevelopMode(DevelopMode.FREEDOM.name());
         createAppCommand.setOwner(768821468053254144L);
-        createAppCommand.setBusinessUnit("Honda");
-        createAppCommand.setDepartment("motorcycles");
+        createAppCommand.setDepartmentAbbreviation("Honda");
+        createAppCommand.setDepartment("Honda汽车");
         ArrayList<AppMemberDTO> appMembers = new ArrayList<>();
         AppMemberDTO memberDTO = new AppMemberDTO();
         memberDTO.setAccountId(ACCOUNT_ID);

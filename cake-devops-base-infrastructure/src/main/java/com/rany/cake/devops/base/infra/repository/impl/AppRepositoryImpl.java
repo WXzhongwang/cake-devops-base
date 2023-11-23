@@ -13,9 +13,9 @@ import com.rany.cake.devops.base.infra.mapper.AppEnvPOMapper;
 import com.rany.cake.devops.base.infra.mapper.AppPOMapper;
 import com.rany.cake.devops.base.infra.po.AppEnvPO;
 import com.rany.cake.devops.base.infra.po.AppPO;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -28,15 +28,15 @@ import java.util.List;
  * @email 18668485565163.com
  */
 @Service
-@AllArgsConstructor
 public class AppRepositoryImpl implements AppRepository {
+    private @Resource AppPOMapper appPOMapper;
 
-    private final AppPOMapper appPOMapper;
-    private final AppDao appDao;
-    private final AppEnvDao appEnvDao;
-    private final AppEnvPOMapper appEnvPOMapper;
-    private final AppDataConvertor appDataConvertor;
-    private final AppEnvDataConvertor appEnvDataConvertor;
+    private @Resource AppDao appDao;
+
+    private @Resource AppEnvDao appEnvDao;
+    private @Resource AppEnvPOMapper appEnvPOMapper;
+    private @Resource AppDataConvertor appDataConvertor;
+    private @Resource AppEnvDataConvertor appEnvDataConvertor;
 
     @Override
     public App find(@NotNull AppId appId) {

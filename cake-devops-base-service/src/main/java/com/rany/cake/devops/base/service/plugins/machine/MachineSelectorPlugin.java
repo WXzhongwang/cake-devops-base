@@ -29,7 +29,7 @@ public class MachineSelectorPlugin extends BasePlugin {
     private HostDataAdapter hostDataAdapter;
     @Resource
     @Lazy
-    @Qualifier("${devops.package.balancer:random}")
+    @Qualifier("random")
     private MachineSelectLoadBalance machineSelector;
 
     @Override

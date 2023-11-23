@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.infra.po.HostPO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -34,6 +35,6 @@ public interface HostDao {
     int update(Host host);
 
 
-    List<HostPO> selectByPrimaryKeyList(List<Long> hostIds);
+    List<HostPO> selectByPrimaryKeyList(@Param("hostIds") List<Long> hostIds);
 
 }

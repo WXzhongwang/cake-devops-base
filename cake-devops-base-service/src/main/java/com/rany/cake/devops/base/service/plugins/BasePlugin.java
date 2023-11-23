@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.service.plugins;
 import com.rany.cake.devops.base.service.context.Plugin;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,7 +19,7 @@ public abstract class BasePlugin implements Plugin {
     /**
      * 运行环境变量
      */
-    protected ThreadLocal<Map<String, Object>> args = new ThreadLocal<>();
+    protected ThreadLocal<Map<String, Object>> args = ThreadLocal.withInitial(HashMap::new);
 
     public void putArg(String key, Object value) {
         Map<String, Object> argMap = this.args.get();

@@ -13,17 +13,17 @@
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
         <result column="desc" jdbcType="VARCHAR" property="desc"/>
-        <result column="verified" jdbcType="TINYINT" property="verified"/>
+        <result column="verified" jdbcType="CHAR" property="verified"/>
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
-        <result column="pkey" jdbcType="LONGVARCHAR" property="pkey"/>
+        <result column="pkey" jdbcType="VARCHAR" property="pkey"/>
     </resultMap>
 
     <sql id="Base_Column_List">
 
         id
         , name, host_name, port, username, status, is_deleted, gmt_create, gmt_modified,
-        desc, verified, creator, modifier, pkey
+        `desc`, verified, creator, modifier, pkey
     </sql>
 
 
@@ -31,7 +31,7 @@
         select
         <include refid="Base_Column_List"/>
         from host
-        where id_deleted = '0' and
+        where is_deleted = '0' and
         id in
         <foreach collection="hostIds" index="index" item="hostId" open="(" separator="," close=")">
             #{hostId}
@@ -49,7 +49,7 @@
                 #{port,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{desc,jdbcType=VARCHAR}, #{verified,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR},
-                #{modifier,jdbcType=VARCHAR}, #{pkey,jdbcType=LONGVARCHAR})
+                #{modifier,jdbcType=VARCHAR}, #{pkey})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Host">
@@ -92,7 +92,7 @@
                 modifier = #{modifier,jdbcType=VARCHAR},
             </if>
             <if test="pkey != null">
-                pkey = #{pkey,jdbcType=LONGVARCHAR},
+                pkey = #{pkey},
             </if>
         </set>
         where id = #{id.id,jdbcType=BIGINT}

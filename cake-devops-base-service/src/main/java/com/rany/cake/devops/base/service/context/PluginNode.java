@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.context;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -16,13 +17,10 @@ public class PluginNode implements Plugin {
     /**
      * 下一个执行节点
      */
+    @Getter
     private PluginNode next;
 
     private Plugin plugin;
-
-    public PluginNode getNext() {
-        return next;
-    }
 
     public void setNext(PluginNode next) {
         this.next = next;
