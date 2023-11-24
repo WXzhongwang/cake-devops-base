@@ -10,7 +10,7 @@
         <result column="release_branch" jdbcType="VARCHAR" property="releaseBranch"/>
         <result column="release_commit_id" jdbcType="VARCHAR" property="releaseCommitId"/>
         <result column="release_version" jdbcType="VARCHAR" property="releaseVersion"/>
-        <result column="env_name" jdbcType="VARCHAR" property="envName"/>
+        <result column="env_id" jdbcType="BIGINT" property="envId"/>
         <result column="release_status" jdbcType="VARCHAR" property="releaseStatus"/>
         <result column="rollback" jdbcType="VARCHAR" property="rollback"/>
         <result column="rollback_id" jdbcType="BIGINT" property="rollbackId"/>
@@ -23,28 +23,28 @@
     <sql id="Base_Column_List">
         id
         , app_id, release_no, approval_id, release_date, release_branch, release_commit_id,
-        release_version, env_name, release_status, rollback, rollback_id, is_deleted, gmt_create,
-        gmt_modified, creator, modifier
+    release_version, env_id, release_status, rollback, rollback_id, is_deleted, gmt_create,
+    gmt_modified, creator, modifier
     </sql>
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.Release">
 
-        insert into release (id, app_id, release_no,
-                             approval_id, release_date, release_branch,
-                             release_commit_id, release_version, env_name,
-                             release_status, rollback, rollback_id,
-                             is_deleted, gmt_create, gmt_modified,
-                             creator, modifier)
+        insert into release_no (id, app_id, release_no,
+                                approval_id, release_date, release_branch,
+                                release_commit_id, release_version, env_id,
+                                release_status, rollback, rollback_id,
+                                is_deleted, gmt_create, gmt_modified,
+                                creator, modifier)
         values (#{id.id,jdbcType=BIGINT}, #{appId.id,jdbcType=BIGINT}, #{releaseNo,jdbcType=VARCHAR},
                 #{approvalId.id,jdbcType=BIGINT}, #{releaseDate,jdbcType=TIMESTAMP}, #{releaseBranch,jdbcType=VARCHAR},
-                #{releaseCommitId,jdbcType=VARCHAR}, #{releaseVersion,jdbcType=VARCHAR}, #{envName,jdbcType=VARCHAR},
+                #{releaseCommitId,jdbcType=VARCHAR}, #{releaseVersion,jdbcType=VARCHAR}, #{envId},
                 #{releaseStatus,jdbcType=VARCHAR}, #{rollback,jdbcType=VARCHAR}, #{rollbackId.id,jdbcType=BIGINT},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Release">
-        update release
+        update release_no
         <set>
             <if test="appId != null">
                 app_id = #{appId.id,jdbcType=BIGINT},
@@ -67,8 +67,8 @@
             <if test="releaseVersion != null">
                 release_version = #{releaseVersion,jdbcType=VARCHAR},
             </if>
-            <if test="envName != null">
-                env_name = #{envName,jdbcType=VARCHAR},
+            <if test="envId != null">
+                env_id = #{envId},
             </if>
             <if test="releaseStatus != null">
                 release_status = #{releaseStatus,jdbcType=VARCHAR},

@@ -75,7 +75,7 @@
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
-        <table schema="cake_devops" tableName="release" domainObjectName="ReleasePO" enableCountByExample="false"
+        <table schema="cake_devops" tableName="release_no" domainObjectName="ReleasePO" enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>

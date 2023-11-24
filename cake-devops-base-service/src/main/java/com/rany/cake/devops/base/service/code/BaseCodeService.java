@@ -9,4 +9,6 @@ package com.rany.cake.devops.base.service.code;
  * @email 18668485565163.com
  */
 public abstract class BaseCodeService {
+
+    public abstract Boolean createBranch(String repoUrl, String branchName, String ref);
 }

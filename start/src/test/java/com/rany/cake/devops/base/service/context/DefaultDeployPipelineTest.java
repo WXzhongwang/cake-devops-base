@@ -5,10 +5,11 @@ import com.rany.cake.devops.base.BaseTests;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
+import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.pk.AppId;
-import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.NamespaceId;
+import com.rany.cake.devops.base.domain.pk.ReleaseId;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
 import com.rany.cake.devops.base.domain.repository.ClusterRepository;
 import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
@@ -61,12 +62,18 @@ public class DefaultDeployPipelineTest extends BaseTests {
     @Test
     public void start() {
         DeployContext deployContext = new DeployContext();
-        App app = appRepository.find(new AppId(781513981771788288L));
+        Release release = releaseRepository.find(new ReleaseId(1L));
+        deployContext.setRelease(release);
+
+        App app = appRepository.find(release.getAppId());
         deployContext.setApp(app);
-        AppEnv appEnv = appRepository.getAppEnv(1L);
+
+        AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
         deployContext.setAppEnv(appEnv);
-        Cluster cluster = clusterRepository.find(new ClusterId(1L));
+
+        Cluster cluster = clusterRepository.find(appEnv.getClusterId());
         deployContext.setCluster(cluster);
+        
         Namespace namespace = nameSpaceRepository.find(new NamespaceId(1L));
         deployContext.setNamespace(namespace);
 

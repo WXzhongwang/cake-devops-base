@@ -1,12 +1,16 @@
 package com.rany.cake.devops.base.service.plugins.scm;
 
+import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.enums.CodePlatformEnum;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.service.code.BaseCodeService;
 import com.rany.cake.devops.base.service.code.CodeFactory;
+import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
+import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -30,15 +34,30 @@ public class CheckOutPlugin extends BasePlugin {
 
     @Resource
     private CodeFactory codeFactory;
+    @Resource
+    private RedisSerialNumberGenerator redisSerialNumberGenerator;
 
     @Override
     public boolean execute(DeployContext context) {
-        CodeRepository app = context.getApp().getCodeRepository();
-        // 默认以分支为基准分支
-        String ref = StringUtils.isNotEmpty(context.getRelease().getReleaseBranch()) ?
-                context.getRelease().getReleaseBranch() : context.getRelease().getReleaseCommitId();
-        log.info("Current code repo:{}, default branch:{}", app.getRepo(), app.getDefaultBranch());
+        CodeRepository codeRepository = context.getApp().getCodeRepository();
+        String appName = context.getApp().getAppName().getName();
+        Release release = context.getRelease();
+        String ref = StringUtils.isNotEmpty(release.getReleaseBranch()) ? release.getReleaseBranch() : release.getReleaseCommitId();
+        log.info("Current code repo:{}, default branch:{}", codeRepository.getRepo(), codeRepository.getDefaultBranch());
         BaseCodeService codeService = codeFactory.build(CodePlatformEnum.GITLAB, "127.0.0.0:12345", "tokexxxx");
-        return true;
+        String[] repos = RepoUrlUtils.extractNamespaceAndProject(codeRepository.getRepo());
+        if (repos == null) {
+            log.error("Current code repo extract error");
+            return false;
+        }
+        String serialNum = redisSerialNumberGenerator.generateSerialNumber(appName);
+        String newReleaseBranchName = RepoUrlUtils.generateReleaseBranchName(serialNum);
+        Boolean success = codeService.createBranch(codeRepository.getRepo(),
+                RepoUrlUtils.generateReleaseBranchName(newReleaseBranchName), ref);
+        if (BooleanUtils.isNotTrue(success)) {
+            log.error("Create new branch failed, {}", newReleaseBranchName);
+            return false;
+        }
+        return success;
     }
 }

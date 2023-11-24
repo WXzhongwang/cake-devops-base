@@ -1,5 +1,7 @@
 package com.rany.cake.devops.base.service.code.gitlab;
 
+import com.rany.cake.devops.base.service.code.RepoUrlUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -8,19 +10,27 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.gitlab4j.api.GitLabApi;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Branch;
+import org.gitlab4j.api.models.Project;
 
 import java.io.IOException;
 
-public class GitLabApi {
+@Slf4j
+public class GitLabService {
 
     private final String gitLabApiUrl;
     private final String gitLabApiToken;
     private final HttpClient httpClient;
+    private final GitLabApi gitLabApi;
 
-    public GitLabApi(String gitLabApiUrl, String gitLabApiToken) {
+    public GitLabService(String gitLabApiUrl, String gitLabApiToken) {
         this.gitLabApiUrl = gitLabApiUrl;
         this.gitLabApiToken = gitLabApiToken;
         this.httpClient = HttpClients.createDefault();
+        this.gitLabApi = new GitLabApi(gitLabApiUrl, gitLabApiToken);
+        // ProjectApi projectApi = this.gitLabApi.getProjectApi();
     }
 
     public String get(String endpoint) throws IOException {
@@ -44,6 +54,7 @@ public class GitLabApi {
         return EntityUtils.toString(response.getEntity());
     }
 
+
     public String createRepository(String projectName, String visibility) throws IOException {
         String createProjectEndpoint = "/projects";
         String payload = "{\"name\": " + projectName + ", \"visibility\": " + visibility + "}";
@@ -55,11 +66,40 @@ public class GitLabApi {
         return get(getProjectEndpoint);
     }
 
-    public String createBranch(String projectId, String branchName, String ref) throws IOException {
-        String createBranchEndpoint = "/projects/" + projectId + "/repository/branches";
-        String payload = "{\"branch\": " + branchName + ", \"ref\": " + ref + "}";
-        return post(createBranchEndpoint, payload);
+    public Project getProject(String repoUrl) {
+        // 通过项目路径获取项目信息
+        String[] namespaceAndProject = RepoUrlUtils.extractNamespaceAndProject(repoUrl);
+        if (namespaceAndProject == null) {
+            return null;
+        }
+        String namespace = namespaceAndProject[0];
+        String projectName = namespaceAndProject[1];
+        try {
+            return gitLabApi.getProjectApi().getProject(namespace, projectName);
+        } catch (GitLabApiException e) {
+            log.error("获取项目信息失败");
+            return null;
+        }
     }
+
+//    public String createBranch(String projectId, String branchName, String ref) throws IOException {
+//        String createBranchEndpoint = "/projects/" + projectId + "/repository/branches";
+//        String payload = "{\"branch\": " + branchName + ", \"ref\": " + ref + "}";
+//        return post(createBranchEndpoint, payload);
+//    }
+
+    public Branch createBranch(String repoUrl, String branchName, String ref) {
+        // 获取项目
+        Project project = this.getProject(repoUrl);
+        try {
+            project = gitLabApi.getProjectApi().getProject(project.getId());
+            // 创建新分支
+            return gitLabApi.getRepositoryApi().createBranch(project, branchName, ref);
+        } catch (GitLabApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public String getBranch(String projectId, String branchName) throws IOException {
         String getBranchEndpoint = "/projects/" + projectId + "/repository/branches/" + branchName;

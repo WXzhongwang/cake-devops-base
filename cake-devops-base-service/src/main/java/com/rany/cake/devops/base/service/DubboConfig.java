@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.rany.uic.api.facade.account.AccountFacade;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DubboConfig {
 
+    // @Reference(check = false)
     @Reference
     private AccountFacade accountFacade;
 

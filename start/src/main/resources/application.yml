@@ -3,8 +3,8 @@ server:
 
 dubbo:
   application:
-    id: rany-uic-service
-    name: rany-uic-service
+    id: cake-ops-service
+    name: cake-ops-service
   protocol:
     name: dubbo
     port: -1

@@ -18,12 +18,12 @@ import com.rany.cake.devops.base.domain.repository.AppRepository;
 import com.rany.cake.devops.base.domain.repository.ApprovalRepository;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
 import com.rany.cake.devops.base.domain.service.ReleaseDomainService;
+import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -34,6 +34,7 @@ public class ReleaseRemoteService implements ReleaseService {
     private final ReleaseRepository releaseRepository;
     private final AppRepository appRepository;
     private final ApprovalRepository approvalRepository;
+    private final RedisSerialNumberGenerator redisSerialNumberGenerator;
 
     @Override
     public PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand) {
@@ -54,7 +55,7 @@ public class ReleaseRemoteService implements ReleaseService {
         Release release = new Release(new ReleaseId(snowflakeIdWorker.nextId()),
                 new AppId(createReleaseCommand.getAppId()),
                 appEnv.getId(),
-                UUID.randomUUID().toString(),
+                redisSerialNumberGenerator.generateReleaseSerialNumber(),
                 createReleaseCommand.getReleaseDate()
         );
         releaseDomainService.save(release);
