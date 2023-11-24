@@ -5,22 +5,22 @@ public class RunningConstant {
     /**
      * 打包机器IP
      */
-    public static final String BUILDER_IP = "builder_ip";
-    public static final String BUILDER_PORT = "builder_port";
-    public static final String BUILDER_REMOTE_USER = "builder_remote_user";
-    public static final String BUILDER_REMOTE_PWD = "builder_remote_password";
+    public static final String BUILDER_IP = "BUILDER_IP";
+    public static final String BUILDER_PORT = "BUILDER_PORT";
+    public static final String BUILDER_REMOTE_USER = "BUILDER_REMOTE_USER";
+    public static final String BUILDER_REMOTE_PWD = "BUILDER_REMOTE_PASSWORD";
     /**
      * 通过调用curl接口判断实际的审批情况
      */
-    public static final String APPROVAL_CHECK_ADDRESS = "approval_check_address";
+    public static final String APPROVAL_CHECK_ADDRESS = "APPROVAL_CHECK_ADDRESS";
     public static final String APPROVAL_CURL_ADDRESS = "http://localhost:7100/approval/approval/check?approvalNumber=%s";
-    public static final String APPROVAL_CHECK_REQUIRED = "approval_check_required";
+    public static final String APPROVAL_CHECK_REQUIRED = "APPROVAL_CHECK_REQUIRED";
     /**
      * 通过调用curl接口判断封网情况
      */
-    public static final String FORBIDDEN_CHECK_ADDRESS = "forbidden_check_address";
+    public static final String FORBIDDEN_CHECK_ADDRESS = "FORBIDDEN_CHECK_ADDRESS";
     public static final String FORBIDDEN_CURL_ADDRESS = "http://localhost:7100/approval/forbidden/check?appId=%d";
-    public static final String FORBIDDEN_CHECK_REQUIRED = "forbidden_check_required";
+    public static final String FORBIDDEN_CHECK_REQUIRED = "FORBIDDEN_CHECK_REQUIRED";
 
 
     public static final String DEFAULT_SHELL_CMD = "mvn clean package -U -Dmaven.compile.fork=true -P${ENV}";
