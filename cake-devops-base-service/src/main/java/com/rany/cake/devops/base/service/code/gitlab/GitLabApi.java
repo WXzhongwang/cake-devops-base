@@ -15,7 +15,7 @@ public class GitLabApi {
 
     private final String gitLabApiUrl;
     private final String gitLabApiToken;
-    private HttpClient httpClient;
+    private final HttpClient httpClient;
 
     public GitLabApi(String gitLabApiUrl, String gitLabApiToken) {
         this.gitLabApiUrl = gitLabApiUrl;
