@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.service.plugins.approval;
 
 import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
+import com.rany.cake.devops.base.domain.pk.ApprovalId;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
@@ -25,12 +26,14 @@ public class ApprovalPlugin extends BasePlugin {
 
     @Override
     public boolean execute(DeployContext context) {
+        ApprovalId approvalId = context.getRelease().getApprovalId();
         context.putArg(RunningConstant.APPROVAL_CHECK_REQUIRED, Boolean.FALSE);
+        // 线上环境，校验发布单是否通过
         if (context.getAppEnv().getEnv().equals(AppEnvEnum.PROD)) {
             context.putArg(RunningConstant.APPROVAL_CHECK_REQUIRED, Boolean.TRUE);
             context.putArg(RunningConstant.APPROVAL_CHECK_ADDRESS,
                     String.format(RunningConstant.APPROVAL_CURL_ADDRESS,
-                            context.getApp().getId().getId()));
+                            approvalId.getId()));
         }
         return true;
     }
