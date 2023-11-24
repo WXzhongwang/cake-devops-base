@@ -12,9 +12,11 @@ import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
 import com.rany.cake.devops.base.domain.repository.ClusterRepository;
 import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
+import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
 import com.rany.cake.devops.base.service.plugins.approval.ApprovalPlugin;
 import com.rany.cake.devops.base.service.plugins.approval.DeploymentForbiddenPlugin;
 import com.rany.cake.devops.base.service.plugins.machine.MachineSelectorPlugin;
+import com.rany.cake.devops.base.service.plugins.scm.CheckOutPlugin;
 import com.rany.cake.devops.base.service.plugins.test.SonarQubePlugin;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,6 +39,8 @@ public class DefaultDeployPipelineTest extends BaseTests {
     @Resource
     private NameSpaceRepository nameSpaceRepository;
     @Resource
+    private ReleaseRepository releaseRepository;
+    @Resource
     private ApprovalPlugin approvalPlugin;
     @Resource
     private DeploymentForbiddenPlugin deploymentForbiddenPlugin;
@@ -44,6 +48,8 @@ public class DefaultDeployPipelineTest extends BaseTests {
     private MachineSelectorPlugin machineSelectorPlugin;
     @Resource
     private SonarQubePlugin sonarQubePlugin;
+    @Resource
+    private CheckOutPlugin checkOutPlugin;
 
 
     @Test
@@ -67,6 +73,7 @@ public class DefaultDeployPipelineTest extends BaseTests {
         DeployPipeline pipeline = new DefaultDeployPipeline(deployContext);
         pipeline.addLast(approvalPlugin);
         pipeline.addLast(deploymentForbiddenPlugin);
+        pipeline.addLast(checkOutPlugin);
         pipeline.addLast(machineSelectorPlugin);
         pipeline.addLast(sonarQubePlugin);
         pipeline.start();

@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.service.context;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
+import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import lombok.Data;
 
@@ -25,6 +26,10 @@ public class DeployContext implements Serializable {
 
     private App app;
 
+    /**
+     * 基于发布单拉起发布pipeline
+     */
+    private Release release;
     /**
      * 发布集群
      */

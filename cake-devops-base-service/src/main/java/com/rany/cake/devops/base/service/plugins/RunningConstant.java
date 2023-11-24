@@ -33,4 +33,6 @@ public class RunningConstant {
     public static final String SONAR_PWD = "SONAR_PWD";
 
     public static final String DING_WEBHOOK_URL = "DING_WEBHOOK_URL";
+    public static final String CODE_REPO_URL = "REPO_URL";
+    public static final String CODE_BRANCH_NAME = "BRANCH_NAME";
 }
