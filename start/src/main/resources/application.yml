@@ -18,6 +18,8 @@ dubbo:
 spring:
   profiles:
     active: dev
+  redis:
+    url: redis://127.0.0.1:6379
   datasource:
     druid:
       type: com.alibaba.druid.pool.DruidDataSource
