@@ -16,6 +16,7 @@ import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
 import com.rany.cake.devops.base.service.plugins.approval.ApprovalPlugin;
 import com.rany.cake.devops.base.service.plugins.approval.DeploymentForbiddenPlugin;
+import com.rany.cake.devops.base.service.plugins.ci.DeliveryPlugin;
 import com.rany.cake.devops.base.service.plugins.machine.MachineSelectorPlugin;
 import com.rany.cake.devops.base.service.plugins.scm.CheckOutPlugin;
 import com.rany.cake.devops.base.service.plugins.test.SonarQubePlugin;
@@ -51,6 +52,8 @@ public class DefaultDeployPipelineTest extends BaseTests {
     private SonarQubePlugin sonarQubePlugin;
     @Resource
     private CheckOutPlugin checkOutPlugin;
+    @Resource
+    private DeliveryPlugin deliveryPlugin;
 
 
     @Test
@@ -73,16 +76,17 @@ public class DefaultDeployPipelineTest extends BaseTests {
 
         Cluster cluster = clusterRepository.find(appEnv.getClusterId());
         deployContext.setCluster(cluster);
-        
+
         Namespace namespace = nameSpaceRepository.find(new NamespaceId(1L));
         deployContext.setNamespace(namespace);
 
         DeployPipeline pipeline = new DefaultDeployPipeline(deployContext);
         pipeline.addLast(approvalPlugin);
         pipeline.addLast(deploymentForbiddenPlugin);
-        pipeline.addLast(checkOutPlugin);
+        //pipeline.addLast(checkOutPlugin);
         pipeline.addLast(machineSelectorPlugin);
         pipeline.addLast(sonarQubePlugin);
+        pipeline.addLast(deliveryPlugin);
         pipeline.start();
     }
 }

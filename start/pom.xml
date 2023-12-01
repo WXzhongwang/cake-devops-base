@@ -117,6 +117,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
+                    <include>ci/*.sh</include>
                     <include>application.yml</include>
                     <include>application-${activatedProperties}.yml</include>
                 </includes>
