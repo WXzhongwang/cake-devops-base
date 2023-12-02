@@ -129,14 +129,16 @@ function push_aliyun_image {
   $DOCKER_HOME tag "$project:$version" "$ALIYUN_ACR_URL/$namespace/$project:$version"
 
   echo "TAG: $ALIYUN_ACR_URL/$namespace/$project:$version"
+
   # 推送镜像到Harbor
-  $DOCKER_HOME push "$ALIYUN_ACR_URL/$namespace/$project:$version"
+  $DOCKER_HOME push -q "$ALIYUN_ACR_URL/$namespace/$project:$version"
 
   # 判断镜像推送是否成功
+  wait $!
   # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
-    echo "Failed to push image"
-    return 1
+      echo "Failed to push image"
+      return 1
   fi
 }
 
