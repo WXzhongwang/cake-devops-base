@@ -37,6 +37,7 @@ public class DeliveryPlugin extends BasePlugin {
         String remoteWorkSpaceFolder = context.getApp().getAppName().getName();
         String repo = context.getApp().getCodeRepository().getRepo();
         String branch = context.getRelease().getReleaseBranch();
+        String releaseVersion = context.getRelease().getReleaseNo();
 
         JSch jsch = new JSch();
         Session session = null;
@@ -61,8 +62,8 @@ public class DeliveryPlugin extends BasePlugin {
             String executeCommand = String.join(" ", "sh", "build.sh", repo, branch, "true",
                     "cake-devops-base",
                     "cake-devops-base",
-                    "v1.0.0"
-                    , "\"https://oapi.dingtalk.com/robot/send?access_token=89ca235dbe9f617f4ca045a1f24b0e61a32e9f845771752416377089c36470b7\"");
+                    releaseVersion,
+                    "\"https://oapi.dingtalk.com/robot/send?access_token=89ca235dbe9f617f4ca045a1f24b0e61a32e9f845771752416377089c36470b7\"");
             JSCHTool.remoteExecute(session, "cd " + remoteBase + remoteWorkSpaceFolder + ";\n" +
                     "curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.1/java-build-source.tar.gz;" +
                     "tar -zxvf java-build-source.tar.gz;\n" +
