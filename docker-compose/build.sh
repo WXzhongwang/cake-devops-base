@@ -9,6 +9,7 @@ function send_dingding_notification {
   local webhook_url=$2
   local status=$3
   local app_name=$4
+  # shellcheck disable=SC2155
   local date_suffix=$(date "+%Y-%m-%d %H:%M:%S")
   # 使用Markdown格式发送钉钉通知
   curl -H "Content-Type: application/json" -X POST -d '{
@@ -22,6 +23,7 @@ function send_dingding_notification {
 
 # 拉取代码
 function checkout {
+  echo "【Checkout】start to run..."
   local repo_url=$1
   local branch_name=$2
   local folder_name=$3
@@ -32,6 +34,7 @@ function checkout {
 
 # 编译打包
 function mvn_build {
+  echo "【MavenBuild】start to run..."
   local folder_name=$1
 
   # shellcheck disable=SC2164
@@ -40,6 +43,7 @@ function mvn_build {
   $MAVEN_HOME_363 clean package -U -DskipTests=true
 
   # 判断编译是否成功
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     echo "Compilation failed"
     return 1
@@ -48,6 +52,7 @@ function mvn_build {
 
 # SonarQube扫描
 function sonar_scan {
+  echo "【SonarScan】start to run..."
   local sonar_scan=$1
   local sonar_url=$2
   local sonar_token=$3
@@ -74,13 +79,15 @@ function sonar_scan {
 
 # 构建镜像
 function build_image {
+  echo "【BuildImage】start to run..."
   local image_name=$1
-
+  echo "$DOCKER_HOME"
   # 生成镜像
   $DOCKER_HOME build -t "$image_name" .
 
   # 判断
   # 判断镜像生成是否成功
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     echo "Failed to build image"
     return 1
@@ -89,6 +96,7 @@ function build_image {
 
 # 推送镜像到Harbor
 function push_image {
+  echo "【PushImage】start to run..."
   local harbor_url=$1
   local harbor_username=$2
   local harbor_password=$3
@@ -105,6 +113,7 @@ function push_image {
   $DOCKER_HOME push "$HARBOR_URL/$image_name"
 
   # 判断镜像推送是否成功
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     echo "Failed to push image"
     return 1
@@ -158,6 +167,7 @@ function main {
   sonar_scan "$sonar_scan" "$sonar_url" "$sonar_token" "$repo_name"
 
   # 判断SonarQube扫描是否成功
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     send_notification "SonarQube扫描失败" "failed" "$repo_name"
     exit 1
@@ -167,6 +177,7 @@ function main {
   build_image "$image_name"
 
   # 判断构建镜像是否成功
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     send_notification "构建镜像失败" "failed" "$repo_name"
     exit 1
@@ -176,6 +187,7 @@ function main {
   push_image "$harbor_url" "$harbor_username" "$harbor_password" "$image_name"
 
   # 判断推送镜像是否成功
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     send_notification "推送镜像失败" "failed" "$repo_name"
     exit 1
