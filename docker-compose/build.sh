@@ -53,37 +53,32 @@ function mvn_build {
 # SonarQube扫描
 function sonar_scan {
   echo "【SonarScan】start to run..."
-  local sonar_scan=$1
-  local sonar_url=$2
-  local sonar_token=$3
-  local repo_name=$4
+  local repo_name=$1
 
-  # 判断是否执行SonarQube扫描任务
-  if [ "$sonar_scan" == "true" ]; then
-    # 执行SonarQube扫描任务
-    # shellcheck disable=SC2153
-    $SONAR_SCAN_HOME \
-      -Dsonar.projectKey="$repo_name" \
-      -Dsonar.sources=. \
-      -Dsonar.host.url="$SONAR_URL" \
-      -Dsonar.login="$SONAR_TOKEN" \
-      -Dsonar.java.binaries=*/*/classes
+  # 执行SonarQube扫描任务
+  # shellcheck disable=SC2153
+  $SONAR_SCAN_HOME \
+    -Dsonar.projectKey="$repo_name" \
+    -Dsonar.sources=. \
+    -Dsonar.host.url="$SONAR_URL" \
+    -Dsonar.login="$SONAR_TOKEN" \
+    -Dsonar.java.binaries=*/*/classes
 
-    # 判断SonarQube扫描是否成功
-    if [ $? -ne 0 ]; then
-      echo "SonarQube scan failed"
-      return 1
-    fi
+  # 判断SonarQube扫描是否成功
+  if [ $? -ne 0 ]; then
+    echo "SonarQube scan failed"
+    return 1
   fi
 }
 
 # 构建镜像
 function build_image {
   echo "【BuildImage】start to run..."
-  local image_name=$1
+  local project=$1
+  local version=$2
   echo "$DOCKER_HOME"
   # 生成镜像
-  $DOCKER_HOME build -t "$image_name" .
+  $DOCKER_HOME build -t "$project:$version" .
 
   # 判断
   # 判断镜像生成是否成功
@@ -95,22 +90,46 @@ function build_image {
 }
 
 # 推送镜像到Harbor
-function push_image {
+function push_harbor_image {
   echo "【PushImage】start to run..."
-  local harbor_url=$1
-  local harbor_username=$2
-  local harbor_password=$3
-  local image_name=$4
+  local namespace=$1
+  local project=$2
+  local version=$3
 
   # 登录Harbor
   # shellcheck disable=SC2153
   $DOCKER_HOME login -u "$HARBOR_URER" -p "$HARBOR_PASSWORD" "$HARBOR_URL"
 
   # 标记镜像
-  $DOCKER_HOME tag "$image_name" "$HARBOR_URL/$image_name"
+  $DOCKER_HOME tag "$project:$version" "$HARBOR_URL/$namespace/$project:$version"
 
   # 推送镜像到Harbor
-  $DOCKER_HOME push "$HARBOR_URL/$image_name"
+  $DOCKER_HOME push "$HARBOR_URL/$project:$version"
+
+  # 判断镜像推送是否成功
+  # shellcheck disable=SC2181
+  if [ $? -ne 0 ]; then
+    echo "Failed to push image"
+    return 1
+  fi
+}
+
+
+function push_aliyun_image {
+  echo "【PushAliyunImage】start to run..."
+  local namespace=$1
+  local project=$2
+  local version=$3
+
+  # 登录ACR
+  # shellcheck disable=SC2153
+  $DOCKER_HOME login --username="$ALIYUN_ACR_USER_NAME" "$ALIYUN_ACR_URL" --password="$ALIYUN_ACR_USER_PASSWORD"
+
+  # 标记镜像
+  $DOCKER_HOME tag "$project:$version" "$ALIYUN_ACR_URL/$namespace/$project:$version"
+
+  # 推送镜像到Harbor
+  $DOCKER_HOME push "$ALIYUN_ACR_URL/$namespace/$project:$version"
 
   # 判断镜像推送是否成功
   # shellcheck disable=SC2181
@@ -125,8 +144,10 @@ function main {
   local repo_url=$1
   local branch_name=$2
   local sonar_scan=$3
-  local image_name=$4
-  local dingtalk_webhook_url=$5
+  local namespace=$4
+  local project=$5
+  local version=$6
+  local dingtalk_webhook_url=$7
 
   # 发送钉钉通知
   function send_notification {
@@ -158,13 +179,16 @@ function main {
   mvn_build "$folder_name"
 
   # 判断编译打包是否成功
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     send_notification "编译打包失败" "failed" "$repo_name"
     exit 1
   fi
 
-  # SonarQube扫描
-  sonar_scan "$sonar_scan" "$sonar_url" "$sonar_token" "$repo_name"
+  if [ "$sonar_scan" == "true" ]; then
+    # SonarQube扫描
+    sonar_scan "$repo_name"
+  fi
 
   # 判断SonarQube扫描是否成功
   # shellcheck disable=SC2181
@@ -184,7 +208,9 @@ function main {
   fi
 
   # 推送镜像到Harbor
-  push_image "$harbor_url" "$harbor_username" "$harbor_password" "$image_name"
+  #push_harbor_image "$namespace" "$project" "$version"
+  # 推送镜像到 aliyun
+  push_aliyun_image "$namespace" "$project" "$version"
 
   # 判断推送镜像是否成功
   # shellcheck disable=SC2181
@@ -202,4 +228,4 @@ function main {
 }
 
 # 启动
-main "$1" "$2" "$3" "$4" "$5"
+main "$1" "$2" "$3" "$4" "$5" "$6" "$7"
