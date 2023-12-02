@@ -198,7 +198,7 @@ function main {
   fi
 
   # 构建镜像
-  build_image "$image_name"
+  build_image "$project" "$version"
 
   # 判断构建镜像是否成功
   # shellcheck disable=SC2181
