@@ -56,16 +56,15 @@ public class DeliveryPlugin extends BasePlugin {
             JSCHTool.remoteExecute(session, "ls -l");
             JSCHTool.remoteExecute(session, "pwd");
             JSCHTool.remoteExecute(session, "mkdir " + remoteBase + remoteWorkSpaceFolder);
-            JSCHTool.remoteExecute(session, "cd " + remoteBase + remoteWorkSpaceFolder + "; curl -O https://github.com/WXzhongwang/cake-devops-base/blob/main/docker-compose/java-build-source.tar.gz");
-            JSCHTool.remoteExecute(session, "pwd; tar -zxvf java-build-source.tar.gz");
-            JSCHTool.remoteExecute(session, "chmod +x build.sh");
-            JSCHTool.remoteExecute(session, String.format("sh build.sh %s %s %s %s %s",
-                    repo,
-                    branch,
-                    "false",
-                    "cake-devops-base:v1.0.0",
-                    "https://oapi.dingtalk.com/robot/send?access_token=89ca235dbe9f617f4ca045a1f24b0e61a32e9f845771752416377089c36470b7"));
-
+            // J：此选项告诉 -O, --remote-name 选项使用服务器指定的 Content-Disposition 文件名，而不是从 URL 中提取文件名。
+            // L：如果服务器报告请求的页面已移动到不同的位置（用 Location: 标头和 3XX 响应代码指示），此选项将使 curl 在新位置重做请求。
+            // O：使用此选项，您无需指定下载的输出文件名。
+            String executeCommand = String.join(" ", "sh", "build.sh", repo, branch, "false", "cake-devops-base:v1.0.0", "\"https://oapi.dingtalk.com/robot/send?access_token=89ca235dbe9f617f4ca045a1f24b0e61a32e9f845771752416377089c36470b7\"");
+            JSCHTool.remoteExecute(session, "cd " + remoteBase + remoteWorkSpaceFolder + ";\n" +
+                    "curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.1/java-build-source.tar.gz;" +
+                    "tar -zxvf java-build-source.tar.gz;\n" +
+                    "chmod +x build.sh;\n" +
+                    executeCommand);
         } catch (JSchException e) {
             log.error("DeliveryPlugin error", e);
         } finally {
