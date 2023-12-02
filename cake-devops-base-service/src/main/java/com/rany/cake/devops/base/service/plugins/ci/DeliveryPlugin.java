@@ -56,8 +56,8 @@ public class DeliveryPlugin extends BasePlugin {
             JSCHTool.remoteExecute(session, "ls -l");
             JSCHTool.remoteExecute(session, "pwd");
             JSCHTool.remoteExecute(session, "mkdir " + remoteBase + remoteWorkSpaceFolder);
-            JSCHTool.remoteExecute(session, "cd " + remoteBase + remoteWorkSpaceFolder + ";curl -O https://github.com/WXzhongwang/cake-devops-base/blob/main/docker-compose/java-build-source.tar.gz");
-            JSCHTool.remoteExecute(session, "tar -zxvf java-build-source.tar.gz");
+            JSCHTool.remoteExecute(session, "cd " + remoteBase + remoteWorkSpaceFolder + "; curl -O https://github.com/WXzhongwang/cake-devops-base/blob/main/docker-compose/java-build-source.tar.gz");
+            JSCHTool.remoteExecute(session, "pwd; tar -zxvf java-build-source.tar.gz");
             JSCHTool.remoteExecute(session, "chmod +x build.sh");
             JSCHTool.remoteExecute(session, String.format("sh build.sh %s %s %s %s %s",
                     repo,
