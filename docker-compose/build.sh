@@ -34,6 +34,7 @@ function checkout {
 function mvn_build {
   local folder_name=$1
 
+  # shellcheck disable=SC2164
   cd "$folder_name"
   # 编译构建
   $MAVEN_HOME_363 clean package -U -DskipTests=true
@@ -55,6 +56,7 @@ function sonar_scan {
   # 判断是否执行SonarQube扫描任务
   if [ "$sonar_scan" == "true" ]; then
     # 执行SonarQube扫描任务
+    # shellcheck disable=SC2153
     $SONAR_SCAN_HOME \
       -Dsonar.projectKey="$repo_name" \
       -Dsonar.sources=. \
@@ -93,6 +95,7 @@ function push_image {
   local image_name=$4
 
   # 登录Harbor
+  # shellcheck disable=SC2153
   $DOCKER_HOME login -u "$HARBOR_URER" -p "$HARBOR_PASSWORD" "$HARBOR_URL"
 
   # 标记镜像
