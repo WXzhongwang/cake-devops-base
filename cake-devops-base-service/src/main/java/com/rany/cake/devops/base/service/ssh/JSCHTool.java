@@ -40,7 +40,7 @@ public class JSCHTool {
         remoteExecute(session, "echo 'It a test file.' > /Users/yuanjinxiu/jsch-demo/test-file");
         remoteExecute(session, "cat /Users/yuanjinxiu/jsch-demo/test-file");
 
-        scpTo("/Users/yuanjinxiu/workspace/cake-devops-base/docker-compose/build.sh", session, "/Users/yuanjinxiu/jsch-demo/build.sh");
+        scpTo(session, "/Users/yuanjinxiu/workspace/cake-devops-base/docker-compose/build.sh", "/Users/yuanjinxiu/jsch-demo/build.sh");
         System.out.println("hello");
         session.disconnect();
     }
@@ -84,7 +84,7 @@ public class JSCHTool {
         return resultLines;
     }
 
-    public static long scpTo(String source, Session session, String destination) {
+    public static long scpTo(Session session, String source, String destination) {
         FileInputStream fileInputStream = null;
         try {
             ChannelExec channel = (ChannelExec) session.openChannel("exec");
