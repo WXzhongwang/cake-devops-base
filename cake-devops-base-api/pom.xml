@@ -13,12 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
             <groupId>com.rany</groupId>
             <artifactId>cake-framework-common</artifactId>
         </dependency>
