@@ -53,7 +53,6 @@ public class DeliveryPlugin extends BasePlugin {
             session.connect();
 
             JSCHTool.remoteExecute(session, "ls -l");
-            JSCHTool.remoteExecute(session, "ls -l");
             JSCHTool.remoteExecute(session, "pwd");
             JSCHTool.remoteExecute(session, "mkdir " + remoteBase + remoteWorkSpaceFolder);
             // J：此选项告诉 -O, --remote-name 选项使用服务器指定的 Content-Disposition 文件名，而不是从 URL 中提取文件名。
