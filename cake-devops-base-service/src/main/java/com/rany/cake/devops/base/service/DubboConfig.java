@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 public class DubboConfig {
 
     // @Reference(check = false)
-    @Reference
+    @Reference(check = false)
     private AccountFacade accountFacade;
 
     @Bean
