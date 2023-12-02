@@ -128,6 +128,7 @@ function push_aliyun_image {
   # 标记镜像
   $DOCKER_HOME tag "$project:$version" "$ALIYUN_ACR_URL/$namespace/$project:$version"
 
+  echo "$project:$version" "$ALIYUN_ACR_URL/$namespace/$project:$version"
   # 推送镜像到Harbor
   $DOCKER_HOME push "$ALIYUN_ACR_URL/$namespace/$project:$version"
 
