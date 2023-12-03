@@ -11,16 +11,16 @@ public interface ApprovalService {
     /**
      * 创建审批单
      *
-     * @param createApprovalCommand
-     * @return
+     * @param createApprovalCommand 创建审批单
+     * @return 成功
      */
     PojoResult<Long> createApproval(CreateApprovalCommand createApprovalCommand);
 
     /**
      * 获取审批单信息
      *
-     * @param approvalBasicQuery
-     * @return
+     * @param approvalBasicQuery 获取审批单信息
+     * @return 审批信息
      */
     PojoResult<ApprovalDTO> getApproval(ApprovalBasicQuery approvalBasicQuery);
 
@@ -28,16 +28,16 @@ public interface ApprovalService {
     /**
      * 删除审批单
      *
-     * @param deleteApprovalCommand
-     * @return
+     * @param deleteApprovalCommand 删除审批单
+     * @return 成功
      */
     PojoResult<Boolean> deleteApproval(DeleteApprovalCommand deleteApprovalCommand);
 
     /**
      * 更新审批单基本信息
      *
-     * @param modifyApprovalCommand
-     * @return
+     * @param modifyApprovalCommand 更新审批单基本信息
+     * @return 成功
      */
     PojoResult<Boolean> modifyApproval(ModifyApprovalCommand modifyApprovalCommand);
 
@@ -45,24 +45,24 @@ public interface ApprovalService {
     /**
      * 通过审批单
      *
-     * @param approveApprovalCommand
-     * @return
+     * @param approveApprovalCommand 通过审批单
+     * @return 成功
      */
     PojoResult<Boolean> approveApproval(ApproveApprovalCommand approveApprovalCommand);
 
     /**
      * 撤销审批单
      *
-     * @param repealApprovalCommand
-     * @return
+     * @param repealApprovalCommand 撤销审批单
+     * @return 成功
      */
     PojoResult<Boolean> repealApproval(RepealApprovalCommand repealApprovalCommand);
 
     /**
      * 拒绝审批单
      *
-     * @param rejectApprovalCommand
-     * @return
+     * @param rejectApprovalCommand 拒绝审批单
+     * @return 成功
      */
     PojoResult<Boolean> rejectApproval(RejectApprovalCommand rejectApprovalCommand);
 }
