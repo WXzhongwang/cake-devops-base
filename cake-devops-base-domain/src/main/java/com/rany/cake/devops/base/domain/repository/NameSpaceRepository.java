@@ -2,7 +2,10 @@ package com.rany.cake.devops.base.domain.repository;
 
 import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
+import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.NamespaceId;
+
+import java.util.List;
 
 /**
  * 命名空间
@@ -13,4 +16,8 @@ import com.rany.cake.devops.base.domain.pk.NamespaceId;
  * @email 18668485565163.com
  */
 public interface NameSpaceRepository extends Repository<Namespace, NamespaceId> {
+
+    int update(Namespace namespace);
+
+    List<Namespace> listNamespace(ClusterId clusterId);
 }

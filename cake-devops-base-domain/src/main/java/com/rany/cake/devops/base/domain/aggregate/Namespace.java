@@ -2,10 +2,14 @@ package com.rany.cake.devops.base.domain.aggregate;
 
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
+import com.rany.cake.devops.base.domain.enums.CommonStatusEnum;
+import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.type.NamespaceName;
 import lombok.*;
+
+import java.util.Date;
 
 /**
  * 命名空间
@@ -23,7 +27,7 @@ import lombok.*;
 public class Namespace extends BaseAggregateRoot implements IAggregate<NamespaceId> {
 
     private NamespaceId id;
-    
+
     private ClusterId clusterId;
 
     private NamespaceName name;
@@ -60,8 +64,16 @@ public class Namespace extends BaseAggregateRoot implements IAggregate<Namespace
 
     private String status;
 
-    public Namespace(NamespaceId id, NamespaceName name) {
+    public Namespace(NamespaceId id, NamespaceName name, ClusterId clusterId) {
         this.id = id;
         this.name = name;
+        this.clusterId = clusterId;
+    }
+
+    public void init() {
+        this.status = CommonStatusEnum.ENABLE.getCode();
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
+        this.gmtCreate = new Date();
+        this.gmtModified = new Date();
     }
 }

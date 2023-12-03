@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
 import com.rany.cake.devops.base.infra.convertor.NamespaceDataConvertor;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 命名空间
@@ -45,5 +47,15 @@ public class NamespaceRepositoryImpl implements NameSpaceRepository {
     @Override
     public void save(@NotNull Namespace namespace) {
         namespaceDao.save(namespace);
+    }
+
+    @Override
+    public int update(Namespace namespace) {
+        return namespaceDao.update(namespace);
+    }
+
+    @Override
+    public List<Namespace> listNamespace(ClusterId clusterId) {
+        return namespaceDao.listNamespace(clusterId.getId());
     }
 }

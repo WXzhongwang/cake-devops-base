@@ -93,4 +93,12 @@
         </set>
         where id = #{id.id,jdbcType=BIGINT}
     </update>
+
+    <select id="listNamespace" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from namespace
+        where is_deleted = '0'
+        and cluster_id = #{clusterId}
+    </select>
 </mapper>
