@@ -122,7 +122,6 @@ function push_aliyun_image {
   local namespace=$1
   local project=$2
   local version=$3
-
   # 登录ACR
   # shellcheck disable=SC2153
   $DOCKER_HOME login -u "$ALIYUN_ACR_USER_NAME"  -p "$ALIYUN_ACR_USER_PASSWORD" "$ALIYUN_ACR_URL"
