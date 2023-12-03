@@ -28,6 +28,5 @@ public class CreateAppCommand extends DTO {
     private String departmentAbbreviation;
     private String department;
     private List<AppMemberDTO> appMembers;
-    // private List<AppEnvDTO> appEnvs;
     private String healthCheck;
 }

@@ -11,6 +11,7 @@ import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.dto.ResourceStrategyDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
+import com.rany.cake.devops.base.api.query.AppEnvQuery;
 import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
@@ -32,6 +33,7 @@ import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
+import com.rany.cake.devops.base.service.adapter.AppDataAdapter;
 import com.rany.uic.api.facade.account.AccountFacade;
 import com.rany.uic.api.query.account.AccountQuery;
 import com.rany.uic.common.dto.account.AccountDTO;
@@ -68,6 +70,7 @@ public class AppRemoteService implements AppService {
     private final AppMemberDomainService appMemberDomainService;
     private final AppDomainService appDomainService;
     private final ClusterDomainService clusterDomainService;
+    private final AppDataAdapter appDataAdapter;
 
     @Override
     public PojoResult<Long> createApp(CreateAppCommand createAppCommand) {
@@ -138,7 +141,7 @@ public class AppRemoteService implements AppService {
         if (CollectionUtils.isNotEmpty(appEnvNames) && appEnvNames.contains(env.getEnvName())) {
             throw new DevOpsException(DevOpsErrorMessage.ENV_DUPLICATED);
         }
-        AppEnvEnum appEnvEnum = EnumUtils.getEnum(AppEnvEnum.class, env.getEnvEnum());
+        AppEnvEnum appEnvEnum = EnumUtils.getEnum(AppEnvEnum.class, env.getEnv());
         AppEnv appEnv = new AppEnv(app.getId(), cluster.getId(), env.getEnvName(), appEnvEnum);
         appEnv.setDomains(env.getDomains());
         appEnv.setAutoScaling(env.getAutoScaling());
@@ -148,5 +151,15 @@ public class AppRemoteService implements AppService {
                 resourceStrategyDTO.getMemory()));
         appDomainService.createEnv(appEnv);
         return PojoResult.succeed(appEnv.getId());
+    }
+
+    @Override
+    public ListResult<AppEnvDTO> listAppEnv(AppEnvQuery appEnvQuery) {
+        App app = appDomainService.getApp(new AppId(appEnvQuery.getAppId()));
+        if (app == null) {
+            throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
+        }
+        List<AppEnv> appEnvs = appDomainService.listAppEnv(new AppId(appEnvQuery.getAppId()));
+        return ListResult.succeed(appDataAdapter.envSourceToTarget(appEnvs));
     }
 }

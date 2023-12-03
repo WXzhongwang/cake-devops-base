@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 集群
@@ -50,5 +51,9 @@ public class ClusterRepositoryImpl implements ClusterRepository {
     @Override
     public int update(Cluster cluster) {
         return clusterDao.update(cluster);
+    }
+
+    public List<Cluster> selectAll() {
+        return clusterDao.selectAll();
     }
 }

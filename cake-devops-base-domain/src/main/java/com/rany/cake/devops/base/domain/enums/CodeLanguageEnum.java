@@ -22,7 +22,7 @@ public enum CodeLanguageEnum {
         this.value = value;
     }
 
-    private Integer code;
+    private final Integer code;
 
-    private String value;
+    private final String value;
 }

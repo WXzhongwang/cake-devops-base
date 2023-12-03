@@ -14,10 +14,10 @@ public class WebSocketService {
     @Resource
     private WebSocketServer webSocketServer;
 
-    public void sendMessage(String taskId, String logMessage) {
+    public void sendMessage(String releaseId, String logMessage) {
         try {
             ConcurrentHashMap<String, WebSocketServer> map = webSocketServer.getWebSocketMap();
-            WebSocketServer server = map.get(taskId);
+            WebSocketServer server = map.get(releaseId);
             if (server != null) {
                 server.sendMessage(logMessage);
             } else {

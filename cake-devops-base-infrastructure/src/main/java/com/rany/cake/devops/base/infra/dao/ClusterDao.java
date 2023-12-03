@@ -2,6 +2,8 @@ package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 
+import java.util.List;
+
 /**
  * 集群
  *
@@ -29,5 +31,12 @@ public interface ClusterDao {
      * @return
      */
     int update(Cluster cluster);
+
+    /**
+     * 查全部
+     *
+     * @return
+     */
+    List<Cluster> selectAll();
 
 }

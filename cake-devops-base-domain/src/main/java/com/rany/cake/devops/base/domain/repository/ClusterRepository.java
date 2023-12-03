@@ -4,6 +4,8 @@ import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 
+import java.util.List;
+
 /**
  * 集群
  *
@@ -15,4 +17,6 @@ import com.rany.cake.devops.base.domain.pk.ClusterId;
 public interface ClusterRepository extends Repository<Cluster, ClusterId> {
 
     int update(Cluster cluster);
+
+    List<Cluster> selectAll();
 }

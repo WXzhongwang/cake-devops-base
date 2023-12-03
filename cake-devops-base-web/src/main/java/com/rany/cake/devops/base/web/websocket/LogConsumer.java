@@ -29,10 +29,10 @@ public class LogConsumer {
         try {
             log.debug("consumer>>>接收到的消息>>>{}", msg);
             msg.split(" - ")[0].trim().replace("[", "").replace("]", "");
-            String tracId = msg.substring(0, msg.indexOf(" - ")).trim().replace("[", "").replace("]", "");
+            String releaseId = msg.substring(0, msg.indexOf(" - ")).trim().replace("[", "").replace("]", "");
             msg = msg.substring(msg.indexOf(" - ") + 2);
             //调用websocket发送日志信息到页面上
-            webSocketService.sendMessage(tracId, msg);
+            webSocketService.sendMessage(releaseId, msg);
         } catch (Exception e) {
             log.error("获取消息失败，异常原因：{}", e.getMessage(), e);
         } finally {

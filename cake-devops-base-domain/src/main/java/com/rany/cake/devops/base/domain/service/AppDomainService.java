@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * TODO
+ * AppDomainService
  *
  * @author zhongshengwang
- * @description TODO
+ * @description appDomainService
  * @date 2023/1/28 20:59
  * @email 18668485565163.com
  */
@@ -57,5 +57,9 @@ public class AppDomainService {
 
     public App getApp(AppId appId) {
         return appRepository.find(appId);
+    }
+
+    public List<AppEnv> listAppEnv(AppId appId) {
+        return appRepository.listAppEnv(appId.getId());
     }
 }

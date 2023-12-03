@@ -6,6 +6,8 @@ import com.rany.cake.devops.base.domain.repository.ClusterRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * 集群
  *
@@ -35,5 +37,9 @@ public class ClusterDomainService {
 
     public Cluster getCluster(ClusterId clusterId) {
         return clusterRepository.find(clusterId);
+    }
+
+    public List<Cluster> selectAll() {
+        return clusterRepository.selectAll();
     }
 }

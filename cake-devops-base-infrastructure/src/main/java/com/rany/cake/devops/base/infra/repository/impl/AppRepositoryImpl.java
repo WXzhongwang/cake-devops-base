@@ -75,4 +75,10 @@ public class AppRepositoryImpl implements AppRepository {
         AppEnvPO appEnvPO = appEnvPOMapper.selectByPrimaryKey(envId);
         return appEnvDataConvertor.targetToSource(appEnvPO);
     }
+
+    @Override
+    public List<AppEnv> listAppEnv(Long appId) {
+        List<AppEnvPO> appEnvPOS = appEnvDao.selectByAppId(appId);
+        return appEnvDataConvertor.targetToSource(appEnvPOS);
+    }
 }

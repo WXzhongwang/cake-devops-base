@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 应用环境
@@ -18,12 +19,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class AppEnvDTO extends DTO {
 
+    private Long id;
+    private Long appId;
     private Long clusterId;
-    private String envEnum;
+    private String env;
     private String envName;
     private List<String> domains;
     private ResourceStrategyDTO resourceStrategyDTO;
-
+    private Map<String, String> configMap;
     /**
      * 是否自动扩容
      */
@@ -32,4 +35,8 @@ public class AppEnvDTO extends DTO {
      * 是否开启部署 需要审批
      */
     private Boolean needApproval;
+    /**
+     * 状态
+     */
+    private String status;
 }

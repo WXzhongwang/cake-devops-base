@@ -18,9 +18,9 @@ public enum ClusterTypeEnum {
     TENCENT(3, "腾讯云"),
     ;
 
-    private Integer code;
+    private final Integer code;
 
-    private String value;
+    private final String value;
 
     ClusterTypeEnum(Integer code, String value) {
         this.code = code;
