@@ -9,7 +9,6 @@ import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -24,7 +23,6 @@ import javax.annotation.Resource;
  * @date 2023/1/20 20:30
  * @email 18668485565163.com
  */
-@Slf4j
 @Component
 public class CheckOutPlugin extends BasePlugin {
     @Override

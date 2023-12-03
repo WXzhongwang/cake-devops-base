@@ -1,53 +1,21 @@
 package com.rany.cake.devops.base.service.ssh;
 
 import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
-@Slf4j
+
 public class JSCHTool {
+    protected static final Logger log = LoggerFactory.getLogger("RabbitMq");
 
-    public static void main(String[] args) throws JSchException {
-        String host = "127.0.0.1";
-        String user = "yuanjinxiu";
-        String password = "131400";
-        int port = 22;
-
-        JSch jsch = new JSch();
-        Session session = jsch.getSession(user, host, port);
-        session.setPassword(password);
-
-        // 关闭 StrictHostKeyChecking，避免 UnknownHostKey 导致连接失败
-        java.util.Properties config = new java.util.Properties();
-        config.put("StrictHostKeyChecking", "no");
-        session.setConfig(config);
-
-        // 连接到服务器
-        session.connect();
-        remoteExecute(session, "ls -l");
-        remoteExecute(session, "pwd");
-        remoteExecute(session, "mkdir /Users/yuanjinxiu/jsch-demo");
-        remoteExecute(session, "ls /Users/yuanjinxiu/jsch-demo");
-        remoteExecute(session, "touch /Users/yuanjinxiu/jsch-demo/test1; touch /Users/yuanjinxiu/jsch-demo/test2");
-        remoteExecute(session, "echo 'It a test file.' > /Users/yuanjinxiu/jsch-demo/test-file");
-        remoteExecute(session, "cat /Users/yuanjinxiu/jsch-demo/test-file");
-
-        scpTo(session, "/Users/yuanjinxiu/workspace/cake-devops-base/docker-compose/build.sh", "/Users/yuanjinxiu/jsch-demo/build.sh");
-        System.out.println("hello");
-        session.disconnect();
-    }
-
-    public static List<String> remoteExecute(Session session, String command) throws JSchException {
+    public static void remoteExecute(Session session, String command) throws JSchException {
         log.info(">> {}", command);
-        List<String> resultLines = new ArrayList<>();
         ChannelExec channel = null;
         try {
             channel = (ChannelExec) session.openChannel("exec");
@@ -59,7 +27,6 @@ public class JSCHTool {
                 String inputLine = null;
                 while ((inputLine = inputReader.readLine()) != null) {
                     log.info("{}", inputLine);
-                    resultLines.add(inputLine);
                 }
             } finally {
                 if (input != null) {
@@ -71,7 +38,7 @@ public class JSCHTool {
                 }
             }
         } catch (IOException e) {
-            log.error("IOcxecption:", e);
+            log.error("IOException occur:", e);
         } finally {
             if (channel != null) {
                 try {
@@ -81,7 +48,6 @@ public class JSCHTool {
                 }
             }
         }
-        return resultLines;
     }
 
     public static long scpTo(Session session, String source, String destination) {

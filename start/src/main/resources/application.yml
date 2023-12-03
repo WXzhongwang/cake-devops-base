@@ -51,6 +51,19 @@ spring:
       #通过connectProperties属性来打开mergeSql功能；慢SQL记录
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;
 
+  application:
+    name: cake-devops-base
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+  rabbitmq:
+    addresses: 127.0.0.1:5672
+    username: guest
+    password: guest
+    connection-timeout: 5000
+    virtual-host: /
+
 enable:
   sql:
     print:
@@ -63,7 +76,13 @@ mybatis:
   mapper-locations: classpath:com/rany/cake/devops/base/infra/mapper/*.xml, classpath:com/rany/cake/devops/base/infra/dao/*.xml
   type-aliases-package: com.rany.cake.devops.base.infra, com.rany.cake.devops.base.domain
 
+
+
 devops:
+  log:
+    queueName: devops-log-queue
+    exchangeName: devops-log-exchange
+    bindingKey: devops-log-key
   app:
     tenantId: 768821467507994624
   package:

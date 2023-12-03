@@ -17,6 +17,7 @@ public final class Constants {
 
     public static final String SYSTEM_NAME = "cake-devops";
     public static final String SYSTEM_VERSION = "1.0.0";
+    public final static String TRACE_ID = "traceId";
     /**
      * 默认端口
      */
@@ -27,4 +28,30 @@ public final class Constants {
      * 打包主机组名称，不存在会创建改组
      */
     public static final String DEFAULT_GROUP_NAME = "package";
+    public static final String AUTHORIZED_KEYS = "~/.ssh/authorized_keys";
+
+
+    /**
+     * 秒时间戳
+     */
+    public static final long SECOND_TIME = 1000L;
+
+    /**
+     * 分钟时间戳
+     */
+    public static final long MINUTE_TIME = 60 * SECOND_TIME;
+
+    /**
+     * 小时时间戳
+     */
+    public static final long HOUR_TIME = 60 * MINUTE_TIME;
+
+    /**
+     * 天时间戳
+     */
+    public static final long DAY_TIME = 24 * HOUR_TIME;
+    /**
+     * 超时时间5分钟
+     */
+    public static final Long WEBSOCKET_TIMEOUT = MINUTE_TIME * 5;
 }

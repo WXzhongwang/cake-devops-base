@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <property name="APP_NAME" value="cake-devops-base"/>
+    <property name="log.path" value="${user.home}/${APP_NAME}/logs"/>
+    <property name="ENCODING" value="UTF-8"/>
+
+    <springProperty scope="context" name="rabbitmq-address" source="spring.rabbitmq.addresses"
+                    defaultValue="127.0.0.1:5672"/>
+    <springProperty scope="context" name="rabbitmq-username" source="spring.rabbitmq.username" defaultValue="guest"/>
+    <springProperty scope="context" name="rabbitmq-password" source="spring.rabbitmq.password" defaultValue="guest"/>
+    <springProperty scope="context" name="rabbitmq-virtual-host" source="spring.rabbitmq.virtualHost" defaultValue="/"/>
+    <springProperty scope="context" name="exchange-name" source="devops.log.exchangeName"
+                    defaultValue="default-exchange"/>
+    <springProperty scope="context" name="binding-key" source="devops.log.bindingKey" defaultValue="default-routing"/>
+
+
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%yellow(%date{yyyy-MM-dd HH:mm:ss})|%X{traceId}|%highlight([%-5level])|%green(%logger)|%msg%n"/>
+
+    <property name="FILE_LOG_PATTERN"
+              value="%date{yyyy-MM-dd HH:mm:ss}|%X{traceId}|[%-5level]|%thread|%file:%line|%logger|%msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>${ENCODING}</charset>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--  要区别于其他的appender中的文件名字  -->
+        <file>${log.path}/application.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${ENCODING}</charset>
+        </encoder>
+        <!-- 设置滚动日志记录的滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志归档路径以及格式 -->
+            <fileNamePattern>${log.path}/info/application-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--归档日志文件保留的最大数量-->
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+
+    <appender name="RABBITMQ" class="org.springframework.amqp.rabbit.logback.AmqpAppender">
+        <layout>
+            <pattern>[%X{traceId}] - %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </layout>
+        <!--rabbitmq地址 -->
+        <addresses>${rabbitmq-address}</addresses>
+        <username>${rabbitmq-username}</username>
+        <password>${rabbitmq-password}</password>
+        <virtualHost>${rabbitmq-virtual-host}</virtualHost>
+
+        <declareExchange>false</declareExchange>
+        <exchangeType>direct</exchangeType>
+        <exchangeName>${exchange-name}</exchangeName>
+        <routingKeyPattern>${binding-key}</routingKeyPattern>
+        <generateId>true</generateId>
+        <charset>UTF-8</charset>
+        <durable>true</durable>
+        <deliveryMode>NON_PERSISTENT</deliveryMode>
+        <!--        <filter class="com.log.websocket.stomp.LogFilter">-->
+        <!--            <level>INFO</level>-->
+        <!--        </filter>-->
+    </appender>
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </root>
+        <logger name="RabbitMq" level="debug">
+            <appender-ref ref="RABBITMQ"/>
+        </logger>
+    </springProfile>
+</configuration>

@@ -7,7 +7,6 @@ import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
 import com.rany.cake.devops.base.service.ssh.JSCHTool;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Component;
  * @email 18668485565163.com
  */
 
-@Slf4j
 @Component
 public class DeliveryPlugin extends BasePlugin {
     @Override
@@ -71,6 +69,7 @@ public class DeliveryPlugin extends BasePlugin {
                     executeCommand);
         } catch (JSchException e) {
             log.error("DeliveryPlugin error", e);
+            return false;
         } finally {
             if (session != null) {
                 session.disconnect();

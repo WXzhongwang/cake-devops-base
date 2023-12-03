@@ -1,0 +1,79 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>任务日志展示</title>
+</head>
+<body>
+<script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+
+    let socket = null;
+
+    function openSocket() {
+        let detailDiv = $("#log_detail");
+        let releaseId = $("#gather_task_id").val();
+        //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
+        let socketUrl = "http://localhost:8300/api/ws/cake-devops/" + releaseId;
+        socketUrl = socketUrl.replace("https", "ws").replace("http", "ws");
+        if (socket != null) {
+            socket.close();
+            socket = null;
+        }
+        socket = new WebSocket(socketUrl);
+        //打开事件
+        socket.onopen = function () {
+            console.log("websocket已打开");
+        };
+        //获得消息事件
+        socket.onmessage = function (msg) {
+            console.log(msg.data);
+            //发现消息进入    开始处理前端触发逻辑
+            detailDiv.append("<p>" + msg.data + "</p>")
+        };
+        //关闭事件
+        socket.onclose = function () {
+            console.log("websocket已关闭");
+        };
+        //发生了错误事件
+        socket.onerror = function () {
+            console.log("websocket发生了错误");
+        }
+    }
+
+    function sendMessage() {
+        if (typeof (WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        } else {
+            console.log("您的浏览器支持WebSocket");
+            console.log('{"toUserId":"' + $("#toUserId").val() + '","contentText":"' + $("#contentText").val() + '"}');
+            socket.send('{"toUserId":"' + $("#toUserId").val() + '","contentText":"' + $("#contentText").val() + '"}');
+        }
+    }
+
+
+    function printLog() {
+        if (typeof (WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+            alert("您的浏览器不支持WebSocket");
+        } else {
+            openSocket();
+        }
+    }
+
+    function quit() {
+        if (socket != null) {
+            socket.close();
+            socket = null;
+            let detailDiv = $("#log_detail");
+            detailDiv.append("<p>客户端已退出</p>")
+        }
+    }
+</script>
+<input type="hidden" id="gather_task_id" th:value="${releaseId}"/>
+<button onclick="printLog()">打印日志</button>
+<button onclick="quit()">退出</button>
+<div id="log_detail">
+</div>
+</body>
+</html>

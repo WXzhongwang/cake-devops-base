@@ -118,6 +118,8 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>ci/*.sh</include>
+                    <include>static/</include>
+                    <include>templates/</include>
                     <include>application.yml</include>
                     <include>application-${activatedProperties}.yml</include>
                 </includes>
