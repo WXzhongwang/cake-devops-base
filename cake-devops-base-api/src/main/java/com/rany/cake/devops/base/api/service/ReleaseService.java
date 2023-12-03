@@ -15,7 +15,7 @@ import com.rany.cake.devops.base.api.command.release.DeployCommand;
 public interface ReleaseService {
 
     /**
-     * 创建发布
+     * 创建发布变更
      *
      * @param createReleaseCommand 创建发布
      * @return 是否成功
@@ -23,10 +23,10 @@ public interface ReleaseService {
     PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand);
 
     /**
-     * 基于发布单发布
+     * 基于变更单发布
      *
-     * @param deployCommand
-     * @return
+     * @param deployCommand 立即发布
+     * @return 立即发布
      */
     PojoResult<Boolean> deploy(DeployCommand deployCommand);
 }

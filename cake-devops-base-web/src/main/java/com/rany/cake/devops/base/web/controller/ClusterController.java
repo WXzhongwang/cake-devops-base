@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * 集群
+ */
 @RestController
 @RequestMapping("/cluster")
 public class ClusterController {

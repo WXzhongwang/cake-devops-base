@@ -18,6 +18,7 @@ public enum DevOpsErrorMessage {
     CLUSTER_NOT_FOUND("50000", "集群未找到"),
     ENV_NOT_FOUND("50000", "环境未找到"),
     APPROVAL_NOT_FOUND("50000", "审批未找到"),
+    APPROVAL_NOT_APPROVED("50000", "审批未通过"),
     RELEASE_NOT_FOUND("50000", "发布未找到"),
     ENV_DUPLICATED("50000", "环境冲突"),
     OPS_SUPPORTED_ERROR("50001", "尚未支持的集群类型"),

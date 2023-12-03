@@ -2,6 +2,10 @@ package com.rany.cake.devops.base.domain.enums;
 
 public enum ReleaseStatus {
     /**
+     * 审批中
+     */
+    APPROVAL,
+    /**
      * 待发布
      */
     READY,
@@ -10,7 +14,7 @@ public enum ReleaseStatus {
      * 发布中
      */
     PENDING,
-    
+
     /**
      * 已发布
      */

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * 审批单
+ */
 @RestController
 @RequestMapping("/approval")
 public class ApprovalController {

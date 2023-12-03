@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * 命名空间
+ */
 @RestController
 @RequestMapping("/namespace")
 public class NamespaceController {

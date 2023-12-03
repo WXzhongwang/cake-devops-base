@@ -2,6 +2,10 @@ package com.rany.cake.devops.base.domain.aggregate;
 
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
+import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
+import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.domain.enums.ReleaseStatus;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
 import com.rany.cake.devops.base.domain.pk.ReleaseId;
@@ -43,5 +47,25 @@ public class Release extends BaseAggregateRoot implements IAggregate<ReleaseId> 
         this.envId = envId;
         this.releaseNo = releaseNo;
         this.releaseDate = releaseDate;
+    }
+
+    public void init(AppEnv appEnv) {
+        this.releaseStatus = ReleaseStatus.APPROVAL.name();
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
+        this.gmtCreate = new Date();
+        this.gmtModified = new Date();
+        // 非线上环境不关注审批
+        if (appEnv.getEnv() != AppEnvEnum.PROD) {
+            this.releaseStatus = ReleaseStatus.READY.name();
+        }
+    }
+
+    public void approved() {
+        this.releaseStatus = ReleaseStatus.READY.name();
+    }
+
+    public void deploy() {
+        this.releaseStatus = ReleaseStatus.PENDING.name();
+        this.gmtModified = new Date();
     }
 }

@@ -11,6 +11,7 @@ import com.rany.cake.devops.base.domain.aggregate.Approval;
 import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.enums.ApprovalStatus;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
 import com.rany.cake.devops.base.domain.pk.ReleaseId;
@@ -21,6 +22,7 @@ import com.rany.cake.devops.base.domain.service.ReleaseDomainService;
 import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 
 import java.util.Objects;
@@ -46,18 +48,22 @@ public class ReleaseRemoteService implements ReleaseService {
         if (appEnv == null) {
             throw new DevOpsException(DevOpsErrorMessage.ENV_NOT_FOUND);
         }
-        if (Objects.nonNull(createReleaseCommand.getApprovalId())) {
-            Approval approval = approvalRepository.find(new ApprovalId(createReleaseCommand.getApprovalId()));
-            if (approval == null) {
-                throw new DevOpsException(DevOpsErrorMessage.APPROVAL_NOT_FOUND);
-            }
-        }
         Release release = new Release(new ReleaseId(snowflakeIdWorker.nextId()),
                 new AppId(createReleaseCommand.getAppId()),
                 appEnv.getId(),
                 redisSerialNumberGenerator.generateReleaseSerialNumber(),
                 createReleaseCommand.getReleaseDate()
         );
+        release.init(appEnv);
+        if (Objects.nonNull(createReleaseCommand.getApprovalId())) {
+            Approval approval = approvalRepository.find(new ApprovalId(createReleaseCommand.getApprovalId()));
+            if (approval == null) {
+                throw new DevOpsException(DevOpsErrorMessage.APPROVAL_NOT_FOUND);
+            }
+            if (StringUtils.equals(approval.getApprovalStatus(), ApprovalStatus.APPROVED.name())) {
+                release.approved();
+            }
+        }
         releaseDomainService.save(release);
         return PojoResult.succeed(Boolean.TRUE);
     }
@@ -68,6 +74,15 @@ public class ReleaseRemoteService implements ReleaseService {
         if (release == null) {
             throw new DevOpsException(DevOpsErrorMessage.RELEASE_NOT_FOUND);
         }
-        return null;
+        if (Objects.nonNull(release.getApprovalId())) {
+            Approval approval = approvalRepository.find(release.getApprovalId());
+            if (approval != null && !StringUtils.equals(approval.getApprovalStatus(), ApprovalStatus.APPROVED.name())) {
+                throw new DevOpsException(DevOpsErrorMessage.APPROVAL_NOT_APPROVED);
+            }
+        }
+        release.deploy();
+        releaseDomainService.update(release);
+        // TODO 开始发布
+        return PojoResult.succeed(Boolean.TRUE);
     }
 }
