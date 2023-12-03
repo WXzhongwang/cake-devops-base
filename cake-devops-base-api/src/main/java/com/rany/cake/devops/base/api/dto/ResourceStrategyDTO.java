@@ -28,4 +28,13 @@ public class ResourceStrategyDTO extends DTO {
      * 内存资源
      */
     private String memory;
+
+    /**
+     * cpu资源
+     */
+    private String maxCpu;
+    /**
+     * 内存资源
+     */
+    private String maxMemory;
 }

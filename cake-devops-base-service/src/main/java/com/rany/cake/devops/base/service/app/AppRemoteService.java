@@ -146,7 +146,7 @@ public class AppRemoteService implements AppService {
         appEnv.setDomains(env.getDomains());
         appEnv.setAutoScaling(env.getAutoScaling());
         appEnv.setNeedApproval(env.getNeedApproval());
-        ResourceStrategyDTO resourceStrategyDTO = env.getResourceStrategyDTO();
+        ResourceStrategyDTO resourceStrategyDTO = env.getResourceStrategy();
         appEnv.setResourceStrategy(new ResourceStrategy(resourceStrategyDTO.getMaxReplicas(), resourceStrategyDTO.getCpu(),
                 resourceStrategyDTO.getMemory()));
         appDomainService.createEnv(appEnv);

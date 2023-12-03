@@ -2,8 +2,10 @@ package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
+import com.rany.cake.devops.base.api.dto.ResourceStrategyDTO;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
@@ -42,6 +44,8 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
 
     @Mapping(source = "appId.id", target = "appId")
     @Mapping(source = "clusterId.id", target = "clusterId")
+    @Mapping(source = "env", target = "env")
+    @Mapping(target = "resourceStrategy", expression = "java(this.strategySourceToTarget(appEnv.getResourceStrategy()))")
     AppEnvDTO envSourceToTarget(AppEnv appEnv);
 
     @InheritConfiguration(name = "envSourceToTarget")
@@ -49,10 +53,16 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
 
     @Mapping(target = "appId.id", source = "appId")
     @Mapping(target = "clusterId.id", source = "clusterId")
+    @Mapping(target = "env", source = "env")
+    @Mapping(target = "resourceStrategy", expression = "java(this.strategyTargetToSource(appEnvDTO.getResourceStrategy()))")
     AppEnv envTargetToSource(AppEnvDTO appEnvDTO);
 
     @InheritConfiguration(name = "envTargetToSource")
     List<AppEnv> envTargetToSource(List<AppEnvDTO> appEnvDTOs);
+
+    ResourceStrategyDTO strategySourceToTarget(ResourceStrategy resourceStrategy);
+
+    ResourceStrategy strategyTargetToSource(ResourceStrategyDTO resourceStrategyDTO);
 
     /**
      * PO转聚合根
