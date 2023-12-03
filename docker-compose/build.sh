@@ -103,6 +103,8 @@ function push_harbor_image {
   # 标记镜像
   $DOCKER_HOME tag "$project:$version" "$HARBOR_URL/$namespace/$project:$version"
 
+  echo "TAG: $HARBOR_URL/$namespace/$project:$version"
+
   # 推送镜像到Harbor
   $DOCKER_HOME push "$HARBOR_URL/$project:$version"
 
@@ -123,14 +125,14 @@ function push_aliyun_image {
 
   # 登录ACR
   # shellcheck disable=SC2153
-  $DOCKER_HOME login --username="$ALIYUN_ACR_USER_NAME" "$ALIYUN_ACR_URL" --password="$ALIYUN_ACR_USER_PASSWORD"
+  $DOCKER_HOME login -u "$ALIYUN_ACR_USER_NAME"  -p "$ALIYUN_ACR_USER_PASSWORD" "$ALIYUN_ACR_URL"
 
   # 标记镜像
   $DOCKER_HOME tag "$project:$version" "$ALIYUN_ACR_URL/$namespace/$project:$version"
 
   echo "TAG: $ALIYUN_ACR_URL/$namespace/$project:$version"
 
-  # 推送镜像到Harbor
+  # 推送镜像到阿里云
   $DOCKER_HOME push "$ALIYUN_ACR_URL/$namespace/$project:$version"
 
   # 判断镜像推送是否成功
