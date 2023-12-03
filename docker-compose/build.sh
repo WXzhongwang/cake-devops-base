@@ -172,6 +172,7 @@ function main {
   checkout "$repo_url" "$branch_name" "$folder_name"
 
   # 判断拉取代码是否成功
+  # shellcheck disable=SC2181
   if [ $? -ne 0 ]; then
     send_notification "拉取代码失败" "failed" "$repo_name"
     exit 1
