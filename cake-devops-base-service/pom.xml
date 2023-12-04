@@ -13,6 +13,26 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
@@ -53,39 +73,47 @@
             <version>0.3.8</version>
         </dependency>
 
-        <!-- maven-embedder -->
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-embedder</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-compat</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.resolver</groupId>
-            <artifactId>maven-resolver-connector-basic</artifactId>
-            <version>1.7.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.resolver</groupId>
-            <artifactId>maven-resolver-transport-http</artifactId>
-            <version>1.7.1</version>
-        </dependency>
+        <!--        &lt;!&ndash; maven-embedder &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.maven</groupId>-->
+        <!--            <artifactId>maven-embedder</artifactId>-->
+        <!--            <version>3.8.1</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.maven</groupId>-->
+        <!--            <artifactId>maven-compat</artifactId>-->
+        <!--            <version>3.8.1</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.maven.resolver</groupId>-->
+        <!--            <artifactId>maven-resolver-connector-basic</artifactId>-->
+        <!--            <version>1.7.1</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.maven.resolver</groupId>-->
+        <!--            <artifactId>maven-resolver-transport-http</artifactId>-->
+        <!--            <version>1.7.1</version>-->
+        <!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.google.cloud.tools</groupId>
-            <artifactId>jib-core</artifactId>
-            <version>0.23.0</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.google.cloud.tools</groupId>-->
+        <!--            <artifactId>jib-core</artifactId>-->
+        <!--            <version>0.23.0</version>-->
+        <!--        </dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.jacoco</groupId>-->
+        <!--            <artifactId>jacoco-maven-plugin</artifactId>-->
+        <!--            <version>0.8.7</version>-->
+        <!--        </dependency>-->
+        
+
+        <!--K8S-->
         <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.7</version>
+            <groupId>io.kubernetes</groupId>
+            <artifactId>client-java</artifactId>
+            <version>16.0.2</version>
         </dependency>
 
 
@@ -95,15 +123,6 @@
             <artifactId>gitlab4j-api</artifactId>
             <version>4.19.0</version>
         </dependency>
-
-        <!--K8S-->
-        <dependency>
-            <groupId>io.kubernetes</groupId>
-            <artifactId>client-java</artifactId>
-            <version>16.0.2</version>
-            <!--            <version>18.0.1</version>-->
-        </dependency>
-
 
         <dependency>
             <groupId>com.rany.uic</groupId>

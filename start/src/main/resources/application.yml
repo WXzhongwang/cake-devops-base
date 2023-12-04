@@ -79,6 +79,10 @@ mybatis:
 
 
 devops:
+  redisson:
+    address: 127.0.0.1:6379
+    type: STANDALONE
+    enabled: true
   log:
     queueName: devops-log-queue
     exchangeName: devops-log-exchange

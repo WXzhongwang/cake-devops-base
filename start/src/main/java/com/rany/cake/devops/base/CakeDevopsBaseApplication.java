@@ -6,6 +6,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @EnableDubbo
 @EnableTransactionManagement
+@EnableAspectJAutoProxy
 @SpringBootApplication(exclude = {ParamLimitInterceptor.class})
 @MapperScan(basePackages = {"com.rany.cake.devops.base.infra.dao", "com.rany.cake.devops.base.infra.mapper"})
 @ComponentScan({"com.rany.cake.devops.base", "com.rany.cake.devops.base.domain", "com.rany.cake.devops.base.web", "com.rany.cake.devops.base.service", "com.rany.cake.devops.base.infra"})
