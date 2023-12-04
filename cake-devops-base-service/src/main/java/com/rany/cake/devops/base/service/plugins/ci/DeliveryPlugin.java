@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.service.plugins.ci;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
@@ -31,8 +32,7 @@ public class DeliveryPlugin extends BasePlugin {
         Integer port = (Integer) context.getArgMap().get(RunningConstant.BUILDER_PORT);
         String user = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_USER);
         String password = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_PWD);
-        String remoteBase = "/Users/yuanjinxiu/ci/";
-        String remoteWorkSpaceFolder = context.getApp().getAppName().getName();
+        String appName = context.getApp().getAppName().getName();
         String repo = context.getApp().getCodeRepository().getRepo();
         String branch = context.getRelease().getReleaseBranch();
         String releaseVersion = context.getRelease().getReleaseNo();
@@ -53,7 +53,6 @@ public class DeliveryPlugin extends BasePlugin {
 
             JSCHTool.remoteExecute(session, "ls -l");
             JSCHTool.remoteExecute(session, "pwd");
-            JSCHTool.remoteExecute(session, "mkdir " + remoteBase + remoteWorkSpaceFolder);
             // J：此选项告诉 -O, --remote-name 选项使用服务器指定的 Content-Disposition 文件名，而不是从 URL 中提取文件名。
             // L：如果服务器报告请求的页面已移动到不同的位置（用 Location: 标头和 3XX 响应代码指示），此选项将使 curl 在新位置重做请求。
             // O：使用此选项，您无需指定下载的输出文件名。
@@ -62,7 +61,7 @@ public class DeliveryPlugin extends BasePlugin {
                     "cake-devops-base",
                     releaseVersion,
                     "\"https://oapi.dingtalk.com/robot/send?access_token=89ca235dbe9f617f4ca045a1f24b0e61a32e9f845771752416377089c36470b7\"");
-            JSCHTool.remoteExecute(session, "cd " + remoteBase + remoteWorkSpaceFolder + ";\n" +
+            JSCHTool.remoteExecute(session, "cd " + Constants.REMOTE_BASE + appName + ";\n" +
                     "curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.1/java-build-source.tar.gz;" +
                     "tar -zxvf java-build-source.tar.gz;\n" +
                     "chmod +x build.sh;\n" +

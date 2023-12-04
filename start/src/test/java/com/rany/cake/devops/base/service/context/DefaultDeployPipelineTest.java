@@ -14,12 +14,7 @@ import com.rany.cake.devops.base.domain.repository.AppRepository;
 import com.rany.cake.devops.base.domain.repository.ClusterRepository;
 import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
-import com.rany.cake.devops.base.service.plugins.approval.ApprovalPlugin;
-import com.rany.cake.devops.base.service.plugins.approval.DeploymentForbiddenPlugin;
-import com.rany.cake.devops.base.service.plugins.ci.DeliveryPlugin;
-import com.rany.cake.devops.base.service.plugins.machine.MachineSelectorPlugin;
-import com.rany.cake.devops.base.service.plugins.scm.CheckOutPlugin;
-import com.rany.cake.devops.base.service.plugins.test.SonarQubePlugin;
+import com.rany.cake.devops.base.service.ReleaseCenter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,18 +37,9 @@ public class DefaultDeployPipelineTest extends BaseTests {
     private NameSpaceRepository nameSpaceRepository;
     @Resource
     private ReleaseRepository releaseRepository;
+
     @Resource
-    private ApprovalPlugin approvalPlugin;
-    @Resource
-    private DeploymentForbiddenPlugin deploymentForbiddenPlugin;
-    @Resource
-    private MachineSelectorPlugin machineSelectorPlugin;
-    @Resource
-    private SonarQubePlugin sonarQubePlugin;
-    @Resource
-    private CheckOutPlugin checkOutPlugin;
-    @Resource
-    private DeliveryPlugin deliveryPlugin;
+    private ReleaseCenter releaseCenter;
 
 
     @Test
@@ -64,29 +50,11 @@ public class DefaultDeployPipelineTest extends BaseTests {
 
     @Test
     public void start() {
-        DeployContext deployContext = new DeployContext();
         Release release = releaseRepository.find(new ReleaseId(1L));
-        deployContext.setRelease(release);
-
         App app = appRepository.find(release.getAppId());
-        deployContext.setApp(app);
-
         AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
-        deployContext.setAppEnv(appEnv);
-
         Cluster cluster = clusterRepository.find(appEnv.getClusterId());
-        deployContext.setCluster(cluster);
-
         Namespace namespace = nameSpaceRepository.find(new NamespaceId(1L));
-        deployContext.setNamespace(namespace);
-
-        DeployPipeline pipeline = new DefaultDeployPipeline(deployContext);
-        pipeline.addLast(approvalPlugin);
-        pipeline.addLast(deploymentForbiddenPlugin);
-        //pipeline.addLast(checkOutPlugin);
-        pipeline.addLast(machineSelectorPlugin);
-        pipeline.addLast(sonarQubePlugin);
-        pipeline.addLast(deliveryPlugin);
-        pipeline.start();
+        releaseCenter.release(release, app, appEnv, namespace, cluster);
     }
 }

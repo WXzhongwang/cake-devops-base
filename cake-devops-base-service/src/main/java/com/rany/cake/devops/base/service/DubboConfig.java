@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * TODO
+ * dubbo依赖
  *
  * @author zhongshengwang
  * @description TODO
@@ -15,8 +15,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class DubboConfig {
-
-    // @Reference(check = false)
     @Reference(check = false)
     private AccountFacade accountFacade;
 

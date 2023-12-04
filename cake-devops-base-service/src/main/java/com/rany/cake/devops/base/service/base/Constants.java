@@ -29,6 +29,7 @@ public final class Constants {
      */
     public static final String DEFAULT_GROUP_NAME = "package";
     public static final String AUTHORIZED_KEYS = "~/.ssh/authorized_keys";
+    public static final String REMOTE_BASE = "/Users/yuanjinxiu/ci/";
 
 
     /**
