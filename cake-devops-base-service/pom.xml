@@ -72,42 +72,20 @@
             <artifactId>jenkins-client</artifactId>
             <version>0.3.8</version>
         </dependency>
+        <!--Spring shell-->
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline-terminal-jna</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.bretty</groupId>
+            <artifactId>console-table-builder</artifactId>
+        </dependency>
 
-        <!--        &lt;!&ndash; maven-embedder &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.maven</groupId>-->
-        <!--            <artifactId>maven-embedder</artifactId>-->
-        <!--            <version>3.8.1</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.maven</groupId>-->
-        <!--            <artifactId>maven-compat</artifactId>-->
-        <!--            <version>3.8.1</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.maven.resolver</groupId>-->
-        <!--            <artifactId>maven-resolver-connector-basic</artifactId>-->
-        <!--            <version>1.7.1</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.maven.resolver</groupId>-->
-        <!--            <artifactId>maven-resolver-transport-http</artifactId>-->
-        <!--            <version>1.7.1</version>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>com.google.cloud.tools</groupId>-->
-        <!--            <artifactId>jib-core</artifactId>-->
-        <!--            <version>0.23.0</version>-->
-        <!--        </dependency>-->
-
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.jacoco</groupId>-->
-        <!--            <artifactId>jacoco-maven-plugin</artifactId>-->
-        <!--            <version>0.8.7</version>-->
-        <!--        </dependency>-->
-        
 
         <!--K8S-->
         <dependency>
@@ -139,6 +117,11 @@
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.55</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-core</artifactId>
+            <version>2.9.2</version>
         </dependency>
 
         <dependency>
