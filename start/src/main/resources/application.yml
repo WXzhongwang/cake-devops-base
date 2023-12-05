@@ -80,6 +80,17 @@ mybatis:
   type-aliases-package: com.rany.cake.devops.base.infra, com.rany.cake.devops.base.domain
 
 
+ssh:
+  shell:
+    enable: true
+    version: 2.0.0
+    display-banner: on
+    host: 0.0.0.0
+    port: 2222
+    shared-history: off
+    history-directory: ${home}/opscloud-data/ssh-server/history-log/
+    host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
+
 
 devops:
   redisson:
@@ -105,5 +116,7 @@ devops:
       region:
       accessKey:
       secretKey:
-
+#logging:
+#  level:
+#    org.jline: debug
 
