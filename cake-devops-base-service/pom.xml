@@ -72,19 +72,6 @@
             <artifactId>jenkins-client</artifactId>
             <version>0.3.8</version>
         </dependency>
-        <!--Spring shell-->
-        <dependency>
-            <groupId>org.springframework.shell</groupId>
-            <artifactId>spring-shell-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline-terminal-jna</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.bretty</groupId>
-            <artifactId>console-table-builder</artifactId>
-        </dependency>
 
 
         <!--K8S-->

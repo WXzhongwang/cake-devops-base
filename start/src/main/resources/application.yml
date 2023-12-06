@@ -20,9 +20,9 @@ spring:
     active: dev
   redis:
     url: redis://127.0.0.1:6379
-  shell:
-    interactive:
-      enabled: false
+  #  shell:
+  #    interactive:
+  #      enabled: false
   datasource:
     druid:
       type: com.alibaba.druid.pool.DruidDataSource
@@ -55,7 +55,7 @@ spring:
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;
 
   application:
-    name: cake-devops-base
+    name: cake-ops-service
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -90,7 +90,10 @@ ssh:
     shared-history: off
     history-directory: ${home}/opscloud-data/ssh-server/history-log/
     host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
-
+    prompt:
+      # white|cyan
+      color: cyan
+      text: 'ssh-server>'
 
 devops:
   redisson:
