@@ -87,5 +87,21 @@
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
+
+        <table schema="cake_devops" tableName="terminal_session" domainObjectName="TerminalSessionPO"
+               enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="terminal_session_instance" domainObjectName="TerminalSessionInstancePO"
+               enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="terminal_session_instance_command"
+               domainObjectName="TerminalSessionInstanceCommandPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
     </context>
 </generatorConfiguration>
