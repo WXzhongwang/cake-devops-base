@@ -57,7 +57,7 @@ public class AppMemberRepositoryImpl implements AppMemberRepository {
     }
 
     @Override
-    public int saveUpdate(AppMember appMember) {
-        return appMemberDao.saveUpdate(appMember);
+    public void saveUpdate(AppMember appMember) {
+        appMemberDao.saveUpdate(appMember);
     }
 }

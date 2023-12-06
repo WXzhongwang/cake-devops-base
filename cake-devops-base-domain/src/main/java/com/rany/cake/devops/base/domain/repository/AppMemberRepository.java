@@ -27,9 +27,8 @@ public interface AppMemberRepository extends Repository<AppMember, MemberId> {
     /**
      * 保存更新
      *
-     * @param appMember
-     * @return
+     * @param appMember 成员
      */
-    int saveUpdate(AppMember appMember);
+    void saveUpdate(AppMember appMember);
 
 }
