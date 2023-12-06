@@ -10,6 +10,7 @@
     </parent>
     <artifactId>start</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -131,7 +132,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.rany.uic.UicApplication</mainClass>
+                    <mainClass>com.rany.cake.devops.base.CakeDevopsBaseApplication</mainClass>
                     <skip>false</skip>
                 </configuration>
                 <executions>
