@@ -1,0 +1,40 @@
+server:
+  port: 8300
+
+dubbo:
+  application:
+    id: cake-ops-ssh-service
+    name: cake-ops-ssh-service
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  metadata-report:
+    address: zookeeper://127.0.0.1:2181
+  scan:
+    basePackages: com.rany.cake.devops
+
+spring:
+  profiles:
+    active: dev
+  shell:
+    interactive:
+      enabled: false
+
+
+ssh:
+  shell:
+    enable: true
+    version: 2.0.0
+    display-banner: on
+    host: 0.0.0.0
+    port: 2222
+    shared-history: off
+    history-directory: ${home}/opscloud-data/ssh-server/history-log/
+    host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
+
+logging:
+  level:
+    org.jline: debug
+

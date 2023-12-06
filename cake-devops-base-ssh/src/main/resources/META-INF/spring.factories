@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.rany.cake.devops.ssh.base.SshShellAutoConfiguration
+
+

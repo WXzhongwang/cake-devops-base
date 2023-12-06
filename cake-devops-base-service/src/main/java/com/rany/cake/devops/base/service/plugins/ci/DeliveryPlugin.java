@@ -7,7 +7,7 @@ import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
-import com.rany.cake.devops.base.service.ssh.JSCHTool;
+import com.rany.cake.devops.base.service.utils.JSCHTool;
 import org.springframework.stereotype.Component;
 
 /**

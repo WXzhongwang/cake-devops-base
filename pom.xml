@@ -48,6 +48,8 @@
         <module>cake-devops-base-domain</module>
         <module>cake-devops-base-service</module>
         <module>cake-devops-base-web</module>
+        <module>cake-devops-base-ssh</module>
+        <module>cake-devops-base-ssh-server</module>
         <module>start</module>
     </modules>
 
