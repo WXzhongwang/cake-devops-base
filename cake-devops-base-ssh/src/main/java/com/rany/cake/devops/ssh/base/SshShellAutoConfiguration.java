@@ -1,9 +1,11 @@
 package com.rany.cake.devops.ssh.base;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rany.cake.devops.ssh.base.auth.SshShellAuthenticationProvider;
 import com.rany.cake.devops.ssh.base.auth.impl.SshShellPasswordAuthenticationProvider;
 import com.rany.cake.devops.ssh.base.listener.SshShellListener;
 import com.rany.cake.devops.ssh.base.listener.SshShellListenerService;
+import com.rany.cake.devops.ssh.base.processor.provided.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.server.SshServer;
 import org.jline.terminal.Terminal;
@@ -104,6 +106,35 @@ public class SshShellAutoConfiguration {
             context.getBeansOfType(ValueProvider.class);
         };
     }
+
+
+    @Bean
+    @ConditionalOnClass(name = "com.fasterxml.jackson.databind.ObjectMapper")
+    public JsonPointerPostProcessor jsonPointerPostProcessor(ObjectMapper mapper) {
+        return new JsonPointerPostProcessor(mapper);
+    }
+
+    @Bean
+    @ConditionalOnClass(name = "com.fasterxml.jackson.databind.ObjectMapper")
+    public PrettyJsonPostProcessor prettyJsonPostProcessor(ObjectMapper mapper) {
+        return new PrettyJsonPostProcessor(mapper);
+    }
+
+    @Bean
+    public SavePostProcessor savePostProcessor() {
+        return new SavePostProcessor();
+    }
+
+    @Bean
+    public GrepPostProcessor grepPostProcessor() {
+        return new GrepPostProcessor();
+    }
+
+    @Bean
+    public HighlightPostProcessor highlightPostProcessor() {
+        return new HighlightPostProcessor();
+    }
+
 }
 
 

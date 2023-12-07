@@ -3,10 +3,12 @@ package com.rany.cake.devops.ssh.base;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,6 +19,9 @@ import java.util.List;
 public class SshShellProperties {
     public static final String SSH_SHELL_PREFIX = "ssh.shell";
     public static final String SSH_SHELL_ENABLE = SSH_SHELL_PREFIX + ".enable";
+
+    public static final String ACTUATOR_ROLE = "ACTUATOR";
+    public static final String ADMIN_ROLE = "ADMIN";
 
     private String host = "127.0.0.1";
 
@@ -43,6 +48,8 @@ public class SshShellProperties {
 
     private Prompt prompt = new Prompt();
 
+    private Commands commands = new Commands();
+
 
     @Data
     public static class Prompt {
@@ -54,4 +61,24 @@ public class SshShellProperties {
     }
 
     private List<String> confirmationWords = new ArrayList<>(SshShellHelper.DEFAULT_CONFIRM_WORDS);
+
+    /**
+     * Commands configuration
+     */
+    @Data
+    public static class Commands {
+
+        @NestedConfigurationProperty
+        private CommandProperties actuator = CommandProperties.withAuthorizedRoles(new ArrayList<>(Collections.singletonList(ACTUATOR_ROLE)));
+
+        @NestedConfigurationProperty
+        private CommandProperties server = new CommandProperties();
+
+        @NestedConfigurationProperty
+        private CommandProperties history = new CommandProperties();
+
+        @NestedConfigurationProperty
+        private CommandProperties stacktrace = new CommandProperties();
+
+    }
 }
