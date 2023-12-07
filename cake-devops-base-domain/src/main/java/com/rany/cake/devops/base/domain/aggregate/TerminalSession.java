@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.domain.aggregate;
 
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
+import com.rany.cake.devops.base.domain.enums.SessionTypeEnum;
 import com.rany.cake.devops.base.domain.pk.TerminalSessionId;
 import lombok.*;
 
@@ -17,9 +18,9 @@ public class TerminalSession extends BaseAggregateRoot implements IAggregate<Ter
     private String sessionId;
     private Long accountId;
     private String remoteAddr;
-    private String sessionClosed;
+    private Boolean sessionClosed;
     private Date closeTime;
     private String serverHostname;
     private String serverAddr;
-    private String sessionType;
+    private SessionTypeEnum sessionType;
 }

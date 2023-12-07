@@ -1,7 +1,7 @@
 package com.rany.cake.devops.ssh.base.listener.event;
 
 
-import com.rany.cake.devops.ssh.base.common.HostInfo;
+import com.rany.cake.devops.base.domain.base.HostInfo;
 import com.rany.cake.devops.ssh.base.listener.SshShellEvent;
 import com.rany.cake.devops.ssh.base.listener.SshShellEventFactory;
 import org.springframework.beans.factory.InitializingBean;

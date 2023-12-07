@@ -27,6 +27,7 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
     private HostId id;
     private String name;
     private String hostName;
+    private String serverAddr;
     private Integer port;
     private String username;
     private String pkey;

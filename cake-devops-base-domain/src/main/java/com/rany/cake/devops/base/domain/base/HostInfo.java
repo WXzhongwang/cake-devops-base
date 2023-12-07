@@ -1,4 +1,4 @@
-package com.rany.cake.devops.ssh.base.common;
+package com.rany.cake.devops.base.domain.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +19,7 @@ public class HostInfo {
     private String hostAddress = "127.0.0.1";
 
     @Builder.Default
-    private String hostname = "cake-devops";
+    private String hostname = "cake-devops-hostname";
 
     public static HostInfo build() {
         try {

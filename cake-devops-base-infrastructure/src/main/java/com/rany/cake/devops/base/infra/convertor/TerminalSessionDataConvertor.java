@@ -24,6 +24,7 @@ public interface TerminalSessionDataConvertor extends BaseConvertor<TerminalSess
      * @return PO
      */
     @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "sessionType", target = "sessionType")
     @Override
     TerminalSessionPO sourceToTarget(TerminalSession terminalSession);
 
@@ -36,5 +37,6 @@ public interface TerminalSessionDataConvertor extends BaseConvertor<TerminalSess
 
     @Override
     @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "sessionType", source = "sessionType")
     TerminalSession targetToSource(TerminalSessionPO terminalSessionPO);
 }

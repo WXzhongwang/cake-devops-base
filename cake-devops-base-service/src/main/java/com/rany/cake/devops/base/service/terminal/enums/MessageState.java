@@ -2,8 +2,6 @@ package com.rany.cake.devops.base.service.terminal.enums;
 
 import lombok.Getter;
 
-import java.util.Arrays;
-
 @Getter
 public enum MessageState {
 
@@ -28,9 +26,5 @@ public enum MessageState {
     MessageState(String code, String desc) {
         this.state = code;
         this.desc = desc;
-    }
-
-    public String getDescByState(String state) {
-        return Arrays.stream(MessageState.values()).filter(typeEnum -> typeEnum.getState().equals(state)).findFirst().map(MessageState::getDesc).orElse("undefined");
     }
 }

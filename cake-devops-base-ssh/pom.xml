@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>com.rany.cake.devops</groupId>
-            <artifactId>cake-devops-base-api</artifactId>
+            <artifactId>cake-devops-base-service</artifactId>
         </dependency>
 
         <!--Spring shell-->
