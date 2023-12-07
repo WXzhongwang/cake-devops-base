@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.TerminalSessionInstanceDao">
+
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.TerminalSessionInstancePO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="session_id" property="sessionId" jdbcType="VARCHAR"/>
+        <result column="instance_id" property="instanceId" jdbcType="VARCHAR"/>
+        <result column="duplicate_instance_id" property="duplicateInstanceId" jdbcType="VARCHAR"/>
+        <result column="instance_session_type" property="instanceSessionType" jdbcType="VARCHAR"/>
+        <result column="login_user" property="loginUser" jdbcType="VARCHAR"/>
+        <result column="host_ip" property="hostIp" jdbcType="VARCHAR"/>
+        <result column="output_size" property="outputSize" jdbcType="BIGINT"/>
+        <result column="instance_closed" property="instanceClosed" jdbcType="VARCHAR"/>
+        <result column="open_time" property="openTime" jdbcType="TIMESTAMP"/>
+        <result column="close_time" property="closeTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        , session_id, instance_id, duplicate_instance_id, instance_session_type, login_user,
+        host_ip, output_size, instance_closed, open_time, close_time, is_deleted, gmt_create,
+        gmt_modified, creator, modifier
+    </sql>
+    <select id="selectBySessionId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from terminal_session_instance
+        where session_id = #{sessionId}
+    </select>
+    <select id="selectByInstanceId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+
+        select
+        <include refid="Base_Column_List"/>
+        from terminal_session_instance
+        where instance_id = #{instanceId}
+    </select>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.TerminalSessionInstance">
+        insert into terminal_session_instance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="sessionId != null">
+                session_id,
+            </if>
+            <if test="instanceId != null">
+                instance_id,
+            </if>
+            <if test="duplicateInstanceId != null">
+                duplicate_instance_id,
+            </if>
+            <if test="instanceSessionType != null">
+                instance_session_type,
+            </if>
+            <if test="loginUser != null">
+                login_user,
+            </if>
+            <if test="hostIp != null">
+                host_ip,
+            </if>
+            <if test="outputSize != null">
+                output_size,
+            </if>
+            <if test="instanceClosed != null">
+                instance_closed,
+            </if>
+            <if test="openTime != null">
+                open_time,
+            </if>
+            <if test="closeTime != null">
+                close_time,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id.id,jdbcType=BIGINT},
+            </if>
+            <if test="sessionId != null">
+                #{sessionId,jdbcType=VARCHAR},
+            </if>
+            <if test="instanceId != null">
+                #{instanceId,jdbcType=VARCHAR},
+            </if>
+            <if test="duplicateInstanceId != null">
+                #{duplicateInstanceId,jdbcType=VARCHAR},
+            </if>
+            <if test="instanceSessionType != null">
+                #{instanceSessionType,jdbcType=VARCHAR},
+            </if>
+            <if test="loginUser != null">
+                #{loginUser,jdbcType=VARCHAR},
+            </if>
+            <if test="hostIp != null">
+                #{hostIp,jdbcType=VARCHAR},
+            </if>
+            <if test="outputSize != null">
+                #{outputSize,jdbcType=BIGINT},
+            </if>
+            <if test="instanceClosed != null">
+                #{instanceClosed,jdbcType=VARCHAR},
+            </if>
+            <if test="openTime != null">
+                #{openTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="closeTime != null">
+                #{closeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.TerminalSessionInstance">
+        update terminal_session_instance
+        <set>
+            <if test="sessionId != null">
+                session_id = #{sessionId,jdbcType=VARCHAR},
+            </if>
+            <if test="instanceId != null">
+                instance_id = #{instanceId,jdbcType=VARCHAR},
+            </if>
+            <if test="duplicateInstanceId != null">
+                duplicate_instance_id = #{duplicateInstanceId,jdbcType=VARCHAR},
+            </if>
+            <if test="instanceSessionType != null">
+                instance_session_type = #{instanceSessionType,jdbcType=VARCHAR},
+            </if>
+            <if test="loginUser != null">
+                login_user = #{loginUser,jdbcType=VARCHAR},
+            </if>
+            <if test="hostIp != null">
+                host_ip = #{hostIp,jdbcType=VARCHAR},
+            </if>
+            <if test="outputSize != null">
+                output_size = #{outputSize,jdbcType=BIGINT},
+            </if>
+            <if test="instanceClosed != null">
+                instance_closed = #{instanceClosed,jdbcType=VARCHAR},
+            </if>
+            <if test="openTime != null">
+                open_time = #{openTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="closeTime != null">
+                close_time = #{closeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id.id,jdbcType=BIGINT}
+    </update>
+</mapper>

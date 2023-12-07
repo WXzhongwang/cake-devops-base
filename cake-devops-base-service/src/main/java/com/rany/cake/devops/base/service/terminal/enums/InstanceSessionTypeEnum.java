@@ -1,4 +1,4 @@
-package com.rany.cake.devops.ssh.base.enums;
+package com.rany.cake.devops.base.service.terminal.enums;
 
 import lombok.Getter;
 
