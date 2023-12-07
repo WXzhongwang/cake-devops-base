@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.TerminalSessionDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.TerminalSessionPO">
+
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="session_id" property="sessionId" jdbcType="VARCHAR"/>
+        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="remote_addr" property="remoteAddr" jdbcType="VARCHAR"/>
+        <result column="session_closed" property="sessionClosed" jdbcType="VARCHAR"/>
+        <result column="close_time" property="closeTime" jdbcType="TIMESTAMP"/>
+        <result column="server_hostname" property="serverHostname" jdbcType="VARCHAR"/>
+        <result column="server_addr" property="serverAddr" jdbcType="VARCHAR"/>
+        <result column="session_type" property="sessionType" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+        id
+        , session_id, account_id, remote_addr, session_closed, close_time, server_hostname,
+        server_addr, session_type, is_deleted, gmt_create, gmt_modified, creator, modifier
+    </sql>
+
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.TerminalSession">
+        insert into terminal_session
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="sessionId != null">
+                session_id,
+            </if>
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="remoteAddr != null">
+                remote_addr,
+            </if>
+            <if test="sessionClosed != null">
+                session_closed,
+            </if>
+            <if test="closeTime != null">
+                close_time,
+            </if>
+            <if test="serverHostname != null">
+                server_hostname,
+            </if>
+            <if test="serverAddr != null">
+                server_addr,
+            </if>
+            <if test="sessionType != null">
+                session_type,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id.id,jdbcType=BIGINT},
+            </if>
+            <if test="sessionId != null">
+                #{sessionId,jdbcType=VARCHAR},
+            </if>
+            <if test="accountId != null">
+                #{accountId,jdbcType=BIGINT},
+            </if>
+            <if test="remoteAddr != null">
+                #{remoteAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionClosed != null">
+                #{sessionClosed,jdbcType=VARCHAR},
+            </if>
+            <if test="closeTime != null">
+                #{closeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="serverHostname != null">
+                #{serverHostname,jdbcType=VARCHAR},
+            </if>
+            <if test="serverAddr != null">
+                #{serverAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionType != null">
+                #{sessionType,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.TerminalSession">
+        update terminal_session
+        <set>
+            <if test="sessionId != null">
+                session_id = #{sessionId,jdbcType=VARCHAR},
+            </if>
+            <if test="accountId != null">
+                account_id = #{accountId,jdbcType=BIGINT},
+            </if>
+            <if test="remoteAddr != null">
+                remote_addr = #{remoteAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionClosed != null">
+                session_closed = #{sessionClosed,jdbcType=VARCHAR},
+            </if>
+            <if test="closeTime != null">
+                close_time = #{closeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="serverHostname != null">
+                server_hostname = #{serverHostname,jdbcType=VARCHAR},
+            </if>
+            <if test="serverAddr != null">
+                server_addr = #{serverAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionType != null">
+                session_type = #{sessionType,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id.id,jdbcType=BIGINT}
+    </update>
+</mapper>
