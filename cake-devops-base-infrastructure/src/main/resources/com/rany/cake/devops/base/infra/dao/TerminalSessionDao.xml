@@ -164,4 +164,10 @@
         </set>
         where id = #{id.id,jdbcType=BIGINT}
     </update>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        <include refid="Base_Column_List"/>
+        from terminal_session
+        where id = #{id,jdbcType=BIGINT}
+    </select>
 </mapper>

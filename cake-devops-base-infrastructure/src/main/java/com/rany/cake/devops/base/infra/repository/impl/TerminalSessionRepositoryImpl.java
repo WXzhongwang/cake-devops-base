@@ -6,6 +6,7 @@ import com.rany.cake.devops.base.domain.repository.TerminalSessionRepository;
 import com.rany.cake.devops.base.infra.convertor.TerminalSessionDataConvertor;
 import com.rany.cake.devops.base.infra.dao.TerminalSessionDao;
 import com.rany.cake.devops.base.infra.mapper.TerminalSessionPOMapper;
+import com.rany.cake.devops.base.infra.po.TerminalSessionPO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,13 @@ public class TerminalSessionRepositoryImpl implements TerminalSessionRepository 
 
     @Override
     public int update(TerminalSession terminalSession) {
-        return 0;
+        return terminalSessionDao.update(terminalSession);
     }
 
     @Override
     public List<TerminalSession> selectAll() {
-        return null;
+        List<TerminalSessionPO> terminalSessions = terminalSessionDao.selectAll();
+        return terminalSessionDataConvertor.targetToSource(terminalSessions);
     }
 
     @Override
@@ -36,11 +38,11 @@ public class TerminalSessionRepositoryImpl implements TerminalSessionRepository 
 
     @Override
     public void remove(@NotNull TerminalSession terminalSession) {
-
+        terminalSessionDao.update(terminalSession);
     }
 
     @Override
     public void save(@NotNull TerminalSession terminalSession) {
-
+        terminalSessionDao.update(terminalSession);
     }
 }

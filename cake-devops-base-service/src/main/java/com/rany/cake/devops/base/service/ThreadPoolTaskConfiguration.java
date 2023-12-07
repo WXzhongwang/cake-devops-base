@@ -6,8 +6,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static com.rany.cake.devops.base.service.ThreadPoolTaskConfiguration.TaskPools.*;
-
 
 /**
  * 线程池基础配置
@@ -35,7 +33,7 @@ public class ThreadPoolTaskConfiguration {
      */
     private static final String THREAD_NAME_PREFIX = "core-exec-";
 
-    @Bean(name = CORE)
+    @Bean(name = TaskPools.CORE)
     public ThreadPoolTaskExecutor coreExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(100);
@@ -54,7 +52,7 @@ public class ThreadPoolTaskConfiguration {
         return executor;
     }
 
-    @Bean(name = LEO)
+    @Bean(name = TaskPools.EXTERNAL)
     public ThreadPoolTaskExecutor leoExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(100);
@@ -73,7 +71,7 @@ public class ThreadPoolTaskConfiguration {
         return executor;
     }
 
-    @Bean(name = SERVER_TERMINAL)
+    @Bean(name = TaskPools.SERVER_TERMINAL)
     public ThreadPoolTaskExecutor serverTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(50);
@@ -92,7 +90,7 @@ public class ThreadPoolTaskConfiguration {
         return executor;
     }
 
-    @Bean(name = KUBERNETES_TERMINAL)
+    @Bean(name = TaskPools.KUBERNETES_TERMINAL)
     public ThreadPoolTaskExecutor kubernetesTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(50);
