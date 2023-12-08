@@ -1,6 +1,7 @@
 package com.rany.cake.devops.ssh.base.common;
 
 import com.jcraft.jsch.Channel;
+import com.rany.cake.devops.base.service.terminal.HostSystem;
 import com.rany.cake.devops.base.service.terminal.SessionOutput;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

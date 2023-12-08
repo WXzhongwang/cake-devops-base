@@ -116,6 +116,12 @@
             <artifactId>alibabacloud-cr20181201</artifactId>
             <version>0.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>3.23.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 

@@ -25,7 +25,7 @@
  * exception statement from all source files in the program, then also delete
  * it in the license file.
  */
-package com.rany.cake.devops.ssh.base.common;
+package com.rany.cake.devops.base.service.terminal;
 
 import com.rany.cake.devops.base.service.terminal.server.message.Login;
 import lombok.AllArgsConstructor;
