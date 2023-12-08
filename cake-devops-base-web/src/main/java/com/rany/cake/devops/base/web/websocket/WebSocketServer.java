@@ -8,6 +8,8 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -18,15 +20,11 @@ public class WebSocketServer {
     /**
      * concurrent包的线程安全Set，用来存放每个客户端对应的WebSocket对象。
      */
-    private static ConcurrentHashMap<String, WebSocketServer> webSocketMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, List<WebSocketServer>> webSocketMap = new ConcurrentHashMap<>();
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
     private Session session;
-    /**
-     * releaseId
-     */
-    private String releaseId = "";
 
     /**
      * 连接建立成功调用的方法
@@ -37,12 +35,13 @@ public class WebSocketServer {
             session.setMaxIdleTimeout(Constants.WEBSOCKET_TIMEOUT);
             log.info("current releaseId:{}", releaseId);
             this.session = session;
-            this.releaseId = releaseId;
             if (webSocketMap.containsKey(releaseId)) {
-                webSocketMap.remove(releaseId);
-                webSocketMap.put(releaseId, this);
+                List<WebSocketServer> webSocketServers = webSocketMap.get(releaseId);
+                webSocketServers.add(this);
             } else {
-                webSocketMap.put(releaseId, this);
+                List<WebSocketServer> servers = new ArrayList<>();
+                servers.add(this);
+                webSocketMap.put(releaseId, servers);
             }
             sendMessage("socket连接成功");
         } catch (Exception e) {
@@ -71,10 +70,7 @@ public class WebSocketServer {
      * 实现服务器主动推送
      */
     public void sendMessage(String message) throws IOException {
-        //加锁，否则会出现java.lang.IllegalStateException: The remote endpoint was in state [TEXT_FULL_WRITING] which is an invalid state for called method异常，并发使用session发送消息导致的
-        synchronized (this.session) {
-            this.session.getBasicRemote().sendText(message);
-        }
+        this.session.getBasicRemote().sendText(message);
     }
 
     /**
@@ -87,7 +83,7 @@ public class WebSocketServer {
     public void onError(Session session, Throwable error) {
     }
 
-    public ConcurrentHashMap<String, WebSocketServer> getWebSocketMap() {
+    public ConcurrentHashMap<String, List<WebSocketServer>> getWebSocketMap() {
         return webSocketMap;
     }
 }

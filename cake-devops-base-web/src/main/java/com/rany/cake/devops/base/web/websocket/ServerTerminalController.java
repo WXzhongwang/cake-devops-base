@@ -3,6 +3,8 @@ package com.rany.cake.devops.base.web.websocket;
 
 import com.rany.cake.devops.base.domain.aggregate.TerminalSession;
 import com.rany.cake.devops.base.domain.base.HostInfo;
+import com.rany.cake.devops.base.domain.factory.TerminalSessionFactory;
+import com.rany.cake.devops.base.domain.repository.TerminalSessionRepository;
 import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.terminal.SentOutputTask;
 import com.rany.cake.devops.base.service.terminal.ServerTerminalMessageHandlerFactory;
@@ -39,16 +41,15 @@ public class ServerTerminalController extends SocketBaseController {
 
     private static final HostInfo SERVER_INFO = HostInfo.build();
 
-    // private static TerminalSessionService terminalSessionService;
+    @Resource
+    private TerminalSessionFactory terminalSessionFactory;
+
+    @Resource
+    private TerminalSessionRepository terminalSessionRepository;
 
     private TerminalSession terminalSession;
 
     private static ThreadPoolTaskExecutor serverTerminalExecutor;
-
-//    @Autowired
-//    public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
-//        ServerTerminalController.terminalSessionService = terminalSessionService;
-//    }
 
     @Resource
     public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor serverTerminalExecutor) {

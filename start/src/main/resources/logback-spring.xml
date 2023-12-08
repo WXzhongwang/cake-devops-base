@@ -46,7 +46,7 @@
 
     <appender name="RABBITMQ" class="org.springframework.amqp.rabbit.logback.AmqpAppender">
         <layout>
-            <pattern>[%X{traceId}] - %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+            <pattern>[%X{__releaseId__}] - %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
         </layout>
         <!--rabbitmq地址 -->
         <addresses>${rabbitmq-address}</addresses>
@@ -62,9 +62,6 @@
         <charset>UTF-8</charset>
         <durable>true</durable>
         <deliveryMode>NON_PERSISTENT</deliveryMode>
-        <!--        <filter class="com.log.websocket.stomp.LogFilter">-->
-        <!--            <level>INFO</level>-->
-        <!--        </filter>-->
     </appender>
 
     <springProfile name="dev">

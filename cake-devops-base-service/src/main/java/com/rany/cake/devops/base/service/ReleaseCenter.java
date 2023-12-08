@@ -14,6 +14,8 @@ import com.rany.cake.devops.base.service.plugins.ci.DeliveryPlugin;
 import com.rany.cake.devops.base.service.plugins.machine.MachineSelectorPlugin;
 import com.rany.cake.devops.base.service.plugins.scm.CheckOutPlugin;
 import com.rany.cake.devops.base.service.plugins.test.SonarQubePlugin;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -32,6 +34,10 @@ public class ReleaseCenter {
     private CheckOutPlugin checkOutPlugin;
     @Resource
     private DeliveryPlugin deliveryPlugin;
+    @Resource
+    @Qualifier(ThreadPoolTaskConfiguration.TaskPools.CORE)
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
 
     public Boolean release(Release release, App app, AppEnv appEnv, Namespace namespace, Cluster cluster) {
         DeployContext deployContext = new DeployContext();
@@ -40,7 +46,7 @@ public class ReleaseCenter {
         deployContext.setAppEnv(appEnv);
         deployContext.setCluster(cluster);
         deployContext.setNamespace(namespace);
-        
+
         DeployPipeline pipeline = new DefaultDeployPipeline(deployContext);
         pipeline.addLast(approvalPlugin);
         pipeline.addLast(deploymentForbiddenPlugin);
@@ -48,7 +54,7 @@ public class ReleaseCenter {
         pipeline.addLast(machineSelectorPlugin);
         pipeline.addLast(sonarQubePlugin);
         pipeline.addLast(deliveryPlugin);
-        pipeline.start();
+        threadPoolTaskExecutor.execute(pipeline::start);
         return Boolean.TRUE;
     }
 }

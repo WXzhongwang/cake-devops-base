@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -16,10 +17,12 @@ public class WebSocketService {
 
     public void sendMessage(String releaseId, String logMessage) {
         try {
-            ConcurrentHashMap<String, WebSocketServer> map = webSocketServer.getWebSocketMap();
-            WebSocketServer server = map.get(releaseId);
-            if (server != null) {
-                server.sendMessage(logMessage);
+            ConcurrentHashMap<String, List<WebSocketServer>> map = webSocketServer.getWebSocketMap();
+            List<WebSocketServer> servers = map.get(releaseId);
+            if (servers != null && !servers.isEmpty()) {
+                for (WebSocketServer server : servers) {
+                    server.sendMessage(logMessage);
+                }
             } else {
                 log.warn("客户端已退出");
             }

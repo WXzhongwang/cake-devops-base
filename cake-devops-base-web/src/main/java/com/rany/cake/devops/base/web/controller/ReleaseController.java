@@ -5,6 +5,7 @@ import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
 import com.rany.cake.devops.base.api.service.ReleaseService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,7 @@ public class ReleaseController {
      * @return 成功
      */
     @PostMapping("/deploy")
-    public PojoResult<Boolean> deploy(DeployCommand deployCommand) {
+    public PojoResult<Boolean> deploy(@RequestBody DeployCommand deployCommand) {
         return releaseService.deploy(deployCommand);
     }
 }

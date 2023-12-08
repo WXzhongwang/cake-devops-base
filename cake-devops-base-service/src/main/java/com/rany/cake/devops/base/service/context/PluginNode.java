@@ -1,18 +1,19 @@
 package com.rany.cake.devops.base.service.context;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * TODO
+ * 插件节点
  *
  * @author zhongshengwang
  * @description TODO
  * @date 2023/1/15 20:56
  * @email 18668485565163.com
  */
-@Slf4j
 public class PluginNode implements Plugin {
+    private static final Logger log = LoggerFactory.getLogger("RabbitMq");
 
     /**
      * 下一个执行节点
