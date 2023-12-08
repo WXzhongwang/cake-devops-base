@@ -23,9 +23,9 @@ public class LogConsumer {
                     exchange = @Exchange(name = "${devops.log.exchangeName}", ignoreDeclarationExceptions = "true"),
                     key = "${devops.log.bindingKey}"
             ),
-            concurrency = "2"
+            concurrency = "1"
     )
-    public void listenerPush(String msg, Channel channel, Message message) throws IOException {
+    public void listenerPush(String msg, Channel channel, Message message) {
         try {
             log.debug("consumer>>>接收到的消息>>>{}", msg);
             msg.split(" - ")[0].trim().replace("[", "").replace("]", "");
@@ -36,7 +36,11 @@ public class LogConsumer {
         } catch (Exception e) {
             log.error("获取消息失败，异常原因：{}", e.getMessage(), e);
         } finally {
-            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            try {
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

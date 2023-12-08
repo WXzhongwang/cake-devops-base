@@ -8,9 +8,8 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @Slf4j
 @ServerEndpoint(value = "/api/ws/cake-devops/{releaseId}")
@@ -20,7 +19,7 @@ public class WebSocketServer {
     /**
      * concurrent包的线程安全Set，用来存放每个客户端对应的WebSocket对象。
      */
-    private static final ConcurrentHashMap<String, List<WebSocketServer>> webSocketMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, CopyOnWriteArraySet<WebSocketServer>> webSocketMap = new ConcurrentHashMap<>();
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
@@ -36,10 +35,10 @@ public class WebSocketServer {
             log.info("current releaseId:{}", releaseId);
             this.session = session;
             if (webSocketMap.containsKey(releaseId)) {
-                List<WebSocketServer> webSocketServers = webSocketMap.get(releaseId);
+                CopyOnWriteArraySet<WebSocketServer> webSocketServers = webSocketMap.get(releaseId);
                 webSocketServers.add(this);
             } else {
-                List<WebSocketServer> servers = new ArrayList<>();
+                CopyOnWriteArraySet<WebSocketServer> servers = new CopyOnWriteArraySet<>();
                 servers.add(this);
                 webSocketMap.put(releaseId, servers);
             }
@@ -53,7 +52,9 @@ public class WebSocketServer {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose() {
+    public void onClose(@PathParam("releaseId") String releaseId) {
+        CopyOnWriteArraySet<WebSocketServer> socketServers = webSocketMap.get(releaseId);
+        socketServers.remove(this);  //从set中删除
     }
 
     /**
@@ -83,7 +84,7 @@ public class WebSocketServer {
     public void onError(Session session, Throwable error) {
     }
 
-    public ConcurrentHashMap<String, List<WebSocketServer>> getWebSocketMap() {
+    public ConcurrentHashMap<String, CopyOnWriteArraySet<WebSocketServer>> getWebSocketMap() {
         return webSocketMap;
     }
 }

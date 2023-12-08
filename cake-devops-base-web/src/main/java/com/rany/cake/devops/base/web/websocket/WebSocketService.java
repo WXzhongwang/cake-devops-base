@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @Slf4j
 @Component
@@ -17,8 +17,8 @@ public class WebSocketService {
 
     public void sendMessage(String releaseId, String logMessage) {
         try {
-            ConcurrentHashMap<String, List<WebSocketServer>> map = webSocketServer.getWebSocketMap();
-            List<WebSocketServer> servers = map.get(releaseId);
+            ConcurrentHashMap<String, CopyOnWriteArraySet<WebSocketServer>> map = webSocketServer.getWebSocketMap();
+            CopyOnWriteArraySet<WebSocketServer> servers = map.get(releaseId);
             if (servers != null && !servers.isEmpty()) {
                 for (WebSocketServer server : servers) {
                     server.sendMessage(logMessage);

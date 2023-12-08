@@ -3,6 +3,16 @@
 <head>
     <meta charset="utf-8">
     <title>任务日志展示</title>
+    <style>
+        #log_detail {
+            max-height: 800px; /* 设置最大高度 */
+            min-height: 600px;
+            border: 1px solid #d3d356;
+            width: 1000px;
+            margin: 0 auto;
+            overflow-y: auto; /* 启用垂直滚动条 */
+        }
+    </style>
 </head>
 <body>
 <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
@@ -23,21 +33,21 @@
         socket = new WebSocket(socketUrl);
         //打开事件
         socket.onopen = function () {
-            console.log("websocket已打开");
+            console.log("websocket已打开<br/>");
         };
         //获得消息事件
         socket.onmessage = function (msg) {
             console.log(msg.data);
             //发现消息进入    开始处理前端触发逻辑
-            detailDiv.append("<p>" + msg.data + "</p>")
+            detailDiv.append(msg.data + "<br/>")
         };
         //关闭事件
         socket.onclose = function () {
-            console.log("websocket已关闭");
+            console.log("websocket已关闭<br/>");
         };
         //发生了错误事件
         socket.onerror = function () {
-            console.log("websocket发生了错误");
+            console.log("websocket发生了错误<br/>");
         }
     }
 
@@ -46,8 +56,8 @@
             console.log("您的浏览器不支持WebSocket");
         } else {
             console.log("您的浏览器支持WebSocket");
-            console.log('{"toUserId":"' + $("#toUserId").val() + '","contentText":"' + $("#contentText").val() + '"}');
-            socket.send('{"toUserId":"' + $("#toUserId").val() + '","contentText":"' + $("#contentText").val() + '"}');
+            // console.log('{"toUserId":"' + $("#toUserId").val() + '","contentText":"' + $("#contentText").val() + '"}');
+            // socket.send('{"toUserId":"' + $("#toUserId").val() + '","contentText":"' + $("#contentText").val() + '"}');
         }
     }
 
