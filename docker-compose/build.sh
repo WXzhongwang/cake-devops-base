@@ -42,12 +42,16 @@ function checkout {
   local folder_name=$3
 
   # 拉取远程Git仓库代码
-  git clone -b "$branch_name" "$repo_url" .
+  git clone -b "$branch_name" "$repo_url" "$folder_name"
 }
 
 # 编译打包
 function mvn_build {
   echo "【MavenBuild】start to run..."
+  local folder_name=$1
+
+  # shellcheck disable=SC2164
+  cd "$folder_name"
   # 编译构建
   $MAVEN_HOME_363 clean package -U -DskipTests=true
 
@@ -170,16 +174,10 @@ function main {
     send_dingding_notification "$message" "$dingtalk_webhook_url" "$status" "$app_name"
   }
 
-  # 设置日期格式
-#  date_suffix=$(date "+%Y%m%d_%H%M%S")
-#  # 创建文件夹，解析出仓库名称
-#  repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
-#  folder_name="${repo_name}/${date_suffix}"
-#  echo "$folder_name"
-#  mkdir -p "$folder_name"
-  folder_name=$(pwd)
+  repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
+  folder_name="$(pwd)/$repo_name"
   # 拉取代码
-  checkout "$repo_url" "$branch_name"
+  checkout "$repo_url" "$branch_name" "$repo_name"
 
   # 判断拉取代码是否成功
   # shellcheck disable=SC2181
@@ -189,7 +187,7 @@ function main {
   fi
 
   # 编译打包
-  mvn_build
+  mvn_build "$folder_name"
 
   # 判断编译打包是否成功
   # shellcheck disable=SC2181
