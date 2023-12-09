@@ -10,6 +10,9 @@ import com.rany.cake.devops.base.service.plugins.RunningConstant;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * 推送脚本并执行构建指令
  *
@@ -37,6 +40,15 @@ public class DeliveryPlugin extends BasePlugin {
         String branch = context.getRelease().getReleaseBranch();
         String releaseVersion = context.getRelease().getReleaseNo();
 
+        // 获取当前日期和时间
+        LocalDateTime now = LocalDateTime.now();
+        // 定义日期时间格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        // 格式化日期和时间
+        String formattedDateTime = now.format(formatter);
+        String workspace = String.format(Constants.REMOTE_BASE + "/" + appName + "/" + formattedDateTime);
+        log.info("workspace directory: " + workspace);
+
         JSch jsch = new JSch();
         Session session = null;
         try {
@@ -53,6 +65,7 @@ public class DeliveryPlugin extends BasePlugin {
 
             JSCHTool.remoteExecute(session, "ls -l");
             JSCHTool.remoteExecute(session, "pwd");
+            JSCHTool.remoteExecute(session, "mkdir -p " + workspace);
             // J：此选项告诉 -O, --remote-name 选项使用服务器指定的 Content-Disposition 文件名，而不是从 URL 中提取文件名。
             // L：如果服务器报告请求的页面已移动到不同的位置（用 Location: 标头和 3XX 响应代码指示），此选项将使 curl 在新位置重做请求。
             // O：使用此选项，您无需指定下载的输出文件名。
@@ -61,7 +74,7 @@ public class DeliveryPlugin extends BasePlugin {
                     "cake-devops-base",
                     releaseVersion,
                     "\"https://oapi.dingtalk.com/robot/send?access_token=89ca235dbe9f617f4ca045a1f24b0e61a32e9f845771752416377089c36470b7\"");
-            JSCHTool.remoteExecute(session, "cd " + Constants.REMOTE_BASE + ";\n" +
+            JSCHTool.remoteExecute(session, "cd " + workspace + ";\n" +
                     "curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.1/java-build-source.tar.gz;" +
                     "tar -zxvf java-build-source.tar.gz;\n" +
                     "chmod +x build.sh;\n" +

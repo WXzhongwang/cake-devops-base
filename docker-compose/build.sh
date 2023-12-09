@@ -2,6 +2,10 @@
 # set -e
 
 source conf/cake-sample.conf
+source ~/.bash_profile
+java -version
+
+
 
 # 发送钉钉通知
 function send_dingding_notification {
@@ -11,12 +15,21 @@ function send_dingding_notification {
   local app_name=$4
   # shellcheck disable=SC2155
   local date_suffix=$(date "+%Y-%m-%d %H:%M:%S")
+
+# 根据状态选择字体颜色
+  local color=""
+  if [ "$status" == "succeed" ]; then
+    color="#00FF00"  # 绿色
+  else
+    color="#FF0000"  # 红色
+  fi
+
   # 使用Markdown格式发送钉钉通知
   curl -H "Content-Type: application/json" -X POST -d '{
     "msgtype": "markdown",
     "markdown": {
       "title": "【COVA】构建通知",
-      "text": "# 构建通知\n\n <font color=\"#FF0000\"> Cova </font>提醒您:\n\n - 应用名称：['"$app_name"']\n- 时间：['"$date_suffix"']\n- 状态：['"$status"']\n- 备注：['"$message"']"
+      "text": "# 构建通知\n\n <font color=\"'$color'\"> Cova </font>提醒您:\n\n - 应用名称：['"$app_name"']\n- 时间：['"$date_suffix"']\n- 状态：['"$status"']\n- 备注：['"$message"']"
     }
   }' "$webhook_url"
 }
@@ -29,16 +42,12 @@ function checkout {
   local folder_name=$3
 
   # 拉取远程Git仓库代码
-  git clone -b "$branch_name" "$repo_url" "$folder_name"
+  git clone -b "$branch_name" "$repo_url" .
 }
 
 # 编译打包
 function mvn_build {
   echo "【MavenBuild】start to run..."
-  local folder_name=$1
-
-  # shellcheck disable=SC2164
-  cd "$folder_name"
   # 编译构建
   $MAVEN_HOME_363 clean package -U -DskipTests=true
 
@@ -162,15 +171,15 @@ function main {
   }
 
   # 设置日期格式
-  date_suffix=$(date "+%Y%m%d_%H%M%S")
-  # 创建文件夹，解析出仓库名称
-  repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
-  folder_name="${repo_name}/${date_suffix}"
-  echo "$folder_name"
-  mkdir -p "$folder_name"
-
+#  date_suffix=$(date "+%Y%m%d_%H%M%S")
+#  # 创建文件夹，解析出仓库名称
+#  repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
+#  folder_name="${repo_name}/${date_suffix}"
+#  echo "$folder_name"
+#  mkdir -p "$folder_name"
+  folder_name=$(pwd)
   # 拉取代码
-  checkout "$repo_url" "$branch_name" "$folder_name"
+  checkout "$repo_url" "$branch_name"
 
   # 判断拉取代码是否成功
   # shellcheck disable=SC2181
@@ -180,7 +189,7 @@ function main {
   fi
 
   # 编译打包
-  mvn_build "$folder_name"
+  mvn_build
 
   # 判断编译打包是否成功
   # shellcheck disable=SC2181
