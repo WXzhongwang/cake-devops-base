@@ -39,11 +39,11 @@ public class TerminalSessionInstanceRepositoryImpl implements TerminalSessionIns
 
     @Override
     public void remove(@NotNull TerminalSessionInstance terminalSessionInstance) {
-
+        terminalSessionInstanceDao.update(terminalSessionInstance);
     }
 
     @Override
     public void save(@NotNull TerminalSessionInstance terminalSessionInstance) {
-
+        terminalSessionInstanceDao.save(terminalSessionInstance);
     }
 }

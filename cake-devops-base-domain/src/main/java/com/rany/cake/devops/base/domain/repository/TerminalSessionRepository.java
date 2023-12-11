@@ -10,7 +10,7 @@ import java.util.List;
  * 终端
  *
  * @author zhongshengwang
- * @description 集群
+ * @description 终端
  * @date 2023/1/28 21:01
  * @email 18668485565163.com
  */
