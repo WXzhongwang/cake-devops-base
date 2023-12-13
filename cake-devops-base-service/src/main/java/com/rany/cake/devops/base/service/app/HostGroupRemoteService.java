@@ -15,6 +15,7 @@ import com.rany.cake.devops.base.service.adapter.HostGroupDataAdapter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
+import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 /**
  * 主机服务
@@ -25,6 +26,7 @@ import org.apache.dubbo.config.annotation.Service;
  * @email 18668485565163.com
  */
 @Service
+@ShenyuService("/host-group/**")
 @Slf4j
 @AllArgsConstructor
 public class HostGroupRemoteService implements HostGroupService {
@@ -34,7 +36,7 @@ public class HostGroupRemoteService implements HostGroupService {
 
 
     @Override
-    public PojoResult<Long> createHostGroupCommand(CreateGroupCommand createHostCommand) {
+    public PojoResult<Long> createHostGroup(CreateGroupCommand createHostCommand) {
         HostGroup host = new HostGroup(new HostGroupId(snowflakeIdWorker.nextId()), createHostCommand.getName(), createHostCommand.getPid(),
                 createHostCommand.getSort());
         hostGroupDomainService.save(host);

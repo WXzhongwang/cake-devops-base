@@ -17,9 +17,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <shenyu.version>2.6.0</shenyu.version>
     </properties>
 
     <dependencies>
+        <!-- apache shenyu apache dubbo plugin start-->
+        <dependency>
+            <groupId>org.apache.shenyu</groupId>
+            <artifactId>shenyu-spring-boot-starter-client-apache-dubbo</artifactId>
+            <version>${shenyu.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
@@ -75,11 +82,11 @@
             <artifactId>dubbo</artifactId>
         </dependency>
         <!--jenkins-java-client-->
-        <dependency>
-            <groupId>com.offbytwo.jenkins</groupId>
-            <artifactId>jenkins-client</artifactId>
-            <version>0.3.8</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.offbytwo.jenkins</groupId>-->
+        <!--            <artifactId>jenkins-client</artifactId>-->
+        <!--            <version>0.3.8</version>-->
+        <!--        </dependency>-->
 
 
         <!--K8S-->

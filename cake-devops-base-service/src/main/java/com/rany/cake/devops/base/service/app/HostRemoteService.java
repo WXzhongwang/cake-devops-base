@@ -15,6 +15,7 @@ import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
+import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 /**
  * 主机服务
@@ -25,6 +26,7 @@ import org.apache.dubbo.config.annotation.Service;
  * @email 18668485565163.com
  */
 @Service
+@ShenyuService("/host/**")
 @Slf4j
 @AllArgsConstructor
 public class HostRemoteService implements HostService {
