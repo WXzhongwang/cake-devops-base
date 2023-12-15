@@ -1,0 +1,197 @@
+import React, { useEffect, useState } from "react";
+import styles from "./app-list.less";
+import { Table, Space, Input, Select, Button, Form, Card } from "antd";
+import { connect, Dispatch, history } from "umi";
+import { AppInfo } from "@/models/app";
+import CreateAppDrawer from "./components/CreateAppDrawer";
+
+const { Option } = Select;
+
+interface AppListProps {
+  dispatch: Dispatch;
+  appList: { list: AppInfo[]; total: number };
+}
+
+const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
+  const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
+  const [filters, setFilters] = useState({
+    appName: "",
+    department: "",
+    language: "",
+  });
+
+  const [createAppDrawerVisible, setCreateAppDrawerVisible] = useState(false);
+
+  const showCreateAppDrawer = () => {
+    setCreateAppDrawerVisible(true);
+  };
+
+  const hideCreateAppDrawer = () => {
+    setCreateAppDrawerVisible(false);
+  };
+
+  const [form] = Form.useForm<{
+    appName: string;
+    department: string;
+    language: string;
+  }>();
+
+  useEffect(() => {
+    getAppList();
+  }, [pagination, filters]);
+
+  const getAppList = () => {
+    dispatch({
+      type: "app/getAppList",
+      payload: { ...pagination, ...filters },
+    });
+  };
+
+  const columns = [
+    {
+      title: "应用名称",
+      dataIndex: "appName",
+      key: "appName",
+      render: (text: any, record: AppInfo) => (
+        <a onClick={() => handleView(record)}>{record.appName}</a>
+      ),
+    },
+    {
+      title: "仓库",
+      dataIndex: "repo",
+      key: "repo",
+      width: 200,
+    },
+    {
+      title: "默认分支",
+      dataIndex: "defaultBranch",
+      key: "defaultBranch",
+    },
+    // {
+    //   title: "部门缩写",
+    //   dataIndex: "departmentAbbreviation",
+    //   key: "departmentAbbreviation",
+    // },
+    {
+      title: "部门",
+      dataIndex: "department",
+      key: "department",
+    },
+    {
+      title: "开发语言",
+      dataIndex: "language",
+      key: "language",
+    },
+    {
+      title: "描述",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "开发模式",
+      dataIndex: "developMode",
+      key: "developMode",
+    },
+    {
+      title: "状态",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
+      title: "操作",
+      key: "action",
+      render: (text: any, record: AppInfo) => (
+        <Space size="middle">
+          <a onClick={() => handleView(record)}>查看</a>
+        </Space>
+      ),
+    },
+  ];
+
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    setPagination({ pageNo: page, pageSize: pageSize || 10 });
+  };
+
+  const handleView = (record: AppInfo) => {
+    // 处理查看操作
+    console.log("查看应用详情", record);
+    // 示例：跳转到详情页，使用 history.push
+    history.push(`/app-detail/${record.id}`);
+  };
+
+  return (
+    <Card>
+      <Space size="middle" direction="vertical" style={{ width: "100%" }}>
+        <Form
+          form={form}
+          layout="inline"
+          onFinish={(values) => {
+            console.log(values);
+            setFilters(values);
+          }}
+        >
+          <Form.Item name="appName" label="应用名称">
+            <Input placeholder="请输入应用名称" />
+          </Form.Item>
+          <Form.Item name="department" label="部门">
+            <Input placeholder="请输入部门" />
+          </Form.Item>
+          <Form.Item name="language" label="开发语言">
+            <Select placeholder="请选择开发语言">
+              <Option value="java">Java</Option>
+              <Option value="python">Python</Option>
+              {/* 其他语言选项 */}
+            </Select>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              查询
+            </Button>
+            <Button
+              onClick={() => {
+                form.resetFields();
+                setFilters({
+                  appName: "",
+                  department: "",
+                  language: "",
+                });
+              }}
+            >
+              重置
+            </Button>
+          </Form.Item>
+        </Form>
+
+        {/* 创建应用按钮 */}
+        <Button type="primary" onClick={showCreateAppDrawer}>
+          创建应用
+        </Button>
+
+        {/* 添加应用抽屉 */}
+        <CreateAppDrawer
+          open={createAppDrawerVisible}
+          onClose={hideCreateAppDrawer}
+        />
+
+        <Table
+          columns={columns}
+          dataSource={appList.list}
+          pagination={{
+            total: appList.total,
+            current: pagination.pageNo,
+            pageSize: pagination.pageSize,
+            onChange: handlePaginationChange,
+          }}
+        />
+      </Space>
+    </Card>
+  );
+};
+
+export default connect(
+  ({ app }: { app: { appList: { list: AppInfo[]; total: number } } }) => {
+    return {
+      appList: app.appList,
+    };
+  }
+)(AppList);
