@@ -29,7 +29,7 @@
 - [ ] **应用管理**: 列表页开发中
 - [ ] **应用管理**: 创建应用开发中
 
-![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/web.png)
+![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/web.jpg)
 
 ## 向导
 
