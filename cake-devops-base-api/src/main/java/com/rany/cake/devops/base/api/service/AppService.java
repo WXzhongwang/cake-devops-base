@@ -1,11 +1,14 @@
 package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.ListResult;
+import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
+import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
+import com.rany.cake.devops.base.api.query.AppPageQuery;
 
 /**
  * 应用服务
@@ -24,6 +27,14 @@ public interface AppService {
      * @return 应用ID
      */
     PojoResult<Long> createApp(CreateAppCommand createAppCommand);
+
+
+    /**
+     * 分页查询应用列表
+     * @param appPageQuery 应用查询
+     * @return app集合
+     */
+    PageResult<AppDTO> pageApp(AppPageQuery appPageQuery);
 
 
     /**

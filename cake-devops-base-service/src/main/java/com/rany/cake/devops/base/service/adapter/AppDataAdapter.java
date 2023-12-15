@@ -3,10 +3,12 @@ package com.rany.cake.devops.base.service.adapter;
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.ResourceStrategyDTO;
+import com.rany.cake.devops.base.api.query.AppPageQuery;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
+import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -80,4 +82,7 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
     @Mapping(target = "language", source = "language")
     @Mapping(target = "developMode", source = "developMode")
     App targetToSource(AppDTO appDTO);
+
+
+    AppQueryParam convertParam(AppPageQuery appPageQuery);
 }

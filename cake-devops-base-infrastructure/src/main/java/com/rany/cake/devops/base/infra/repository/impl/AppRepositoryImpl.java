@@ -1,16 +1,22 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
+
+import com.cake.framework.common.response.Page;
+import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
+import com.rany.cake.devops.base.infra.aop.PageUtils;
+import com.rany.cake.devops.base.infra.aop.PagingQuery;
 import com.rany.cake.devops.base.infra.convertor.AppDataConvertor;
 import com.rany.cake.devops.base.infra.convertor.AppEnvDataConvertor;
 import com.rany.cake.devops.base.infra.dao.AppDao;
 import com.rany.cake.devops.base.infra.dao.AppEnvDao;
 import com.rany.cake.devops.base.infra.mapper.AppEnvPOMapper;
 import com.rany.cake.devops.base.infra.mapper.AppPOMapper;
+import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.infra.po.AppEnvPO;
 import com.rany.cake.devops.base.infra.po.AppPO;
 import org.springframework.stereotype.Service;
@@ -80,5 +86,13 @@ public class AppRepositoryImpl implements AppRepository {
     public List<AppEnv> listAppEnv(Long appId) {
         List<AppEnvPO> appEnvPOS = appEnvDao.selectByAppId(appId);
         return appEnvDataConvertor.targetToSource(appEnvPOS);
+    }
+
+    @PagingQuery
+    public Page<App> pageApp(AppQueryParam appQueryParam) {
+        List<AppPO> appPOS = appDao.queryApp(appQueryParam);
+        PageInfo<AppPO> pageInfo = new PageInfo<>(appPOS);
+        List<App> apps = appDataConvertor.targetToSource(appPOS);
+        return PageUtils.build(pageInfo, apps);
     }
 }

@@ -1,9 +1,11 @@
 package com.rany.cake.devops.base.domain.repository;
 
+import com.cake.framework.common.response.Page;
 import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.pk.AppId;
+import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 
 import java.util.List;
 
@@ -23,4 +25,5 @@ public interface AppRepository extends Repository<App, AppId> {
     AppEnv getAppEnv(Long envId);
 
     List<AppEnv> listAppEnv(Long appId);
+    Page<App> pageApp(AppQueryParam appQueryParam);
 }

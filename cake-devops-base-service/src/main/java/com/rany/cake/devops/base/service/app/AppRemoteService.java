@@ -1,17 +1,21 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.ListResult;
+import com.cake.framework.common.response.Page;
+import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
+import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.dto.ResourceStrategyDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
+import com.rany.cake.devops.base.api.query.AppPageQuery;
 import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
@@ -26,6 +30,7 @@ import com.rany.cake.devops.base.domain.enums.DevelopMode;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
+import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
 import com.rany.cake.devops.base.domain.service.AppMemberDomainService;
 import com.rany.cake.devops.base.domain.service.ClusterDomainService;
@@ -33,6 +38,7 @@ import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
+import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.AppDataAdapter;
 import com.rany.uic.api.facade.account.AccountFacade;
 import com.rany.uic.api.query.account.AccountQuery;
@@ -43,14 +49,12 @@ import com.rany.uic.common.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -124,6 +128,15 @@ public class AppRemoteService implements AppService {
         app.sava();
         appDomainService.save(app);
         return PojoResult.succeed(app.getId().getId());
+    }
+
+    @Override
+    public PageResult<AppDTO> pageApp(AppPageQuery appPageQuery) {
+        AppQueryParam appQueryParam = appDataAdapter.convertParam(appPageQuery);
+        Page<App> page = appDomainService.pageApp(appQueryParam);
+        List<App> apps = new ArrayList<>(page.getItems());
+        List<AppDTO> appDTOList = appDataAdapter.sourceToTarget(apps);
+        return PageResult.succeed(PageUtils.build(page, appDTOList));
     }
 
     @Override

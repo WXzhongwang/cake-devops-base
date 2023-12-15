@@ -1,6 +1,10 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.App;
+import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
+import com.rany.cake.devops.base.infra.po.AppPO;
+
+import java.util.List;
 
 /**
  * TODO
@@ -28,5 +32,7 @@ public interface AppDao {
      * @return
      */
     int update(App app);
+
+    List<AppPO> queryApp(AppQueryParam appQueryParam);
 
 }

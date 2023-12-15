@@ -69,4 +69,22 @@
             modifier                = #{modifier,jdbcType=VARCHAR}
         where id = #{id.id,jdbcType=BIGINT}
     </update>
+
+    <select id="queryApp" parameterType="com.rany.cake.devops.base.domain.repository.param.AppQueryParam" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from app
+        <where>
+            is_deleted = '0'
+            <if test="appName != null and appName != ''">
+                and app_name = #{appName}
+            </if>
+            <if test="language != null and language != ''">
+                and language = #{language}
+            </if>
+            <if test="department != null and department != ''">
+                and department = #{department}
+            </if>
+        </where>
+    </select>
 </mapper>
