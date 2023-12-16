@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base;
 
 import com.cake.framework.mybatis.ParamLimitInterceptor;
+import com.rany.cake.dingtalk.starter.EnableCakeSso;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *
  * @author zhongshengwang
  */
+@EnableCakeSso
 @EnableDubbo
 @EnableTransactionManagement
 @EnableAspectJAutoProxy

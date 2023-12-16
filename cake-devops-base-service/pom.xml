@@ -18,6 +18,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <shenyu.version>2.6.0</shenyu.version>
+        <cake-dingtalk-sso.version>1.0-SNAPSHOT</cake-dingtalk-sso.version>
     </properties>
 
     <dependencies>
@@ -26,6 +27,11 @@
             <groupId>org.apache.shenyu</groupId>
             <artifactId>shenyu-spring-boot-starter-client-apache-dubbo</artifactId>
             <version>${shenyu.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rany.cake.dingtalk.sso</groupId>
+            <artifactId>cake-dingtalk-sso-starter</artifactId>
+            <version>${cake-dingtalk-sso.version}</version>
         </dependency>
         <dependency>
             <groupId>org.redisson</groupId>

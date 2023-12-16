@@ -2,6 +2,8 @@ package com.rany.cake.devops.base.web.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 /**
@@ -22,4 +24,14 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
         // 注册自定义拦截器，添加拦截路径和排除拦截路径
         registry.addInterceptor(new LogInterceptor()).addPathPatterns("/**");
     }
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+    }
+
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        // 将根路径重定向到 React 首页
+//        registry.addRedirectViewController("/", "/static/index.html");
+//    }
 }

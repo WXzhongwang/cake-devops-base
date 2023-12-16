@@ -1,11 +1,14 @@
 package com.rany.cake.devops.base.web.controller;
 
 import com.cake.framework.common.response.ListResult;
+import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
+import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
+import com.rany.cake.devops.base.api.query.AppPageQuery;
 import com.rany.cake.devops.base.api.service.AppService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +20,16 @@ import javax.annotation.Resource;
  * 应用
  */
 @RestController
-@RequestMapping("/app")
+@RequestMapping("/api/devops/app")
 public class AppController {
 
     @Resource
     private AppService appService;
 
+    @PostMapping("/pageApp")
+    public PageResult<AppDTO> pageApp(AppPageQuery appPageQuery) {
+        return appService.pageApp(appPageQuery);
+    }
 
     @PostMapping("/create")
     public PojoResult<Long> createApp(CreateAppCommand createAppCommand) {

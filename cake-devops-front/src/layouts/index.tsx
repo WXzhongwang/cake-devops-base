@@ -1,16 +1,63 @@
+import React, { useEffect, useState } from "react";
 import { ProLayout } from "@ant-design/pro-layout";
-import { Link, Outlet, useAppData, useLocation } from "umi";
+import { Dropdown } from "antd";
+import { Link, Outlet, useAppData, useLocation, connect, Dispatch } from "umi";
+import { LogoutOutlined } from "@ant-design/icons";
+import { API } from "typings";
+interface LayoutProps {
+  dispatch: Dispatch;
+  isLogin: boolean;
+  userData: API.UserInfo;
+}
 
-export default function Layout() {
+const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
   const { clientRoutes } = useAppData();
   const location = useLocation();
-  console.log(clientRoutes);
+
+  const getUserInfo = () => {
+    dispatch({
+      type: "user/getUserInfo",
+    });
+  };
+
+  console.log("isLogin", isLogin);
+  console.log("userData", userData);
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
   return (
     <ProLayout
+      layout="top"
       route={clientRoutes[0]}
       location={location}
       title="Cake"
-      headerRender={() => <div>111</div>}
+      waterMarkProps={{
+        content: [userData.userName, userData.userId],
+      }}
+      avatarProps={{
+        src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
+        size: "small",
+        title: userData.userName,
+        render: (props, dom) => {
+          return (
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    key: "logout",
+                    icon: <LogoutOutlined />,
+                    label: "退出登录",
+                  },
+                ],
+              }}
+            >
+              {dom}
+            </Dropdown>
+          );
+        },
+      }}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || menuItemProps.children) {
           return defaultDom;
@@ -31,4 +78,13 @@ export default function Layout() {
       <Outlet />
     </ProLayout>
   );
-}
+};
+
+export default connect(
+  ({ user }: { user: { isLogin: boolean; userData: API.UserInfo } }) => {
+    return {
+      isLogin: user.isLogin,
+      userData: user.userData,
+    };
+  }
+)(Layout);

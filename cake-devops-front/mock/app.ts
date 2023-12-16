@@ -31,9 +31,15 @@ export default {
     const start = (pageNo - 1) * pageSize;
     const end = start + pageSize;
     const result = {
-      list: appList.slice(start, end),
+      items: appList.slice(start, end),
       total: totalApps,
     };
-    res.json(result);
+    const content = {
+      success: true,
+      code: "200",
+      msg: "",
+      content: result,
+    };
+    res.json(content);
   },
 };

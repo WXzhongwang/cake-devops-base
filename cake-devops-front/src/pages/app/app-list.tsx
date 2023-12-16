@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./app-list.less";
+import { PageContainer } from "@ant-design/pro-components";
 import { Table, Space, Input, Select, Button, Form, Card } from "antd";
 import { connect, Dispatch, history } from "umi";
 import { AppInfo } from "@/models/app";
@@ -120,71 +120,74 @@ const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
   };
 
   return (
-    <Card>
-      <Space size="middle" direction="vertical" style={{ width: "100%" }}>
-        <Form
-          form={form}
-          layout="inline"
-          onFinish={(values) => {
-            console.log(values);
-            setFilters(values);
-          }}
-        >
-          <Form.Item name="appName" label="应用名称">
-            <Input placeholder="请输入应用名称" />
-          </Form.Item>
-          <Form.Item name="department" label="部门">
-            <Input placeholder="请输入部门" />
-          </Form.Item>
-          <Form.Item name="language" label="开发语言">
-            <Select placeholder="请选择开发语言">
-              <Option value="java">Java</Option>
-              <Option value="python">Python</Option>
-              {/* 其他语言选项 */}
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <Button
-              onClick={() => {
-                form.resetFields();
-                setFilters({
-                  appName: "",
-                  department: "",
-                  language: "",
-                });
-              }}
-            >
-              重置
-            </Button>
-          </Form.Item>
-        </Form>
+    <PageContainer>
+      <Card>
+        <Space size="middle" direction="vertical" style={{ width: "100%" }}>
+          <Form
+            form={form}
+            layout="inline"
+            onFinish={(values) => {
+              console.log(values);
+              setFilters(values);
+            }}
+          >
+            <Form.Item name="appName" label="应用名称">
+              <Input placeholder="请输入应用名称" />
+            </Form.Item>
+            <Form.Item name="department" label="部门">
+              <Input placeholder="请输入部门" />
+            </Form.Item>
+            <Form.Item name="language" label="开发语言">
+              <Select placeholder="请选择开发语言">
+                <Option value="java">Java</Option>
+                <Option value="python">Python</Option>
+                {/* 其他语言选项 */}
+              </Select>
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                查询
+              </Button>
+              <Button
+                onClick={() => {
+                  form.resetFields();
+                  setFilters({
+                    appName: "",
+                    department: "",
+                    language: "",
+                  });
+                }}
+              >
+                重置
+              </Button>
+            </Form.Item>
+          </Form>
 
-        {/* 创建应用按钮 */}
-        <Button type="primary" onClick={showCreateAppDrawer}>
-          创建应用
-        </Button>
+          {/* 创建应用按钮 */}
+          <Button type="primary" onClick={showCreateAppDrawer}>
+            创建应用
+          </Button>
 
-        {/* 添加应用抽屉 */}
-        <CreateAppDrawer
-          open={createAppDrawerVisible}
-          onClose={hideCreateAppDrawer}
-        />
+          {/* 添加应用抽屉 */}
+          <CreateAppDrawer
+            open={createAppDrawerVisible}
+            onClose={hideCreateAppDrawer}
+          />
 
-        <Table
-          columns={columns}
-          dataSource={appList.list}
-          pagination={{
-            total: appList.total,
-            current: pagination.pageNo,
-            pageSize: pagination.pageSize,
-            onChange: handlePaginationChange,
-          }}
-        />
-      </Space>
-    </Card>
+          <Table
+            columns={columns}
+            dataSource={appList.list}
+            rowKey={"id"}
+            pagination={{
+              total: appList.total,
+              current: pagination.pageNo,
+              pageSize: pagination.pageSize,
+              onChange: handlePaginationChange,
+            }}
+          />
+        </Space>
+      </Card>
+    </PageContainer>
   );
 };
 
