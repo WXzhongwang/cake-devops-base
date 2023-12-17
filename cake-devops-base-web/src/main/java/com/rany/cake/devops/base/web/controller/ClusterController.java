@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * 集群
  */
 @RestController
-@RequestMapping("/cluster")
+@RequestMapping("/api/devops/cluster")
 public class ClusterController {
 
     @Resource

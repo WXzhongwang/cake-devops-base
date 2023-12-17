@@ -10,10 +10,12 @@ import {
   Form,
   Select,
   Input,
+  Radio,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { connect, Dispatch, useParams } from "umi";
 import { AppInfo, AppEnv } from "@/models/app";
+import { ClusterInfo } from "@/models/cluster";
 import dayjs from "dayjs";
 
 const { Paragraph } = Typography;
@@ -21,17 +23,32 @@ const { Option } = Select;
 interface AppDetailProps {
   dispatch: Dispatch;
   appDetail: AppInfo | null;
+  clusterList: ClusterInfo[] | [];
 }
 
-const AppDetail: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
+interface CreateEnvFormProps {
+  envName: string;
+  env: string;
+  clusterId: string;
+  domains: string[];
+  autoScaling: boolean;
+  needApproval: boolean;
+  replicas: number;
+  cpu: string;
+  memory: string;
+  maxCpu: string;
+  maxMemory: string;
+}
+
+const AppDetail: React.FC<AppDetailProps> = ({
+  dispatch,
+  appDetail,
+  clusterList,
+}) => {
   const { id } = useParams();
   const [drawerVisible, setDrawerVisible] = useState(false);
 
-  const [form] = Form.useForm<{
-    appName: string;
-    department: string;
-    language: string;
-  }>();
+  const [form] = Form.useForm<CreateEnvFormProps>();
 
   useEffect(() => {
     // 在组件挂载时，调用 model 的获取应用详情接口
@@ -40,6 +57,13 @@ const AppDetail: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
       payload: { id },
     });
   }, [dispatch, id]);
+
+  useEffect(() => {
+    // 在组件挂载时，调用 model 的获取应用详情接口
+    dispatch({
+      type: "cluster/listAll",
+    });
+  }, [dispatch]);
 
   // 显示抽屉的方法
   const showDrawer = () => {
@@ -52,14 +76,35 @@ const AppDetail: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
   };
 
   // 提交抽屉表单的方法
-  const onFinish = (values: any) => {
+  const onFinish = (values: CreateEnvFormProps) => {
     console.log("Received values:", values);
-    // 在这里调用提交环境信息的接口
-    // ...
+    dispatch({
+      type: "app/createAppEnv",
+      payload: {
+        appId: id,
+        env: {
+          env: values.env,
+          clusterId: values.clusterId,
+          envName: values.envName,
+          needApproval: values.needApproval,
+          autoScaling: values.autoScaling,
+          domains: values.domains,
+          resourceStrategy: {
+            replicas: values.replicas,
+            cpu: values.cpu,
+            memory: values.memory,
+            maxCpu: values.maxCpu,
+            maxMemory: values.maxCpu,
+          },
+        },
+      },
+    });
 
     // 关闭抽屉
     closeDrawer();
   };
+
+  console.log("clusters", clusterList);
 
   return (
     <Card
@@ -184,6 +229,21 @@ const AppDetail: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
               <Option value="线上">线上</Option>
             </Select>
           </Form.Item>
+          <Form.Item
+            name="clusterId"
+            label="选择集群"
+            rules={[{ required: true, message: "请选择集群" }]}
+          >
+            <Select placeholder="请选择集群">
+              {clusterList &&
+                clusterList.map((cluster) => (
+                  <Option key={cluster.id} value={cluster.id}>
+                    {cluster.clusterName}({cluster.clusterType})
+                  </Option>
+                ))}
+            </Select>
+          </Form.Item>
+
           <Form.List
             name="domains"
             rules={[
@@ -254,28 +314,48 @@ const AppDetail: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
             label="CPU"
             rules={[{ required: true, message: "请输入CPU核数" }]}
           >
-            <Input type="number" placeholder="请输入CPU核数" />
+            <Input placeholder="请输入CPU核数" />
           </Form.Item>
           <Form.Item
             name="memory"
             label="内存"
             rules={[{ required: true, message: "请输入内存大小" }]}
           >
-            <Input type="number" placeholder="请输入内存大小" />
+            <Input placeholder="请输入内存大小" />
           </Form.Item>
           <Form.Item
             name="maxCpu"
             label="最大CPU"
             rules={[{ required: true, message: "请输入最大CPU核数" }]}
           >
-            <Input type="number" placeholder="请输入最大CPU核数" />
+            <Input placeholder="请输入最大CPU核数" />
           </Form.Item>
           <Form.Item
             name="maxMemory"
             label="最大内存"
             rules={[{ required: true, message: "请输入最大内存大小" }]}
           >
-            <Input type="number" placeholder="请输入最大内存大小" />
+            <Input placeholder="请输入最大内存大小" />
+          </Form.Item>
+          <Form.Item
+            name="needApproval"
+            label="发布是否审批"
+            rules={[{ required: true }]}
+          >
+            <Radio.Group defaultValue={false}>
+              <Radio value={true}>是</Radio>
+              <Radio value={false}>否</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            name="autoScaling"
+            label="是否自动扩容"
+            rules={[{ required: true }]}
+          >
+            <Radio.Group defaultValue={false}>
+              <Radio value={true}>是</Radio>
+              <Radio value={false}>否</Radio>
+            </Radio.Group>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
@@ -288,6 +368,17 @@ const AppDetail: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
   );
 };
 
-export default connect(({ app }: { app: { appDetail: AppInfo } }) => ({
-  appDetail: app.appDetail,
-}))(AppDetail);
+export default connect(
+  ({
+    app,
+    cluster,
+  }: {
+    app: { appDetail: AppInfo };
+    cluster: {
+      clusterList: ClusterInfo[];
+    };
+  }) => ({
+    appDetail: app.appDetail,
+    clusterList: cluster.clusterList,
+  })
+)(AppDetail);

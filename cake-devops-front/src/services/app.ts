@@ -1,6 +1,10 @@
 // src/services/app.ts
 import request from "umi-request";
-import { CreateAppPayload, QueryAppPayload } from "@/models/app";
+import {
+  CreateAppEnvPayload,
+  CreateAppPayload,
+  QueryAppPayload,
+} from "@/models/app";
 export async function pageAppList(data: QueryAppPayload) {
   return request("/api/devops/app/pageApp", {
     method: "POST",
@@ -10,6 +14,13 @@ export async function pageAppList(data: QueryAppPayload) {
 
 export async function createApp(data: CreateAppPayload) {
   return request("/api/devops/app/createApp", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function createAppEnv(data: CreateAppEnvPayload) {
+  return request("/api/devops/app/createEnv", {
     method: "POST",
     data,
   });

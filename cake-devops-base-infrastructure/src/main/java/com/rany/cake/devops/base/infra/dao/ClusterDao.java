@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
+import com.rany.cake.devops.base.infra.po.ClusterPO;
 
 import java.util.List;
 
@@ -37,6 +38,6 @@ public interface ClusterDao {
      *
      * @return
      */
-    List<Cluster> selectAll();
+    List<ClusterPO> selectAll();
 
 }

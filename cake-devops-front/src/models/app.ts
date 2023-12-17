@@ -1,7 +1,6 @@
 // src/models/app.ts
 import * as appService from "@/services/app";
-import { S } from "mockjs";
-import { Effect, Reducer, ConnectProps } from "umi";
+import { Effect, Reducer } from "umi";
 
 // 定义创建应用的参数类型
 export interface CreateAppPayload {
@@ -15,6 +14,11 @@ export interface CreateAppPayload {
   departmentAbbreviation: string;
   department: string;
   healthCheck: string;
+}
+
+export interface CreateAppEnvPayload {
+  appId: string;
+  env: AppEnv;
 }
 
 export interface QueryAppPayload {
@@ -44,7 +48,9 @@ export interface AppInfo {
 }
 
 export interface AppEnv {
-  id: string;
+  id: string | null;
+  appId: string | null;
+  clusterId: string | null;
   env: string;
   envName: string;
   domains: string[];
@@ -74,6 +80,11 @@ export interface AppState {
 interface CreateAppAction {
   type: "app/createApp";
   payload: CreateAppPayload;
+}
+
+interface CreateAppEnvAction {
+  type: "app/createAppEnv";
+  payload: CreateAppEnvPayload;
 }
 
 interface QueryAppAction {
@@ -110,7 +121,6 @@ const AppModel: AppModelType = {
   effects: {
     *getAppList({ payload }: QueryAppAction, { call, put }) {
       const response = yield call(appService.pageAppList, payload);
-      console.log("acc", response);
       yield put({
         type: "setAppList",
         payload: {
@@ -123,6 +133,12 @@ const AppModel: AppModelType = {
       yield call(appService.createApp, payload);
       yield put({ type: "getAppList" });
     },
+
+    *createAppEnv({ payload }: CreateAppEnvAction, { call, put }) {
+      yield call(appService.createAppEnv, payload);
+      yield put({ type: "getAppDetail" });
+    },
+
     *getAppDetail({ payload }: GetAppDetailAction, { call, put }) {
       const response = yield call(appService.getAppDetail, payload.id);
       yield put({
@@ -133,11 +149,9 @@ const AppModel: AppModelType = {
   },
   reducers: {
     setAppList(state, action) {
-      console.log("acc", action);
       return { ...state, appList: { ...state.appList, ...action.payload } };
     },
     setAppDetail(state, action) {
-      console.log("acc", action);
       return { ...state, appDetail: action.payload };
     },
   },

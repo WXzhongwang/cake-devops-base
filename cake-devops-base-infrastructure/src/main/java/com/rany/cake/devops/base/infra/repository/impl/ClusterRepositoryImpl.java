@@ -54,6 +54,7 @@ public class ClusterRepositoryImpl implements ClusterRepository {
     }
 
     public List<Cluster> selectAll() {
-        return clusterDao.selectAll();
+        List<ClusterPO> clusters = clusterDao.selectAll();
+        return clusterDataConvertor.targetToSource(clusters);
     }
 }
