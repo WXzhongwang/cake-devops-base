@@ -1,5 +1,6 @@
 // src/services/app.ts
-import request from "umi-request";
+import request from "@/services/request";
+
 import { CreateClusterPayload, ConnectClusterPayload } from "@/models/cluster";
 
 export async function listAll() {

@@ -121,13 +121,17 @@ const AppModel: AppModelType = {
   effects: {
     *getAppList({ payload }: QueryAppAction, { call, put }) {
       const response = yield call(appService.pageAppList, payload);
-      yield put({
-        type: "setAppList",
-        payload: {
-          list: response.content.items,
-          total: response.content.total,
-        },
-      });
+      console.log(response);
+
+      if (response?.content) {
+        yield put({
+          type: "setAppList",
+          payload: {
+            list: response.content.items,
+            total: response.content.total,
+          },
+        });
+      }
     },
     *createApp({ payload }: CreateAppAction, { call, put }) {
       yield call(appService.createApp, payload);

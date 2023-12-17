@@ -1,6 +1,6 @@
 // src/services/user.ts
 import { QueryAppAccountPayload } from "@/models/user";
-import request from "umi-request";
+import request from "@/services/request";
 
 export async function logout() {
   return request("/sso/logout", { method: "GET" });

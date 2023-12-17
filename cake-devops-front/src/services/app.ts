@@ -1,5 +1,5 @@
 // src/services/app.ts
-import request from "umi-request";
+import request from "@/services/request";
 import {
   CreateAppEnvPayload,
   CreateAppPayload,

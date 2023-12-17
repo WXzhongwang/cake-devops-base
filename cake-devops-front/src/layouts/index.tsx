@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { ProLayout } from "@ant-design/pro-layout";
 import { Dropdown } from "antd";
-import { Link, Outlet, useAppData, useLocation, connect, Dispatch } from "umi";
+import { logout } from "@/services/user";
+import {
+  Link,
+  Outlet,
+  useAppData,
+  useLocation,
+  connect,
+  Dispatch,
+  history,
+} from "umi";
 import { LogoutOutlined } from "@ant-design/icons";
 import { API } from "typings";
 interface LayoutProps {
@@ -20,9 +29,6 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
     });
   };
 
-  console.log("isLogin", isLogin);
-  console.log("userData", userData);
-
   useEffect(() => {
     getUserInfo();
   }, []);
@@ -34,12 +40,12 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
       location={location}
       title="Cake"
       waterMarkProps={{
-        content: [userData.userName, userData.userId],
+        content: [userData?.userName, userData?.userId],
       }}
       avatarProps={{
         src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
         size: "small",
-        title: userData.userName,
+        title: userData?.userName,
         render: (props, dom) => {
           return (
             <Dropdown
@@ -49,6 +55,9 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
                     key: "logout",
                     icon: <LogoutOutlined />,
                     label: "退出登录",
+                    onClick: async () => {
+                      const res = await logout();
+                    },
                   },
                 ],
               }}

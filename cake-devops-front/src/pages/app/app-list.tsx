@@ -3,7 +3,7 @@ import { PageContainer } from "@ant-design/pro-components";
 import { Table, Space, Input, Select, Button, Form, Card } from "antd";
 import { connect, Dispatch, history } from "umi";
 import { AppInfo } from "@/models/app";
-import CreateAppDrawer from "./components/CreateAppDrawer";
+import CreateAppDrawer from "./components/create-app-drawer";
 
 const { Option } = Select;
 

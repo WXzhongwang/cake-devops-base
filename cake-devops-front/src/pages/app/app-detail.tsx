@@ -1,4 +1,3 @@
-// AppDetail.tsx
 import React, { useEffect, useState } from "react";
 import {
   Descriptions,
@@ -209,7 +208,15 @@ const AppDetail: React.FC<AppDetailProps> = ({
         open={drawerVisible}
         bodyStyle={{ paddingBottom: 80 }}
       >
-        <Form layout="vertical" form={form} onFinish={onFinish}>
+        <Form
+          layout="vertical"
+          form={form}
+          initialValues={{
+            needApproval: false,
+            autoScaling: false,
+          }}
+          onFinish={onFinish}
+        >
           {/* 在这里添加表单项，例如环境名称、环境类型、选择集群、域名等 */}
           <Form.Item
             name="envName"
@@ -249,7 +256,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
             rules={[
               {
                 validator: async (_, domains) => {
-                  if (!domains || domains.length > 3) {
+                  if (domains && domains.length > 3) {
                     return Promise.reject(new Error("最多配置3个域名"));
                   }
                 },
@@ -279,13 +286,12 @@ const AppDetail: React.FC<AppDetailProps> = ({
                     >
                       <Input style={{ width: 260 }} placeholder="请输入域名" />
                     </Form.Item>
-                    {fields.length > 1 ? (
-                      <MinusCircleOutlined
-                        style={{ margin: "0 8px" }}
-                        className="dynamic-delete-button"
-                        onClick={() => remove(field.name)}
-                      />
-                    ) : null}
+
+                    <MinusCircleOutlined
+                      style={{ margin: "0 8px" }}
+                      className="dynamic-delete-button"
+                      onClick={() => remove(field.name)}
+                    />
                   </Form.Item>
                 ))}
                 <Form.Item>
@@ -342,7 +348,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
             label="发布是否审批"
             rules={[{ required: true }]}
           >
-            <Radio.Group defaultValue={false}>
+            <Radio.Group>
               <Radio value={true}>是</Radio>
               <Radio value={false}>否</Radio>
             </Radio.Group>
@@ -352,7 +358,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
             label="是否自动扩容"
             rules={[{ required: true }]}
           >
-            <Radio.Group defaultValue={false}>
+            <Radio.Group>
               <Radio value={true}>是</Radio>
               <Radio value={false}>否</Radio>
             </Radio.Group>
