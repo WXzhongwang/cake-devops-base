@@ -7,6 +7,7 @@ import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
+import com.rany.cake.devops.base.api.query.AppBasicQuery;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
 import com.rany.cake.devops.base.api.query.AppPageQuery;
 
@@ -27,6 +28,14 @@ public interface AppService {
      * @return 应用ID
      */
     PojoResult<Long> createApp(CreateAppCommand createAppCommand);
+
+    /**
+     * 获取应用详情
+     * @param appBasicQuery 应用详情
+     *
+     * @return
+     */
+    PojoResult<AppDTO> getApp(AppBasicQuery appBasicQuery);
 
 
     /**

@@ -14,6 +14,7 @@ import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.dto.ResourceStrategyDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
+import com.rany.cake.devops.base.api.query.AppBasicQuery;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
 import com.rany.cake.devops.base.api.query.AppPageQuery;
 import com.rany.cake.devops.base.api.service.AppService;
@@ -131,6 +132,16 @@ public class AppRemoteService implements AppService {
     }
 
     @Override
+    public PojoResult<AppDTO> getApp(AppBasicQuery appBasicQuery) {
+        App app = appDomainService.getApp(new AppId(appBasicQuery.getAppId()));
+        if (app == null) {
+            throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
+        }
+        AppDTO appDTO = appDataAdapter.sourceToTarget(app);
+        return PojoResult.succeed(appDTO);
+    }
+
+    @Override
     public PageResult<AppDTO> pageApp(AppPageQuery appPageQuery) {
         AppQueryParam appQueryParam = appDataAdapter.convertParam(appPageQuery);
         Page<App> page = appDomainService.pageApp(appQueryParam);
@@ -162,7 +173,7 @@ public class AppRemoteService implements AppService {
         appEnv.setAutoScaling(env.getAutoScaling());
         appEnv.setNeedApproval(env.getNeedApproval());
         ResourceStrategyDTO resourceStrategyDTO = env.getResourceStrategy();
-        appEnv.setResourceStrategy(new ResourceStrategy(resourceStrategyDTO.getMaxReplicas(), resourceStrategyDTO.getCpu(),
+        appEnv.setResourceStrategy(new ResourceStrategy(resourceStrategyDTO.getReplicas(), resourceStrategyDTO.getCpu(),
                 resourceStrategyDTO.getMemory()));
         appDomainService.createEnv(appEnv);
         return PojoResult.succeed(appEnv.getId());

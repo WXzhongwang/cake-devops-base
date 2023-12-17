@@ -19,7 +19,7 @@ public class ResourceStrategyDTO extends DTO {
     /**
      * 最大副本数
      */
-    private Integer maxReplicas;
+    private Integer replicas;
     /**
      * cpu资源
      */

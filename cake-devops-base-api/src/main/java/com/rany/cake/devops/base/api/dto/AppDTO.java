@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -26,4 +27,5 @@ public class AppDTO extends DTO {
     private Date gmtModified;
     private String creator;
     private String modifier;
+    private List<AppEnvDTO> appEnvList;
 }

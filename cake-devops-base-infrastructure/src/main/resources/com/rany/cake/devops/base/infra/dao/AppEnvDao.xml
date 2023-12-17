@@ -2,28 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.rany.cake.devops.base.infra.dao.AppEnvDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.AppEnvPO">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="cluster_id" jdbcType="BIGINT" property="clusterId"/>
-        <result column="app_id" jdbcType="BIGINT" property="appId"/>
-        <result column="domains" jdbcType="VARCHAR" property="domains"/>
-        <result column="env_name" jdbcType="VARCHAR" property="envName"/>
-        <result column="env" jdbcType="VARCHAR" property="env"/>
-        <result column="max_replicas" jdbcType="INTEGER" property="maxReplicas"/>
-        <result column="cpu" jdbcType="DECIMAL" property="cpu"/>
-        <result column="memory" jdbcType="DECIMAL" property="memory"/>
-        <result column="auto_scaling" jdbcType="CHAR" property="autoScaling"/>
-        <result column="need_approval" jdbcType="CHAR" property="needApproval"/>
-        <result column="status" jdbcType="VARCHAR" property="status"/>
-        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
-        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
-        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
-        <result column="creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="cluster_id" jdbcType="BIGINT" property="clusterId" />
+        <result column="app_id" jdbcType="BIGINT" property="appId" />
+        <result column="domains" jdbcType="VARCHAR" property="domains" />
+        <result column="env_name" jdbcType="VARCHAR" property="envName" />
+        <result column="env" jdbcType="VARCHAR" property="env" />
+        <result column="replicas" jdbcType="INTEGER" property="replicas" />
+        <result column="cpu" jdbcType="VARCHAR" property="cpu" />
+        <result column="max_cpu" jdbcType="VARCHAR" property="maxCpu" />
+        <result column="memory" jdbcType="VARCHAR" property="memory" />
+        <result column="max_memory" jdbcType="VARCHAR" property="maxMemory" />
+        <result column="auto_scaling" jdbcType="CHAR" property="autoScaling" />
+        <result column="need_approval" jdbcType="CHAR" property="needApproval" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     </resultMap>
+
     <sql id="Base_Column_List">
-        id
-        , cluster_id, app_id, domains, env_name, env, max_replicas, cpu, memory, auto_scaling,
-        need_approval, status, is_deleted, gmt_create, gmt_modified, creator, modifier
+        id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
+    auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
+    modifier
     </sql>
     <select id="selectByAppId" parameterType="java.lang.Long" resultMap="BaseResultMap">
 
@@ -36,14 +39,16 @@
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
         insert into app_env (cluster_id, app_id,
                              domains, env_name, env,
-                             max_replicas, cpu, memory,
+                             replicas, cpu, memory,
+                             max_cpu, max_memory,
                              auto_scaling, need_approval, status,
                              is_deleted, gmt_create, gmt_modified,
                              creator, modifier)
         values (#{clusterId.id,jdbcType=BIGINT}, #{appId.id,jdbcType=BIGINT},
                 #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
                 #{envName,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR},
-                #{maxReplicas,jdbcType=INTEGER}, #{cpu,jdbcType=DECIMAL}, #{memory,jdbcType=DECIMAL},
+                #{replicas,jdbcType=INTEGER}, #{resourceStrategy.cpu}, #{resourceStrategy.memory},
+                #{resourceStrategy.maxCpu}, #{resourceStrategy.maxMemory},
                 #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
@@ -70,14 +75,20 @@
             <if test="env != null">
                 env = #{env,jdbcType=VARCHAR},
             </if>
-            <if test="maxReplicas != null">
-                max_replicas = #{maxReplicas,jdbcType=INTEGER},
+            <if test="replicas != null">
+                replicas = #{replicas},
             </if>
-            <if test="cpu != null">
-                cpu = #{cpu,jdbcType=DECIMAL},
+            <if test="resourceStrategy.cpu != null">
+                cpu = #{resourceStrategy.cpu},
             </if>
-            <if test="memory != null">
-                memory = #{memory,jdbcType=DECIMAL},
+            <if test="resourceStrategy.memory != null">
+                memory = #{resourceStrategy.memory},
+            </if>
+            <if test="resourceStrategy.maxCpu != null">
+                max_cpu = #{maxCpu},
+            </if>
+            <if test="resourceStrategy.maxMemory != null">
+                max_memory = #{resourceStrategy.maxMemory},
             </if>
             <if test="autoScaling != null">
                 auto_scaling = #{autoScaling,jdbcType=CHAR},

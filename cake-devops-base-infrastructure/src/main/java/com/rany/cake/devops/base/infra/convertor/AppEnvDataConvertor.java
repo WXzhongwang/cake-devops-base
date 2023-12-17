@@ -26,6 +26,11 @@ public interface AppEnvDataConvertor extends BaseConvertor<AppEnv, AppEnvPO> {
     @Mapping(source = "appId.id", target = "appId")
     @Mapping(source = "clusterId.id", target = "clusterId")
     @Mapping(expression = "java(this.convertString(appEnv.getDomains()))", target = "domains")
+    @Mapping(source = "resourceStrategy.replicas", target = "replicas")
+    @Mapping(source = "resourceStrategy.cpu", target = "cpu")
+    @Mapping(source = "resourceStrategy.memory", target = "memory")
+    @Mapping(source = "resourceStrategy.maxCpu", target = "maxCpu")
+    @Mapping(source = "resourceStrategy.maxMemory", target = "maxMemory")
     @Override
     AppEnvPO sourceToTarget(AppEnv appEnv);
 
@@ -40,5 +45,10 @@ public interface AppEnvDataConvertor extends BaseConvertor<AppEnv, AppEnvPO> {
     @Mapping(target = "appId.id", source = "appId")
     @Mapping(target = "clusterId.id", source = "clusterId")
     @Mapping(target = "domains", expression = "java(this.convertList(appEnvPO.getDomains()))")
+    @Mapping(target = "resourceStrategy.replicas", source = "replicas")
+    @Mapping(target = "resourceStrategy.cpu", source = "cpu")
+    @Mapping(target = "resourceStrategy.memory", source = "memory")
+    @Mapping(target = "resourceStrategy.maxCpu", source = "maxCpu")
+    @Mapping(target = "resourceStrategy.maxMemory", source = "maxMemory")
     AppEnv targetToSource(AppEnvPO appEnvPO);
 }

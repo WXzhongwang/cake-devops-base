@@ -27,7 +27,7 @@ import java.util.List;
  * @email 18668485565163.com
  */
 @Data
-@Builder
+// @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)

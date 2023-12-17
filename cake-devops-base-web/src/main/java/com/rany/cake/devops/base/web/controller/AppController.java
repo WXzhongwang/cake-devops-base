@@ -7,12 +7,11 @@ import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
+import com.rany.cake.devops.base.api.query.AppBasicQuery;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
 import com.rany.cake.devops.base.api.query.AppPageQuery;
 import com.rany.cake.devops.base.api.service.AppService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -29,6 +28,13 @@ public class AppController {
     @PostMapping("/pageApp")
     public PageResult<AppDTO> pageApp(AppPageQuery appPageQuery) {
         return appService.pageApp(appPageQuery);
+    }
+
+    @GetMapping("/getApp")
+    public PojoResult<AppDTO> getApp(@RequestParam("id")Long appId) {
+        AppBasicQuery appBasicQuery = new AppBasicQuery();
+        appBasicQuery.setAppId(appId);
+        return appService.getApp(appBasicQuery);
     }
 
     @PostMapping("/create")
