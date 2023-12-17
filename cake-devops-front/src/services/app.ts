@@ -14,3 +14,7 @@ export async function createApp(data: CreateAppPayload) {
     data,
   });
 }
+
+export async function getAppDetail(id: number) {
+  return request(`/api/devops/app/getApp?id=${id}`);
+}

@@ -12,6 +12,35 @@ interface QueryCurrentUserAction {
   type: "user/getUserInfo";
 }
 
+export interface QueryAppAccountPayload {
+  name: string;
+  pageNo: number;
+  pageSize: number;
+}
+
+export interface AppAccountDTO {
+  id: string;
+  accountName: string;
+  phone: string;
+  email: string;
+  tenantId: string;
+  isAdmin: boolean;
+  accountType: string;
+  status: string;
+  isDeleted: string;
+  lastLoginIp: string;
+  lastLoginTime: Date;
+  feature: string;
+  gmtCreate: Date;
+  gmtModified: Date;
+  headImage: string;
+  dingding: string;
+  qq: string;
+  wechat: string;
+  birthday: Date;
+  tags: string;
+}
+
 type UserModelType = {
   namespace: "user";
   state: UserModelState;
@@ -28,7 +57,11 @@ const UserModel: UserModelType = {
   namespace: "user",
   state: {
     isLogin: false,
-    userData: {},
+    userData: {
+      userId: "",
+      userName: "",
+      realName: "",
+    },
   },
   effects: {
     *logout(_, { call, put }) {
@@ -49,7 +82,7 @@ const UserModel: UserModelType = {
       yield put({
         type: "setUserInfo",
         payload: {
-          isLogin: false,
+          isLogin: true,
           userData: res.content,
         },
       });

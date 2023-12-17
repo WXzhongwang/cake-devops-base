@@ -2,7 +2,7 @@ import { defineMock } from "umi";
 import Mock from "mockjs";
 
 export default {
-  "GET /api/devops/getUser": (req: Request, res: Response) => {
+  "GET /api/devops/user/getUser": (req: Request, res: Response) => {
     const result = {
       success: true,
       code: "200",
