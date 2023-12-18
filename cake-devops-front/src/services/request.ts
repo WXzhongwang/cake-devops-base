@@ -23,7 +23,7 @@ const errorHandler = (error: CustomError<any>) => {
   if (response.status !== 200 || !data.success) {
     // The request was made and the server responded with a status code
     console.error("Response error:", response.status, data);
-    debugger;
+    // debugger;
     message.error(data.message);
   } else {
     // The request was made but no response was received

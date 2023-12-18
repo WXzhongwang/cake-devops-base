@@ -3,8 +3,8 @@
 <mapper namespace="com.rany.cake.devops.base.infra.dao.GroupHostDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.GroupHostPO">
         <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="group_id" jdbcType="BIGINT" property="groupId"/>
-        <result column="host_id" jdbcType="BIGINT" property="hostId"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="host_id" jdbcType="VARCHAR" property="hostId"/>
         <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
@@ -31,7 +31,7 @@
         insert into group_host (id, group_id, host_id,
                                 is_deleted, gmt_create, gmt_modified,
                                 creator, modifier)
-        values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{hostId,jdbcType=BIGINT},
+        values (#{id,jdbcType=BIGINT}, #{groupId}, #{hostId},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
     </insert>
@@ -40,10 +40,10 @@
         update group_host
         <set>
             <if test="groupId != null">
-                group_id = #{groupId,jdbcType=BIGINT},
+                group_id = #{groupId},
             </if>
             <if test="hostId != null">
-                host_id = #{hostId,jdbcType=BIGINT},
+                host_id = #{hostId},
             </if>
             <if test="isDeleted != null">
                 is_deleted = #{isDeleted,jdbcType=VARCHAR},

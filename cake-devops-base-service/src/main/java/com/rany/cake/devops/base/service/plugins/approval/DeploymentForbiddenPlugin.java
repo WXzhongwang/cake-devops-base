@@ -26,7 +26,7 @@ public class DeploymentForbiddenPlugin extends BasePlugin {
 
     @Override
     public boolean execute(DeployContext context) {
-        Long appId = context.getApp().getId().getId();
+        String appId = context.getApp().getAppId().getAppId();
         // 线上应用处理存在封网校验
         context.putArg(RunningConstant.FORBIDDEN_CHECK_REQUIRED, Boolean.FALSE);
         if (Objects.equals(context.getAppEnv().getEnv(), AppEnvEnum.PROD)) {

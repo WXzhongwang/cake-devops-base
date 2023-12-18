@@ -36,7 +36,7 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
     /**
      * 主键
      */
-    private AppId id;
+    private AppId appId;
 
     /**
      * 应用名
@@ -73,7 +73,7 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
     /**
      * 拥有者
      */
-    private Long owner;
+    private String owner;
     /**
      * 健康检查
      * 健康检查路径，端口后的uri，如：/health
@@ -96,10 +96,10 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      */
     private List<VolumeMount> volumeMounts;
 
-    public App(AppId appId, AppName appName, Long owner, String description, CodeRepository codeRepository,
+    public App(AppId appId, AppName appName, String owner, String description, CodeRepository codeRepository,
                CodeLanguageEnum language,
                DevelopMode developMode) {
-        this.id = appId;
+        this.appId = appId;
         this.owner = owner;
         this.appName = appName;
         this.description = description;
@@ -113,5 +113,11 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
         this.gmtModified = DateUtil.date();
         this.status = CommonStatusEnum.ENABLE.getValue();
         this.isDeleted = DeleteStatusEnum.NO.getValue();
+    }
+
+
+    @Override
+    public AppId getBizID() {
+        return appId;
     }
 }

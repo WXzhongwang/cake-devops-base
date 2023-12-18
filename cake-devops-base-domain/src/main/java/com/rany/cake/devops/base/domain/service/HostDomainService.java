@@ -31,8 +31,8 @@ public class HostDomainService {
         if (packagingGroup == null) {
             return Collections.emptyList();
         }
-        ArrayList<Long> groupIds = new ArrayList<>();
-        groupIds.add(packagingGroup.getId().getId());
+        List<String> groupIds = new ArrayList<>();
+        groupIds.add(packagingGroup.getBizID().getHostGroupId());
         return hostRepository.getHostsByGroupIds(groupIds);
     }
 

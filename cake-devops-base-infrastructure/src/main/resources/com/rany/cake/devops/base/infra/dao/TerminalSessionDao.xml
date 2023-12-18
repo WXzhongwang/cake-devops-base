@@ -5,7 +5,7 @@
 
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="session_id" property="sessionId" jdbcType="VARCHAR"/>
-        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="account_id" property="accountId" jdbcType="VARCHAR"/>
         <result column="remote_addr" property="remoteAddr" jdbcType="VARCHAR"/>
         <result column="session_closed" property="sessionClosed" jdbcType="VARCHAR"/>
         <result column="close_time" property="closeTime" jdbcType="TIMESTAMP"/>

@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.domain.pk;
 import com.cake.framework.common.base.Identifier;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * TODO
@@ -15,12 +16,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class AppId implements Identifier {
-    Long id;
+    String appId;
 
-    public AppId(Long id) {
-        if (id < 0) {
+    public AppId(String appId) {
+        if (StringUtils.isEmpty(appId)) {
             throw new IllegalArgumentException();
         }
-        this.id = id;
+        this.appId = appId;
     }
 }

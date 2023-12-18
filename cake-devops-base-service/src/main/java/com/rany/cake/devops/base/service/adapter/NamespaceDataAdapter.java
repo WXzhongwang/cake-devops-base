@@ -24,8 +24,8 @@ public interface NamespaceDataAdapter extends BaseConvertor<Namespace, Namespace
      * @param namespace 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
-    @Mapping(source = "clusterId.id", target = "clusterId")
+    @Mapping(source = "namespaceId.namespaceId", target = "namespaceId")
+    @Mapping(source = "clusterId.clusterId", target = "clusterId")
     @Mapping(source = "name.name", target = "name")
     NamespaceDTO sourceToTarget(Namespace namespace);
 
@@ -37,8 +37,8 @@ public interface NamespaceDataAdapter extends BaseConvertor<Namespace, Namespace
      * @return 聚合根
      */
 
-    @Mapping(target = "id.id", source = "id")
-    @Mapping(target = "clusterId.id", source = "clusterId")
+    @Mapping(target = "namespaceId.namespaceId", source = "namespaceId")
+    @Mapping(target = "clusterId.clusterId", source = "clusterId")
     @Mapping(target = "name.name", source = "name")
     Namespace targetToSource(NamespaceDTO namespaceDTO);
 }

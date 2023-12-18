@@ -36,7 +36,7 @@ public class HostRepositoryImpl implements HostRepository {
 
     @Override
     public Host find(@NotNull HostId hostId) {
-        HostPO hostPO = hostPOMapper.selectByPrimaryKey(hostId.getId());
+        HostPO hostPO = hostDao.selectByHostId(hostId.getHostId());
         return hostDataConvertor.targetToSource(hostPO);
     }
 
@@ -58,9 +58,9 @@ public class HostRepositoryImpl implements HostRepository {
     }
 
     @Override
-    public List<Host> getHostsByGroupIds(List<Long> groupIds) {
+    public List<Host> getHostsByGroupIds(List<String> groupIds) {
         List<GroupHostPO> groupHostPOS = groupHostDao.selectByGroupIds(groupIds);
-        List<Long> hostIds = groupHostPOS.stream().map(GroupHostPO::getHostId).collect(Collectors.toList());
+        List<String> hostIds = groupHostPOS.stream().map(GroupHostPO::getHostId).collect(Collectors.toList());
         List<HostPO> hostPOS = hostDao.selectByPrimaryKeyList(hostIds);
         return hostDataConvertor.targetToSource(hostPOS);
     }

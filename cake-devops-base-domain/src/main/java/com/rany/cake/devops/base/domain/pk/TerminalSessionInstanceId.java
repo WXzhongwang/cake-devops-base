@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.domain.pk;
 import com.cake.framework.common.base.Identifier;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * TerminalSessionInstanceId
@@ -15,10 +16,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TerminalSessionInstanceId implements Identifier {
-    Long id;
+    String id;
 
-    public TerminalSessionInstanceId(Long id) {
-        if (id < 0) {
+    public TerminalSessionInstanceId(String id) {
+        if (StringUtils.isEmpty(id)) {
             throw new IllegalArgumentException();
         }
         this.id = id;

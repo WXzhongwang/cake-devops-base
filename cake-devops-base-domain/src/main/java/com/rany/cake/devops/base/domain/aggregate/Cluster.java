@@ -25,7 +25,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class Cluster extends BaseAggregateRoot implements IAggregate<ClusterId> {
 
-    private ClusterId id;
+    private ClusterId clusterId;
     private ClusterName clusterName;
     private List<String> tags;
     private String version;
@@ -40,9 +40,15 @@ public class Cluster extends BaseAggregateRoot implements IAggregate<ClusterId> 
 
     private String status;
 
-    public Cluster(ClusterId id, ClusterName clusterName, ClusterTypeEnum clusterType) {
-        this.id = id;
+    public Cluster(ClusterId clusterId, ClusterName clusterName, ClusterTypeEnum clusterType) {
+        this.clusterId = clusterId;
         this.clusterName = clusterName;
         this.clusterType = clusterType;
+    }
+
+
+    @Override
+    public ClusterId getBizID() {
+        return clusterId;
     }
 }

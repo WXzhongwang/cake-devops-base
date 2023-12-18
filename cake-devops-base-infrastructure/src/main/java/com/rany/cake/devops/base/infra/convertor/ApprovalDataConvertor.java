@@ -23,7 +23,7 @@ public interface ApprovalDataConvertor extends BaseConvertor<Approval, ApprovalP
      * @param approval 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "approvalId.approvalId", target = "approvalId")
     @Override
     ApprovalPO sourceToTarget(Approval approval);
 
@@ -35,6 +35,6 @@ public interface ApprovalDataConvertor extends BaseConvertor<Approval, ApprovalP
      */
 
     @Override
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "approvalId.approvalId", source = "approvalId")
     Approval targetToSource(ApprovalPO approvalPO);
 }

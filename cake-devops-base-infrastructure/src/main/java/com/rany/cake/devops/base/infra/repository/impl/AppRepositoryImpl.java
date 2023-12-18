@@ -46,9 +46,9 @@ public class AppRepositoryImpl implements AppRepository {
 
     @Override
     public App find(@NotNull AppId appId) {
-        AppPO appPO = appPOMapper.selectByPrimaryKey(appId.getId());
+        AppPO appPO = appDao.selectByAppId(appId.getAppId());
         App app = appDataConvertor.targetToSource(appPO);
-        List<AppEnvPO> appEnvPOS = appEnvDao.selectByAppId(appId.getId());
+        List<AppEnvPO> appEnvPOS = appEnvDao.selectByAppId(appId.getAppId());
         List<AppEnv> appEnvs = appEnvDataConvertor.targetToSource(appEnvPOS);
         app.setAppEnvList(appEnvs);
         return app;
@@ -77,13 +77,13 @@ public class AppRepositoryImpl implements AppRepository {
     }
 
     @Override
-    public AppEnv getAppEnv(Long envId) {
-        AppEnvPO appEnvPO = appEnvPOMapper.selectByPrimaryKey(envId);
+    public AppEnv getAppEnv(String envId) {
+        AppEnvPO appEnvPO = appEnvDao.selectByEnvId(envId);
         return appEnvDataConvertor.targetToSource(appEnvPO);
     }
 
     @Override
-    public List<AppEnv> listAppEnv(Long appId) {
+    public List<AppEnv> listAppEnv(String appId) {
         List<AppEnvPO> appEnvPOS = appEnvDao.selectByAppId(appId);
         return appEnvDataConvertor.targetToSource(appEnvPOS);
     }

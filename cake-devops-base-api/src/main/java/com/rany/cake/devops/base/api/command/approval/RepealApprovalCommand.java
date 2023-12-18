@@ -16,5 +16,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class RepealApprovalCommand extends BaseCommand {
 
-    private Long approvalId;
+    private String approvalId;
 }

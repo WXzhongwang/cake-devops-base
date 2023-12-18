@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.infra.po.AppEnvPO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -31,5 +32,6 @@ public interface AppEnvDao {
      * @param appId
      * @return
      */
-    List<AppEnvPO> selectByAppId(Long appId);
+    List<AppEnvPO> selectByAppId(@Param("appId") String appId);
+    AppEnvPO selectByEnvId(@Param("envId") String envId);
 }

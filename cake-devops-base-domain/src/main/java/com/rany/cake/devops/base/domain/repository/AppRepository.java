@@ -22,8 +22,8 @@ public interface AppRepository extends Repository<App, AppId> {
 
     void saveAppEnv(AppEnv appEnv);
 
-    AppEnv getAppEnv(Long envId);
+    AppEnv getAppEnv(String envId);
 
-    List<AppEnv> listAppEnv(Long appId);
+    List<AppEnv> listAppEnv(String appId);
     Page<App> pageApp(AppQueryParam appQueryParam);
 }

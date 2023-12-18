@@ -120,17 +120,6 @@ const AppDetail: React.FC<AppDetailProps> = ({
           </Paragraph>
         </Descriptions.Item>
         <Descriptions.Item label="仓库">
-          {/* <Paragraph
-            copyable={{
-              icon: [
-                <SmileOutlined key="copy-icon" />,
-                <SmileFilled key="copied-icon" />,
-              ],
-              tooltips: ["点击复制", "复制成功"],
-            }}
-          >
-            {appDetail.repo}
-          </Paragraph> */}
           <Paragraph
             copyable={{ tooltips: ["点击复制", "复制成功"] }}
             style={{ display: "inline" }}
@@ -165,7 +154,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
         {appDetail?.appEnvList.map((appEnv: AppEnv) => (
           <Card
             title={appEnv.envName}
-            key={appEnv.id}
+            key={appEnv.envId}
             extra={<a href="#">More</a>}
             style={{ width: 300, marginBottom: "16px" }}
           >
@@ -244,7 +233,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
             <Select placeholder="请选择集群">
               {clusterList &&
                 clusterList.map((cluster) => (
-                  <Option key={cluster.id} value={cluster.id}>
+                  <Option key={cluster.clusterId} value={cluster.clusterId}>
                     {cluster.clusterName}({cluster.clusterType})
                   </Option>
                 ))}

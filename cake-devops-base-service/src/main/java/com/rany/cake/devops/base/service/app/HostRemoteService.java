@@ -36,13 +36,13 @@ public class HostRemoteService implements HostService {
 
 
     @Override
-    public PojoResult<Long> createHostCommand(CreateHostCommand createHostCommand) {
-        Host host = new Host(new HostId(snowflakeIdWorker.nextId()), createHostCommand.getName(),
+    public PojoResult<String> createHostCommand(CreateHostCommand createHostCommand) {
+        Host host = new Host(new HostId(String.valueOf(snowflakeIdWorker.nextId())), createHostCommand.getName(),
                 createHostCommand.getHostname(), createHostCommand.getPort());
         host.setUsername(createHostCommand.getUsername());
         host.setPkey(createHostCommand.getPkey());
         hostDomainService.save(host);
-        return PojoResult.succeed(host.getId().getId());
+        return PojoResult.succeed(host.getHostId().getHostId());
     }
 
     @Override

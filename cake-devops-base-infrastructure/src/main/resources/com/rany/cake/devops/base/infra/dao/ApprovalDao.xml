@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.ApprovalPO">
 
         <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="approval_id" jdbcType="VARCHAR" property="approvalId"/>
         <result column="change_date" jdbcType="TIMESTAMP" property="changeDate"/>
         <result column="approval_status" jdbcType="VARCHAR" property="approvalStatus"/>
         <result column="comment" jdbcType="VARCHAR" property="comment"/>
@@ -12,26 +13,33 @@
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
-        <result column="doc_address" jdbcType="LONGVARCHAR" property="docAddress"/>
+        <result column="doc_address" jdbcType="VARCHAR" property="docAddress"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-
-        id
+        id,
+        approval_id
         , doc_address, change_date, approval_status, comment, is_deleted, gmt_create, gmt_modified,
         creator, modifier
     </sql>
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.Approval">
-        insert into approval (id, doc_address, change_date,
+        insert into approval (approval_id, doc_address, change_date,
                               approval_status, comment, is_deleted,
                               gmt_create, gmt_modified, creator,
                               modifier)
-        values (#{id.id,jdbcType=BIGINT}, #{docAddress,jdbcType=VARCHAR}, #{changeDate,jdbcType=TIMESTAMP},
+        values (#{approvalId.approvalId}, #{docAddress,jdbcType=VARCHAR}, #{changeDate,jdbcType=TIMESTAMP},
                 #{approvalStatus,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, #{isDeleted,jdbcType=VARCHAR},
                 #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
                 #{modifier,jdbcType=VARCHAR})
     </insert>
+
+    <select id="selectByApprovalId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from approval
+    where approval_id = #{approvalId}
+    </select>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Approval">
         update approval
@@ -64,6 +72,6 @@
                 modifier = #{modifier,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id.id,jdbcType=BIGINT}
+        where approval_id = #{approvalId.approvalId}
     </update>
 </mapper>

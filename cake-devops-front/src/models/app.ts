@@ -31,7 +31,7 @@ export interface QueryAppPayload {
 
 // 应用信息
 export interface AppInfo {
-  id: string;
+  appId: string;
   appName: string;
   repo: string;
   defaultBranch: string;
@@ -48,17 +48,17 @@ export interface AppInfo {
 }
 
 export interface AppEnv {
-  id: string | null;
+  envId: string | null;
   appId: string | null;
   clusterId: string | null;
   env: string;
   envName: string;
   domains: string[];
   resourceStrategy: ResourceStrategyDTO;
-  configMap: Record<string, string>;
+  configMap: Record<string, string> | null;
   autoScaling: boolean;
   needApproval: boolean;
-  status: string;
+  status: string | null;
 }
 
 export interface ResourceStrategyDTO {

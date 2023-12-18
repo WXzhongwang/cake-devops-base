@@ -22,5 +22,5 @@ public class CreateGroupCommand extends BaseCommand {
      */
     private String name;
     private Integer sort;
-    private Long pid;
+    private String pid;
 }

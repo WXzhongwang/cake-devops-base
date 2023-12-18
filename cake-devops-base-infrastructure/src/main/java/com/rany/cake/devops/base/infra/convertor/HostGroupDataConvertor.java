@@ -23,7 +23,7 @@ public interface HostGroupDataConvertor extends BaseConvertor<HostGroup, HostGro
      * @param hostGroup 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "hostGroupId.hostGroupId", target = "hostGroupId")
     @Override
     HostGroupPO sourceToTarget(HostGroup hostGroup);
 
@@ -35,6 +35,6 @@ public interface HostGroupDataConvertor extends BaseConvertor<HostGroup, HostGro
      */
 
     @Override
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "hostGroupId.hostGroupId", source = "hostGroupId")
     HostGroup targetToSource(HostGroupPO hostGroupPO);
 }

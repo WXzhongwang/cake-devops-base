@@ -28,12 +28,20 @@
     auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
     modifier
     </sql>
-    <select id="selectByAppId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByAppId"  resultMap="BaseResultMap">
 
         select
         <include refid="Base_Column_List"/>
         from app_env
-        where app_id = #{appId,jdbcType=BIGINT}
+        where app_id = #{appId}
+    </select>
+
+    <select id="selectByEnvId"  resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from app_env
+        where env_id = #{envId}
     </select>
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">

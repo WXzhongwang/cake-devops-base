@@ -25,4 +25,8 @@ public class TerminalSessionInstance extends BaseAggregateRoot implements IAggre
     private String instanceClosed;
     private Date closeTime;
 
+    @Override
+    public TerminalSessionInstanceId getBizID() {
+        return id;
+    }
 }

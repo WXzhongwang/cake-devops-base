@@ -4,7 +4,7 @@ import { Effect, Reducer } from "umi";
 
 // 应用信息
 export interface ClusterInfo {
-  id: string;
+  clusterId: string;
   clusterName: string;
   version: string;
   clusterType: string;

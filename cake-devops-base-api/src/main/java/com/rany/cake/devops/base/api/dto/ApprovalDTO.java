@@ -10,7 +10,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class ApprovalDTO extends DTO {
 
-    private Long id;
+    private String approvalId;
     private String docAddress;
     private Date changeDate;
     private String approvalStatus;

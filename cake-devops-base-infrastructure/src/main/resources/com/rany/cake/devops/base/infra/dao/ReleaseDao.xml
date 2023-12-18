@@ -3,17 +3,17 @@
 <mapper namespace="com.rany.cake.devops.base.infra.dao.ReleaseDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.ReleasePO">
         <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="app_id" jdbcType="BIGINT" property="appId"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
         <result column="release_no" jdbcType="VARCHAR" property="releaseNo"/>
-        <result column="approval_id" jdbcType="BIGINT" property="approvalId"/>
+        <result column="approval_id" jdbcType="VARCHAR" property="approvalId"/>
         <result column="release_date" jdbcType="TIMESTAMP" property="releaseDate"/>
         <result column="release_branch" jdbcType="VARCHAR" property="releaseBranch"/>
         <result column="release_commit_id" jdbcType="VARCHAR" property="releaseCommitId"/>
         <result column="release_version" jdbcType="VARCHAR" property="releaseVersion"/>
-        <result column="env_id" jdbcType="BIGINT" property="envId"/>
+        <result column="env_id" jdbcType="VARCHAR" property="envId"/>
         <result column="release_status" jdbcType="VARCHAR" property="releaseStatus"/>
         <result column="rollback" jdbcType="VARCHAR" property="rollback"/>
-        <result column="rollback_id" jdbcType="BIGINT" property="rollbackId"/>
+        <result column="rollback_id" jdbcType="VARCHAR" property="rollbackId"/>
         <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
@@ -21,7 +21,8 @@
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id
+        id,
+        release_id
         , app_id, release_no, approval_id, release_date, release_branch, release_commit_id,
     release_version, env_id, release_status, rollback, rollback_id, is_deleted, gmt_create,
     gmt_modified, creator, modifier
@@ -29,31 +30,42 @@
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.Release">
 
-        insert into release_no (id, app_id, release_no,
+        insert into release_no (release_id, app_id, release_no,
                                 approval_id, release_date, release_branch,
                                 release_commit_id, release_version, env_id,
                                 release_status, rollback, rollback_id,
                                 is_deleted, gmt_create, gmt_modified,
                                 creator, modifier)
-        values (#{id.id,jdbcType=BIGINT}, #{appId.id,jdbcType=BIGINT}, #{releaseNo,jdbcType=VARCHAR},
-                #{approvalId.id,jdbcType=BIGINT}, #{releaseDate,jdbcType=TIMESTAMP}, #{releaseBranch,jdbcType=VARCHAR},
-                #{releaseCommitId,jdbcType=VARCHAR}, #{releaseVersion,jdbcType=VARCHAR}, #{envId},
-                #{releaseStatus,jdbcType=VARCHAR}, #{rollback,jdbcType=VARCHAR}, #{rollbackId.id,jdbcType=BIGINT},
-                #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
-                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
+        values (#{releaseId.releaseId},
+                #{appId.appId},
+                #{releaseNo,jdbcType=VARCHAR},
+                #{approvalId.approvalId},
+                #{releaseDate,jdbcType=TIMESTAMP},
+                #{releaseBranch,jdbcType=VARCHAR},
+                #{releaseCommitId,jdbcType=VARCHAR},
+                #{releaseVersion,jdbcType=VARCHAR},
+                #{envId},
+                #{releaseStatus,jdbcType=VARCHAR},
+                #{rollback,jdbcType=VARCHAR},
+                #{rollbackId.releaseId},
+                #{isDeleted,jdbcType=VARCHAR},
+                #{gmtCreate,jdbcType=TIMESTAMP},
+                #{gmtModified,jdbcType=TIMESTAMP},
+                #{creator,jdbcType=VARCHAR},
+                #{modifier,jdbcType=VARCHAR})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Release">
         update release_no
         <set>
             <if test="appId != null">
-                app_id = #{appId.id,jdbcType=BIGINT},
+                app_id = #{appId.appId},
             </if>
             <if test="releaseNo != null">
                 release_no = #{releaseNo,jdbcType=VARCHAR},
             </if>
             <if test="approvalId != null">
-                approval_id = #{approvalId.id,jdbcType=BIGINT},
+                approval_id = #{approvalId.approvalId},
             </if>
             <if test="releaseDate != null">
                 release_date = #{releaseDate,jdbcType=TIMESTAMP},
@@ -77,7 +89,7 @@
                 rollback = #{rollback,jdbcType=VARCHAR},
             </if>
             <if test="rollbackId != null">
-                rollback_id = #{rollbackId.id,jdbcType=BIGINT},
+                rollback_id = #{rollbackId.releaseId},
             </if>
             <if test="isDeleted != null">
                 is_deleted = #{isDeleted,jdbcType=VARCHAR},
@@ -95,7 +107,15 @@
                 modifier = #{modifier,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id.id,jdbcType=BIGINT}
+        where release_id = #{releaseId.releaseId}
     </update>
+
+    <select id="selectByReleaseId" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List" />
+        from release
+        where release_id = #{releaseId}
+    </select>
 
 </mapper>

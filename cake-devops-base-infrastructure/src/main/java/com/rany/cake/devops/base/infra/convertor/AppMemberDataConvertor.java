@@ -23,8 +23,8 @@ public interface AppMemberDataConvertor extends BaseConvertor<AppMember, AppMemb
      * @param appMember 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
-    @Mapping(source = "appId.id", target = "appId")
+    @Mapping(source = "memberId.memberId", target = "memberId")
+    @Mapping(source = "appId.appId", target = "appId")
     @Override
     AppMemberPO sourceToTarget(AppMember appMember);
 
@@ -36,7 +36,7 @@ public interface AppMemberDataConvertor extends BaseConvertor<AppMember, AppMemb
      */
 
     @Override
-    @Mapping(target = "id.id", source = "id")
-    @Mapping(target = "appId.id", source = "appId")
+    @Mapping(target = "memberId.memberId", source = "memberId")
+    @Mapping(target = "appId.appId", source = "appId")
     AppMember targetToSource(AppMemberPO appMemberPO);
 }

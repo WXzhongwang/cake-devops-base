@@ -44,17 +44,17 @@ public class DefaultDeployPipelineTest extends BaseTests {
 
     @Test
     public void test01_testApp() {
-        App app = appRepository.find(new AppId(781513981771788288L));
+        App app = appRepository.find(new AppId("781513981771788288"));
         Assert.assertNotNull(app);
     }
 
     @Test
     public void start() {
-        Release release = releaseRepository.find(new ReleaseId(1L));
+        Release release = releaseRepository.find(new ReleaseId("1"));
         App app = appRepository.find(release.getAppId());
         AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
         Cluster cluster = clusterRepository.find(appEnv.getClusterId());
-        Namespace namespace = nameSpaceRepository.find(new NamespaceId(1L));
+        Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
         releaseCenter.release(release, app, appEnv, namespace, cluster);
     }
 }

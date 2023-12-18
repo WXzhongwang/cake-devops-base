@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
+import com.rany.cake.devops.base.infra.po.NamespacePO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -39,6 +40,8 @@ public interface NamespaceDao {
      * @param clusterId 集群ID
      * @return 命名空间列表
      */
-    List<Namespace> listNamespace(@Param("clusterId") Long clusterId);
+    List<Namespace> listNamespace(@Param("clusterId") String clusterId);
+
+    NamespacePO selectByNamespaceId(@Param("namespaceId") String namespaceId);
 
 }

@@ -7,10 +7,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class HostGroupDTO extends DTO {
-    private Long id;
+    private String hostGroupId;
     private String name;
     private Long parentId;
     private Integer sort;
-
-    //private List<HostDTO> hosts;
 }

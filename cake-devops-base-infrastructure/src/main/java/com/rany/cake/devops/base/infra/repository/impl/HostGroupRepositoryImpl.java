@@ -31,7 +31,7 @@ public class HostGroupRepositoryImpl implements HostGroupRepository {
 
     @Override
     public HostGroup find(@NotNull HostGroupId hostId) {
-        HostGroupPO hostPO = hostGroupPOMapper.selectByPrimaryKey(hostId.getId());
+        HostGroupPO hostPO = hostGroupDao.selectByHostGroupId(hostId.getHostGroupId());
         return hostGroupDataConvertor.targetToSource(hostPO);
     }
 

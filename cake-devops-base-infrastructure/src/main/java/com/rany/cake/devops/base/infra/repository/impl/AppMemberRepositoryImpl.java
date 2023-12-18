@@ -31,7 +31,7 @@ public class AppMemberRepositoryImpl implements AppMemberRepository {
 
     @Override
     public AppMember find(@NotNull MemberId memberId) {
-        AppMemberPO memberPO = appMemberPOMapper.selectByPrimaryKey(memberId.getId());
+        AppMemberPO memberPO = appMemberDao.selectByMemberId(memberId.getMemberId());
         return appMemberDataConvertor.targetToSource(memberPO);
     }
 
@@ -48,7 +48,7 @@ public class AppMemberRepositoryImpl implements AppMemberRepository {
     }
 
     @Override
-    public AppMember findByAccountId(Long accountId) {
+    public AppMember findByAccountId(String accountId) {
         AppMemberPO appMemberPO = appMemberDao.selectByAccountId(accountId);
         if (appMemberPO == null) {
             return null;

@@ -23,7 +23,7 @@ public interface HostDataConvertor extends BaseConvertor<Host, HostPO> {
      * @param host 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "hostId.hostId", target = "hostId")
     @Override
     HostPO sourceToTarget(Host host);
 
@@ -35,6 +35,6 @@ public interface HostDataConvertor extends BaseConvertor<Host, HostPO> {
      */
 
     @Override
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "hostId.hostId", source = "hostId")
     Host targetToSource(HostPO hostPO);
 }

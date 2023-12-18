@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Machine extends DTO {
-    private Long id;
+    private String hostId;
     private String name;
     private String hostName;
     private Integer port;

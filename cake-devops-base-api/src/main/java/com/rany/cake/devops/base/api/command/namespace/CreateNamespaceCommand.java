@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class CreateNamespaceCommand extends DTO {
 
-    private Long clusterId;
+    private String clusterId;
 
     private String name;
     /**

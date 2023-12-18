@@ -16,8 +16,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ModifyGroupCommand extends BaseCommand {
 
-    private Long groupId;
+    private String groupId;
     private String name;
     private Integer sort;
-    private Long pid;
+    private String pid;
 }

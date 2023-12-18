@@ -31,7 +31,7 @@ public class ApprovalRepositoryImpl implements ApprovalRepository {
 
     @Override
     public Approval find(@NotNull ApprovalId approvalId) {
-        ApprovalPO approvalPO = approvalPOMapper.selectByPrimaryKey(approvalId.getId());
+        ApprovalPO approvalPO = approvalDao.selectByApprovalId(approvalId.getApprovalId());
         return approvalDataConvertor.targetToSource(approvalPO);
     }
 

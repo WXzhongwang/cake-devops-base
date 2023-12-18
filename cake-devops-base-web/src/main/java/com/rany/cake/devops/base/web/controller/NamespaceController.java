@@ -23,7 +23,7 @@ public class NamespaceController {
     private NamespaceService namespaceService;
 
     @PostMapping("/create")
-    public PojoResult<Long> createApp(CreateNamespaceCommand createNamespaceCommand) {
+    public PojoResult<String> createApp(CreateNamespaceCommand createNamespaceCommand) {
         return namespaceService.createNamespace(createNamespaceCommand);
     }
 

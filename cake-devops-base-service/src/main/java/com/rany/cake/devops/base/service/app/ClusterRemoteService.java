@@ -52,19 +52,19 @@ public class ClusterRemoteService implements ClusterService {
     }
 
     @Override
-    public PojoResult<Long> createCluster(CreateClusterCommand createClusterCommand) {
+    public PojoResult<String> createCluster(CreateClusterCommand createClusterCommand) {
         PojoResult<Boolean> connect = this.testConnect(new TestClusterConnectCommand(createClusterCommand.getConnectString(),
                 createClusterCommand.getClusterType(), createClusterCommand.getToken()));
         if (!connect.getSuccess() || !connect.getContent()) {
             throw new DevOpsException(DevOpsErrorMessage.OPS_CONNECTED_ERROR);
         }
-        Cluster cluster = new Cluster(new ClusterId(idGenerator.nextId()), new ClusterName(createClusterCommand.getName()),
+        Cluster cluster = new Cluster(new ClusterId(String.valueOf(idGenerator.nextId())), new ClusterName(createClusterCommand.getName()),
                 EnumUtils.getEnum(ClusterTypeEnum.class, createClusterCommand.getClusterType()));
         cluster.setConnectionString(cluster.getConnectionString());
         cluster.setToken(cluster.getToken());
         cluster.setTags(cluster.getTags());
         clusterDomainService.save(cluster);
-        return PojoResult.succeed(cluster.getId().getId());
+        return PojoResult.succeed(cluster.getClusterId().getClusterId());
     }
 
     @Override

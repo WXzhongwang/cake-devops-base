@@ -16,5 +16,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class DeleteApprovalCommand extends BaseCommand {
 
-    private Long approvalId;
+    private String approvalId;
 }

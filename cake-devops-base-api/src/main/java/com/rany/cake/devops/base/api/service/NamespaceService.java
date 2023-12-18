@@ -22,7 +22,7 @@ public interface NamespaceService {
      * @param createAppCommand 创建命名空间
      * @return 命名空间ID
      */
-    PojoResult<Long> createNamespace(CreateNamespaceCommand createAppCommand);
+    PojoResult<String> createNamespace(CreateNamespaceCommand createAppCommand);
 
     /**
      * 查询集群命名空间

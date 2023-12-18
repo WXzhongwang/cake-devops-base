@@ -3,6 +3,7 @@
 <mapper namespace="com.rany.cake.devops.base.infra.dao.ClusterDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.ClusterPO">
         <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="cluster_id" jdbcType="VARCHAR" property="clusterId"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="tags" jdbcType="VARCHAR" property="tags"/>
         <result column="version" jdbcType="VARCHAR" property="version"/>
@@ -15,18 +16,26 @@
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id
+        id,
+        cluster_id
         , name, tags, version, cluster_type, status, is_deleted, gmt_create, gmt_modified,
         creator, modifier
     </sql>
 
+    <select id="selectByClusterId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from cluster
+        where cluster_id = #{clusterId}
+    </select>
+
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.Cluster">
 
-        insert into cluster (id, name,
+        insert into cluster (cluster_id, name,
                              tags, version, cluster_type,
                              status, is_deleted, gmt_create,
                              gmt_modified, creator, modifier)
-        values (#{id.id,jdbcType=BIGINT}, #{clusterName.name,jdbcType=VARCHAR},
+        values (#{clusterId.clusterId}, #{clusterName.name,jdbcType=VARCHAR},
                 #{tags,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
                 #{version,jdbcType=VARCHAR}, #{clusterType,jdbcType=CHAR},
                 #{status,jdbcType=CHAR}, #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
@@ -68,7 +77,7 @@
                 modifier = #{modifier,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id.id,jdbcType=BIGINT}
+        where cluster_id = #{clusterId.clusterId}
     </update>
 
     <select id="selectAll" resultMap="BaseResultMap">

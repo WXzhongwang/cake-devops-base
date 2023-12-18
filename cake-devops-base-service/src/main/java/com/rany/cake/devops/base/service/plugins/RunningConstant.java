@@ -19,7 +19,7 @@ public class RunningConstant {
      * 通过调用curl接口判断封网情况
      */
     public static final String FORBIDDEN_CHECK_ADDRESS = "FORBIDDEN_CHECK_ADDRESS";
-    public static final String FORBIDDEN_CURL_ADDRESS = "http://localhost:7100/approval/forbidden/check?appId=%d";
+    public static final String FORBIDDEN_CURL_ADDRESS = "http://localhost:7100/approval/forbidden/check?appId=%s";
     public static final String FORBIDDEN_CHECK_REQUIRED = "FORBIDDEN_CHECK_REQUIRED";
 
 

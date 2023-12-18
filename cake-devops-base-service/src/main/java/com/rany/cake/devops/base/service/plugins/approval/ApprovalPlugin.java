@@ -33,7 +33,7 @@ public class ApprovalPlugin extends BasePlugin {
             context.putArg(RunningConstant.APPROVAL_CHECK_REQUIRED, Boolean.TRUE);
             context.putArg(RunningConstant.APPROVAL_CHECK_ADDRESS,
                     String.format(RunningConstant.APPROVAL_CURL_ADDRESS,
-                            approvalId.getId()));
+                            approvalId.getApprovalId()));
         }
         return true;
     }

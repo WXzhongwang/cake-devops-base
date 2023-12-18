@@ -16,5 +16,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class HostBasicQuery extends BaseQuery {
 
-    private Long hostId;
+    private String hostId;
 }

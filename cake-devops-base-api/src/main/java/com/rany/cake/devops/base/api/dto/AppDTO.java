@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class AppDTO extends DTO {
-    private Long id;
+    private String  appId;
     private String appName;
     private String repo;
     private String defaultBranch;

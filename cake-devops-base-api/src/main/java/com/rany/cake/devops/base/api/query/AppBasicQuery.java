@@ -16,5 +16,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class AppBasicQuery extends BaseQuery {
 
-    private Long appId;
+    private String appId;
 }

@@ -21,7 +21,14 @@ public interface AppMemberDao {
      * @param accountId
      * @return
      */
-    AppMemberPO selectByAccountId(@Param("id") Long accountId);
+    AppMemberPO selectByAccountId(@Param("accountId") String accountId);
+
+    /**
+     * memberIdc查询
+     * @param memberId
+     * @return
+     */
+    AppMemberPO selectByMemberId(@Param("memberId") String memberId);
 
     /**
      * 保存更新

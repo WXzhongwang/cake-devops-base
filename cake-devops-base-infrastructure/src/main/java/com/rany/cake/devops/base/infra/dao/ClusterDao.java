@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.infra.po.ClusterPO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -39,5 +40,8 @@ public interface ClusterDao {
      * @return
      */
     List<ClusterPO> selectAll();
+
+
+    ClusterPO selectByClusterId(@Param("clusterId") String clusterId);
 
 }

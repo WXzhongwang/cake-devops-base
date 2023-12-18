@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ModifyHostCommand extends BaseCommand {
 
-    private Long hostId;
+    private String hostId;
     /**
      * name
      */

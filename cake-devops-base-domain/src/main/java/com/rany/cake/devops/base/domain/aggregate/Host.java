@@ -24,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
-    private HostId id;
+    private HostId hostId;
     private String name;
     private String hostName;
     private String serverAddr;
@@ -42,8 +42,9 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
      */
     private HostExtend hostExtend;
 
-    public Host(HostId id, String name, String hostName, Integer port) {
-        this.id = id;
+
+    public Host(HostId hostId, String name, String hostName, Integer port) {
+        this.hostId = hostId;
         this.name = name;
         this.hostName = hostName;
         this.port = port;
@@ -58,6 +59,12 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
     public Boolean modify() {
         this.gmtModified = DateUtil.date();
         return Boolean.TRUE;
+    }
+
+
+    @Override
+    public HostId getBizID() {
+        return hostId;
     }
 }
 

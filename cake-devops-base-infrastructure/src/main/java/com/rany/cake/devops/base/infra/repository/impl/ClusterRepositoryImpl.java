@@ -32,7 +32,7 @@ public class ClusterRepositoryImpl implements ClusterRepository {
 
     @Override
     public Cluster find(@NotNull ClusterId clusterId) {
-        ClusterPO clusterPO = clusterPOMapper.selectByPrimaryKey(clusterId.getId());
+        ClusterPO clusterPO = clusterDao.selectByClusterId(clusterId.getClusterId());
         return clusterDataConvertor.targetToSource(clusterPO);
     }
 

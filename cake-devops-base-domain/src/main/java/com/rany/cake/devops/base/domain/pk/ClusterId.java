@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.domain.pk;
 import com.cake.framework.common.base.Identifier;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * TODO
@@ -16,12 +17,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClusterId implements Identifier {
 
-    Long id;
+    String clusterId;
 
-    public ClusterId(Long id) {
-        if (id < 0) {
+    public ClusterId(String clusterId) {
+        if (StringUtils.isEmpty(clusterId)) {
             throw new IllegalArgumentException();
         }
-        this.id = id;
+        this.clusterId = clusterId;
     }
 }

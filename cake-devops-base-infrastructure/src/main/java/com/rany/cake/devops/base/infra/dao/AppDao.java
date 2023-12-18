@@ -2,7 +2,9 @@ package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
+import com.rany.cake.devops.base.infra.po.AppEnvPO;
 import com.rany.cake.devops.base.infra.po.AppPO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -34,5 +36,8 @@ public interface AppDao {
     int update(App app);
 
     List<AppPO> queryApp(AppQueryParam appQueryParam);
+
+
+    AppPO selectByAppId(@Param("appId") String appId);
 
 }

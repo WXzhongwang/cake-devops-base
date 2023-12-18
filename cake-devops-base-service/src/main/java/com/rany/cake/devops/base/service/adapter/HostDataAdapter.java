@@ -28,7 +28,7 @@ public interface HostDataAdapter extends BaseConvertor<Host, HostDTO> {
      * @param host 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "hostId.hostId", target = "hostId")
     HostDTO sourceToTarget(Host host);
 
     @InheritConfiguration(name = "sourceToTarget")
@@ -41,13 +41,13 @@ public interface HostDataAdapter extends BaseConvertor<Host, HostDTO> {
      * @return 聚合根
      */
 
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "hostId.hostId", source = "hostId")
     Host targetToSource(HostDTO hostDTO);
 
     @InheritConfiguration(name = "targetToSource")
     List<Host> targetToSource(List<HostDTO> hostDTO);
 
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "hostId.hostId", target = "hostId")
     Machine sourceToMachine(Host host);
 
     @InheritConfiguration(name = "sourceToMachine")

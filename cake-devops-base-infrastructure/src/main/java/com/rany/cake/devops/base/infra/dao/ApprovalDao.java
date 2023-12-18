@@ -1,6 +1,8 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Approval;
+import com.rany.cake.devops.base.infra.po.ApprovalPO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 审批
@@ -20,6 +22,9 @@ public interface ApprovalDao {
      * @return
      */
     int save(Approval approval);
+
+
+    ApprovalPO selectByApprovalId(@Param("approvalId") String approvalId);
 
 
     /**

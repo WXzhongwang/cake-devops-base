@@ -32,5 +32,5 @@ public interface GroupHostDao {
      * @param groupIds
      * @return
      */
-    List<GroupHostPO> selectByGroupIds(@Param("groupIds") List<Long> groupIds);
+    List<GroupHostPO> selectByGroupIds(@Param("groupIds") List<String> groupIds);
 }

@@ -23,9 +23,9 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class HostGroup extends BaseAggregateRoot implements IAggregate<HostGroupId> {
-    private HostGroupId id;
+    private HostGroupId hostGroupId;
     private String name;
-    private Long parentId;
+    private String parentId;
     private Integer sort;
     /**
      * 小组主机列表
@@ -33,8 +33,8 @@ public class HostGroup extends BaseAggregateRoot implements IAggregate<HostGroup
     private List<Host> hosts;
 
 
-    public HostGroup(HostGroupId id, String name, Long parentId, Integer sort) {
-        this.id = id;
+    public HostGroup(HostGroupId hostGroupId, String name, String parentId, Integer sort) {
+        this.hostGroupId = hostGroupId;
         this.name = name;
         this.parentId = parentId;
         this.sort = sort;
@@ -49,6 +49,11 @@ public class HostGroup extends BaseAggregateRoot implements IAggregate<HostGroup
     public Boolean modify() {
         this.gmtModified = DateUtil.date();
         return Boolean.TRUE;
+    }
+
+    @Override
+    public HostGroupId getBizID() {
+        return hostGroupId;
     }
 }
 

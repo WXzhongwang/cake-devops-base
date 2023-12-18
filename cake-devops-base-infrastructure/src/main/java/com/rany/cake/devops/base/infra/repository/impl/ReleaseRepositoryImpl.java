@@ -31,7 +31,7 @@ public class ReleaseRepositoryImpl implements ReleaseRepository {
 
     @Override
     public Release find(@NotNull ReleaseId releaseId) {
-        ReleasePO releasePO = releasePOMapper.selectByPrimaryKey(releaseId.getId());
+        ReleasePO releasePO = releaseDao.selectByReleaseId(releaseId.getReleaseId());
         return releaseDataConvertor.targetToSource(releasePO);
     }
 

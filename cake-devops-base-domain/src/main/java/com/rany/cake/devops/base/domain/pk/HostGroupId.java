@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.domain.pk;
 import com.cake.framework.common.base.Identifier;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 主机分组ID
@@ -15,12 +16,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class HostGroupId implements Identifier {
-    Long id;
+    String hostGroupId;
 
-    public HostGroupId(Long id) {
-        if (id < 0) {
+    public HostGroupId(String hostGroupId) {
+        if (StringUtils.isEmpty(hostGroupId)) {
             throw new IllegalArgumentException();
         }
-        this.id = id;
+        this.hostGroupId = hostGroupId;
     }
 }

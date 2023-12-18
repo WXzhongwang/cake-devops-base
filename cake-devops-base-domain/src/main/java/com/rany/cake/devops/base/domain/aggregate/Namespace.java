@@ -26,7 +26,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class Namespace extends BaseAggregateRoot implements IAggregate<NamespaceId> {
 
-    private NamespaceId id;
+    private NamespaceId namespaceId;
 
     private ClusterId clusterId;
 
@@ -64,8 +64,8 @@ public class Namespace extends BaseAggregateRoot implements IAggregate<Namespace
 
     private String status;
 
-    public Namespace(NamespaceId id, NamespaceName name, ClusterId clusterId) {
-        this.id = id;
+    public Namespace(NamespaceId namespaceId, NamespaceName name, ClusterId clusterId) {
+        this.namespaceId = namespaceId;
         this.name = name;
         this.clusterId = clusterId;
     }
@@ -75,5 +75,11 @@ public class Namespace extends BaseAggregateRoot implements IAggregate<Namespace
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.gmtCreate = new Date();
         this.gmtModified = new Date();
+    }
+
+
+    @Override
+    public NamespaceId getBizID() {
+        return namespaceId;
     }
 }

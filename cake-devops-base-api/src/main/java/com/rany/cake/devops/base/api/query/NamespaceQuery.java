@@ -16,5 +16,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class NamespaceQuery extends BaseQuery {
 
-    private Long clusterId;
+    private String clusterId;
 }

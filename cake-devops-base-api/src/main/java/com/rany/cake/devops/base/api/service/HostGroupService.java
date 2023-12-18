@@ -23,7 +23,7 @@ public interface HostGroupService {
      * @param createHostCommand
      * @return
      */
-    PojoResult<Long> createHostGroup(CreateGroupCommand createHostCommand);
+    PojoResult<String> createHostGroup(CreateGroupCommand createHostCommand);
 
     /**
      * 获取主机组信息

@@ -62,7 +62,7 @@ public class AppDomainService {
     }
 
     public List<AppEnv> listAppEnv(AppId appId) {
-        return appRepository.listAppEnv(appId.getId());
+        return appRepository.listAppEnv(appId.getAppId());
     }
 
     public Page<App> pageApp(AppQueryParam appQueryParam) {

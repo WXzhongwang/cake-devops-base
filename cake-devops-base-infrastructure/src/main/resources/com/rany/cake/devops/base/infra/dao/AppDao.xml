@@ -3,6 +3,7 @@
 <mapper namespace="com.rany.cake.devops.base.infra.dao.AppDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.AppPO">
         <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="app_id" property="appId" jdbcType="VARCHAR"/>
         <result column="app_name" property="appName" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="repo" property="repo" jdbcType="VARCHAR"/>
@@ -19,20 +20,28 @@
         <result column="department" property="department" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id
+        id,
+          app_id
         , app_name, description, repo, default_branch, language, develop_mode, owner, health_check,
     status, is_deleted, gmt_create, gmt_modified, department_abbreviation, department,
     creator, modifier
     </sql>
 
+    <select id="selectByAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from app
+        where app_id = #{appId}
+    </select>
+
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.App">
-        insert into app (id, app_name, description,
+        insert into app (app_id, app_name, description,
                          repo, default_branch, language,
                          develop_mode, owner, health_check,
                          status, is_deleted, gmt_create,
                          gmt_modified, department_abbreviation,
                          department)
-        values (#{id.id,jdbcType=BIGINT},
+        values (#{appId.appId},
                 #{appName.name,jdbcType=VARCHAR},
                 #{description,jdbcType=VARCHAR},
                 #{codeRepository.repo,jdbcType=VARCHAR},
@@ -67,7 +76,7 @@
             department              = #{businessOwnership.department,jdbcType=VARCHAR},
             creator                 = #{creator,jdbcType=VARCHAR},
             modifier                = #{modifier,jdbcType=VARCHAR}
-        where id = #{id.id,jdbcType=BIGINT}
+        where app_id = #{appId.appId}
     </update>
 
     <select id="queryApp" parameterType="com.rany.cake.devops.base.domain.repository.param.AppQueryParam" resultMap="BaseResultMap">

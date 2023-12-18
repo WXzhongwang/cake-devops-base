@@ -23,7 +23,7 @@ public class ApprovalController {
 
 
     @PostMapping("/create")
-    public PojoResult<Long> createApproval(CreateApprovalCommand createApprovalCommand) {
+    public PojoResult<String> createApproval(CreateApprovalCommand createApprovalCommand) {
         return approvalService.createApproval(createApprovalCommand);
     }
 

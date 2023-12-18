@@ -31,19 +31,19 @@ public class AppController {
     }
 
     @GetMapping("/getApp")
-    public PojoResult<AppDTO> getApp(@RequestParam("id")Long appId) {
+    public PojoResult<AppDTO> getApp(@RequestParam("id")String appId) {
         AppBasicQuery appBasicQuery = new AppBasicQuery();
         appBasicQuery.setAppId(appId);
         return appService.getApp(appBasicQuery);
     }
 
     @PostMapping("/create")
-    public PojoResult<Long> createApp(CreateAppCommand createAppCommand) {
+    public PojoResult<String> createApp(CreateAppCommand createAppCommand) {
         return appService.createApp(createAppCommand);
     }
 
     @PostMapping("/createEnv")
-    public PojoResult<Long> createAppEnv(CreateAppEnvCommand createAppEnvCommand) {
+    public PojoResult<String> createAppEnv(CreateAppEnvCommand createAppEnvCommand) {
         return appService.createAppEnv(createAppEnvCommand);
     }
 

@@ -18,5 +18,5 @@ public class DeleteGroupCommand extends BaseCommand {
     /**
      * groupId
      */
-    private Long groupId;
+    private String groupId;
 }

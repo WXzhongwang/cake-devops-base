@@ -31,7 +31,7 @@ public interface ClusterService {
      * @param createClusterCommand 创建集群
      * @return 创建是否成功
      */
-    PojoResult<Long> createCluster(CreateClusterCommand createClusterCommand);
+    PojoResult<String> createCluster(CreateClusterCommand createClusterCommand);
 
     /**
      * 查询所有集群

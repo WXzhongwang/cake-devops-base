@@ -9,16 +9,16 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ReleaseDTO extends DTO {
-    private Long id;
-    private Long appId;
+    private String releaseId;
+    private String appId;
     private String releaseNo;
-    private Long approvalId;
+    private String approvalId;
     private Date releaseDate;
     private String releaseBranch;
     private String releaseCommitId;
     private String releaseVersion;
-    private Long envId;
+    private String envId;
     private String releaseStatus;
     private String rollback;
-    private Long rollbackId;
+    private String rollbackId;
 }

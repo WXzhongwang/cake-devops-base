@@ -27,14 +27,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId> {
 
-    private MemberId id;
+    private MemberId memberId;
 
     private AppId appId;
 
     /**
      * uic accountId
      */
-    private Long accountId;
+    private String accountId;
 
     /**
      * 角色列表
@@ -47,8 +47,8 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
 
     public AppMember(MemberId memberId,
                      AppId appId,
-                     Long accountId) {
-        this.id = memberId;
+                     String accountId) {
+        this.memberId = memberId;
         this.appId = appId;
         this.accountId = accountId;
         this.roles = StringUtils.EMPTY;
@@ -73,5 +73,11 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
         }
         this.roles = String.join(",", finalRoles);
         this.gmtModified = DateUtil.date();
+    }
+
+
+    @Override
+    public MemberId getBizID() {
+        return memberId;
     }
 }

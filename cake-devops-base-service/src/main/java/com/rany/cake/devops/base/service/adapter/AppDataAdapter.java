@@ -33,7 +33,7 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
      * @param app 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "appId.appId", target = "appId")
     @Mapping(source = "appName.name", target = "appName")
     @Mapping(source = "codeRepository.repo", target = "repo")
     @Mapping(source = "codeRepository.defaultBranch", target = "defaultBranch")
@@ -44,8 +44,9 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
     AppDTO sourceToTarget(App app);
 
 
-    @Mapping(source = "appId.id", target = "appId")
-    @Mapping(source = "clusterId.id", target = "clusterId")
+    @Mapping(source = "id", target = "envId")
+    @Mapping(source = "appId.appId", target = "appId")
+    @Mapping(source = "clusterId.clusterId", target = "clusterId")
     @Mapping(source = "env", target = "env")
     @Mapping(target = "resourceStrategy", expression = "java(this.strategySourceToTarget(appEnv.getResourceStrategy()))")
     AppEnvDTO envSourceToTarget(AppEnv appEnv);
@@ -53,8 +54,9 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
     @InheritConfiguration(name = "envSourceToTarget")
     List<AppEnvDTO> envSourceToTarget(List<AppEnv> appEnvs);
 
-    @Mapping(target = "appId.id", source = "appId")
-    @Mapping(target = "clusterId.id", source = "clusterId")
+    @Mapping(target = "appId.appId", source = "appId")
+    @Mapping(target = "id", source = "envId")
+    @Mapping(target = "clusterId.clusterId", source = "clusterId")
     @Mapping(target = "env", source = "env")
     @Mapping(target = "resourceStrategy", expression = "java(this.strategyTargetToSource(appEnvDTO.getResourceStrategy()))")
     AppEnv envTargetToSource(AppEnvDTO appEnvDTO);
@@ -73,7 +75,7 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
      * @return 聚合根
      */
 
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "appId.appId", source = "appId")
     @Mapping(target = "appName.name", source = "appName")
     @Mapping(target = "codeRepository.repo", source = "repo")
     @Mapping(target = "codeRepository.defaultBranch", source = "defaultBranch")

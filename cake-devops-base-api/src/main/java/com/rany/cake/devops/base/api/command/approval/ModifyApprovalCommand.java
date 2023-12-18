@@ -18,7 +18,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class ModifyApprovalCommand extends BaseCommand {
 
-    private Long approvalId;
+    private String approvalId;
 
     private String docAddress;
     private Date changeDate;

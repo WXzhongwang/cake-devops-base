@@ -9,8 +9,8 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class NamespaceDTO extends DTO {
-    private Long id;
-    private Long clusterId;
+    private String namespaceId;
+    private String clusterId;
     private String name;
 
     /**

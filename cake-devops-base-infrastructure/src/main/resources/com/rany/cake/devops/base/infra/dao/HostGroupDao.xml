@@ -4,8 +4,9 @@
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.HostGroupPO">
 
         <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="host_group_id" jdbcType="VARCHAR" property="hostGroupId"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
         <result column="sort" jdbcType="INTEGER" property="sort"/>
         <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
@@ -14,16 +15,17 @@
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id
+        id,
+        host_group_id
         , name, parent_id, sort, is_deleted, gmt_create, gmt_modified, creator, modifier
     </sql>
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.HostGroup">
 
-        insert into host_group (id, name, parent_id,
+        insert into host_group (host_group_id, name, parent_id,
                                 sort, is_deleted, gmt_create,
                                 gmt_modified, creator, modifier)
-        values (#{id.id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT},
+        values (#{hostGroupId.hostGroupId}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT},
                 #{sort,jdbcType=INTEGER}, #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
                 #{gmtModified,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
     </insert>
@@ -35,7 +37,7 @@
                 name = #{name,jdbcType=VARCHAR},
             </if>
             <if test="parentId != null">
-                parent_id = #{parentId,jdbcType=BIGINT},
+                parent_id = #{parentId},
             </if>
             <if test="sort != null">
                 sort = #{sort,jdbcType=INTEGER},
@@ -56,7 +58,7 @@
                 modifier = #{modifier,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id.id,jdbcType=BIGINT}
+        where host_group_id = #{hostGroupId.hostGroupId}
     </update>
 
     <select id="getPackagingGroup" resultMap="BaseResultMap">
@@ -65,5 +67,12 @@
         from host_group
         where name = 'package'
         limit 1
+    </select>
+
+    <select id="selectByHostGroupId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from host_group
+        where host_group_id = #{hostGroupId}
     </select>
 </mapper>

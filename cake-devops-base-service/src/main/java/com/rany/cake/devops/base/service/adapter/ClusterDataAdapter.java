@@ -24,7 +24,7 @@ public interface ClusterDataAdapter extends BaseConvertor<Cluster, ClusterDTO> {
      * @param cluster 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "clusterId.clusterId", target = "clusterId")
     @Mapping(source = "clusterName.name", target = "clusterName")
     @Mapping(source = "clusterType", target = "clusterType")
     ClusterDTO sourceToTarget(Cluster cluster);
@@ -37,7 +37,7 @@ public interface ClusterDataAdapter extends BaseConvertor<Cluster, ClusterDTO> {
      * @return 聚合根
      */
 
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "clusterId.clusterId", source = "clusterId")
     @Mapping(target = "clusterName.name", source = "clusterName")
     @Mapping(target = "clusterType", source = "clusterType")
     Cluster targetToSource(ClusterDTO clusterDTO);

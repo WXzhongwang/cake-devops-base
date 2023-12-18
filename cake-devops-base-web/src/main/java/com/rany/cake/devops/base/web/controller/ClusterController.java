@@ -24,7 +24,7 @@ public class ClusterController {
     private ClusterService clusterService;
 
     @PostMapping("/create")
-    public PojoResult<Long> createApp(CreateClusterCommand createClusterCommand) {
+    public PojoResult<String> createApp(CreateClusterCommand createClusterCommand) {
         return clusterService.createCluster(createClusterCommand);
     }
 

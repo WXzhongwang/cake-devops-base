@@ -23,4 +23,9 @@ public class TerminalSession extends BaseAggregateRoot implements IAggregate<Ter
     private String serverHostname;
     private String serverAddr;
     private SessionTypeEnum sessionType;
+
+    @Override
+    public TerminalSessionId getBizID() {
+        return id;
+    }
 }

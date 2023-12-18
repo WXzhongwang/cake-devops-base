@@ -23,7 +23,7 @@ public interface AppDataConvertor extends BaseConvertor<App, AppPO> {
      * @param app 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "appId.appId", target = "appId")
     @Mapping(source = "appName.name", target = "appName")
     @Mapping(source = "codeRepository.repo", target = "repo")
     @Mapping(source = "codeRepository.defaultBranch", target = "defaultBranch")
@@ -40,7 +40,7 @@ public interface AppDataConvertor extends BaseConvertor<App, AppPO> {
      */
 
     @Override
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "appId.appId", source = "appId")
     @Mapping(target = "appName.name", source = "appName")
     @Mapping(target = "codeRepository.repo", source = "repo")
     @Mapping(target = "codeRepository.defaultBranch", source = "defaultBranch")

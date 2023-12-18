@@ -36,11 +36,11 @@ public class HostGroupRemoteService implements HostGroupService {
 
 
     @Override
-    public PojoResult<Long> createHostGroup(CreateGroupCommand createHostCommand) {
-        HostGroup host = new HostGroup(new HostGroupId(snowflakeIdWorker.nextId()), createHostCommand.getName(), createHostCommand.getPid(),
+    public PojoResult<String> createHostGroup(CreateGroupCommand createHostCommand) {
+        HostGroup host = new HostGroup(new HostGroupId(String.valueOf(snowflakeIdWorker.nextId())), createHostCommand.getName(), createHostCommand.getPid(),
                 createHostCommand.getSort());
         hostGroupDomainService.save(host);
-        return PojoResult.succeed(host.getId().getId());
+        return PojoResult.succeed(host.getBizID().getHostGroupId());
     }
 
     @Override

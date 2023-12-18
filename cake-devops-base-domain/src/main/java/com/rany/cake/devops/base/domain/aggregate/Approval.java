@@ -25,7 +25,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class Approval extends BaseAggregateRoot implements IAggregate<ApprovalId> {
 
-    private ApprovalId id;
+    private ApprovalId approvalId;
     private String docAddress;
     private Date changeDate;
     private String approvalStatus;
@@ -55,5 +55,10 @@ public class Approval extends BaseAggregateRoot implements IAggregate<ApprovalId
     public void repeal() {
         this.gmtModified = DateUtil.date();
         this.approvalStatus = ApprovalStatus.REPEALED.name();
+    }
+
+    @Override
+    public ApprovalId getBizID() {
+        return approvalId;
     }
 }

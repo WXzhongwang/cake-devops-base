@@ -25,7 +25,7 @@ public class TerminalSessionFactory {
      */
     public TerminalSession build(String sessionId, HostInfo hostInfo, SessionTypeEnum sessionType) {
         return TerminalSession.builder()
-                .id(new TerminalSessionId(snowflakeIdWorker.nextId()))
+                .id(new TerminalSessionId(String.valueOf(snowflakeIdWorker.nextId())))
                 .sessionId(sessionId)
                 .serverHostname(hostInfo.getHostname())
                 .serverAddr(hostInfo.getHostAddress())

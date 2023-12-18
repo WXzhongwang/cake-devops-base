@@ -53,7 +53,7 @@ public class ReleaseRemoteService implements ReleaseService {
         if (appEnv == null) {
             throw new DevOpsException(DevOpsErrorMessage.ENV_NOT_FOUND);
         }
-        Release release = new Release(new ReleaseId(snowflakeIdWorker.nextId()),
+        Release release = new Release(new ReleaseId(String.valueOf(snowflakeIdWorker.nextId())),
                 new AppId(createReleaseCommand.getAppId()),
                 appEnv.getId(),
                 redisSerialNumberGenerator.generateReleaseSerialNumber(),
@@ -75,14 +75,14 @@ public class ReleaseRemoteService implements ReleaseService {
 
     @Override
     public PojoResult<Boolean> deploy(DeployCommand deployCommand) {
-        Release release = releaseRepository.find(new ReleaseId(deployCommand.getReleaseId()));
+        Release release = releaseRepository.find(new ReleaseId(String.valueOf(deployCommand.getReleaseId())));
         if (release == null) {
             throw new DevOpsException(DevOpsErrorMessage.RELEASE_NOT_FOUND);
         }
         App app = appRepository.find(release.getAppId());
         AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
         Cluster cluster = clusterRepository.find(appEnv.getClusterId());
-        Namespace namespace = nameSpaceRepository.find(new NamespaceId(1L));
+        Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
 
         if (Objects.nonNull(release.getApprovalId())) {
             Approval approval = approvalRepository.find(release.getApprovalId());

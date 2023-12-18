@@ -22,15 +22,15 @@ public class CreateReleaseCommand extends BaseCommand {
     /**
      * 应用ID
      */
-    private Long appId;
+    private String appId;
     /**
      * 环境ID
      */
-    private Long envId;
+    private String envId;
     /**
      * 关联审批ID
      */
-    private Long approvalId;
+    private String approvalId;
     /**
      * 预计发布日期
      */
@@ -55,5 +55,5 @@ public class CreateReleaseCommand extends BaseCommand {
     /**
      * 回滚到哪一次发布
      */
-    private Long rollbackId;
+    private String rollbackId;
 }

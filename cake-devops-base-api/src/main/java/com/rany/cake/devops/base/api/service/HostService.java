@@ -23,7 +23,7 @@ public interface HostService {
      * @param createHostCommand
      * @return
      */
-    PojoResult<Long> createHostCommand(CreateHostCommand createHostCommand);
+    PojoResult<String> createHostCommand(CreateHostCommand createHostCommand);
 
     /**
      * 获取主机信息

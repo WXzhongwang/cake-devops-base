@@ -23,8 +23,8 @@ public interface AppEnvDataConvertor extends BaseConvertor<AppEnv, AppEnvPO> {
      * @param appEnv 聚合根
      * @return PO
      */
-    @Mapping(source = "appId.id", target = "appId")
-    @Mapping(source = "clusterId.id", target = "clusterId")
+    @Mapping(source = "appId.appId", target = "appId")
+    @Mapping(source = "clusterId.clusterId", target = "clusterId")
     @Mapping(expression = "java(this.convertString(appEnv.getDomains()))", target = "domains")
     @Mapping(source = "resourceStrategy.replicas", target = "replicas")
     @Mapping(source = "resourceStrategy.cpu", target = "cpu")
@@ -42,8 +42,8 @@ public interface AppEnvDataConvertor extends BaseConvertor<AppEnv, AppEnvPO> {
      */
 
     @Override
-    @Mapping(target = "appId.id", source = "appId")
-    @Mapping(target = "clusterId.id", source = "clusterId")
+    @Mapping(target = "appId.appId", source = "appId")
+    @Mapping(target = "clusterId.clusterId", source = "clusterId")
     @Mapping(target = "domains", expression = "java(this.convertList(appEnvPO.getDomains()))")
     @Mapping(target = "resourceStrategy.replicas", source = "replicas")
     @Mapping(target = "resourceStrategy.cpu", source = "cpu")

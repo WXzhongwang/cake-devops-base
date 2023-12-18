@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.domain.pk;
 import com.cake.framework.common.base.Identifier;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * ReleaseId
@@ -15,12 +16,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ReleaseId implements Identifier {
-    Long id;
+    String releaseId;
 
-    public ReleaseId(Long id) {
-        if (id < 0) {
+    public ReleaseId(String releaseId) {
+        if (StringUtils.isEmpty(releaseId)) {
             throw new IllegalArgumentException();
         }
-        this.id = id;
+        this.releaseId = releaseId;
     }
 }

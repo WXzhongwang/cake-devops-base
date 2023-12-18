@@ -16,5 +16,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ApprovalBasicQuery extends BaseQuery {
 
-    private Long approvalId;
+    private String approvalId;
 }

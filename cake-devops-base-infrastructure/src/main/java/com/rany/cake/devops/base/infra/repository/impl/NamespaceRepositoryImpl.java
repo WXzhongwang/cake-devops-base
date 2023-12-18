@@ -33,7 +33,7 @@ public class NamespaceRepositoryImpl implements NameSpaceRepository {
 
     @Override
     public Namespace find(@NotNull NamespaceId namespaceId) {
-        NamespacePO namespacePO = namespacePOMapper.selectByPrimaryKey(namespaceId.getId());
+        NamespacePO namespacePO = namespaceDao.selectByNamespaceId(namespaceId.getNamespaceId());
         return namespaceDataConvertor.targetToSource(namespacePO);
     }
 
@@ -56,6 +56,6 @@ public class NamespaceRepositoryImpl implements NameSpaceRepository {
 
     @Override
     public List<Namespace> listNamespace(ClusterId clusterId) {
-        return namespaceDao.listNamespace(clusterId.getId());
+        return namespaceDao.listNamespace(clusterId.getClusterId());
     }
 }

@@ -33,7 +33,7 @@ public class TerminalSessionInstanceRepositoryImpl implements TerminalSessionIns
 
     @Override
     public TerminalSessionInstance find(@NotNull TerminalSessionInstanceId terminalSessionInstanceId) {
-        TerminalSessionInstancePO terminalSessionInstancePO = terminalSessionInstancePOMapper.selectByPrimaryKey(terminalSessionInstanceId.getId());
+        TerminalSessionInstancePO terminalSessionInstancePO = terminalSessionInstanceDao.selectByInstanceId(terminalSessionInstanceId.getId());
         return terminalSessionInstanceDataConvertor.targetToSource(terminalSessionInstancePO);
     }
 

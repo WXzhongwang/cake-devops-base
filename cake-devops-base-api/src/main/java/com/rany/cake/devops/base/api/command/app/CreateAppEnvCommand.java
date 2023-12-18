@@ -16,6 +16,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CreateAppEnvCommand extends DTO {
-    private Long appId;
+    private String appId;
     private AppEnvDTO env;
 }

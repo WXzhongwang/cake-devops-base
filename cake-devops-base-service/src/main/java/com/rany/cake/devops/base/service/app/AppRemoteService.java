@@ -50,7 +50,6 @@ import com.rany.uic.common.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
@@ -80,8 +79,8 @@ public class AppRemoteService implements AppService {
     private final AppDataAdapter appDataAdapter;
 
     @Override
-    public PojoResult<Long> createApp(CreateAppCommand createAppCommand) {
-        App app = new App(new AppId(snowflakeIdWorker.nextId()),
+    public PojoResult<String> createApp(CreateAppCommand createAppCommand) {
+        App app = new App(new AppId(String.valueOf(snowflakeIdWorker.nextId())),
                 new AppName(createAppCommand.getAppName()),
                 createAppCommand.getOwner(),
                 createAppCommand.getDescription(),
@@ -93,10 +92,10 @@ public class AppRemoteService implements AppService {
                 createAppCommand.getDepartment()));
         app.setHealthCheck(createAppCommand.getHealthCheck());
 
-        Set<Long> accountIds = Sets.newHashSet(createAppCommand.getOwner());
+        Set<String> accountIds = Sets.newHashSet(createAppCommand.getOwner());
         accountIds.addAll(createAppCommand.getAppMembers().stream().map(AppMemberDTO::getAccountId).collect(Collectors.toSet()));
         AccountQuery accountQuery = new AccountQuery();
-        accountQuery.setAccountIds(new ArrayList<>(accountIds));
+        // accountQuery.setAccountIds(new ArrayList<>(accountIds));
         accountQuery.setTenantId(tenantConfig.getTenantId());
         ListResult<AccountDTO> accounts = accountFacade.findAccounts(accountQuery);
         if (accounts == null || CollectionUtils.isEmpty(accounts.getContent())) {
@@ -106,19 +105,19 @@ public class AppRemoteService implements AppService {
 
         List<AccountDTO> content = accounts.getContent();
         Map<Long, AccountDTO> accountMap = Maps.uniqueIndex(content, AccountDTO::getId);
-        Map<Long, AppMemberDTO> accountRoleMap = Maps.uniqueIndex(createAppCommand.getAppMembers(), AppMemberDTO::getAccountId);
+        Map<String, AppMemberDTO> accountRoleMap = Maps.uniqueIndex(createAppCommand.getAppMembers(), AppMemberDTO::getAccountId);
         ArrayList<AppMember> appMembers = new ArrayList<>();
         for (Map.Entry<Long, AccountDTO> entry : accountMap.entrySet()) {
-            AppMember member = appMemberDomainService.findByAccountId(entry.getKey());
+            AppMember member = appMemberDomainService.findByAccountId(String.valueOf(entry.getKey()));
             if (member == null) {
-                member = new AppMember(new MemberId(snowflakeIdWorker.nextId()), app.getId(), entry.getKey());
+                member = new AppMember(new MemberId(String.valueOf(snowflakeIdWorker.nextId())), app.getAppId(), String.valueOf(entry.getKey()));
             }
             member.setStatus(CommonStatusEnum.ENABLE.getValue());
             // 如果是owner
-            if (createAppCommand.getOwner().equals(entry.getKey())) {
+            if (createAppCommand.getOwner().equals(String.valueOf(entry.getKey()))) {
                 member.authorize(AppRoleEnum.OWNER.name());
             } else {
-                AppMemberDTO accountRoleItem = accountRoleMap.getOrDefault(entry.getKey(), null);
+                AppMemberDTO accountRoleItem = accountRoleMap.getOrDefault(String.valueOf(entry.getKey()), null);
                 if (accountRoleItem != null && CollectionUtils.isNotEmpty(accountRoleItem.getRoles())) {
                     member.authorize(String.join(",", accountRoleItem.getRoles()));
                 }
@@ -128,7 +127,7 @@ public class AppRemoteService implements AppService {
         }
         app.sava();
         appDomainService.save(app);
-        return PojoResult.succeed(app.getId().getId());
+        return PojoResult.succeed(app.getAppId().getAppId());
     }
 
     @Override
@@ -151,13 +150,13 @@ public class AppRemoteService implements AppService {
     }
 
     @Override
-    public PojoResult<Long> createAppEnv(CreateAppEnvCommand createAppEnvCommand) {
+    public PojoResult<String> createAppEnv(CreateAppEnvCommand createAppEnvCommand) {
         App app = appDomainService.getApp(new AppId(createAppEnvCommand.getAppId()));
         if (app == null) {
             throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
         }
         AppEnvDTO env = createAppEnvCommand.getEnv();
-        Long clusterId = env.getClusterId();
+        String clusterId = env.getClusterId();
         Cluster cluster = clusterDomainService.getCluster(new ClusterId(clusterId));
         if (cluster == null) {
             throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
@@ -168,7 +167,7 @@ public class AppRemoteService implements AppService {
             throw new DevOpsException(DevOpsErrorMessage.ENV_DUPLICATED);
         }
         AppEnvEnum appEnvEnum = EnumUtils.getEnum(AppEnvEnum.class, env.getEnv());
-        AppEnv appEnv = new AppEnv(app.getId(), cluster.getId(), env.getEnvName(), appEnvEnum);
+        AppEnv appEnv = new AppEnv(app.getAppId(), cluster.getClusterId(), env.getEnvName(), appEnvEnum);
         appEnv.setDomains(env.getDomains());
         appEnv.setAutoScaling(env.getAutoScaling());
         appEnv.setNeedApproval(env.getNeedApproval());

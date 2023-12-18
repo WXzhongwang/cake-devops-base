@@ -23,7 +23,7 @@ public interface ClusterDataConvertor extends BaseConvertor<Cluster, ClusterPO> 
      * @param cluster 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "clusterId.clusterId", target = "clusterId")
     @Mapping(source = "clusterName.name", target = "name")
     @Mapping(expression = "java(this.convertString(cluster.getTags()))", target = "tags")
     @Override
@@ -37,7 +37,7 @@ public interface ClusterDataConvertor extends BaseConvertor<Cluster, ClusterPO> 
      */
 
     @Override
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "clusterId.clusterId", source = "clusterId")
     @Mapping(target = "clusterName.name", source = "name")
     @Mapping(target = "tags", expression = "java(this.convertList(clusterPO.getTags()))")
     Cluster targetToSource(ClusterPO clusterPO);

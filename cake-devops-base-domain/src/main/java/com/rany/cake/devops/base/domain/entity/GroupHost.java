@@ -16,6 +16,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class GroupHost extends BaseEntity<Long> {
-    private Long groupId;
-    private Long hostId;
+    private String groupId;
+    private String hostId;
 }

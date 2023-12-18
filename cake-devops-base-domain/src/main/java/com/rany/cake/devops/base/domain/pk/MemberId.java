@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.domain.pk;
 import com.cake.framework.common.base.Identifier;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * TODO
@@ -15,12 +16,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class MemberId implements Identifier {
-    Long id;
+    String memberId;
 
-    public MemberId(Long id) {
-        if (id < 0) {
+    public MemberId(String memberId) {
+        if (StringUtils.isEmpty(memberId)) {
             throw new IllegalArgumentException();
         }
-        this.id = id;
+        this.memberId = memberId;
     }
 }

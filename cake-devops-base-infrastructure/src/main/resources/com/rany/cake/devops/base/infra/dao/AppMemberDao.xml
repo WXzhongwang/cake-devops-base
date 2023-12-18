@@ -3,7 +3,8 @@
 <mapper namespace="com.rany.cake.devops.base.infra.dao.AppMemberDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.AppMemberPO">
         <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="account_id" jdbcType="BIGINT" property="accountId"/>
+        <result column="member_id"  property="memberId"/>
+        <result column="account_id" jdbcType="VARCHAR" property="accountId"/>
         <result column="app_id" jdbcType="BIGINT" property="appId"/>
         <result column="roles" jdbcType="VARCHAR" property="roles"/>
         <result column="status" jdbcType="VARCHAR" property="status"/>
@@ -12,11 +13,12 @@
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id
+        id, member_id
         , account_id, app_id, roles, status, is_deleted, gmt_create, gmt_modified
     </sql>
     <insert id="saveUpdate" parameterType="com.rany.cake.devops.base.domain.aggregate.AppMember">
-        insert into app_member (id,
+        insert into app_member (
+                                member_id,
                                 account_id,
                                 app_id,
                                 roles,
@@ -24,9 +26,10 @@
                                 is_deleted,
                                 gmt_create,
                                 gmt_modified)
-        values (#{id.id,jdbcType=BIGINT},
-                #{accountId,jdbcType=BIGINT},
-                #{appId.id,jdbcType=BIGINT},
+        values (
+                #{id.id},
+                #{accountId},
+                #{appId.id},
                 #{roles,jdbcType=VARCHAR},
                 #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR},
@@ -39,11 +42,17 @@
             gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
     </insert>
 
-    <select id="selectByAccountId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByAccountId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from app_member
-        where account_id = #{id,jdbcType=BIGINT}
+        where account_id = #{accountId}
     </select>
 
+    <select id="selectByMemberId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from app_member
+        where member_id = #{memberId}
+    </select>
 </mapper>

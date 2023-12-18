@@ -19,7 +19,7 @@ public class AppMemberDomainService {
 
     private final AppMemberRepository appMemberRepository;
 
-    public AppMember findByAccountId(Long accountId) {
+    public AppMember findByAccountId(String accountId) {
         return appMemberRepository.findByAccountId(accountId);
     }
 }

@@ -18,5 +18,5 @@ public class DeleteHostCommand extends BaseCommand {
     /**
      * hostId
      */
-    private Long hostId;
+    private String hostId;
 }

@@ -33,7 +33,7 @@ public class AppServiceTest extends BaseTests {
     @Resource
     private AppConfig tenantConfig;
 
-    public static final Long ACCOUNT_ID = 781488231601549312L;
+    public static final String ACCOUNT_ID = "781488231601549312L";
 
 
     @Test
@@ -45,7 +45,7 @@ public class AppServiceTest extends BaseTests {
         createAppCommand.setDefaultBranch("origin/main");
         createAppCommand.setLanguage(CodeLanguageEnum.JAVA.name());
         createAppCommand.setDevelopMode(DevelopMode.FREEDOM.name());
-        createAppCommand.setOwner(768821468053254144L);
+        createAppCommand.setOwner("768821468053254144");
         createAppCommand.setDepartmentAbbreviation("Honda");
         createAppCommand.setDepartment("Honda汽车");
         ArrayList<AppMemberDTO> appMembers = new ArrayList<>();
@@ -56,15 +56,15 @@ public class AppServiceTest extends BaseTests {
         createAppCommand.setAppMembers(appMembers);
         // createAppCommand.setAppEnvs(Lists.newArrayList());
         createAppCommand.setHealthCheck("/ok");
-        PojoResult<Long> app = appService.createApp(createAppCommand);
+        PojoResult<String> app = appService.createApp(createAppCommand);
         Assert.assertTrue(app.getSuccess());
     }
 
     public void createAppEnv() {
         CreateAppEnvCommand createAppEnvCommand = new CreateAppEnvCommand();
-        createAppEnvCommand.setAppId(781513981771788288L);
+        createAppEnvCommand.setAppId("781513981771788288");
         AppEnvDTO env = new AppEnvDTO();
         createAppEnvCommand.setEnv(env);
-        PojoResult<Long> app = appService.createAppEnv(createAppEnvCommand);
+        PojoResult<String> app = appService.createAppEnv(createAppEnvCommand);
     }
 }

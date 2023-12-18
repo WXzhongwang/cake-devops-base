@@ -41,7 +41,7 @@ public class HostGroupDomainService {
 
     public HostGroup getHostGroup(HostGroupId hostGroupId) {
         HostGroup hostGroup = hostGroupRepository.find(hostGroupId);
-        List<Host> hosts = hostRepository.getHostsByGroupIds(Lists.newArrayList(hostGroup.getId().getId()));
+        List<Host> hosts = hostRepository.getHostsByGroupIds(Lists.newArrayList(hostGroup.getBizID().getHostGroupId()));
         hostGroup.setHosts(hosts);
         return hostGroup;
     }

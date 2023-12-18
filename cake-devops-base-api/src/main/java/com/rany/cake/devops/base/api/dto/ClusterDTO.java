@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ClusterDTO extends DTO {
-    private Long id;
+    private Long clusterId;
 
     private String clusterName;
     private String version;

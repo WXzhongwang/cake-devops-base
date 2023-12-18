@@ -23,10 +23,10 @@ public interface ReleaseDataConvertor extends BaseConvertor<Release, ReleasePO> 
      * @param release 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
-    @Mapping(source = "appId.id", target = "appId")
-    @Mapping(source = "approvalId.id", target = "approvalId")
-    @Mapping(source = "rollbackId.id", target = "rollbackId")
+    @Mapping(source = "releaseId.releaseId", target = "releaseId")
+    @Mapping(source = "appId.appId", target = "appId")
+    @Mapping(source = "approvalId.approvalId", target = "approvalId")
+    @Mapping(source = "rollbackId.releaseId", target = "rollbackId")
     @Override
     ReleasePO sourceToTarget(Release release);
 
@@ -38,9 +38,9 @@ public interface ReleaseDataConvertor extends BaseConvertor<Release, ReleasePO> 
      */
 
     @Override
-    @Mapping(target = "id.id", source = "id")
-    @Mapping(target = "appId.id", source = "appId")
-    @Mapping(target = "approvalId.id", source = "approvalId")
-    @Mapping(target = "rollbackId.id", source = "rollbackId")
+    @Mapping(target = "releaseId.releaseId", source = "releaseId")
+    @Mapping(target = "appId.appId", source = "appId")
+    @Mapping(target = "approvalId.approvalId", source = "approvalId")
+    @Mapping(target = "rollbackId.releaseId", source = "rollbackId")
     Release targetToSource(ReleasePO releasePO);
 }

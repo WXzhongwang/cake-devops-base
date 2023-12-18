@@ -27,7 +27,7 @@ public interface AppService {
      * @param createAppCommand 创建应用
      * @return 应用ID
      */
-    PojoResult<Long> createApp(CreateAppCommand createAppCommand);
+    PojoResult<String> createApp(CreateAppCommand createAppCommand);
 
     /**
      * 获取应用详情
@@ -52,7 +52,7 @@ public interface AppService {
      * @param createAppEnvCommand 创建应用环境
      * @return 环境ID
      */
-    PojoResult<Long> createAppEnv(CreateAppEnvCommand createAppEnvCommand);
+    PojoResult<String> createAppEnv(CreateAppEnvCommand createAppEnvCommand);
 
     /**
      * 查询应用环境

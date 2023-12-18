@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.HostPO">
 
         <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="host_id" jdbcType="VARCHAR" property="hostId"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="host_name" jdbcType="VARCHAR" property="hostName"/>
         <result column="port" jdbcType="INTEGER" property="port"/>
@@ -22,6 +23,7 @@
     <sql id="Base_Column_List">
 
         id
+        ,host_id
         , name, host_name, port, username, status, is_deleted, gmt_create, gmt_modified,
         `desc`, verified, creator, modifier, pkey
     </sql>
@@ -32,7 +34,7 @@
         <include refid="Base_Column_List"/>
         from host
         where is_deleted = '0' and
-        id in
+        host_id in
         <foreach collection="hostIds" index="index" item="hostId" open="(" separator="," close=")">
             #{hostId}
         </foreach>
@@ -40,12 +42,12 @@
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.Host">
 
-        insert into host (id, name, host_name,
+        insert into host (host_id, name, host_name,
                           port, username, status,
                           is_deleted, gmt_create, gmt_modified,
                           desc, verified, creator,
                           modifier, pkey)
-        values (#{id.id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR},
+        values (#{hostId.hostId}, #{name,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR},
                 #{port,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{desc,jdbcType=VARCHAR}, #{verified,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR},
@@ -95,6 +97,14 @@
                 pkey = #{pkey},
             </if>
         </set>
-        where id = #{id.id,jdbcType=BIGINT}
+        where host_id = #{hostId.hostId}
     </update>
+
+    <select id="selectByHostId" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List" />
+        from host
+        where host_id = #{hostId}
+    </select>
 </mapper>

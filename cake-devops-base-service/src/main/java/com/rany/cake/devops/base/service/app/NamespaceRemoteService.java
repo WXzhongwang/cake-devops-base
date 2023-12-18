@@ -44,12 +44,12 @@ public class NamespaceRemoteService implements NamespaceService {
 
 
     @Override
-    public PojoResult<Long> createNamespace(CreateNamespaceCommand createNamespaceCommand) {
+    public PojoResult<String> createNamespace(CreateNamespaceCommand createNamespaceCommand) {
         Cluster cluster = clusterDomainService.getCluster(new ClusterId(createNamespaceCommand.getClusterId()));
         if (cluster == null) {
             throw new DevOpsException(DevOpsErrorMessage.CLUSTER_NOT_FOUND);
         }
-        Namespace namespace = new Namespace(new NamespaceId(snowflakeIdWorker.nextId()),
+        Namespace namespace = new Namespace(new NamespaceId(String.valueOf(snowflakeIdWorker.nextId())),
                 new NamespaceName(createNamespaceCommand.getName()),
                 new ClusterId(createNamespaceCommand.getClusterId()));
         if (createNamespaceCommand.getRequestCpu() != null) {
@@ -75,7 +75,7 @@ public class NamespaceRemoteService implements NamespaceService {
         }
         namespace.init();
         namespaceDomainService.save(namespace);
-        return PojoResult.succeed(namespace.getId().getId());
+        return PojoResult.succeed(namespace.getNamespaceId().getNamespaceId());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class NamespaceRemoteService implements NamespaceService {
         if (cluster == null) {
             throw new DevOpsException(DevOpsErrorMessage.CLUSTER_NOT_FOUND);
         }
-        List<Namespace> namespaces = namespaceDomainService.listNamespace(cluster.getId());
+        List<Namespace> namespaces = namespaceDomainService.listNamespace(cluster.getClusterId());
         return ListResult.succeed(namespaceDataAdapter.sourceToTarget(namespaces));
     }
 }

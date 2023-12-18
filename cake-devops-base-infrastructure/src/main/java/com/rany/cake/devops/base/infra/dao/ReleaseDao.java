@@ -1,6 +1,9 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Release;
+import com.rany.cake.devops.base.infra.po.NamespacePO;
+import com.rany.cake.devops.base.infra.po.ReleasePO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 发布
@@ -30,4 +33,6 @@ public interface ReleaseDao {
      */
     int update(Release release);
 
+
+    ReleasePO selectByReleaseId(@Param("releaseId") String releaseId);
 }

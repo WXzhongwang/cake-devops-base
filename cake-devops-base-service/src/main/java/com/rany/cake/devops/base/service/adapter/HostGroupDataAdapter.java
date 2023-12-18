@@ -27,7 +27,7 @@ public interface HostGroupDataAdapter extends BaseConvertor<HostGroup, HostGroup
      * @param host 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "hostGroupId.hostGroupId", target = "hostGroupId")
     HostGroupDTO sourceToTarget(HostGroup host);
 
     @InheritConfiguration(name = "sourceToTarget")
@@ -40,7 +40,7 @@ public interface HostGroupDataAdapter extends BaseConvertor<HostGroup, HostGroup
      * @return 聚合根
      */
 
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "hostGroupId.hostGroupId", source = "hostGroupId")
     HostGroup targetToSource(HostGroupDTO hostDTO);
 
     @InheritConfiguration(name = "targetToSource")

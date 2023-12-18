@@ -19,9 +19,9 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = false)
 public class AppEnvDTO extends DTO {
 
-    private Long id;
-    private Long appId;
-    private Long clusterId;
+    private String envId;
+    private String appId;
+    private String clusterId;
     private String env;
     private String envName;
     private List<String> domains;

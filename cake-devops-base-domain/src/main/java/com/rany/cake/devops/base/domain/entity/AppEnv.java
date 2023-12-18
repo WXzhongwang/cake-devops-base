@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class AppEnv extends BaseEntity<Long> {
+public class AppEnv extends BaseEntity<String> {
 
     private AppId appId;
     private ClusterId clusterId;

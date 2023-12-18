@@ -29,7 +29,7 @@ public class DefaultDeployPipeline implements DeployPipeline {
     @Override
     public void start() {
         try {
-            MDC.put(Constants.__TRACE_RELEASE_ID__, String.valueOf(deployContext.getRelease().getId().getId()));
+            MDC.put(Constants.__TRACE_RELEASE_ID__, String.valueOf(deployContext.getRelease().getReleaseId().getReleaseId()));
             log.info("pipeline begin to start...");
             head.getNext().execute(getDeployContext());
         } catch (Exception ex) {

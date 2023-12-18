@@ -24,7 +24,7 @@ public interface ApprovalDataAdapter extends BaseConvertor<Approval, ApprovalDTO
      * @param approval 聚合根
      * @return PO
      */
-    @Mapping(source = "id.id", target = "id")
+    @Mapping(source = "approvalId.approvalId", target = "approvalId")
     ApprovalDTO sourceToTarget(Approval approval);
 
     /**
@@ -34,6 +34,6 @@ public interface ApprovalDataAdapter extends BaseConvertor<Approval, ApprovalDTO
      * @return 聚合根
      */
 
-    @Mapping(target = "id.id", source = "id")
+    @Mapping(target = "approvalId.approvalId", source = "approvalId")
     Approval targetToSource(ApprovalDTO approvalDTO);
 }

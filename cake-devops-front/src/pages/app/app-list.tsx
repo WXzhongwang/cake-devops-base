@@ -116,7 +116,7 @@ const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
     // 处理查看操作
     console.log("查看应用详情", record);
     // 示例：跳转到详情页，使用 history.push
-    history.push(`/app-detail/${record.id}`);
+    history.push(`/app-detail/${record.appId}`);
   };
 
   return (
@@ -177,7 +177,7 @@ const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
           <Table
             columns={columns}
             dataSource={appList.list}
-            rowKey={"id"}
+            rowKey={"appId"}
             pagination={{
               total: appList.total,
               current: pagination.pageNo,

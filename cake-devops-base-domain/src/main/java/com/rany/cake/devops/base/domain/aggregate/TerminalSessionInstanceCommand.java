@@ -19,4 +19,9 @@ public class TerminalSessionInstanceCommand extends BaseAggregateRoot implements
     private String input;
     private String inputFormatted;
     private String output;
+
+    @Override
+    public InstanceCommandId getBizID() {
+        return id;
+    }
 }
