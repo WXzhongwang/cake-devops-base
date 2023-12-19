@@ -8,6 +8,16 @@ export default defineConfig({
     { path: "/", redirect: "/apps" },
     { path: "/apps", component: "app/app-list", name: "应用中心" },
     { path: "/app-detail/:id", component: "app/app-detail" },
+    {
+      path: "/ops",
+      routes: [
+        {
+          path: "/ops",
+          component: "app/app-list",
+          name: "运维中心",
+        },
+      ],
+    },
   ],
   npmClient: "pnpm",
   dva: {},

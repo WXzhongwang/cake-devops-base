@@ -12,6 +12,7 @@ import {
   history,
 } from "umi";
 import { LogoutOutlined } from "@ant-design/icons";
+import defaultProps from "./_default";
 import { API } from "typings";
 interface LayoutProps {
   dispatch: Dispatch;
@@ -36,12 +37,13 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
   return (
     <ProLayout
       layout="top"
-      route={clientRoutes[0]}
-      location={location}
+      // route={clientRoutes[0]}
+      // location={location}
       title="Cake"
       waterMarkProps={{
         content: [userData?.userName, userData?.userId],
       }}
+      {...defaultProps}
       avatarProps={{
         src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
         size: "small",
