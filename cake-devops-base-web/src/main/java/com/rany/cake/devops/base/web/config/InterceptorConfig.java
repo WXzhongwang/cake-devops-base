@@ -28,10 +28,4 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     }
-
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        // 将根路径重定向到 React 首页
-//        registry.addRedirectViewController("/", "/static/index.html");
-//    }
 }

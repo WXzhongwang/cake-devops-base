@@ -37,7 +37,7 @@ public class AppController {
         return appService.getApp(appBasicQuery);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/createApp")
     public PojoResult<String> createApp(CreateAppCommand createAppCommand) {
         return appService.createApp(createAppCommand);
     }
