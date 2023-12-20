@@ -29,7 +29,7 @@ interface CreateEnvFormProps {
   envName: string;
   env: string;
   clusterId: string;
-  domains: string[];
+  domains: string[] | [];
   autoScaling: boolean;
   needApproval: boolean;
   replicas: number;
@@ -215,14 +215,14 @@ const AppDetail: React.FC<AppDetailProps> = ({
             <Input placeholder="请输入环境名称" />
           </Form.Item>
           <Form.Item
-            name="envType"
+            name="env"
             label="环境类型"
             rules={[{ required: true, message: "请选择环境类型" }]}
           >
             <Select placeholder="请选择环境类型">
-              <Option value="测试">测试</Option>
-              <Option value="预发">预发</Option>
-              <Option value="线上">线上</Option>
+              <Option value="TEST">测试</Option>
+              <Option value="PRE">预发</Option>
+              <Option value="PROD">线上</Option>
             </Select>
           </Form.Item>
           <Form.Item

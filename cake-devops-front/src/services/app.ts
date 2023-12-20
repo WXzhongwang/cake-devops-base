@@ -20,6 +20,7 @@ export async function createApp(data: CreateAppPayload) {
 }
 
 export async function createAppEnv(data: CreateAppEnvPayload) {
+  console.log(data);
   return request("/api/devops/app/createEnv", {
     method: "POST",
     data,

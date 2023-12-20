@@ -139,6 +139,7 @@ const AppModel: AppModelType = {
     },
 
     *createAppEnv({ payload }: CreateAppEnvAction, { call, put }) {
+      console.log(payload);
       yield call(appService.createAppEnv, payload);
       yield put({ type: "getAppDetail" });
     },
