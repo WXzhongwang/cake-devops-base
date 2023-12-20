@@ -7,6 +7,7 @@ import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
+import com.rany.cake.devops.base.api.dto.DepartmentDTO;
 import com.rany.cake.devops.base.api.query.AppBasicQuery;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
 import com.rany.cake.devops.base.api.query.AppPageQuery;
@@ -61,5 +62,6 @@ public interface AppService {
      * @return 环境列表
      */
     ListResult<AppEnvDTO> listAppEnv(AppEnvQuery appEnvQuery);
+    ListResult<DepartmentDTO> listDepartments();
 
 }

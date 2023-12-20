@@ -7,6 +7,7 @@ import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
+import com.rany.cake.devops.base.api.dto.DepartmentDTO;
 import com.rany.cake.devops.base.api.query.AppBasicQuery;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
 import com.rany.cake.devops.base.api.query.AppPageQuery;
@@ -26,7 +27,7 @@ public class AppController {
     private AppService appService;
 
     @PostMapping("/pageApp")
-    public PageResult<AppDTO> pageApp(AppPageQuery appPageQuery) {
+    public PageResult<AppDTO> pageApp(@RequestBody AppPageQuery appPageQuery) {
         return appService.pageApp(appPageQuery);
     }
 
@@ -50,5 +51,10 @@ public class AppController {
     @PostMapping("/listEnv")
     public ListResult<AppEnvDTO> listAppEnv(@RequestBody AppEnvQuery appEnvQuery) {
         return appService.listAppEnv(appEnvQuery);
+    }
+
+    @GetMapping("/getDepartments")
+    public ListResult<DepartmentDTO> getDepartments() {
+        return appService.listDepartments();
     }
 }

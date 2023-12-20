@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Drawer, Form, Input, Select, Button } from "antd";
 import { connect, Dispatch } from "umi";
+import { API } from "typings";
+import { Department } from "@/models/app";
 
 const { Option } = Select;
 
@@ -8,19 +10,34 @@ interface CreateAppDrawerProps {
   dispatch: Dispatch;
   open: boolean;
   onClose: () => void;
+  userData: API.UserInfo;
+  departments: Department[] | [];
 }
 
 const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
   dispatch,
   open,
+  userData,
   onClose,
+  departments,
 }) => {
   const [form] = Form.useForm();
+  const [formattedDepartments, setFormattedDepartments] = useState<
+    { label: string; value: string }[]
+  >([]);
 
   const handleCreateApp = (values: any) => {
     // 在这里可以执行创建应用的逻辑
     console.log("创建应用:", values);
-
+    values.owner = userData.userId;
+    // 在这里获取选中的部门对象
+    const selectedDepartment = departments.find(
+      (dep) => dep.value === values.department
+    );
+    // 如果存在选中的部门对象，将其相应属性添加到values中
+    if (selectedDepartment) {
+      values.departmentAbbr = selectedDepartment.abbr;
+    }
     // 在这里可以调用相应的接口或 dispatch 创建应用的 action
     dispatch({
       type: "app/createApp",
@@ -30,6 +47,15 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
     // 关闭抽屉
     onClose();
   };
+
+  useEffect(() => {
+    // 当部门列表更新时，格式化并设置Select的选项
+    const options = departments?.map((dep: Department) => ({
+      value: dep.value,
+      label: dep.label,
+    }));
+    setFormattedDepartments(options);
+  }, [departments]);
 
   return (
     <Drawer
@@ -46,6 +72,15 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
           rules={[{ required: true, message: "请输入应用名称" }]}
         >
           <Input placeholder="请输入应用名称" />
+        </Form.Item>
+        <Form.Item name="department" label="部门">
+          <Select placeholder="请选择部门" allowClear>
+            {formattedDepartments?.map((option) => (
+              <Option key={option.value} value={option.value}>
+                {option.label}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item
           name="repo"
@@ -102,4 +137,8 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
   );
 };
 
-export default connect()(CreateAppDrawer);
+export default connect(({ user }: { user: { userData: API.UserInfo } }) => {
+  return {
+    userData: user.userData,
+  };
+})(CreateAppDrawer);

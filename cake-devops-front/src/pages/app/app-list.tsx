@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import { Table, Space, Input, Select, Button, Form, Card } from "antd";
 import { connect, Dispatch, history } from "umi";
-import { AppInfo } from "@/models/app";
+import { AppInfo, Department } from "@/models/app";
 import CreateAppDrawer from "./components/create-app-drawer";
 
 const { Option } = Select;
@@ -10,10 +10,18 @@ const { Option } = Select;
 interface AppListProps {
   dispatch: Dispatch;
   appList: { list: AppInfo[]; total: number };
+  departments: Department[];
 }
 
-const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
+const AppList: React.FC<AppListProps> = ({
+  dispatch,
+  appList,
+  departments,
+}) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
+  const [formattedDepartments, setFormattedDepartments] = useState<
+    { label: string; value: string }[]
+  >([]);
   const [filters, setFilters] = useState({
     appName: "",
     department: "",
@@ -38,12 +46,19 @@ const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
 
   useEffect(() => {
     getAppList();
+    getDepartments();
   }, [pagination, filters]);
 
   const getAppList = () => {
     dispatch({
       type: "app/getAppList",
       payload: { ...pagination, ...filters },
+    });
+  };
+
+  const getDepartments = () => {
+    dispatch({
+      type: "app/getDepartments",
     });
   };
 
@@ -108,6 +123,17 @@ const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
     },
   ];
 
+  console.log("departments", departments);
+
+  useEffect(() => {
+    // 当部门列表更新时，格式化并设置Select的选项
+    const options = departments?.map((dep: Department) => ({
+      value: dep.value,
+      label: dep.label,
+    }));
+    setFormattedDepartments(options);
+  }, [departments]);
+
   const handlePaginationChange = (page: number, pageSize?: number) => {
     setPagination({ pageNo: page, pageSize: pageSize || 10 });
   };
@@ -135,7 +161,13 @@ const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
               <Input placeholder="请输入应用名称" />
             </Form.Item>
             <Form.Item name="department" label="部门">
-              <Input placeholder="请输入部门" />
+              <Select placeholder="请选择部门" allowClear>
+                {formattedDepartments?.map((option) => (
+                  <Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item name="language" label="开发语言">
               <Select placeholder="请选择开发语言">
@@ -172,6 +204,7 @@ const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
           <CreateAppDrawer
             open={createAppDrawerVisible}
             onClose={hideCreateAppDrawer}
+            departments={departments}
           />
 
           <Table
@@ -192,9 +225,17 @@ const AppList: React.FC<AppListProps> = ({ dispatch, appList }) => {
 };
 
 export default connect(
-  ({ app }: { app: { appList: { list: AppInfo[]; total: number } } }) => {
+  ({
+    app,
+  }: {
+    app: {
+      appList: { list: AppInfo[]; total: number };
+      departments: Department[];
+    };
+  }) => {
     return {
       appList: app.appList,
+      departments: app.departments,
     };
   }
 )(AppList);

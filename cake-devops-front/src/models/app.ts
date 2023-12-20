@@ -1,5 +1,6 @@
 // src/models/app.ts
 import * as appService from "@/services/app";
+import { S } from "mockjs";
 import { Effect, Reducer } from "umi";
 
 // 定义创建应用的参数类型
@@ -10,7 +11,7 @@ export interface CreateAppPayload {
   defaultBranch: string;
   language: string;
   developMode: string;
-  owner: number;
+  owner: string;
   departmentAbbreviation: string;
   department: string;
   healthCheck: string;
@@ -47,6 +48,12 @@ export interface AppInfo {
   appEnvList: AppEnv[];
 }
 
+export interface Department {
+  label: string;
+  value: string;
+  abbr: string;
+}
+
 export interface AppEnv {
   envId: string | null;
   appId: string | null;
@@ -75,6 +82,7 @@ export interface AppState {
     list: AppInfo[];
   };
   appDetail: AppInfo | null;
+  departments: Department[] | [];
 }
 
 interface CreateAppAction {
@@ -92,6 +100,10 @@ interface QueryAppAction {
   payload: QueryAppPayload;
 }
 
+interface QueryDepartmentAction {
+  type: "app/getDepartments";
+}
+
 interface GetAppDetailAction {
   type: "app/getAppDetail";
   payload: { id: number };
@@ -103,9 +115,12 @@ export interface AppModelType {
   effects: {
     getAppList: Effect;
     createApp: Effect;
+    getDepartments: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
+    setAppDetail: Reducer<AppState>;
+    setDepartments: Reducer<AppState>;
   };
 }
 
@@ -117,6 +132,7 @@ const AppModel: AppModelType = {
       total: 0,
       list: [],
     },
+    departments: [],
   },
   effects: {
     *getAppList({ payload }: QueryAppAction, { call, put }) {
@@ -151,13 +167,28 @@ const AppModel: AppModelType = {
         payload: response.content,
       });
     },
+
+    *getDepartments(_, { call, put }) {
+      const response = yield call(appService.getDepartments);
+      console.log(response);
+
+      if (response?.content) {
+        yield put({
+          type: "setDepartments",
+          payload: response.content,
+        });
+      }
+    },
   },
   reducers: {
     setAppList(state, action) {
       return { ...state, appList: { ...state.appList, ...action.payload } };
     },
-    setAppDetail(state, action) {
+    setAppDetail(state: any, action: { payload: any }) {
       return { ...state, appDetail: action.payload };
+    },
+    setDepartments(state: any, action: { payload: any }) {
+      return { ...state, departments: action.payload };
     },
   },
 };

@@ -8,10 +8,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
-import com.rany.cake.devops.base.api.dto.AppDTO;
-import com.rany.cake.devops.base.api.dto.AppEnvDTO;
-import com.rany.cake.devops.base.api.dto.AppMemberDTO;
-import com.rany.cake.devops.base.api.dto.ResourceStrategyDTO;
+import com.rany.cake.devops.base.api.dto.*;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
 import com.rany.cake.devops.base.api.query.AppBasicQuery;
@@ -22,6 +19,7 @@ import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.base.AppConfig;
+import com.rany.cake.devops.base.domain.base.DepartmentConfig;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
@@ -77,6 +75,7 @@ public class AppRemoteService implements AppService {
     private final AppDomainService appDomainService;
     private final ClusterDomainService clusterDomainService;
     private final AppDataAdapter appDataAdapter;
+    private final DepartmentConfig departmentConfig;
 
     @Override
     public PojoResult<String> createApp(CreateAppCommand createAppCommand) {
@@ -93,7 +92,9 @@ public class AppRemoteService implements AppService {
         app.setHealthCheck(createAppCommand.getHealthCheck());
 
         Set<String> accountIds = Sets.newHashSet(createAppCommand.getOwner());
-        accountIds.addAll(createAppCommand.getAppMembers().stream().map(AppMemberDTO::getAccountId).collect(Collectors.toSet()));
+        if (CollectionUtils.isNotEmpty(createAppCommand.getAppMembers())) {
+            accountIds.addAll(createAppCommand.getAppMembers().stream().map(AppMemberDTO::getAccountId).collect(Collectors.toSet()));
+        }
         AccountQuery accountQuery = new AccountQuery();
         // accountQuery.setAccountIds(new ArrayList<>(accountIds));
         accountQuery.setTenantId(tenantConfig.getTenantId());
@@ -186,5 +187,16 @@ public class AppRemoteService implements AppService {
         }
         List<AppEnv> appEnvs = appDomainService.listAppEnv(new AppId(appEnvQuery.getAppId()));
         return ListResult.succeed(appDataAdapter.envSourceToTarget(appEnvs));
+    }
+
+    @Override
+    public ListResult<DepartmentDTO> listDepartments() {
+        List<DepartmentDTO> departmentDTOS= new ArrayList<>();
+        List<DepartmentConfig.Department> departments = departmentConfig.getDepartments();
+        for (DepartmentConfig.Department department : departments) {
+            departmentDTOS.add(new DepartmentDTO().setLabel(department.getLabel()).setValue(department.getValue())
+                    .setAbbr(department.getAbbr()));
+        }
+        return ListResult.succeed(departmentDTOS);
     }
 }

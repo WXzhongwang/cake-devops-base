@@ -30,3 +30,7 @@ export async function createAppEnv(data: CreateAppEnvPayload) {
 export async function getAppDetail(id: number) {
   return request(`/api/devops/app/getApp?id=${id}`);
 }
+
+export async function getDepartments() {
+  return request(`/api/devops/app/getDepartments`);
+}

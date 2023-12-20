@@ -112,6 +112,23 @@ ssh:
       text: 'ssh-server>'
 
 devops:
+  biz-config:
+    departments:
+      - label: Honda汽车
+        value: cake-honda
+        abbr: HONDA
+      - label: QA质量团队
+        value: cake-qa
+        abbr: QA
+      - label: 数据团队
+        value: cake-data
+        abbr: DATA
+      - label: 运维团队
+        value: cake-ops
+        abbr: OPS
+      - label: 职能团队
+        value: cake-hr
+        abbr: HR
   redisson:
     address: 127.0.0.1:6379
     type: STANDALONE
