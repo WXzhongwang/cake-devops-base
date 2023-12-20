@@ -38,17 +38,17 @@ public class AppController {
     }
 
     @PostMapping("/createApp")
-    public PojoResult<String> createApp(CreateAppCommand createAppCommand) {
+    public PojoResult<String> createApp(@RequestBody CreateAppCommand createAppCommand) {
         return appService.createApp(createAppCommand);
     }
 
     @PostMapping("/createEnv")
-    public PojoResult<String> createAppEnv(CreateAppEnvCommand createAppEnvCommand) {
+    public PojoResult<String> createAppEnv(@RequestBody CreateAppEnvCommand createAppEnvCommand) {
         return appService.createAppEnv(createAppEnvCommand);
     }
 
     @PostMapping("/listEnv")
-    public ListResult<AppEnvDTO> createAppEnv(AppEnvQuery appEnvQuery) {
+    public ListResult<AppEnvDTO> listAppEnv(@RequestBody AppEnvQuery appEnvQuery) {
         return appService.listAppEnv(appEnvQuery);
     }
 }
