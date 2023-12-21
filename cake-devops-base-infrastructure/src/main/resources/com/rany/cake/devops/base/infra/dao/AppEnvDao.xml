@@ -3,8 +3,8 @@
 <mapper namespace="com.rany.cake.devops.base.infra.dao.AppEnvDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.AppEnvPO">
         <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="cluster_id" jdbcType="BIGINT" property="clusterId" />
-        <result column="app_id" jdbcType="BIGINT" property="appId" />
+        <result column="cluster_id" jdbcType="VARCHAR" property="clusterId" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
         <result column="domains" jdbcType="VARCHAR" property="domains" />
         <result column="env_name" jdbcType="VARCHAR" property="envName" />
         <result column="env" jdbcType="VARCHAR" property="env" />
@@ -21,10 +21,11 @@
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />
         <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+        <result column="env_id" jdbcType="VARCHAR" property="envId" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
+        id, env_id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
     auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
     modifier
     </sql>
@@ -45,17 +46,20 @@
     </select>
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
-        insert into app_env (cluster_id, app_id,
+        insert into app_env (env_id,
+                             cluster_id, app_id,
                              domains, env_name, env,
                              replicas, cpu, memory,
                              max_cpu, max_memory,
                              auto_scaling, need_approval, status,
                              is_deleted, gmt_create, gmt_modified,
                              creator, modifier)
-        values (#{clusterId.id,jdbcType=BIGINT}, #{appId.id,jdbcType=BIGINT},
+        values (#{envId},
+                #{clusterId.clusterId},
+                #{appId.appId},
                 #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
                 #{envName,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR},
-                #{replicas,jdbcType=INTEGER}, #{resourceStrategy.cpu}, #{resourceStrategy.memory},
+                #{resourceStrategy.replicas,jdbcType=INTEGER}, #{resourceStrategy.cpu}, #{resourceStrategy.memory},
                 #{resourceStrategy.maxCpu}, #{resourceStrategy.maxMemory},
                 #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
@@ -68,10 +72,10 @@
         update app_env
         <set>
             <if test="clusterId != null">
-                cluster_id = #{clusterId.id,jdbcType=BIGINT},
+                cluster_id = #{clusterId.clusterId},
             </if>
             <if test="appId != null">
-                app_id = #{appId,jdbcType=BIGINT},
+                app_id = #{appId.appId},
             </if>
             <if test="domains != null">
                 domain =
@@ -84,7 +88,7 @@
                 env = #{env,jdbcType=VARCHAR},
             </if>
             <if test="replicas != null">
-                replicas = #{replicas},
+                replicas = #{resourceStrategy.replicas},
             </if>
             <if test="resourceStrategy.cpu != null">
                 cpu = #{resourceStrategy.cpu},
@@ -93,7 +97,7 @@
                 memory = #{resourceStrategy.memory},
             </if>
             <if test="resourceStrategy.maxCpu != null">
-                max_cpu = #{maxCpu},
+                max_cpu = #{resourceStrategy.maxCpu},
             </if>
             <if test="resourceStrategy.maxMemory != null">
                 max_memory = #{resourceStrategy.maxMemory},
@@ -123,6 +127,6 @@
                 modifier = #{modifier,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id,jdbcType=BIGINT}
+        where env_id = #{envId}
     </update>
 </mapper>

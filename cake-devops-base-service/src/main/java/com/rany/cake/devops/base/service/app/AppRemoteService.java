@@ -168,7 +168,7 @@ public class AppRemoteService implements AppService {
             throw new DevOpsException(DevOpsErrorMessage.ENV_DUPLICATED);
         }
         AppEnvEnum appEnvEnum = EnumUtils.getEnum(AppEnvEnum.class, env.getEnv());
-        AppEnv appEnv = new AppEnv(app.getAppId(), cluster.getClusterId(), env.getEnvName(), appEnvEnum);
+        AppEnv appEnv = new AppEnv(String.valueOf(snowflakeIdWorker.nextId()), app.getAppId(), cluster.getClusterId(), env.getEnvName(), appEnvEnum);
         appEnv.setDomains(env.getDomains());
         appEnv.setAutoScaling(env.getAutoScaling());
         appEnv.setNeedApproval(env.getNeedApproval());

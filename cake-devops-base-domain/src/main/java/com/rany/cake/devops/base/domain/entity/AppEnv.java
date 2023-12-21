@@ -25,6 +25,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = false)
 public class AppEnv extends BaseEntity<String> {
 
+    private String envId;
     private AppId appId;
     private ClusterId clusterId;
     private String envName;
@@ -50,7 +51,11 @@ public class AppEnv extends BaseEntity<String> {
      */
     private String status;
 
-    public AppEnv(AppId appId, ClusterId clusterId, String envName, AppEnvEnum env) {
+    public AppEnv() {
+    }
+
+    public AppEnv(String envId, AppId appId, ClusterId clusterId, String envName, AppEnvEnum env) {
+        this.envId = envId;
         this.appId = appId;
         this.clusterId = clusterId;
         this.envName = envName;

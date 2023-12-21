@@ -44,7 +44,7 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
     AppDTO sourceToTarget(App app);
 
 
-    @Mapping(source = "id", target = "envId")
+    @Mapping(target = "envId", source = "envId")
     @Mapping(source = "appId.appId", target = "appId")
     @Mapping(source = "clusterId.clusterId", target = "clusterId")
     @Mapping(source = "env", target = "env")
@@ -55,7 +55,7 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
     List<AppEnvDTO> envSourceToTarget(List<AppEnv> appEnvs);
 
     @Mapping(target = "appId.appId", source = "appId")
-    @Mapping(target = "id", source = "envId")
+    @Mapping(target = "envId", source = "envId")
     @Mapping(target = "clusterId.clusterId", source = "clusterId")
     @Mapping(target = "env", source = "env")
     @Mapping(target = "resourceStrategy", expression = "java(this.strategyTargetToSource(appEnvDTO.getResourceStrategy()))")
