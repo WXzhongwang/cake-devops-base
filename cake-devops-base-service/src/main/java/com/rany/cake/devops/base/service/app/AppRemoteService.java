@@ -174,7 +174,9 @@ public class AppRemoteService implements AppService {
         appEnv.setNeedApproval(env.getNeedApproval());
         ResourceStrategyDTO resourceStrategyDTO = env.getResourceStrategy();
         appEnv.setResourceStrategy(new ResourceStrategy(resourceStrategyDTO.getReplicas(), resourceStrategyDTO.getCpu(),
-                resourceStrategyDTO.getMemory()));
+                resourceStrategyDTO.getMemory(),
+                resourceStrategyDTO.getMaxCpu(),
+                resourceStrategyDTO.getMaxMemory()));
         appDomainService.createEnv(appEnv);
         return PojoResult.succeed(appEnv.getId());
     }

@@ -41,9 +41,11 @@ public class ResourceStrategy extends BaseValueObject {
     public ResourceStrategy() {
     }
 
-    public ResourceStrategy(Integer replicas, String cpu, String memory) {
+    public ResourceStrategy(Integer replicas, String cpu, String memory, String maxCpu, String maxMemory) {
         this.replicas = replicas;
         this.cpu = cpu;
         this.memory = memory;
+        this.maxCpu = maxCpu;
+        this.maxMemory = maxMemory;
     }
 }

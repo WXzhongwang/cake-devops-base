@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.domain.entity;
 import com.cake.framework.common.base.BaseEntity;
 import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
 import com.rany.cake.devops.base.domain.enums.CommonStatusEnum;
+import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
@@ -60,6 +61,7 @@ public class AppEnv extends BaseEntity<String> {
         this.clusterId = clusterId;
         this.envName = envName;
         this.env = env;
-        this.status = CommonStatusEnum.ENABLE.getCode();
+        this.status = CommonStatusEnum.ENABLE.getValue();
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
     }
 }
