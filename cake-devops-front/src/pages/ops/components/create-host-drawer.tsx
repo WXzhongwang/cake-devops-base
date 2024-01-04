@@ -1,12 +1,12 @@
 // components/create-app-drawer.tsx
 import { Form, Input, Button, Drawer } from "antd";
-import { HostInfo } from "@/models/host";
+import { HostModel } from "@/models/host";
 
 interface CreateHostDrawerProps {
   open: boolean;
   onClose: () => void;
   departments: { label: string; value: string }[];
-  onCreate: (values: HostInfo) => void;
+  onCreate: (values: HostModel) => void;
 }
 
 const CreateHostDrawer: React.FC<CreateHostDrawerProps> = ({
@@ -17,7 +17,7 @@ const CreateHostDrawer: React.FC<CreateHostDrawerProps> = ({
 }) => {
   const [form] = Form.useForm();
 
-  const handleFinish = (values: HostInfo) => {
+  const handleFinish = (values: HostModel) => {
     onCreate(values);
     form.resetFields();
   };
