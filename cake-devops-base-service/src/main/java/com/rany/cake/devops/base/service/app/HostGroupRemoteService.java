@@ -1,21 +1,27 @@
 package com.rany.cake.devops.base.service.app;
 
+import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.group.CreateGroupCommand;
 import com.rany.cake.devops.base.api.command.group.DeleteGroupCommand;
 import com.rany.cake.devops.base.api.command.group.ModifyGroupCommand;
 import com.rany.cake.devops.base.api.dto.HostGroupDTO;
+import com.rany.cake.devops.base.api.dto.HostGroupTreeDTO;
 import com.rany.cake.devops.base.api.query.HostGroupBasicQuery;
+import com.rany.cake.devops.base.api.query.HostGroupTreeQuery;
 import com.rany.cake.devops.base.api.service.HostGroupService;
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.pk.HostGroupId;
 import com.rany.cake.devops.base.domain.service.HostGroupDomainService;
 import com.rany.cake.devops.base.service.adapter.HostGroupDataAdapter;
+import com.rany.cake.devops.base.service.utils.HostGroupTreeConverter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
+
+import java.util.List;
 
 /**
  * 主机服务
@@ -41,6 +47,15 @@ public class HostGroupRemoteService implements HostGroupService {
                 createHostCommand.getSort());
         hostGroupDomainService.save(host);
         return PojoResult.succeed(host.getBizID().getHostGroupId());
+    }
+
+    @Override
+    public ListResult<HostGroupTreeDTO> getHostGroupTree(HostGroupTreeQuery hostGroupTreeQuery) {
+        List<HostGroup> hostGroups = hostGroupDomainService.listAllHostGroup();
+        List<HostGroupDTO> hostGroupDTOS = hostGroupDataAdapter.sourceToTarget(hostGroups);
+        List<HostGroupTreeDTO> treeDTOS = hostGroupDataAdapter.toTreeDTO(hostGroupDTOS);
+        List<HostGroupTreeDTO> hostGroupTreeDTOS = HostGroupTreeConverter.convertListToTree(treeDTOS);
+        return ListResult.succeed(hostGroupTreeDTOS);
     }
 
     @Override

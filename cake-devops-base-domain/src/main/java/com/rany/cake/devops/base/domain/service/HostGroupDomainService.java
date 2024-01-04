@@ -45,4 +45,9 @@ public class HostGroupDomainService {
         hostGroup.setHosts(hosts);
         return hostGroup;
     }
+
+    public List<HostGroup> listAllHostGroup() {
+        return hostGroupRepository.listAll();
+    }
+
 }

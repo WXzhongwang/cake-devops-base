@@ -1,21 +1,29 @@
 package com.rany.cake.devops.base.service.app;
 
+import com.cake.framework.common.response.Page;
+import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.host.CreateHostCommand;
 import com.rany.cake.devops.base.api.command.host.DeleteHostCommand;
 import com.rany.cake.devops.base.api.command.host.ModifyHostCommand;
 import com.rany.cake.devops.base.api.dto.HostDTO;
 import com.rany.cake.devops.base.api.query.HostBasicQuery;
+import com.rany.cake.devops.base.api.query.HostPageQuery;
 import com.rany.cake.devops.base.api.service.HostService;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.pk.HostId;
+import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
+import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 主机服务
@@ -49,6 +57,15 @@ public class HostRemoteService implements HostService {
     public PojoResult<HostDTO> getHost(HostBasicQuery hostBasicQuery) {
         Host host = hostDomainService.getHost(new HostId(hostBasicQuery.getHostId()));
         return PojoResult.succeed(hostDataAdapter.sourceToTarget(host));
+    }
+
+    @Override
+    public PageResult<HostDTO> pageHost(HostPageQuery hostPageQuery) {
+        HostPageQueryParam hostPageQueryParam = hostDataAdapter.convertParam(hostPageQuery);
+        Page<Host> page = hostDomainService.pageHost(hostPageQueryParam);
+        List<Host> hosts = new ArrayList<>(page.getItems());
+        List<HostDTO> hostDTOList = hostDataAdapter.sourceToTarget(hosts);
+        return PageResult.succeed(PageUtils.build(page, hostDTOList));
     }
 
     @Override

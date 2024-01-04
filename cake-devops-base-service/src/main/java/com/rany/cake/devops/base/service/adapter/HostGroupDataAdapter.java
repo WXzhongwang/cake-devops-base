@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.HostGroupDTO;
+import com.rany.cake.devops.base.api.dto.HostGroupTreeDTO;
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
 import org.mapstruct.InheritConfiguration;
@@ -45,4 +46,10 @@ public interface HostGroupDataAdapter extends BaseConvertor<HostGroup, HostGroup
 
     @InheritConfiguration(name = "targetToSource")
     List<HostGroup> targetToSource(List<HostGroupDTO> hostDTO);
+
+
+    HostGroupTreeDTO toTreeDTO(HostGroupDTO hostDTO);
+
+    @InheritConfiguration(name = "toTreeDTO")
+    List<HostGroupTreeDTO> toTreeDTO(List<HostGroupDTO> hostGroupDTOList);
 }

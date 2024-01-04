@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 主机组
@@ -56,5 +57,11 @@ public class HostGroupRepositoryImpl implements HostGroupRepository {
     public HostGroup getPackagingGroup() {
         HostGroupPO packagingGroup = hostGroupDao.getPackagingGroup();
         return hostGroupDataConvertor.targetToSource(packagingGroup);
+    }
+
+    @Override
+    public List<HostGroup> listAll() {
+        List<HostGroupPO> groupPOS = hostGroupDao.listAll();
+        return hostGroupDataConvertor.targetToSource(groupPOS);
     }
 }

@@ -1,9 +1,13 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
+import com.cake.framework.common.response.Page;
+import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
+import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
+import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.infra.convertor.HostDataConvertor;
 import com.rany.cake.devops.base.infra.dao.GroupHostDao;
 import com.rany.cake.devops.base.infra.dao.HostDao;
@@ -63,5 +67,13 @@ public class HostRepositoryImpl implements HostRepository {
         List<String> hostIds = groupHostPOS.stream().map(GroupHostPO::getHostId).collect(Collectors.toList());
         List<HostPO> hostPOS = hostDao.selectByPrimaryKeyList(hostIds);
         return hostDataConvertor.targetToSource(hostPOS);
+    }
+
+    @Override
+    public Page<Host> pageHost(HostPageQueryParam hostPageQueryParam) {
+        List<HostPO> hostPOS = hostDao.queryHost(hostPageQueryParam);
+        PageInfo<HostPO> pageInfo = new PageInfo<>(hostPOS);
+        List<Host> hosts = hostDataConvertor.targetToSource(hostPOS);
+        return PageUtils.build(pageInfo, hosts);
     }
 }

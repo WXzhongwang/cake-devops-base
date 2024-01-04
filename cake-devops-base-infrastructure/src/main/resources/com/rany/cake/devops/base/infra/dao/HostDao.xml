@@ -103,8 +103,20 @@
     <select id="selectByHostId" parameterType="java.lang.String" resultMap="BaseResultMap">
 
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from host
         where host_id = #{hostId}
+    </select>
+
+
+    <select id="queryHost" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host
+        where host_id in (
+        select host_id from group_host
+        where group_id = #{groupId}
+        and is_deleted = '0'
+        )
     </select>
 </mapper>

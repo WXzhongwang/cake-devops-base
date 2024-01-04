@@ -69,6 +69,13 @@
         limit 1
     </select>
 
+    <select id="listAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host_group
+        where is_deleted = '0'
+    </select>
+
     <select id="selectByHostGroupId" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />

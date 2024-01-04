@@ -1,11 +1,15 @@
 package com.rany.cake.devops.base.api.service;
 
+import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.host.CreateHostCommand;
 import com.rany.cake.devops.base.api.command.host.DeleteHostCommand;
 import com.rany.cake.devops.base.api.command.host.ModifyHostCommand;
+import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.HostDTO;
+import com.rany.cake.devops.base.api.query.AppPageQuery;
 import com.rany.cake.devops.base.api.query.HostBasicQuery;
+import com.rany.cake.devops.base.api.query.HostPageQuery;
 
 /**
  * 主机服务
@@ -32,6 +36,13 @@ public interface HostService {
      * @return
      */
     PojoResult<HostDTO> getHost(HostBasicQuery hostBasicQuery);
+
+    /**
+     * 分页查询主机列表
+     * @param hostPageQuery 分页查询
+     * @return app集合
+     */
+    PageResult<HostDTO> pageHost(HostPageQuery hostPageQuery);
 
 
     /**

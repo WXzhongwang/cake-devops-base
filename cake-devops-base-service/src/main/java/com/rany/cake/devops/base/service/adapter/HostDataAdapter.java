@@ -1,7 +1,9 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.HostDTO;
+import com.rany.cake.devops.base.api.query.HostPageQuery;
 import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
 import com.rany.cake.devops.base.service.plugins.machine.Machine;
 import org.mapstruct.InheritConfiguration;
@@ -33,6 +35,8 @@ public interface HostDataAdapter extends BaseConvertor<Host, HostDTO> {
 
     @InheritConfiguration(name = "sourceToTarget")
     List<HostDTO> sourceToTarget(List<Host> hosts);
+
+    HostPageQueryParam convertParam(HostPageQuery hostPageQuery);
 
     /**
      * PO转聚合根

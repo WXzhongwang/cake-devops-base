@@ -4,6 +4,8 @@ import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
 import com.rany.cake.devops.base.domain.pk.HostGroupId;
 
+import java.util.List;
+
 /**
  * 主机组
  *
@@ -16,5 +18,6 @@ public interface HostGroupRepository extends Repository<HostGroup, HostGroupId> 
     int update(HostGroup hostGroup);
 
     HostGroup getPackagingGroup();
+    List<HostGroup> listAll();
 }
 

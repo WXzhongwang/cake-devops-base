@@ -5,6 +5,8 @@ import com.rany.cake.devops.base.infra.po.ClusterPO;
 import com.rany.cake.devops.base.infra.po.HostGroupPO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 主机组
  *
@@ -39,6 +41,7 @@ public interface HostGroupDao {
      * @return
      */
     HostGroupPO getPackagingGroup();
+    List<HostGroupPO> listAll();
 
     HostGroupPO selectByHostGroupId(@Param("hostGroupId") String hostGroupId);
 

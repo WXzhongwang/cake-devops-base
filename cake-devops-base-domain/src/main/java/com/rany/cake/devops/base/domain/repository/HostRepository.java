@@ -1,8 +1,10 @@
 package com.rany.cake.devops.base.domain.repository;
 
+import com.cake.framework.common.response.Page;
 import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.pk.HostId;
+import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 
 import java.util.List;
 
@@ -19,4 +21,6 @@ public interface HostRepository extends Repository<Host, HostId> {
     int update(Host host);
 
     List<Host> getHostsByGroupIds(List<String> groupIds);
+
+    Page<Host> pageHost(HostPageQueryParam hostPageQueryParam);
 }
