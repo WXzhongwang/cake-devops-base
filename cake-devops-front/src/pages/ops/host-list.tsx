@@ -1,218 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { PageContainer } from "@ant-design/pro-components";
-import { Table, Space, Input, Select, Button, Form, Card } from "antd";
-import { connect, Dispatch, history } from "umi";
-import { HostInfo } from "@/models/host";
- import CreateHostDrawer from "./components/create-host-drawer";
-
-const { Option } = Select;
+import React, { useState, useEffect } from "react";
+import { Row, Col } from "antd";
+import { connect, Dispatch } from "umi";
+import HostGroupTree from "./components/host-group-tree";
+import HostTable from "./components/host-table";
+import { QueryHostPayload, HostModel, HostGroupModel } from "@/models/host";
 
 interface HostListProps {
   dispatch: Dispatch;
-  hostList: { list: HostInfo[]; total: number };
-  //   departments: Department[];
+  hosts: HostModel[];
+  hostGroups: HostGroupModel[];
 }
 
-const AppList: React.FC<HostListProps> = ({
-  dispatch,
-  hostList,
-  //  departments,
-}) => {
+const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, hostGroups }) => {
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
-  const [formattedDepartments, setFormattedDepartments] = useState<
-    { label: string; value: string }[]
-  >([]);
-  const [filters, setFilters] = useState({
-    hostName: "",
-    hostGroupId: "",
-    serverAddr: "",
-  });
-
-  const [createHostDrawerVisible, setCreateHostDrawerVisible] = useState(false);
-
-  const showCreateHostDrawer = () => {
-    setCreateHostDrawerVisible(true);
-  };
-
-  const hideCreateHostDrawer = () => {
-    setCreateHostDrawerVisible(false);
-  };
-
-  const [form] = Form.useForm<{
-    appName: string;
-    department: string;
-    language: string;
-  }>();
 
   useEffect(() => {
-    getHostList();
-    getHostGroups();
-  }, [pagination, filters]);
-
-  const getHostList = () => {
+    let allGroupIds: string[] = [];
+    // 当 selectedGroup 变化时，触发数据获取
+    if (selectedGroup) {
+      allGroupIds = getAllGroupIds(selectedGroup);
+    }
     dispatch({
-      type: "host/getHostList",
-      payload: { ...pagination, ...filters },
+      type: "host/saveHosts",
+      payload: {
+        hostGroupIds: allGroupIds,
+        pageNo: 1, // 页码
+        pageSize: 10, // 每页条数
+      },
     });
+  }, [pagination, selectedGroup, dispatch]);
+
+  const handleGroupSelect = (groupId: string) => {
+    setSelectedGroup(groupId);
   };
 
-  const getHostGroups = () => {
-    dispatch({
-      type: "hostGroup/getGroups",
-    });
-  };
+  const getAllGroupIds = (groupId: string): string[] => {
+    // 实现此函数以递归获取所有分组 ID
+    // 可以使用 host.hostGroups 获取主机分组的列表
+    // 并通过其 id 查找分组
+    // 为简单起见，假设你有一个函数 findNodeById
+    const findNodeById = (id: string) =>
+      hostGroups.find((group) => group.hostGroupId === id);
 
-  const columns = [
-    {
-      title: "主机名称",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "主机名",
-      dataIndex: "hostName",
-      key: "hostName",
-    },
-    {
-      title: "服务器地址",
-      dataIndex: "serverAddr",
-      key: "serverAddr",
-    },
-    {
-      title: "端口",
-      dataIndex: "port",
-      key: "port",
-    },
-    {
-      title: "用户名",
-      dataIndex: "username",
-      key: "username",
-    },
-    {
-      title: "私钥",
-      dataIndex: "pkey",
-      key: "pkey",
-    },
-    // 可以根据需要添加其他列
-    {
-      title: "操作",
-      key: "action",
-      render: (text: any, record: HostInfo) => (
-        <Space size="middle">
-          <a onClick={() => handleView(record)}>查看</a>
-        </Space>
-      ),
-    },
-
-  // console.log("departments", departments);
-
-  // useEffect(() => {
-  //   // 当部门列表更新时，格式化并设置Select的选项
-  //   const options = departments?.map((dep: Department) => ({
-  //     value: dep.value,
-  //     label: dep.label,
-  //   }));
-  //   setFormattedDepartments(options);
-  // }, [departments]);
-
-  const handlePaginationChange = (page: number, pageSize?: number) => {
-    setPagination({ pageNo: page, pageSize: pageSize || 10 });
-  };
-
-  const handleView = (record: HostInfo) => {
-    // 处理查看操作
-    console.log("查看主机详情", record);
-    // 示例：跳转到详情页，使用 history.push
-    // history.push(`/app-detail/${record.hostId}`);
+    const result: string[] = [];
+    const findChildren = (nodeId: string) => {
+      const node = findNodeById(nodeId);
+      if (node) {
+        result.push(nodeId);
+        if (node.children && node.children.length > 0) {
+          node.children.forEach((child) => {
+            findChildren(child.hostGroupId);
+          });
+        }
+      }
+    };
+    findChildren(groupId);
+    return result;
   };
 
   return (
-    <PageContainer>
-      <Card>
-        <Space size="middle" direction="vertical" style={{ width: "100%" }}>
-          <Form
-            form={form}
-            layout="inline"
-            onFinish={(values) => {
-              console.log(values);
-              setFilters(values);
-            }}
-          >
-            <Form.Item name="hostName" label="主机名称">
-              <Input placeholder="请输入主机名称" />
-            </Form.Item>
-            <Form.Item name="hostGroupId" label="机组">
-              <Select placeholder="请选择机组" allowClear>
-                {formattedDepartments?.map((option) => (
-                  <Option key={option.value} value={option.value}>
-                    {option.label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item name="serverAddr" label="主机地址">
-              <Input placeholder="请输入主机地址" />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                查询
-              </Button>
-              <Button
-                onClick={() => {
-                  form.resetFields();
-                  setFilters({
-                    hostName: "",
-                    hostGroupId: "",
-                    serverAddr: "",
-                  });
-                }}
-              >
-                重置
-              </Button>
-            </Form.Item>
-          </Form>
-
-          {/* 创建应用按钮 */}
-          <Button type="primary" onClick={showCreateHostDrawer}>
-            创建应用
-          </Button>
-
-          {/* 添加应用抽屉 */}
-          <CreateHostDrawer
-            open={createHostDrawerVisible}
-            onClose={hideCreateHostDrawer}
-            // groups={groups}
-          />
-
-          <Table
-            columns={columns}
-            dataSource={hostList.list}
-            rowKey={"hostId"}
-            pagination={{
-              total: hostList.total,
-              current: pagination.pageNo,
-              pageSize: pagination.pageSize,
-              onChange: handlePaginationChange,
-            }}
-          />
-        </Space>
-      </Card>
-    </PageContainer>
+    <Row gutter={16}>
+      <Col span={8}>
+        <HostGroupTree data={hostGroups} onGroupSelect={handleGroupSelect} />
+      </Col>
+      <Col span={16}>
+        <HostTable data={hosts} />
+      </Col>
+    </Row>
   );
 };
 
-export default connect(
-  ({
-    app,
-  }: {
-    app: {
-      appList: { list: AppInfo[]; total: number };
-      departments: Department[];
-    };
-  }) => {
-    return {
-      appList: app.appList,
-      departments: app.departments,
-    };
-  }
-)(AppList);
+export default connect(({ host }) => ({ host }))(HostPage);

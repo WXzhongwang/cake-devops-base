@@ -21,11 +21,6 @@ export default defineConfig({
           component: "ops/host-list",
           name: "主机管理",
         },
-        {
-          path: "/ops/host-group",
-          component: "ops/host-group-list",
-          name: "机组管理",
-        },
       ],
     },
   ],

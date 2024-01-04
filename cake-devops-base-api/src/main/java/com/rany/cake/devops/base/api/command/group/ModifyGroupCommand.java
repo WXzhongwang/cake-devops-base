@@ -19,5 +19,5 @@ public class ModifyGroupCommand extends BaseCommand {
     private String groupId;
     private String name;
     private Integer sort;
-    private String pid;
+    private String parentId;
 }

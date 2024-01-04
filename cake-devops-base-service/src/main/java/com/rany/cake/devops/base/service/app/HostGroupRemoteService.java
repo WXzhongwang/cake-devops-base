@@ -77,7 +77,7 @@ public class HostGroupRemoteService implements HostGroupService {
         HostGroup hostGroup = hostGroupDomainService.getHostGroup(new HostGroupId(modifyGroupCommand.getGroupId()));
         hostGroup.setName(modifyGroupCommand.getName());
         hostGroup.setSort(modifyGroupCommand.getSort());
-        hostGroup.setParentId(modifyGroupCommand.getPid());
+        hostGroup.setParentId(modifyGroupCommand.getParentId());
         hostGroup.modify();
         hostGroupDomainService.update(hostGroup);
         return PojoResult.succeed(Boolean.TRUE);
