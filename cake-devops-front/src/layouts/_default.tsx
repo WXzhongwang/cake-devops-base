@@ -18,7 +18,7 @@ export default {
         name: "应用中心",
       },
       {
-        path: "/cluster",
+        path: "/ops",
         name: "运维中心",
         icon: <CrownFilled />,
         routes: [
@@ -26,19 +26,19 @@ export default {
             path: "/ops/cluster",
             name: "集群管理",
             icon: <TabletFilled />,
-            component: "ops/cluster",
+            component: "ops/cluster-list",
           },
           {
             path: "/ops/host",
             name: "主机管理",
             icon: <ApiFilled />,
-            component: "ops/host",
+            component: "ops/host-list",
           },
           {
             path: "/ops/host-group",
             name: "主机组管理",
             icon: <ApiFilled />,
-            component: "ops/host-group",
+            component: "ops/host-group-list",
           },
         ],
       },

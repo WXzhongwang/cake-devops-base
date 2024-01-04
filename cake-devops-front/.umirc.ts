@@ -12,9 +12,19 @@ export default defineConfig({
       path: "/ops",
       routes: [
         {
-          path: "/ops",
-          component: "app/app-list",
-          name: "运维中心",
+          path: "/ops/cluster",
+          component: "ops/cluster-list",
+          name: "集群管理",
+        },
+        {
+          path: "/ops/host",
+          component: "ops/host-list",
+          name: "主机管理",
+        },
+        {
+          path: "/ops/host-group",
+          component: "ops/host-group-list",
+          name: "机组管理",
         },
       ],
     },
