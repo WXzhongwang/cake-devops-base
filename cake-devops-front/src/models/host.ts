@@ -13,7 +13,7 @@ export interface HostModel {
 }
 
 export interface QueryHostPayload {
-  hostGroupIds?: string[];
+  hostGroupsIds?: string[];
   pageNo: number;
   pageSize: number;
 }
@@ -59,6 +59,12 @@ export interface UpdateHostGroupPayload {
 export interface HostModelState {
   hosts: HostModel[];
   hostGroups: HostGroupModel[];
+  total: number;
+}
+
+interface QueryHostAction {
+  type: "host/fetchHosts";
+  payload: QueryHostPayload;
 }
 
 export interface HostModelType {
@@ -83,17 +89,18 @@ const HostModel: HostModelType = {
 
   state: {
     hosts: [],
+    total: 0,
     hostGroups: [],
   },
 
   effects: {
-    *fetchHosts(payload: QueryHostPayload, { call, put }) {
+    *fetchHosts({ payload }: QueryHostAction, { call, put }) {
       // 调用 API 获取主机数据
-      const response = yield call(api.fetchHosts);
+      const response = yield call(api.fetchHosts, payload);
       // 触发保存主机数据的 reducer
       yield put({
         type: "saveHosts",
-        payload: response.data,
+        payload: response.content,
       });
     },
 
@@ -117,7 +124,7 @@ const HostModel: HostModelType = {
       // 触发保存主机分组数据的 reducer
       yield put({
         type: "saveHostGroups",
-        payload: response.data,
+        payload: response.content,
       });
     },
 
@@ -138,7 +145,11 @@ const HostModel: HostModelType = {
 
   reducers: {
     saveHosts(state, action) {
-      return { ...state, hosts: action.payload };
+      return {
+        ...state,
+        hosts: action.payload.items,
+        total: action.payload.total,
+      };
     },
 
     saveHostGroups(state, action) {

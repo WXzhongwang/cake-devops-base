@@ -113,10 +113,18 @@
         select
         <include refid="Base_Column_List"/>
         from host
-        where host_id in (
-        select host_id from group_host
-        where group_id = #{groupId}
-        and is_deleted = '0'
-        )
+        <where>
+            is_deleted = '0'
+            <if test="hostGroupsIds !=null and hostGroupsIds.size() > 0">
+                and host_id in (
+                select g.host_id from group_host g
+                where g.is_deleted = '0' and
+                g.group_id in
+                <foreach collection="hostGroupsIds" index="index" item="groupId" open="(" separator="," close=")">
+                    #{groupId}
+                </foreach>
+                )
+            </if>
+        </where>
     </select>
 </mapper>

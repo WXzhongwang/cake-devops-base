@@ -23,7 +23,7 @@ public class HostController {
     private HostService hostService;
 
     @PostMapping("/pageHost")
-    public PageResult<HostDTO> pageHost(@RequestBody HostPageQuery hostPageQuery) {
+    public PageResult<HostDTO> pageHost(@RequestBody(required = false) HostPageQuery hostPageQuery) {
         return hostService.pageHost(hostPageQuery);
     }
 

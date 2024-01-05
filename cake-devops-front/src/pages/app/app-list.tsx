@@ -146,7 +146,7 @@ const AppList: React.FC<AppListProps> = ({
   };
 
   return (
-    <PageContainer>
+    <PageContainer title="应用中心">
       <Card>
         <Space size="middle" direction="vertical" style={{ width: "100%" }}>
           <Form

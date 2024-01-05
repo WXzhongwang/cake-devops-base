@@ -1,15 +1,13 @@
 package com.rany.cake.devops.base.web.controller;
 
 import com.cake.framework.common.response.ListResult;
-import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
-import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.command.group.CreateGroupCommand;
 import com.rany.cake.devops.base.api.command.group.ModifyGroupCommand;
-import com.rany.cake.devops.base.api.dto.*;
-import com.rany.cake.devops.base.api.query.*;
-import com.rany.cake.devops.base.api.service.AppService;
+import com.rany.cake.devops.base.api.dto.HostGroupDTO;
+import com.rany.cake.devops.base.api.dto.HostGroupTreeDTO;
+import com.rany.cake.devops.base.api.query.HostGroupBasicQuery;
+import com.rany.cake.devops.base.api.query.HostGroupTreeQuery;
 import com.rany.cake.devops.base.api.service.HostGroupService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +24,7 @@ public class HostGroupController {
     private HostGroupService hostGroupService;
 
     @PostMapping("/tree")
-    public ListResult<HostGroupTreeDTO> listGroupTree(@RequestBody HostGroupTreeQuery treeQuery) {
+    public ListResult<HostGroupTreeDTO> listGroupTree(@RequestBody(required = false) HostGroupTreeQuery treeQuery) {
         return hostGroupService.getHostGroupTree(treeQuery);
     }
 
@@ -34,8 +32,9 @@ public class HostGroupController {
     public PojoResult<String> createHostGroup(@RequestBody CreateGroupCommand command) {
         return hostGroupService.createHostGroup(command);
     }
+
     @GetMapping("/getGroup")
-    public PojoResult<HostGroupDTO> getGroup(@RequestParam("id")String hostGroupId) {
+    public PojoResult<HostGroupDTO> getGroup(@RequestParam("id") String hostGroupId) {
         HostGroupBasicQuery hostGroupBasicQuery = new HostGroupBasicQuery();
         hostGroupBasicQuery.setHostGroupId(hostGroupId);
         return hostGroupService.getHostGroup(hostGroupBasicQuery);

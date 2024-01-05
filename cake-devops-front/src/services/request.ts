@@ -18,7 +18,7 @@ interface CustomResponse {
 const errorHandler = (error: CustomError<any>) => {
   // Add your custom error handling logic here
   const { response, data } = error;
-  debugger;
+  // debugger;
 
   if (response.status !== 200 || !data.success) {
     // The request was made and the server responded with a status code

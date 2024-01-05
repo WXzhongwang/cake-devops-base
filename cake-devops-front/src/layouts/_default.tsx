@@ -34,12 +34,6 @@ export default {
             icon: <ApiFilled />,
             component: "ops/host-list",
           },
-          {
-            path: "/ops/host-group",
-            name: "主机组管理",
-            icon: <ApiFilled />,
-            component: "ops/host-group-list",
-          },
         ],
       },
       // {

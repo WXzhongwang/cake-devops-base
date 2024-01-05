@@ -8,45 +8,46 @@ import {
   UpdateHostGroupPayload,
 } from "@/models/host";
 
-export async function fetchHosts(payload: QueryHostPayload) {
-  return request("/api/devops/hosts/pageHost", {
+export async function fetchHosts(data: QueryHostPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host/pageHost", {
     method: "POST",
-    data: payload,
+    data,
   });
 }
 
-export async function createHost(payload: CreateHostPayload) {
-  return request("/api/devops/hosts/createHost", {
+export async function createHost(data: CreateHostPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host/createHost", {
     method: "POST",
-    data: payload,
+    data,
   });
 }
 
-export async function updateHost(payload: UpdateHostPayload) {
-  const { hostId, ...rest } = payload;
-  return request("/api/devops/hosts/updateHost", {
+export async function updateHost(data: UpdateHostPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host/updateHost", {
     method: "POST",
-    data: rest,
+    data,
   });
 }
 
 export async function fetchHostGroups() {
   return request("/api/devops/host-group/tree", {
     method: "POST",
-    data: {},
   });
 }
 
-export async function createHostGroup(payload: CreateHostGroupPayload) {
+export async function createHostGroup(data: CreateHostGroupPayload) {
   return request("/api/devops/host-group/createGroup", {
     method: "POST",
-    data: payload,
+    data,
   });
 }
 
-export async function updateHostGroup(payload: UpdateHostGroupPayload) {
+export async function updateHostGroup(data: UpdateHostGroupPayload) {
   return request("/api/devops/host-group/createGroup", {
     method: "POST",
-    data: payload,
+    data,
   });
 }
