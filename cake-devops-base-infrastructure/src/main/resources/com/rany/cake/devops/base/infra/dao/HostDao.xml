@@ -115,6 +115,12 @@
         from host
         <where>
             is_deleted = '0'
+            <if test="name != null and name != ''">
+                and name like concat("%", #{name}, "%")
+            </if>
+            <if test="hostName != null and hostName != ''">
+                and host_name like concat("%", #{hostName}, "%")
+            </if>
             <if test="hostGroupsIds !=null and hostGroupsIds.size() > 0">
                 and host_id in (
                 select g.host_id from group_host g

@@ -9,4 +9,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class HostPageQueryParam extends BasePageParam {
     private List<String> hostGroupsIds;
+
+    private String name;
+
+    private String hostName;
 }

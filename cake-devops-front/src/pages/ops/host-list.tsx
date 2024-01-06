@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Button, Card, Form, Input, Space } from "antd";
 import { PageContainer } from "@ant-design/pro-components";
 import { connect, Dispatch } from "umi";
 import HostGroupTree from "./components/host-group-tree";
 import HostTable from "./components/host-table";
-import { QueryHostPayload, HostModel, HostGroupModel } from "@/models/host";
+import CreateHostDrawer from "./components/create-host-drawer";
+import { HostModel, HostGroupModel } from "@/models/host";
 
 interface HostListProps {
   dispatch: Dispatch;
@@ -19,8 +20,18 @@ const HostPage: React.FC<HostListProps> = ({
   hostGroups,
   total,
 }) => {
+  const [createHostVisible, setCreateHostVisible] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
+  const [filters, setFilters] = useState({
+    name: "",
+    hostName: "",
+  });
+
+  const [form] = Form.useForm<{
+    name: string;
+    hostName: string;
+  }>();
 
   useEffect(() => {
     fetchHostGroups();
@@ -36,6 +47,8 @@ const HostPage: React.FC<HostListProps> = ({
       payload: {
         ...pagination,
         hostGroupsIds: allGroupIds,
+        name: filters.name,
+        hostName: filters.hostName,
       },
     });
   }, [pagination, selectedGroup, dispatch]);
@@ -90,6 +103,20 @@ const HostPage: React.FC<HostListProps> = ({
     setPagination({ pageNo: page, pageSize: pageSize || 10 });
   };
 
+  // 定义搜索方法
+  const onSearch = (searchFilters: { name: string; hostName: string }) => {
+    setFilters(searchFilters);
+    setPagination({ pageNo: 1, pageSize: 10 }); // 重置分页
+  };
+
+  // 处理新增主机弹窗的显示和隐藏
+  const handleCreateHostDrawer = () => {
+    setCreateHostVisible(!createHostVisible);
+  };
+
+  // 处理新增主机的提交
+  const handleAddHostSubmit = async (values: any) => {};
+
   console.log("hostGroups", hostGroups);
   return (
     <PageContainer title="主机管理">
@@ -98,12 +125,61 @@ const HostPage: React.FC<HostListProps> = ({
           <HostGroupTree data={hostGroups} onGroupSelect={handleGroupSelect} />
         </Col>
         <Col span={16}>
-          <HostTable
-            data={hosts}
-            total={total}
-            pagination={pagination}
-            onChangeHandle={handlePaginationChange}
-          />
+          <Card>
+            <Space size="middle" direction="vertical" style={{ width: "100%" }}>
+              <Form
+                form={form}
+                layout="inline"
+                onFinish={(values) => {
+                  console.log(values);
+                  setFilters(values);
+                  // 触发外层组件的搜索方法
+                  onSearch(values);
+                }}
+              >
+                <Form.Item name="name" label="实例名称">
+                  <Input placeholder="请输入实例名称" />
+                </Form.Item>
+                <Form.Item name="hostName" label="主机名称">
+                  <Input placeholder="请输入主机名称" />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    查询
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      form.resetFields();
+                      setFilters({
+                        name: "",
+                        hostName: "",
+                      });
+                    }}
+                  >
+                    重置
+                  </Button>
+                </Form.Item>
+              </Form>
+
+              <Button type="primary" onClick={handleCreateHostDrawer}>
+                新增主机
+              </Button>
+              <CreateHostDrawer
+                visible={createHostVisible}
+                onClose={handleCreateHostDrawer}
+                onSubmit={handleAddHostSubmit}
+                hostGroups={hostGroups}
+              />
+
+              <HostTable
+                data={hosts}
+                total={total}
+                pagination={pagination}
+                onChangeHandle={handlePaginationChange}
+                onSearch={onSearch}
+              />
+            </Space>
+          </Card>
         </Col>
       </Row>
     </PageContainer>

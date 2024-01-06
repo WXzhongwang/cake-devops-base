@@ -14,6 +14,8 @@ export interface HostModel {
 
 export interface QueryHostPayload {
   hostGroupsIds?: string[];
+  name: string;
+  hostName: string;
   pageNo: number;
   pageSize: number;
 }

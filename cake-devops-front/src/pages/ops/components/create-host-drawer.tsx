@@ -1,59 +1,115 @@
-// components/create-app-drawer.tsx
-import { Form, Input, Button, Drawer } from "antd";
-import { HostModel } from "@/models/host";
+// src/components/AddHostDrawer.tsx
+import React from "react";
+import { Drawer, Form, Input, Select, Button, TreeSelect } from "antd";
+import { HostGroupModel } from "@/models/host";
 
-interface CreateHostDrawerProps {
-  open: boolean;
+interface AddHostDrawerProps {
+  visible: boolean;
   onClose: () => void;
-  departments: { label: string; value: string }[];
-  onCreate: (values: HostModel) => void;
+  onSubmit: (values: any) => void;
+  hostGroups: HostGroupModel[];
 }
 
-const CreateHostDrawer: React.FC<CreateHostDrawerProps> = ({
-  open,
+const { TreeNode } = TreeSelect;
+
+const renderTreeNodes = (data: HostGroupModel[]) => {
+  return data.map((item) => (
+    <TreeNode value={item.hostGroupId} title={item.name} key={item.hostGroupId}>
+      {item.children && item.children.length > 0
+        ? renderTreeNodes(item.children)
+        : null}
+    </TreeNode>
+  ));
+};
+
+const CreateHostDrawer: React.FC<AddHostDrawerProps> = ({
+  visible,
   onClose,
-  departments,
-  onCreate,
+  onSubmit,
+  hostGroups,
 }) => {
   const [form] = Form.useForm();
 
-  const handleFinish = (values: HostModel) => {
-    onCreate(values);
-    form.resetFields();
-  };
-
   return (
     <Drawer
+      open={visible}
       title="新增主机"
-      placement="right"
       onClose={onClose}
-      visible={open}
-      width={400}
+      width={600}
+      destroyOnClose
     >
-      <Form
-        form={form}
-        onFinish={handleFinish}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
-      >
-        {/* 在此添加与主机信息相关的表单项 */}
+      <Form form={form} layout="vertical">
         <Form.Item
           name="name"
-          label="名称"
-          rules={[{ required: true, message: "请输入主机名称" }]}
+          label="实例名称"
+          rules={[{ required: true, message: "请输入实例名称" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="hostName"
-          label="主机名"
-          rules={[{ required: true, message: "请输入主机名" }]}
+          label="主机名称"
+          rules={[{ required: true, message: "请输入主机名称" }]}
         >
           <Input />
         </Form.Item>
-        {/* ... 其他主机信息的表单项 */}
-        <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-          <Button type="primary" htmlType="submit">
+        <Form.Item
+          name="username"
+          label="用户名"
+          rules={[{ required: true, message: "请输入用户名" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="pkey"
+          label="pkey"
+          rules={[{ required: true, message: "请输入用户名" }]}
+        >
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item
+          name="hostGroupIds"
+          label="机器组"
+          rules={[{ required: true, message: "请选择机器组" }]}
+        >
+          {/* <TreeSelect
+            showSearch
+            style={{ width: "100%" }}
+            dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+            placeholder="请选择机器组"
+            allowClear
+            treeDefaultExpandAll
+            treeCheckable
+            showCheckedStrategy={TreeSelect.SHOW_CHILD}
+            treeNodeFilterProp="title"
+            multiple
+          >
+            {renderTreeNodes(hostGroups)}
+          </TreeSelect> */}
+          <TreeSelect
+            showSearch
+            style={{ width: "100%" }}
+            dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+            placeholder="请选择机器组"
+            allowClear
+            multiple
+            treeDefaultExpandAll
+            showCheckedStrategy={TreeSelect.SHOW_ALL}
+            treeCheckStrictly
+          >
+            {renderTreeNodes(hostGroups)}
+          </TreeSelect>
+        </Form.Item>
+        <Form.Item>
+          <Button
+            type="primary"
+            onClick={() => {
+              form.validateFields().then((values) => {
+                onSubmit(values);
+                form.resetFields();
+              });
+            }}
+          >
             提交
           </Button>
         </Form.Item>

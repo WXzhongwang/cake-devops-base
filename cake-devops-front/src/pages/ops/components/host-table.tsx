@@ -11,6 +11,7 @@ interface HostTableProps {
     pageSize: number;
   };
   onChangeHandle: (pageNo: number, pageSize: number) => void;
+  onSearch: (filters: { name: string; hostName: string }) => void;
 }
 
 const HostTable: React.FC<HostTableProps> = ({
@@ -19,19 +20,10 @@ const HostTable: React.FC<HostTableProps> = ({
   pagination,
   onChangeHandle,
 }) => {
-  const [filters, setFilters] = useState({
-    name: "",
-    hostName: "",
-  });
-  const [form] = Form.useForm<{
-    name: string;
-    hostName: string;
-  }>();
-
   const columns = [
     // 定义你的表格列
     {
-      title: "名称",
+      title: "实例名称",
       dataIndex: "name",
       key: "name",
     },
@@ -63,53 +55,18 @@ const HostTable: React.FC<HostTableProps> = ({
     },
   ];
 
-  // 使用 Ant Design 的 Table 组件展示详细信息
   return (
-    <Space size="middle" direction="vertical" style={{ width: "100%" }}>
-      <Form
-        form={form}
-        layout="inline"
-        onFinish={(values) => {
-          console.log(values);
-          setFilters(values);
-        }}
-      >
-        <Form.Item name="name" label="名称">
-          <Input placeholder="请输入名称" />
-        </Form.Item>
-        <Form.Item name="hostName" label="主机名称">
-          <Input placeholder="请输入主机名称" />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            查询
-          </Button>
-          <Button
-            onClick={() => {
-              form.resetFields();
-              setFilters({
-                name: "",
-                hostName: "",
-              });
-            }}
-          >
-            重置
-          </Button>
-        </Form.Item>
-      </Form>
-
-      <Table
-        columns={columns}
-        dataSource={data}
-        rowKey={"hostId"}
-        pagination={{
-          total: total,
-          current: pagination.pageNo,
-          pageSize: pagination.pageSize,
-          onChange: onChangeHandle,
-        }}
-      />
-    </Space>
+    <Table
+      columns={columns}
+      dataSource={data}
+      rowKey={"hostId"}
+      pagination={{
+        total: total,
+        current: pagination.pageNo,
+        pageSize: pagination.pageSize,
+        onChange: onChangeHandle,
+      }}
+    />
   );
 };
 
