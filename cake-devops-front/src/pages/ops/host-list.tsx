@@ -90,6 +90,7 @@ const HostPage: React.FC<HostListProps> = ({
     setPagination({ pageNo: page, pageSize: pageSize || 10 });
   };
 
+  console.log("hostGroups", hostGroups);
   return (
     <PageContainer title="主机管理">
       <Row gutter={16}>

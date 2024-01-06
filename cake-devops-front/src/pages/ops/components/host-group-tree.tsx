@@ -1,8 +1,8 @@
-// src/components/HostGroupTree.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Space, Tree, Input } from "antd";
 import { HostGroupModel } from "@/models/host";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
+import { DataNode } from "antd/lib/tree";
 
 const { Search } = Input;
 
@@ -11,46 +11,114 @@ interface HostGroupTreeProps {
   onGroupSelect: (groupId: string) => void;
 }
 
-const convertDataToTree = (data: HostGroupModel[], keyword: string): any => {
-  // console.log("treeData", data);
-
+const convertDataToTree = (data: HostGroupModel[]): any => {
   return data?.map((item) => {
-    const treeNode: any = {
+    const treeNode: DataNode = {
       key: item.hostGroupId,
       title: item.name,
-      matched: true,
     };
 
-    const title = (
-      <span
-        style={{ backgroundColor: treeNode.matched ? "yellow" : "transparent" }}
-      >
-        {treeNode.title}
-      </span>
-    );
-
-    console.log("search key word", keyword);
-    if (keyword.length > 0 && treeNode.title.includes(keyword)) {
-      treeNode.matched = true;
-    } else {
-      treeNode.matched = false;
-    }
-
     if (item.children && item.children.length > 0) {
-      treeNode.children = convertDataToTree(item.children, keyword);
+      treeNode.children = convertDataToTree(item.children);
     }
-    treeNode.title = title;
-
     return treeNode;
   });
+};
+
+const dataList: { key: React.Key; title: string }[] = [];
+
+const generateList = (data: DataNode[]) => {
+  for (let i = 0; i < data.length; i++) {
+    const node = data[i];
+    const { title } = node;
+    dataList.push({ key: node.key, title: title as string });
+    if (node.children) {
+      generateList(node.children);
+    }
+  }
+};
+
+const getParentKey = (key: React.Key, tree: DataNode[]): React.Key => {
+  let parentKey: React.Key;
+  for (let i = 0; i < tree.length; i++) {
+    const node = tree[i];
+    if (node.children) {
+      if (node.children.some((item) => item.key === key)) {
+        parentKey = node.key;
+      } else if (getParentKey(key, node.children)) {
+        parentKey = getParentKey(key, node.children);
+      }
+    }
+  }
+  return parentKey!;
 };
 
 const HostGroupTree: React.FC<HostGroupTreeProps> = ({
   data,
   onGroupSelect,
 }) => {
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
-  const [treeData, setTreeData] = useState();
+  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [autoExpandParent, setAutoExpandParent] = useState(true);
+
+  const defaultTreeData = useMemo(() => convertDataToTree(data), [data]);
+
+  useEffect(() => {
+    generateList(defaultTreeData);
+  }, [defaultTreeData]);
+
+  const onExpand = (newExpandedKeys: React.Key[]) => {
+    setExpandedKeys(newExpandedKeys);
+    setAutoExpandParent(false);
+  };
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const newExpandedKeys = dataList
+      .map((item) => {
+        if (item.title.indexOf(value) > -1) {
+          return getParentKey(item.key, defaultTreeData);
+        }
+        return null;
+      })
+      .filter(
+        (item, i, self): item is React.Key =>
+          !!(item && self.indexOf(item) === i)
+      );
+    setExpandedKeys(newExpandedKeys);
+    setSearchValue(value);
+    setAutoExpandParent(true);
+  };
+
+  const treeData = useMemo(() => {
+    const loop = (data: DataNode[]): DataNode[] =>
+      data.map((item) => {
+        const strTitle = item.title as string;
+        const index = strTitle.indexOf(searchValue);
+        const beforeStr = strTitle.substring(0, index);
+        const afterStr = strTitle.slice(index + searchValue.length);
+        const title =
+          index > -1 ? (
+            <span>
+              {beforeStr}
+              <span className="site-tree-search-value">{searchValue}</span>
+              {afterStr}
+            </span>
+          ) : (
+            <span>{strTitle}</span>
+          );
+        if (item.children) {
+          return { title, key: item.key, children: loop(item.children) };
+        }
+
+        return {
+          title,
+          key: item.key,
+        };
+      });
+
+    return loop(defaultTreeData);
+  }, [searchValue, defaultTreeData]);
 
   const handleTreeSelect = (selectedKeys: React.Key[], info: any) => {
     if (selectedKeys.length > 0) {
@@ -60,28 +128,18 @@ const HostGroupTree: React.FC<HostGroupTreeProps> = ({
     }
   };
 
-  useEffect(() => {
-    const treeData = convertDataToTree(data, searchKeyword);
-    console.log("abc", treeData);
-    setTreeData(treeData);
-  }, [searchKeyword]);
-
-  // const refreshTree = () => {
-
-  // };
-
   return (
     <Space size="middle" direction="vertical" style={{ width: "100%" }}>
       <Search
-        placeholder="搜索分组"
-        allowClear
-        enterButton={<SearchOutlined />}
-        onChange={(e) => setSearchKeyword(e.target.value)}
+        style={{ marginBottom: 8 }}
+        placeholder="搜索指定机组"
+        onChange={onChange}
       />
       <Tree
         showLine
-        autoExpandParent={true}
-        switcherIcon={<DownOutlined />}
+        onExpand={onExpand}
+        expandedKeys={expandedKeys}
+        autoExpandParent={autoExpandParent}
         treeData={treeData}
         onSelect={handleTreeSelect}
       />
