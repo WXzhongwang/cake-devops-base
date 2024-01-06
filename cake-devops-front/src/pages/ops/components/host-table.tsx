@@ -33,6 +33,11 @@ const HostTable: React.FC<HostTableProps> = ({
       key: "hostName",
     },
     {
+      title: "服务地址",
+      dataIndex: "serverAddr",
+      key: "serverAddr",
+    },
+    {
       title: "端口",
       dataIndex: "port",
       key: "port",

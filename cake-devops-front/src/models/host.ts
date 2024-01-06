@@ -22,7 +22,8 @@ export interface QueryHostPayload {
 
 export interface CreateHostPayload {
   name: string;
-  hostname: string;
+  hostName: string;
+  serverAddr: string;
   port: number;
   username: string;
   pkey: string;
@@ -31,7 +32,8 @@ export interface CreateHostPayload {
 export interface UpdateHostPayload {
   hostId: string;
   name?: string;
-  hostname?: string;
+  hostName?: string;
+  serverAddr?: string;
   port?: number;
   username?: string;
   pkey?: string;

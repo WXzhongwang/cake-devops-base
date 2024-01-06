@@ -33,6 +33,7 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
     private String pkey;
     private String desc;
     private String verified;
+    private String status;
     /**
      * 主机小组
      */

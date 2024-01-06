@@ -115,7 +115,18 @@ const HostPage: React.FC<HostListProps> = ({
   };
 
   // 处理新增主机的提交
-  const handleAddHostSubmit = async (values: any) => {};
+  const handleAddHostSubmit = async (values: any) => {
+    // 在这里可以执行创建应用的逻辑
+    console.log("创建主机:", values);
+    // 在这里可以调用相应的接口或 dispatch 创建应用的 action
+    dispatch({
+      type: "host/createHost",
+      payload: values,
+    });
+
+    // 关闭抽屉
+    handleCreateHostDrawer();
+  };
 
   console.log("hostGroups", hostGroups);
   return (

@@ -8,6 +8,7 @@ import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
 import com.rany.uic.common.dto.account.AccountDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -22,6 +23,12 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AppMemberAdapter extends BaseConvertor<AppMember, AppMemberDTO> {
 
+
+    @Mapping(source = "memberId.memberId", target = "memberId")
+    AppMemberDTO sourceToTarget(AppMember appMember);
+
+    @Mapping(source = "memberId", target = "memberId.memberId")
+    AppMember targetToSource(AppMemberDTO appMemberDTO);
 
     AppAccountDTO toDTO(AccountDTO accountDTO);
 

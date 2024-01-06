@@ -18,6 +18,7 @@
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
         <result column="pkey" jdbcType="VARCHAR" property="pkey"/>
+        <result column="server_addr" jdbcType="VARCHAR" property="serverAddr"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -25,7 +26,7 @@
         id
         ,host_id
         , name, host_name, port, username, status, is_deleted, gmt_create, gmt_modified,
-        `desc`, verified, creator, modifier, pkey
+        `desc`, verified, creator, modifier, pkey, server_addr
     </sql>
 
 
@@ -46,12 +47,12 @@
                           port, username, status,
                           is_deleted, gmt_create, gmt_modified,
                           desc, verified, creator,
-                          modifier, pkey)
+                          modifier, pkey, server_addr)
         values (#{hostId.hostId}, #{name,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR},
                 #{port,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{desc,jdbcType=VARCHAR}, #{verified,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR},
-                #{modifier,jdbcType=VARCHAR}, #{pkey})
+                #{modifier,jdbcType=VARCHAR}, #{pkey}, #{serverAddr})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Host">
@@ -95,6 +96,9 @@
             </if>
             <if test="pkey != null">
                 pkey = #{pkey},
+            </if>
+            <if test="serverAddr != null">
+                server_addr = #{serverAddr},
             </if>
         </set>
         where host_id = #{hostId.hostId}
