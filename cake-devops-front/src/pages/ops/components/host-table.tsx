@@ -28,7 +28,7 @@ const HostTable: React.FC<HostTableProps> = ({
       key: "name",
     },
     {
-      title: "主机名",
+      title: "主机名称",
       dataIndex: "hostName",
       key: "hostName",
     },
