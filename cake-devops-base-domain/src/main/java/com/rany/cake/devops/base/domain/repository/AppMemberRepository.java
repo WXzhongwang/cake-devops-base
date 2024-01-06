@@ -1,8 +1,12 @@
 package com.rany.cake.devops.base.domain.repository;
 
+import com.cake.framework.common.response.Page;
 import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.pk.MemberId;
+import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam;
+
+import java.util.List;
 
 /**
  * 成员
@@ -23,6 +27,16 @@ public interface AppMemberRepository extends Repository<AppMember, MemberId> {
      */
     AppMember findByAccountId(String accountId);
 
+    /**
+     * 查询应用成员
+     *
+     * @param param 应用ID
+     * @return 成员信息
+     */
+    List<AppMember> findByAppId(AppMemberPageQueryParam param);
+
+
+    Page<AppMember> pageByAppId(AppMemberPageQueryParam appMemberPageQueryParam);
 
     /**
      * 保存更新

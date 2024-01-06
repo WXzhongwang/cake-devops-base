@@ -1,9 +1,13 @@
 package com.rany.cake.devops.base.domain.service;
 
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.repository.AppMemberRepository;
+import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * 成员
@@ -21,5 +25,13 @@ public class AppMemberDomainService {
 
     public AppMember findByAccountId(String accountId) {
         return appMemberRepository.findByAccountId(accountId);
+    }
+
+    public List<AppMember> findByAppId(AppMemberPageQueryParam param) {
+        return appMemberRepository.findByAppId(param);
+    }
+
+    public Page<AppMember> pageByAppId(AppMemberPageQueryParam param) {
+        return appMemberRepository.pageByAppId(param);
     }
 }

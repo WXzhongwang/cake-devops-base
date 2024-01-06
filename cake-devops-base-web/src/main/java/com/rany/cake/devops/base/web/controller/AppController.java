@@ -7,10 +7,13 @@ import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
+import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.dto.DepartmentDTO;
 import com.rany.cake.devops.base.api.query.AppBasicQuery;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
+import com.rany.cake.devops.base.api.query.AppMemberPageQuery;
 import com.rany.cake.devops.base.api.query.AppPageQuery;
+import com.rany.cake.devops.base.api.service.AppMemberService;
 import com.rany.cake.devops.base.api.service.AppService;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +28,8 @@ public class AppController {
 
     @Resource
     private AppService appService;
+    @Resource
+    private AppMemberService appMemberService;
 
     @PostMapping("/pageApp")
     public PageResult<AppDTO> pageApp(@RequestBody AppPageQuery appPageQuery) {
@@ -32,7 +37,7 @@ public class AppController {
     }
 
     @GetMapping("/getApp")
-    public PojoResult<AppDTO> getApp(@RequestParam("id")String appId) {
+    public PojoResult<AppDTO> getApp(@RequestParam("id") String appId) {
         AppBasicQuery appBasicQuery = new AppBasicQuery();
         appBasicQuery.setAppId(appId);
         return appService.getApp(appBasicQuery);
@@ -56,5 +61,10 @@ public class AppController {
     @GetMapping("/getDepartments")
     public ListResult<DepartmentDTO> getDepartments() {
         return appService.listDepartments();
+    }
+
+    @PostMapping("/pageAppMembers")
+    public PageResult<AppMemberDTO> pageAppMembers(@RequestBody AppMemberPageQuery appMemberPageQuery) {
+        return appMemberService.pageAppMembers(appMemberPageQuery);
     }
 }

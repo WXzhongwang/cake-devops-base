@@ -1,8 +1,11 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
+import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam;
 import com.rany.cake.devops.base.infra.po.AppMemberPO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 成员
@@ -24,7 +27,16 @@ public interface AppMemberDao {
     AppMemberPO selectByAccountId(@Param("accountId") String accountId);
 
     /**
-     * memberIdc查询
+     * 查询应用成员
+     *
+     * @param param 查询应用成员参数
+     * @return
+     */
+    List<AppMemberPO> selectByAppId(AppMemberPageQueryParam param);
+
+    /**
+     * memberId查询
+     *
      * @param memberId
      * @return
      */

@@ -2,6 +2,8 @@ package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.PageResult;
 import com.rany.cake.devops.base.api.dto.AppAccountDTO;
+import com.rany.cake.devops.base.api.dto.AppMemberDTO;
+import com.rany.cake.devops.base.api.query.AppMemberPageQuery;
 import com.rany.cake.devops.base.api.query.MemberPageQuery;
 
 /**
@@ -16,4 +18,7 @@ public interface AppMemberService {
 
 
     PageResult<AppAccountDTO> pageQueryMember(MemberPageQuery memberPageQuery);
+
+
+    PageResult<AppMemberDTO> pageAppMembers(AppMemberPageQuery appMemberPageQuery);
 }

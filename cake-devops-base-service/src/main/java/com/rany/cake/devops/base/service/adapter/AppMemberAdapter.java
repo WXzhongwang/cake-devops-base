@@ -1,17 +1,13 @@
 package com.rany.cake.devops.base.service.adapter;
 
-import com.rany.cake.devops.base.api.dto.*;
-import com.rany.cake.devops.base.api.query.AppPageQuery;
-import com.rany.cake.devops.base.domain.aggregate.App;
+import com.rany.cake.devops.base.api.dto.AppAccountDTO;
+import com.rany.cake.devops.base.api.dto.AppMemberDTO;
+import com.rany.cake.devops.base.api.query.AppMemberPageQuery;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
-import com.rany.cake.devops.base.domain.entity.AppEnv;
-import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
-import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
+import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
 import com.rany.uic.common.dto.account.AccountDTO;
-import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -28,5 +24,8 @@ public interface AppMemberAdapter extends BaseConvertor<AppMember, AppMemberDTO>
 
 
     AppAccountDTO toDTO(AccountDTO accountDTO);
+
     List<AppAccountDTO> toDTO(List<AccountDTO> accountDTO);
+
+    AppMemberPageQueryParam toParam(AppMemberPageQuery appMemberPageQuery);
 }

@@ -18,6 +18,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class AppMemberDTO extends DTO {
 
+    private String memberId;
     private String accountId;
     private List<String> roles;
 }

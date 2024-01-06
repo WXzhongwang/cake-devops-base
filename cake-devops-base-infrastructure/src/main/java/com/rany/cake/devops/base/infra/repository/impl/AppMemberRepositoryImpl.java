@@ -1,9 +1,14 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
+import com.cake.framework.common.response.Page;
+import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.repository.AppMemberRepository;
+import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam;
+import com.rany.cake.devops.base.infra.aop.PageUtils;
+import com.rany.cake.devops.base.infra.aop.PagingQuery;
 import com.rany.cake.devops.base.infra.convertor.AppMemberDataConvertor;
 import com.rany.cake.devops.base.infra.dao.AppMemberDao;
 import com.rany.cake.devops.base.infra.mapper.AppMemberPOMapper;
@@ -12,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 应用成员
@@ -54,6 +60,22 @@ public class AppMemberRepositoryImpl implements AppMemberRepository {
             return null;
         }
         return appMemberDataConvertor.targetToSource(appMemberPO);
+    }
+
+    @Override
+    public List<AppMember> findByAppId(AppMemberPageQueryParam param) {
+        List<AppMemberPO> appMemberPOList = appMemberDao.selectByAppId(param);
+        return appMemberDataConvertor.targetToSource(appMemberPOList);
+    }
+
+    @Override
+    @PagingQuery
+    public Page<AppMember> pageByAppId(AppMemberPageQueryParam appMemberPageQueryParam) {
+        List<AppMemberPO> appMemberPOList = appMemberDao.selectByAppId(appMemberPageQueryParam);
+        PageInfo<AppMemberPO> pageInfo = new PageInfo<>(appMemberPOList);
+        appMemberDataConvertor.targetToSource(appMemberPOList);
+        List<AppMember> members = appMemberDataConvertor.targetToSource(appMemberPOList);
+        return PageUtils.build(pageInfo, members);
     }
 
     @Override

@@ -3,7 +3,7 @@
 <mapper namespace="com.rany.cake.devops.base.infra.dao.AppMemberDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.AppMemberPO">
         <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="member_id"  property="memberId"/>
+        <result column="member_id" property="memberId"/>
         <result column="account_id" jdbcType="VARCHAR" property="accountId"/>
         <result column="app_id" jdbcType="BIGINT" property="appId"/>
         <result column="roles" jdbcType="VARCHAR" property="roles"/>
@@ -13,12 +13,12 @@
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, member_id
+        id
+        , member_id
         , account_id, app_id, roles, status, is_deleted, gmt_create, gmt_modified
     </sql>
     <insert id="saveUpdate" parameterType="com.rany.cake.devops.base.domain.aggregate.AppMember">
-        insert into app_member (
-                                member_id,
+        insert into app_member (member_id,
                                 account_id,
                                 app_id,
                                 roles,
@@ -26,8 +26,7 @@
                                 is_deleted,
                                 gmt_create,
                                 gmt_modified)
-        values (
-                #{id.id},
+        values (#{id.id},
                 #{accountId},
                 #{appId.id},
                 #{roles,jdbcType=VARCHAR},
@@ -47,6 +46,25 @@
         <include refid="Base_Column_List"/>
         from app_member
         where account_id = #{accountId}
+        and is_deleted = '0'
+    </select>
+
+
+    <select id="selectByAppId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from app_member
+        <where>
+            app_id = #{appId}
+            and is_deleted = '0'
+            <if test="accountIds != null and accountIds.size() > 0">
+                and account_id in
+                <foreach collection="accountIds" index="index" item="accountId" open="(" separator="," close=")">
+                    #{accountId}
+                </foreach>
+            </if>
+        </where>
+
     </select>
 
     <select id="selectByMemberId" resultMap="BaseResultMap">
@@ -54,5 +72,6 @@
         <include refid="Base_Column_List"/>
         from app_member
         where member_id = #{memberId}
+        and is_deleted = '0'
     </select>
 </mapper>
