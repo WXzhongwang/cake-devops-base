@@ -46,6 +46,7 @@ export interface AppInfo {
   gmtCreate: number;
   gmtModified: number;
   appEnvList: AppEnv[];
+  status: string;
 }
 
 export interface Department {

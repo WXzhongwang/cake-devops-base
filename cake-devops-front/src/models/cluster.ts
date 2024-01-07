@@ -16,6 +16,7 @@ export interface ClusterInfo {
   gmtModified: number;
   creator: string;
   modifier: string;
+  tags: string;
 }
 
 export interface ClusterState {
@@ -68,7 +69,6 @@ const ClusterModel: ClusterModelType = {
   effects: {
     *listAll(_: QueryClusterAction, { call, put }) {
       const response = yield call(clusterService.listAll);
-      console.log("aaa", response.content);
       yield put({
         type: "setClusterList",
         payload: response.content,
@@ -80,7 +80,6 @@ const ClusterModel: ClusterModelType = {
     },
     *connectCluster({ payload }: ConnectClusterAction, { call, put }) {
       const response = yield call(clusterService.connect);
-      yield put({ type: "setClusterList" });
     },
   },
   reducers: {

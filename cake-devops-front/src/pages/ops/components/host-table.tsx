@@ -1,6 +1,6 @@
 // src/components/HostTable.tsx
 import React, { useEffect, useState } from "react";
-import { Table, Space, Form, Button, Input } from "antd";
+import { Table, Space, Form, Button, Input, Tag } from "antd";
 import { HostModel } from "@/models/host"; // 请根据实际情况导入你的数据模型
 
 interface HostTableProps {
@@ -47,6 +47,19 @@ const HostTable: React.FC<HostTableProps> = ({
       dataIndex: "username",
       key: "username",
     },
+    {
+      title: "状态",
+      dataIndex: "status",
+      key: "status",
+      render: (text: any, record: HostModel) => {
+        // 根据 status 的值返回相应的 Tag
+        const tagColor = record.status === "0" ? "success" : "error";
+        const statusText = record.status === "0" ? "正常" : "停用";
+
+        return <Tag color={tagColor}>{statusText}</Tag>;
+      },
+    },
+
     // 其他列根据需要添加
     {
       title: "操作",

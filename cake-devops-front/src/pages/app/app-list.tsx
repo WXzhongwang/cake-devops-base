@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PageContainer } from "@ant-design/pro-components";
-import { Table, Space, Input, Select, Button, Form, Card } from "antd";
+import { Table, Space, Input, Select, Button, Form, Card, Tag } from "antd";
 import { connect, Dispatch, history } from "umi";
 import { AppInfo, Department } from "@/models/app";
 import CreateAppDrawer from "./components/create-app-drawer";
@@ -111,6 +111,13 @@ const AppList: React.FC<AppListProps> = ({
       title: "状态",
       dataIndex: "status",
       key: "status",
+      render: (text: any, record: AppInfo) => {
+        // 根据 status 的值返回相应的 Tag
+        const tagColor = record.status === "0" ? "success" : "error";
+        const statusText = record.status === "0" ? "正常" : "停用";
+
+        return <Tag color={tagColor}>{statusText}</Tag>;
+      },
     },
     {
       title: "操作",

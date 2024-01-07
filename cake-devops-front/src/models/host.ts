@@ -10,6 +10,7 @@ export interface HostModel {
   port: number;
   username: string;
   pkey: string;
+  status: string;
 }
 
 export interface QueryHostPayload {

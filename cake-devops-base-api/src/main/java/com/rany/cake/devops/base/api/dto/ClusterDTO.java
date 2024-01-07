@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -23,4 +24,6 @@ public class ClusterDTO extends DTO {
     private Date gmtModified;
     private String creator;
     private String modifier;
+
+    private List<String> tags;
 }

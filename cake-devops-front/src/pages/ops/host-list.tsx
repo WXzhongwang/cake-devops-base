@@ -132,10 +132,10 @@ const HostPage: React.FC<HostListProps> = ({
   return (
     <PageContainer title="主机管理">
       <Row gutter={16}>
-        <Col span={8}>
+        <Col span={4}>
           <HostGroupTree data={hostGroups} onGroupSelect={handleGroupSelect} />
         </Col>
-        <Col span={16}>
+        <Col span={20}>
           <Card>
             <Space size="middle" direction="vertical" style={{ width: "100%" }}>
               <Form
