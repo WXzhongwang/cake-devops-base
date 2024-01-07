@@ -5,6 +5,8 @@ import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * 添加主机
  *
@@ -24,8 +26,8 @@ public class CreateHostCommand extends BaseCommand {
     /**
      * hostname
      */
-    private String hostname;
-    
+    private String hostName;
+
     private String serverAddr;
 
     /**
@@ -42,5 +44,8 @@ public class CreateHostCommand extends BaseCommand {
      * pkey
      */
     private String pkey;
+
+
+    private List<String> hostGroupIds;
 
 }

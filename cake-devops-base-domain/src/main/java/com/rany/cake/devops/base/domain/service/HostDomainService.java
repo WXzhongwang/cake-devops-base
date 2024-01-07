@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.domain.service;
 import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
+import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.HostGroupRepository;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
@@ -43,8 +44,9 @@ public class HostDomainService {
      *
      * @param host
      */
-    public void save(Host host) {
+    public void save(Host host, List<GroupHost> groupHosts) {
         hostRepository.save(host);
+        hostRepository.saveGroupHosts(groupHosts);
     }
 
     public void update(Host host) {

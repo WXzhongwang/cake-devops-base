@@ -52,6 +52,7 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
         this.port = port;
         this.serverAddr = serverAddr;
         this.gmtCreate = DateUtil.date();
+        this.gmtModified = this.gmtCreate;
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.status = CommonStatusEnum.ENABLE.getValue();
     }

@@ -46,7 +46,7 @@
         insert into host (host_id, name, host_name,
                           port, username, status,
                           is_deleted, gmt_create, gmt_modified,
-                          desc, verified, creator,
+                          `desc`, verified, creator,
                           modifier, pkey, server_addr)
         values (#{hostId.hostId}, #{name,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR},
                 #{port,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
@@ -136,5 +136,6 @@
                 )
             </if>
         </where>
+        order by gmt_modified desc
     </select>
 </mapper>

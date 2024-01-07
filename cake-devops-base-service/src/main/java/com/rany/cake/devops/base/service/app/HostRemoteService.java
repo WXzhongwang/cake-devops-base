@@ -12,6 +12,7 @@ import com.rany.cake.devops.base.api.query.HostPageQuery;
 import com.rany.cake.devops.base.api.service.HostService;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
+import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
@@ -46,10 +47,16 @@ public class HostRemoteService implements HostService {
     @Override
     public PojoResult<String> createHostCommand(CreateHostCommand createHostCommand) {
         Host host = new Host(new HostId(String.valueOf(snowflakeIdWorker.nextId())), createHostCommand.getName(),
-                createHostCommand.getHostname(), createHostCommand.getServerAddr(), createHostCommand.getPort());
+                createHostCommand.getHostName(), createHostCommand.getServerAddr(), createHostCommand.getPort());
         host.setUsername(createHostCommand.getUsername());
         host.setPkey(createHostCommand.getPkey());
-        hostDomainService.save(host);
+
+        List<GroupHost> groupHosts = new ArrayList<>();
+        for (String hostGroupId : createHostCommand.getHostGroupIds()) {
+            GroupHost groupHost = new GroupHost(hostGroupId, host.getHostId().getHostId());
+            groupHosts.add(groupHost);
+        }
+        hostDomainService.save(host, groupHosts);
         return PojoResult.succeed(host.getHostId().getHostId());
     }
 

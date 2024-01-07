@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.infra.repository.impl;
 import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
@@ -55,6 +56,13 @@ public class HostRepositoryImpl implements HostRepository {
     @Override
     public void save(@NotNull Host host) {
         hostDao.save(host);
+    }
+
+
+    public void saveGroupHosts(List<GroupHost> groupHosts) {
+        for (GroupHost groupHost : groupHosts) {
+            groupHostDao.save(groupHost);
+        }
     }
 
     @Override

@@ -61,6 +61,13 @@ const CreateHostDrawer: React.FC<AddHostDrawerProps> = ({
           <Input />
         </Form.Item>
         <Form.Item
+          name="port"
+          label="端口"
+          rules={[{ required: true, message: "请输入端口" }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+        <Form.Item
           name="username"
           label="用户名"
           rules={[{ required: true, message: "请输入用户名" }]}
@@ -103,6 +110,7 @@ const CreateHostDrawer: React.FC<AddHostDrawerProps> = ({
             treeDefaultExpandAll
             showCheckedStrategy={TreeSelect.SHOW_ALL}
             treeCheckStrictly
+            treeNodeFilterProp="hostGroupId"
           >
             {renderTreeNodes(hostGroups)}
           </TreeSelect>
@@ -112,7 +120,13 @@ const CreateHostDrawer: React.FC<AddHostDrawerProps> = ({
             type="primary"
             onClick={() => {
               form.validateFields().then((values) => {
-                onSubmit(values);
+                const hostGroupIds = values.hostGroupIds.map(
+                  (item: { value: string }) => item.value
+                );
+                // 构建仅包含 value 的数组
+                const processedValues = { ...values, hostGroupIds };
+                console.log("hostGroupIds", hostGroupIds);
+                onSubmit(processedValues);
                 form.resetFields();
               });
             }}
