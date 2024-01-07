@@ -1,6 +1,5 @@
 // src/models/app.ts
 import * as appService from "@/services/app";
-import { S } from "mockjs";
 import { Effect, Reducer } from "umi";
 
 // 定义创建应用的参数类型
@@ -26,6 +25,11 @@ export interface QueryAppPayload {
   appName: string;
   language: string;
   department: string;
+  pageNo: number;
+  pageSize: number;
+}
+export interface QueryAppMemberPayload {
+  appId: string;
   pageNo: number;
   pageSize: number;
 }
@@ -69,6 +73,36 @@ export interface AppEnv {
   status: string | null;
 }
 
+export interface AppAccountDTO {
+  id: number;
+  accountName: string;
+  phone: string;
+  email: string;
+  tenantId: number;
+  isAdmin: boolean;
+  accountType: string;
+  status: string;
+  isDeleted: string;
+  lastLoginIp: string;
+  lastLoginTime: Date;
+  feature: string;
+  gmtCreate: Date;
+  gmtModified: Date;
+  headImage: string;
+  dingding: string;
+  qq: string;
+  wechat: string;
+  birthday: Date;
+  tags: string;
+}
+
+export interface AppMemberDTO {
+  memberId: string;
+  accountId: string;
+  accountDTO: AppAccountDTO;
+  roles: string[];
+}
+
 export interface ResourceStrategyDTO {
   replicas: number;
   cpu: string;
@@ -84,6 +118,10 @@ export interface AppState {
   };
   appDetail: AppInfo | null;
   departments: Department[] | [];
+  appMembers: {
+    total: number;
+    list: AppMemberDTO[];
+  };
 }
 
 interface CreateAppAction {
@@ -105,6 +143,11 @@ interface QueryDepartmentAction {
   type: "app/getDepartments";
 }
 
+interface PageAppMembersAction {
+  type: "app/pageAppMembers";
+  payload: QueryAppMemberPayload;
+}
+
 interface GetAppDetailAction {
   type: "app/getAppDetail";
   payload: { id: number };
@@ -117,11 +160,13 @@ export interface AppModelType {
     getAppList: Effect;
     createApp: Effect;
     getDepartments: Effect;
+    pageAppMembers: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
     setAppDetail: Reducer<AppState>;
     setDepartments: Reducer<AppState>;
+    setAppMembers: Reducer<AppState>;
   };
 }
 
@@ -134,6 +179,10 @@ const AppModel: AppModelType = {
       list: [],
     },
     departments: [],
+    appMembers: {
+      total: 0,
+      list: [],
+    },
   },
   effects: {
     *getAppList({ payload }: QueryAppAction, { call, put }) {
@@ -169,7 +218,7 @@ const AppModel: AppModelType = {
       });
     },
 
-    *getDepartments(_, { call, put }) {
+    *getDepartments({}: QueryDepartmentAction, { call, put }) {
       const response = yield call(appService.getDepartments);
       console.log(response);
 
@@ -177,6 +226,21 @@ const AppModel: AppModelType = {
         yield put({
           type: "setDepartments",
           payload: response.content,
+        });
+      }
+    },
+
+    *pageAppMembers({ payload }: PageAppMembersAction, { call, put }) {
+      const response = yield call(appService.pageAppMembers, payload);
+      console.log(response);
+
+      if (response?.content) {
+        yield put({
+          type: "setAppMembers",
+          payload: {
+            list: response.content.items,
+            total: response.content.total,
+          },
         });
       }
     },
@@ -190,6 +254,12 @@ const AppModel: AppModelType = {
     },
     setDepartments(state: any, action: { payload: any }) {
       return { ...state, departments: action.payload };
+    },
+    setAppMembers(state: any, action: { payload: any }) {
+      return {
+        ...state,
+        appMembers: { ...state.appMembers, ...action.payload },
+      };
     },
   },
 };

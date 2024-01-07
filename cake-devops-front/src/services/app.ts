@@ -4,6 +4,7 @@ import {
   CreateAppEnvPayload,
   CreateAppPayload,
   QueryAppPayload,
+  QueryAppMemberPayload,
 } from "@/models/app";
 export async function pageAppList(data: QueryAppPayload) {
   return request("/api/devops/app/pageApp", {
@@ -33,4 +34,11 @@ export async function getAppDetail(id: number) {
 
 export async function getDepartments() {
   return request(`/api/devops/app/getDepartments`);
+}
+
+export async function pageAppMembers(data: QueryAppMemberPayload) {
+  return request(`/api/devops/app/pageAppMembers`, {
+    method: "POST",
+    data,
+  });
 }

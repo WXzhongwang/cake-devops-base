@@ -20,5 +20,6 @@ public class AppMemberDTO extends DTO {
 
     private String memberId;
     private String accountId;
+    private AppAccountDTO accountDTO;
     private List<String> roles;
 }

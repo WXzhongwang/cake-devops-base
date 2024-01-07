@@ -16,8 +16,10 @@ import {
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { connect, Dispatch, useParams } from "umi";
-import { AppInfo, AppEnv } from "@/models/app";
+import { AppInfo, AppEnv, AppMemberDTO } from "@/models/app";
 import { ClusterInfo } from "@/models/cluster";
+import CreateEnvDrawer from "./components/create-env-drawer";
+import TeamMembersDrawer from "./components/team-member-drawer";
 import dayjs from "dayjs";
 
 const { Paragraph } = Typography;
@@ -25,6 +27,10 @@ const { Option } = Select;
 interface AppDetailProps {
   dispatch: Dispatch;
   appDetail: AppInfo | null;
+  appMembers: {
+    total: number;
+    list: AppMemberDTO[];
+  };
   clusterList: ClusterInfo[] | [];
 }
 
@@ -46,9 +52,13 @@ const AppDetail: React.FC<AppDetailProps> = ({
   dispatch,
   appDetail,
   clusterList,
+  appMembers,
 }) => {
   const { id } = useParams();
+  const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [teamMembersDrawerVisible, setTeamMembersDrawerVisible] =
+    useState(false);
 
   const [form] = Form.useForm<CreateEnvFormProps>();
 
@@ -62,19 +72,27 @@ const AppDetail: React.FC<AppDetailProps> = ({
 
   useEffect(() => {
     // 在组件挂载时，调用 model 的获取应用详情接口
+    pageAppMembers();
     dispatch({
       type: "cluster/listAll",
     });
   }, [dispatch]);
 
+  const pageAppMembers = () => {
+    dispatch({
+      type: "app/pageAppMembers",
+      payload: { ...pagination, appId: id },
+    });
+  };
+
   // 显示抽屉的方法
-  const showDrawer = () => {
-    setDrawerVisible(true);
+  const switchDrawer = () => {
+    setDrawerVisible(!drawerVisible);
   };
 
   // 关闭抽屉的方法
-  const closeDrawer = () => {
-    setDrawerVisible(false);
+  const switchMemberDrawer = () => {
+    setTeamMembersDrawerVisible(!teamMembersDrawerVisible);
   };
 
   // 提交抽屉表单的方法
@@ -111,7 +129,14 @@ const AppDetail: React.FC<AppDetailProps> = ({
   return (
     <Card
       title={`${appDetail?.appName} 详情页`}
-      extra={<Button onClick={showDrawer}>添加环境</Button>}
+      extra={
+        <div>
+          <Button onClick={switchDrawer}>添加环境</Button>
+          <Button onClick={switchMemberDrawer} style={{ marginLeft: 16 }}>
+            项目成员
+          </Button>
+        </div>
+      }
     >
       <Space style={{ width: "100%" }} direction="vertical" size="large">
         <Descriptions title="应用基础详情" bordered>
@@ -195,176 +220,19 @@ const AppDetail: React.FC<AppDetailProps> = ({
           ))}
         </Row>
       </Space>
+
       {/* 添加抽屉 */}
-      <Drawer
-        title="添加环境"
-        width={500}
-        onClose={closeDrawer}
+      <CreateEnvDrawer
+        onClose={switchDrawer}
+        onFinish={onFinish}
         open={drawerVisible}
-        bodyStyle={{ paddingBottom: 80 }}
-      >
-        <Form
-          layout="vertical"
-          form={form}
-          initialValues={{
-            needApproval: false,
-            autoScaling: false,
-          }}
-          onFinish={onFinish}
-        >
-          {/* 在这里添加表单项，例如环境名称、环境类型、选择集群、域名等 */}
-          <Form.Item
-            name="envName"
-            label="环境名称"
-            rules={[{ required: true, message: "请输入环境名称" }]}
-          >
-            <Input placeholder="请输入环境名称" />
-          </Form.Item>
-          <Form.Item
-            name="env"
-            label="环境类型"
-            rules={[{ required: true, message: "请选择环境类型" }]}
-          >
-            <Select placeholder="请选择环境类型">
-              <Option value="TEST">测试</Option>
-              <Option value="PRE">预发</Option>
-              <Option value="PROD">线上</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="clusterId"
-            label="选择集群"
-            rules={[{ required: true, message: "请选择集群" }]}
-          >
-            <Select placeholder="请选择集群">
-              {clusterList &&
-                clusterList.map((cluster) => (
-                  <Option key={cluster.clusterId} value={cluster.clusterId}>
-                    {cluster.clusterName}({cluster.clusterType})
-                  </Option>
-                ))}
-            </Select>
-          </Form.Item>
-
-          <Form.List
-            name="domains"
-            rules={[
-              {
-                validator: async (_, domains) => {
-                  if (domains && domains.length > 3) {
-                    return Promise.reject(new Error("最多配置3个域名"));
-                  }
-                },
-              },
-            ]}
-          >
-            {(fields, { add, remove }, { errors }) => (
-              <>
-                {fields.map((field, index) => (
-                  <Form.Item
-                    style={{ width: "100%" }}
-                    label={index === 0 ? "域名" : ""}
-                    required={false}
-                    key={field.key}
-                  >
-                    <Form.Item
-                      {...field}
-                      validateTrigger={["onChange", "onBlur"]}
-                      rules={[
-                        {
-                          required: true,
-                          whitespace: true,
-                          message: "请输入合法的域名",
-                        },
-                      ]}
-                      noStyle
-                    >
-                      <Input style={{ width: 260 }} placeholder="请输入域名" />
-                    </Form.Item>
-
-                    <MinusCircleOutlined
-                      style={{ margin: "0 8px" }}
-                      className="dynamic-delete-button"
-                      onClick={() => remove(field.name)}
-                    />
-                  </Form.Item>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    style={{ width: "60%" }}
-                    icon={<PlusOutlined />}
-                  >
-                    增加域名
-                  </Button>
-                  <Form.ErrorList errors={errors} />
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
-          <Form.Item
-            name="replicas"
-            label="副本数"
-            rules={[{ required: true, message: "请输入副本数" }]}
-          >
-            <Input type="number" placeholder="请输入副本数" />
-          </Form.Item>
-          <Form.Item
-            name="cpu"
-            label="CPU"
-            rules={[{ required: true, message: "请输入CPU核数" }]}
-          >
-            <Input placeholder="请输入CPU核数" />
-          </Form.Item>
-          <Form.Item
-            name="memory"
-            label="内存"
-            rules={[{ required: true, message: "请输入内存大小" }]}
-          >
-            <Input placeholder="请输入内存大小" />
-          </Form.Item>
-          <Form.Item
-            name="maxCpu"
-            label="最大CPU"
-            rules={[{ required: true, message: "请输入最大CPU核数" }]}
-          >
-            <Input placeholder="请输入最大CPU核数" />
-          </Form.Item>
-          <Form.Item
-            name="maxMemory"
-            label="最大内存"
-            rules={[{ required: true, message: "请输入最大内存大小" }]}
-          >
-            <Input placeholder="请输入最大内存大小" />
-          </Form.Item>
-          <Form.Item
-            name="needApproval"
-            label="发布是否审批"
-            rules={[{ required: true }]}
-          >
-            <Radio.Group>
-              <Radio value={true}>是</Radio>
-              <Radio value={false}>否</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item
-            name="autoScaling"
-            label="是否自动扩容"
-            rules={[{ required: true }]}
-          >
-            <Radio.Group>
-              <Radio value={true}>是</Radio>
-              <Radio value={false}>否</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              提交
-            </Button>
-          </Form.Item>
-        </Form>
-      </Drawer>
+        clusterList={clusterList}
+      />
+      <TeamMembersDrawer
+        appMembers={appMembers}
+        onClose={switchMemberDrawer}
+        open={teamMembersDrawerVisible}
+      />
     </Card>
   );
 };
@@ -374,12 +242,16 @@ export default connect(
     app,
     cluster,
   }: {
-    app: { appDetail: AppInfo };
+    app: {
+      appMembers: any;
+      appDetail: AppInfo;
+    };
     cluster: {
       clusterList: ClusterInfo[];
     };
   }) => ({
     appDetail: app.appDetail,
+    appMembers: app.appMembers,
     clusterList: cluster.clusterList,
   })
 )(AppDetail);
