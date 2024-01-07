@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.entity.HostExtend;
+import com.rany.cake.devops.base.domain.enums.CommonStatusEnum;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import lombok.*;
@@ -44,11 +45,15 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
     private HostExtend hostExtend;
 
 
-    public Host(HostId hostId, String name, String hostName, Integer port) {
+    public Host(HostId hostId, String name, String hostName, String serverAddr, Integer port) {
         this.hostId = hostId;
         this.name = name;
         this.hostName = hostName;
         this.port = port;
+        this.serverAddr = serverAddr;
+        this.gmtCreate = DateUtil.date();
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
+        this.status = CommonStatusEnum.ENABLE.getValue();
     }
 
     public Boolean delete() {

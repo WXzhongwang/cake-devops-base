@@ -25,6 +25,8 @@ public class CreateHostCommand extends BaseCommand {
      * hostname
      */
     private String hostname;
+    
+    private String serverAddr;
 
     /**
      * port
