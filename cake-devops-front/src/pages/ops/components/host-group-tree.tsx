@@ -28,7 +28,7 @@ const convertDataToTree = (data: HostGroupModel[]): any => {
 const dataList: { key: React.Key; title: string }[] = [];
 
 const generateList = (data: DataNode[]) => {
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i < data?.length; i++) {
     const node = data[i];
     const { title } = node;
     dataList.push({ key: node.key, title: title as string });

@@ -13,7 +13,7 @@ interface AddHostDrawerProps {
 const { TreeNode } = TreeSelect;
 
 const renderTreeNodes = (data: HostGroupModel[]) => {
-  return data.map((item) => (
+  return data?.map((item) => (
     <TreeNode value={item.hostGroupId} title={item.name} key={item.hostGroupId}>
       {item.children && item.children.length > 0
         ? renderTreeNodes(item.children)
