@@ -1,11 +1,30 @@
 // TeamMembersDrawer.tsx
 
-import React from "react";
-import { Drawer, Table, Tag, Space, Button, Popconfirm } from "antd";
+import React, { useState } from "react";
+import { Dispatch, connect } from "umi";
+import {
+  Drawer,
+  Table,
+  Tag,
+  Space,
+  Button,
+  Popconfirm,
+  Modal,
+  Form,
+  Select,
+  message,
+} from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { AppMemberDTO, AppAccountDTO } from "@/models/app";
+import {
+  AppMemberDTO,
+  AppAccountDTO,
+  UpdateAppMemberPayload,
+} from "@/models/app";
+
+const { Option } = Select;
 
 interface TeamMembersDrawerProps {
+  dispatch: Dispatch;
   onClose: () => void;
   open: boolean;
   // 其他需要的 props
@@ -16,10 +35,13 @@ interface TeamMembersDrawerProps {
 }
 
 const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
+  dispatch,
   onClose,
   open,
   appMembers,
 }) => {
+  const [editRoleModalVisible, setEditRoleModalVisible] = useState(false);
+
   console.log("appMembers", appMembers);
   const columns = [
     {
@@ -64,14 +86,44 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
     },
   ];
 
-  const handleEditRole = (record: any) => {
-    // 处理修改角色的逻辑
-    console.log(`编辑角色：${record.name}`);
+  const [selectedMember, setSelectedMember] = useState<AppMemberDTO | null>(
+    null
+  );
+
+  const [form] = Form.useForm();
+
+  const showEditRoleModal = (record: AppMemberDTO) => {
+    setSelectedMember(record);
+    setEditRoleModalVisible(true);
+    form.setFieldsValue({
+      roles: record.roles,
+    });
+  };
+
+  const handleEditRole = (record: AppMemberDTO) => {
+    showEditRoleModal(record);
   };
 
   const handleDeleteMember = (record: any) => {
     // 处理删除人员的逻辑
     console.log(`删除人员：${record.name}`);
+  };
+
+  const handleUpdateRole = (values: any) => {
+    try {
+      form.validateFields().then((values) => {
+        dispatch({
+          type: "app/updateMember",
+          payload: { ...values, memberId: selectedMember?.memberId },
+        });
+      });
+      // 处理更新角色的逻辑，调用接口
+      console.log(`更新角色为：${values.roles}`);
+      setEditRoleModalVisible(false);
+      message.success("更新成功");
+    } catch (errorInfo) {
+      console.log("Failed:", errorInfo);
+    }
   };
 
   return (
@@ -88,8 +140,40 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
         rowKey="memberId"
         pagination={false}
       />
+
+      <Modal
+        title="编辑角色"
+        open={editRoleModalVisible}
+        onCancel={() => setEditRoleModalVisible(false)}
+        onOk={handleUpdateRole}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            label="人员角色"
+            name="roles"
+            rules={[
+              {
+                required: true,
+                message: "请选择人员角色",
+              },
+            ]}
+          >
+            <Select style={{ width: "100%" }} mode="multiple">
+              <Option value="OWNER">拥有者</Option>
+              <Option value="DEVELOPER">开发</Option>
+              <Option value="TESTER">测试</Option>
+              <Option value="OPERATOR">运维</Option>
+              <Option value="ARCHITECT">架构师</Option>
+              <Option value="REPORTER">告警接收</Option>
+              <Option value="CHECKER">部署审批</Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
     </Drawer>
   );
 };
 
-export default TeamMembersDrawer;
+export default connect(({}: { user: {} }) => {
+  return {};
+})(TeamMembersDrawer);

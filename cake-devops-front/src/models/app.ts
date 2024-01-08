@@ -34,6 +34,11 @@ export interface QueryAppMemberPayload {
   pageSize: number;
 }
 
+export interface UpdateAppMemberPayload {
+  memberId: string;
+  roles: string[];
+}
+
 // 应用信息
 export interface AppInfo {
   appId: string;
@@ -148,6 +153,11 @@ interface PageAppMembersAction {
   payload: QueryAppMemberPayload;
 }
 
+interface UpdateMemberAction {
+  type: "app/updateMember";
+  payload: UpdateAppMemberPayload;
+}
+
 interface GetAppDetailAction {
   type: "app/getAppDetail";
   payload: { id: number };
@@ -161,6 +171,7 @@ export interface AppModelType {
     createApp: Effect;
     getDepartments: Effect;
     pageAppMembers: Effect;
+    updateMember: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
@@ -202,6 +213,11 @@ const AppModel: AppModelType = {
     *createApp({ payload }: CreateAppAction, { call, put }) {
       yield call(appService.createApp, payload);
       yield put({ type: "getAppList" });
+    },
+
+    *updateMember({ payload }: UpdateMemberAction, { call, put }) {
+      yield call(appService.updateMember, payload);
+      yield put({ type: "pageAppMembers" });
     },
 
     *createAppEnv({ payload }: CreateAppEnvAction, { call, put }) {

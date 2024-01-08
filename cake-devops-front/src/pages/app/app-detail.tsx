@@ -121,7 +121,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
     });
 
     // 关闭抽屉
-    closeDrawer();
+    switchDrawer();
   };
 
   console.log("clusters", clusterList);
@@ -181,7 +181,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
         </Descriptions>
         <Row justify="start">
           {appDetail?.appEnvList.map((appEnv: AppEnv) => (
-            <Col span={8}>
+            <Col span={8} key={appEnv.envId}>
               <Card
                 title={appEnv.envName}
                 key={appEnv.envId}
@@ -228,6 +228,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
         open={drawerVisible}
         clusterList={clusterList}
       />
+      {/* 团队抽屉成员 */}
       <TeamMembersDrawer
         appMembers={appMembers}
         onClose={switchMemberDrawer}

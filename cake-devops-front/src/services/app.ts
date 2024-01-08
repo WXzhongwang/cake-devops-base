@@ -5,6 +5,7 @@ import {
   CreateAppPayload,
   QueryAppPayload,
   QueryAppMemberPayload,
+  UpdateAppMemberPayload,
 } from "@/models/app";
 export async function pageAppList(data: QueryAppPayload) {
   return request("/api/devops/app/pageApp", {
@@ -15,6 +16,13 @@ export async function pageAppList(data: QueryAppPayload) {
 
 export async function createApp(data: CreateAppPayload) {
   return request("/api/devops/app/createApp", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function updateMember(data: UpdateAppMemberPayload) {
+  return request("/api/devops/app/updateMember", {
     method: "POST",
     data,
   });
