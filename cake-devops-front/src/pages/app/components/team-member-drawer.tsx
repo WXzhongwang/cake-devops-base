@@ -3,7 +3,7 @@
 import React from "react";
 import { Drawer, Table, Tag, Space, Button, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { AppMemberDTO } from "@/models/app";
+import { AppMemberDTO, AppAccountDTO } from "@/models/app";
 
 interface TeamMembersDrawerProps {
   onClose: () => void;
@@ -20,20 +20,13 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
   open,
   appMembers,
 }) => {
-  // 假设你有一个 teamMembers 数组，包含每个人员的信息
-  const teamMembers = [
-    { id: 1, name: "张三", roles: ["开发", "测试"] },
-    { id: 2, name: "李四", roles: ["设计", "运维"] },
-    // 其他人员信息
-  ];
-
   console.log("appMembers", appMembers);
-
   const columns = [
     {
       title: "人员名称",
       dataIndex: "name",
-      key: "name",
+      render: (_: string, record: AppMemberDTO) =>
+        record.accountDTO.accountName,
     },
     {
       title: "人员角色",
@@ -90,9 +83,9 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
       bodyStyle={{ paddingBottom: 80 }}
     >
       <Table
-        dataSource={teamMembers}
+        dataSource={appMembers.list}
         columns={columns}
-        rowKey="id"
+        rowKey="memberId"
         pagination={false}
       />
     </Drawer>
