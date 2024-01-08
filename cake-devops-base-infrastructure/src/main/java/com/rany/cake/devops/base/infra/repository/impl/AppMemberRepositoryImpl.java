@@ -82,4 +82,9 @@ public class AppMemberRepositoryImpl implements AppMemberRepository {
     public void saveUpdate(AppMember appMember) {
         appMemberDao.saveUpdate(appMember);
     }
+
+    @Override
+    public void update(AppMember appMember) {
+        appMemberDao.updateByMemberId(appMember);
+    }
 }

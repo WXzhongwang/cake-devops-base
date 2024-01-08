@@ -26,9 +26,9 @@
                                 is_deleted,
                                 gmt_create,
                                 gmt_modified)
-        values (#{id.id},
+        values (#{memberId.memberId},
                 #{accountId},
-                #{appId.id},
+                #{appId.appId},
                 #{roles,jdbcType=VARCHAR},
                 #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR},
@@ -40,6 +40,35 @@
             is_deleted = #{isDeleted,jdbcType=VARCHAR},
             gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
     </insert>
+
+
+    <update id="updateByMemberId" parameterType="com.rany.cake.devops.base.domain.aggregate.AppMember">
+        update app_member
+        <set>
+            <if test="roles != null">
+                roles = #{roles,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where member_id = #{memberId.memberId}
+    </update>
 
     <select id="selectByAccountId" resultMap="BaseResultMap">
         select

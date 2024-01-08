@@ -4,7 +4,10 @@ package com.rany.cake.devops.base.service.app;
 import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
 import com.cake.framework.common.response.PageResult;
+import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Maps;
+import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
+import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
 import com.rany.cake.devops.base.api.dto.AppAccountDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.query.AppMemberPageQuery;
@@ -83,5 +86,21 @@ public class AppMemberRemoteService implements AppMemberService {
             }
         }
         return PageResult.succeed(PageUtils.build(appMemberPage, appMemberDTOList));
+    }
+
+    @Override
+    public PojoResult<Boolean> updateMember(UpdateAppMemberCommand updateAppMemberCommand) {
+        AppMember appMember = appMemberDomainService.findByMemberId(updateAppMemberCommand.getMemberId());
+        appMember.update(updateAppMemberCommand.getRoles(), updateAppMemberCommand.getStatus());
+        appMemberDomainService.update(appMember);
+        return PojoResult.succeed(Boolean.TRUE);
+    }
+
+    @Override
+    public PojoResult<Boolean> deleteMember(DeleteAppMemberCommand deleteAppMemberCommand) {
+        AppMember appMember = appMemberDomainService.findByMemberId(deleteAppMemberCommand.getMemberId());
+        appMember.delete();
+        appMemberDomainService.update(appMember);
+        return PojoResult.succeed(Boolean.TRUE);
     }
 }

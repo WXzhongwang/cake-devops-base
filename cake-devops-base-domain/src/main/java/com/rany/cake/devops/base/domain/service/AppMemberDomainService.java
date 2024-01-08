@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.domain.service;
 
 import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
+import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.repository.AppMemberRepository;
 import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,18 @@ import java.util.List;
 public class AppMemberDomainService {
 
     private final AppMemberRepository appMemberRepository;
+
+    public AppMember findByMemberId(String memberId) {
+        return appMemberRepository.find(new MemberId(memberId));
+    }
+
+    public void update(AppMember appMember) {
+        appMemberRepository.update(appMember);
+    }
+
+    public void saveUpdate(AppMember appMember) {
+        appMemberRepository.saveUpdate(appMember);
+    }
 
     public AppMember findByAccountId(String accountId) {
         return appMemberRepository.findByAccountId(accountId);

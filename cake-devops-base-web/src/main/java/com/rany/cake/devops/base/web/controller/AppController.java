@@ -5,6 +5,8 @@ import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
+import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
+import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
@@ -66,5 +68,15 @@ public class AppController {
     @PostMapping("/pageAppMembers")
     public PageResult<AppMemberDTO> pageAppMembers(@RequestBody AppMemberPageQuery appMemberPageQuery) {
         return appMemberService.pageAppMembers(appMemberPageQuery);
+    }
+
+    @PostMapping("/updateMember")
+    public PojoResult<Boolean> updateMember(@RequestBody UpdateAppMemberCommand updateAppMemberCommand) {
+        return appMemberService.updateMember(updateAppMemberCommand);
+    }
+
+    @PostMapping("/deleteMember")
+    public PojoResult<Boolean> deleteMember(@RequestBody DeleteAppMemberCommand deleteAppMemberCommand) {
+        return appMemberService.deleteMember(deleteAppMemberCommand);
     }
 }

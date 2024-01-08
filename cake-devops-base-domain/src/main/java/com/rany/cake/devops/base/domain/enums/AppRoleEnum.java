@@ -28,9 +28,9 @@ public enum AppRoleEnum {
 
     CHECKER(7, "部署审批");
 
-    private Integer code;
+    private final Integer code;
 
-    private String value;
+    private final String value;
 
     AppRoleEnum(Integer code, String value) {
         this.code = code;

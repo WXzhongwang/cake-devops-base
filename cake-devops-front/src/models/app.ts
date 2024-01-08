@@ -37,6 +37,11 @@ export interface QueryAppMemberPayload {
 export interface UpdateAppMemberPayload {
   memberId: string;
   roles: string[];
+  status: string;
+}
+
+export interface DeleteAppMemberPayload {
+  memberId: string;
 }
 
 // 应用信息
@@ -158,6 +163,11 @@ interface UpdateMemberAction {
   payload: UpdateAppMemberPayload;
 }
 
+interface DeleteMemberAction {
+  type: "app/deleteMember";
+  payload: DeleteAppMemberPayload;
+}
+
 interface GetAppDetailAction {
   type: "app/getAppDetail";
   payload: { id: number };
@@ -172,6 +182,7 @@ export interface AppModelType {
     getDepartments: Effect;
     pageAppMembers: Effect;
     updateMember: Effect;
+    deleteMember: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
@@ -217,7 +228,12 @@ const AppModel: AppModelType = {
 
     *updateMember({ payload }: UpdateMemberAction, { call, put }) {
       yield call(appService.updateMember, payload);
-      yield put({ type: "pageAppMembers" });
+      //yield put({ type: "pageAppMembers" });
+    },
+
+    *deleteMember({ payload }: DeleteMemberAction, { call, put }) {
+      yield call(appService.deleteMember, payload);
+      //yield put({ type: "pageAppMembers" });
     },
 
     *createAppEnv({ payload }: CreateAppEnvAction, { call, put }) {

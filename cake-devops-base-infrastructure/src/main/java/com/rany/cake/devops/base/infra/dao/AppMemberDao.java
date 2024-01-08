@@ -50,4 +50,6 @@ public interface AppMemberDao {
      */
     int saveUpdate(AppMember appMember);
 
+    int updateByMemberId(AppMember appMember);
+
 }

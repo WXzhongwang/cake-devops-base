@@ -15,11 +15,7 @@ import {
   message,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import {
-  AppMemberDTO,
-  AppAccountDTO,
-  UpdateAppMemberPayload,
-} from "@/models/app";
+import { AppMemberDTO } from "@/models/app";
 
 const { Option } = Select;
 
@@ -33,6 +29,27 @@ interface TeamMembersDrawerProps {
     list: AppMemberDTO[];
   };
 }
+
+const mapRoleToChinese = (role: string) => {
+  switch (role) {
+    case "OWNER":
+      return "拥有者";
+    case "DEVELOPER":
+      return "开发";
+    case "TESTER":
+      return "测试";
+    case "OPERATOR":
+      return "运维";
+    case "ARCHITECT":
+      return "架构师";
+    case "REPORTER":
+      return "告警接收";
+    case "CHECKER":
+      return "部署审批";
+    default:
+      return role;
+  }
+};
 
 const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
   dispatch,
@@ -57,7 +74,7 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
       render: (roles: string[]) => (
         <>
           {roles.map((role) => (
-            <Tag key={role}>{role}</Tag>
+            <Tag key={role}>{mapRoleToChinese(role)}</Tag>
           ))}
         </>
       ),
@@ -107,6 +124,12 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
   const handleDeleteMember = (record: any) => {
     // 处理删除人员的逻辑
     console.log(`删除人员：${record.name}`);
+    dispatch({
+      type: "app/deleteMember",
+      payload: { memberId: record?.memberId },
+    });
+    onClose();
+    message.success("删除项目成员成功");
   };
 
   const handleUpdateRole = (values: any) => {
@@ -116,13 +139,15 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
           type: "app/updateMember",
           payload: { ...values, memberId: selectedMember?.memberId },
         });
+        // 处理更新角色的逻辑，调用接口
+        console.log(`更新角色为：${values.roles}`);
+        setEditRoleModalVisible(false);
+        form.resetFields();
+        onClose();
+        message.success("更新成功");
       });
-      // 处理更新角色的逻辑，调用接口
-      console.log(`更新角色为：${values.roles}`);
-      setEditRoleModalVisible(false);
-      message.success("更新成功");
     } catch (errorInfo) {
-      console.log("Failed:", errorInfo);
+      console.log("更新失败:", errorInfo);
     }
   };
 

@@ -45,4 +45,6 @@ public interface AppMemberRepository extends Repository<AppMember, MemberId> {
      */
     void saveUpdate(AppMember appMember);
 
+    void update(AppMember appMember);
+
 }

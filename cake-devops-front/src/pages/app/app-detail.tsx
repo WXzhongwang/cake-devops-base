@@ -76,7 +76,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
     dispatch({
       type: "cluster/listAll",
     });
-  }, [dispatch]);
+  }, [dispatch, teamMembersDrawerVisible]);
 
   const pageAppMembers = () => {
     dispatch({

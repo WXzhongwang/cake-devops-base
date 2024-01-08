@@ -4,6 +4,8 @@ import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.google.common.collect.Lists;
+import com.rany.cake.devops.base.domain.enums.CommonStatusEnum;
+import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import lombok.*;
@@ -75,6 +77,18 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
         this.gmtModified = DateUtil.date();
     }
 
+
+    public void update(List<String> roles, String status) {
+        this.roles = String.join(",", roles);
+        this.gmtModified = DateUtil.date();
+        this.status = status;
+    }
+
+    public void delete() {
+        this.gmtModified = DateUtil.date();
+        this.status = CommonStatusEnum.DISABLED.getValue();
+        this.isDeleted = DeleteStatusEnum.YES.getValue();
+    }
 
     @Override
     public MemberId getBizID() {
