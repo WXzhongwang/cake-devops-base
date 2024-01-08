@@ -16,4 +16,5 @@ public class HostDTO extends DTO {
     private String pkey;
     private String desc;
     private String verified;
+    private String status;
 }
