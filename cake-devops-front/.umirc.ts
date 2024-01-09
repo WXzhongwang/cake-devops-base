@@ -7,7 +7,8 @@ export default defineConfig({
   routes: [
     { path: "/", redirect: "/apps" },
     { path: "/apps", component: "app/app-list", name: "应用中心" },
-    { path: "/app-detail/:id", component: "app/app-detail" },
+    { path: "/app/info/:id", component: "app/app-detail" },
+    { path: "/app/deploy/:id", component: "app/deploy" },
     {
       path: "/ops",
       routes: [

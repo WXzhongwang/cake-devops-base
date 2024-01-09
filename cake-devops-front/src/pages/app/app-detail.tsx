@@ -15,7 +15,7 @@ import {
   Col,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { connect, Dispatch, useParams } from "umi";
+import { connect, Dispatch, useParams, history } from "umi";
 import { AppInfo, AppEnv, AppMemberDTO } from "@/models/app";
 import { ClusterInfo } from "@/models/cluster";
 import CreateEnvDrawer from "./components/create-env-drawer";
@@ -124,61 +124,92 @@ const AppDetail: React.FC<AppDetailProps> = ({
     switchDrawer();
   };
 
+  const handleDeploy = () => {
+    // 示例：跳转到详情页，使用 history.push
+    history.push(`/app/deploy/${id}`);
+  };
+
   console.log("clusters", clusterList);
 
   return (
-    <Card
-      title={`${appDetail?.appName} 详情页`}
-      extra={
-        <div>
-          <Button onClick={switchDrawer}>添加环境</Button>
-          <Button onClick={switchMemberDrawer} style={{ marginLeft: 16 }}>
-            项目成员
-          </Button>
-        </div>
-      }
-    >
-      <Space style={{ width: "100%" }} direction="vertical" size="large">
-        <Descriptions title="应用基础详情" bordered>
-          <Descriptions.Item label="应用名称">
-            <Paragraph
-              copyable={{ tooltips: ["点击复制", "复制成功"] }}
-              style={{ display: "inline" }}
-            >
-              {appDetail?.appName ?? "--"}
-            </Paragraph>
-          </Descriptions.Item>
-          <Descriptions.Item label="仓库">
-            <Paragraph
-              copyable={{ tooltips: ["点击复制", "复制成功"] }}
-              style={{ display: "inline" }}
-            >
-              {appDetail?.repo}
-            </Paragraph>
-          </Descriptions.Item>
-          <Descriptions.Item label="语言">
-            {appDetail?.language}
-          </Descriptions.Item>
-          <Descriptions.Item label="默认分支">
-            {appDetail?.defaultBranch}
-          </Descriptions.Item>
-          <Descriptions.Item label="开发模式">
-            {appDetail?.developMode}
-          </Descriptions.Item>
-          <Descriptions.Item label="部门">
-            {appDetail?.department}
-          </Descriptions.Item>
-          <Descriptions.Item label="部门缩写">
-            {appDetail?.departmentAbbreviation}
-          </Descriptions.Item>
-          <Descriptions.Item label="创建时间">
-            {dayjs(appDetail?.gmtCreate).format("YYYY-MM-DD HH:mm:ss")}
-          </Descriptions.Item>
-          <Descriptions.Item label="更新时间">
-            {dayjs(appDetail?.gmtModified).format("YYYY-MM-DD HH:mm:ss")}
-          </Descriptions.Item>
-          {/* 添加其他属性 */}
-        </Descriptions>
+    <Space style={{ width: "100%" }} direction="vertical" size="large">
+      <Card
+        title={`${appDetail?.appName} 详情页`}
+        extra={
+          <div>
+            <Button onClick={handleDeploy}>立即部署</Button>
+            <Button onClick={switchMemberDrawer} style={{ marginLeft: 16 }}>
+              项目成员
+            </Button>
+          </div>
+        }
+      >
+        <Space style={{ width: "100%" }} direction="vertical" size="large">
+          <Descriptions title="应用基础详情" bordered>
+            <Descriptions.Item label="应用名称">
+              <Paragraph
+                copyable={{ tooltips: ["点击复制", "复制成功"] }}
+                style={{ display: "inline" }}
+              >
+                {appDetail?.appName ?? "--"}
+              </Paragraph>
+            </Descriptions.Item>
+            <Descriptions.Item label="仓库">
+              <Paragraph
+                copyable={{ tooltips: ["点击复制", "复制成功"] }}
+                style={{ display: "inline" }}
+              >
+                {appDetail?.repo}
+              </Paragraph>
+            </Descriptions.Item>
+            <Descriptions.Item label="语言">
+              {appDetail?.language}
+            </Descriptions.Item>
+            <Descriptions.Item label="默认分支">
+              {appDetail?.defaultBranch}
+            </Descriptions.Item>
+            <Descriptions.Item label="开发模式">
+              {appDetail?.developMode}
+            </Descriptions.Item>
+            <Descriptions.Item label="部门">
+              {appDetail?.department}
+            </Descriptions.Item>
+            <Descriptions.Item label="部门缩写">
+              {appDetail?.departmentAbbreviation}
+            </Descriptions.Item>
+            <Descriptions.Item label="创建时间">
+              {dayjs(appDetail?.gmtCreate).format("YYYY-MM-DD HH:mm:ss")}
+            </Descriptions.Item>
+            <Descriptions.Item label="更新时间">
+              {dayjs(appDetail?.gmtModified).format("YYYY-MM-DD HH:mm:ss")}
+            </Descriptions.Item>
+            {/* 添加其他属性 */}
+          </Descriptions>
+        </Space>
+
+        {/* 添加抽屉 */}
+        <CreateEnvDrawer
+          onClose={switchDrawer}
+          onFinish={onFinish}
+          open={drawerVisible}
+          clusterList={clusterList}
+        />
+        {/* 团队抽屉成员 */}
+        <TeamMembersDrawer
+          appMembers={appMembers}
+          onClose={switchMemberDrawer}
+          open={teamMembersDrawerVisible}
+        />
+      </Card>
+
+      <Card
+        title={`环境信息`}
+        extra={
+          <div>
+            <Button onClick={switchDrawer}>添加环境</Button>
+          </div>
+        }
+      >
         <Row justify="start">
           {appDetail?.appEnvList.map((appEnv: AppEnv) => (
             <Col span={8} key={appEnv.envId}>
@@ -219,22 +250,8 @@ const AppDetail: React.FC<AppDetailProps> = ({
             </Col>
           ))}
         </Row>
-      </Space>
-
-      {/* 添加抽屉 */}
-      <CreateEnvDrawer
-        onClose={switchDrawer}
-        onFinish={onFinish}
-        open={drawerVisible}
-        clusterList={clusterList}
-      />
-      {/* 团队抽屉成员 */}
-      <TeamMembersDrawer
-        appMembers={appMembers}
-        onClose={switchMemberDrawer}
-        open={teamMembersDrawerVisible}
-      />
-    </Card>
+      </Card>
+    </Space>
   );
 };
 
