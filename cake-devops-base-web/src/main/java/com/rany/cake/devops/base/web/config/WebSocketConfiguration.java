@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.web.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import javax.servlet.ServletContext;
 /**
  * 启用WebSocket
  */
+@ConditionalOnProperty(name = "websocket.enabled", havingValue = "true", matchIfMissing = true)
 @Configuration
 public class WebSocketConfiguration implements ServletContextInitializer {
 

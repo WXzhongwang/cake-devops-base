@@ -37,7 +37,11 @@ public abstract class BaseCloudService {
      */
     protected void build() {
         try {
-            this.apiClient = ClientBuilder.cluster().build();
+            //this.apiClient = ClientBuilder.cluster().build();
+            this.apiClient = ClientBuilder.standard().setVerifyingSsl(false).build();
+//            this.apiClient = Config.fromConfig(new InputStreamReader(Files.newInputStream(Paths.get("/Users/yuanjinxiu/.kube/config"))))
+//                    .setBasePath("https://kubernetes.docker.internal:6443")
+//                    .setVerifyingSsl(false);
         } catch (IOException e) {
             log.error("构建K8s-Client异常", e);
             throw new RuntimeException("构建K8s-Client异常");
