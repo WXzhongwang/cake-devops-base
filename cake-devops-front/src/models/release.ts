@@ -7,7 +7,7 @@ export interface CreateReleasePayload {
   envId: string;
   releaseDate: Date;
   releaseBranch: string;
-  releaseVersion: string;
+  releaseVersion: string | undefined;
   docAddress: string;
   comment: string;
 }

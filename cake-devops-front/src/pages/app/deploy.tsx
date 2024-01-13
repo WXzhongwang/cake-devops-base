@@ -20,6 +20,10 @@ import moment from "moment";
 interface AppDetailProps {
   dispatch: Dispatch;
   appDetail: AppInfo | null;
+  releases: {
+    total: number;
+    list: ReleaseHistory[];
+  };
 }
 const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
   const { id } = useParams();
@@ -28,14 +32,7 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
     string | undefined | null
   >(appDetail?.appEnvList?.[0]?.envId);
 
-  // 新增状态来存储表单值
-  const [formValues, setFormValues] = useState({
-    releaseDate: undefined, // 默认值为当前时间
-    releaseBranch: "",
-    docAddress: "",
-    appId: id,
-    envId: selectedEnvironment,
-  });
+  const [form] = Form.useForm();
 
   useEffect(() => {
     dispatch({
@@ -62,17 +59,17 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
 
   const handleEnvironmentChange = (value: any) => {
     setSelectedEnvironment(value);
-    // 处理环境切换的逻辑，可以在这里请求相应的数据等
   };
 
-  const handleAddRelease = (formValues: any) => {
+  const handleAddRelease = (values: any) => {
     // 处理添加发布单的逻辑，可以在这里提交表单等
-    console.log("Form Values:", formValues);
+    console.log("Form Values:", values);
     // 提交表单后关闭抽屉
     // 在这里可以调用相应的接口或 dispatch 创建应用的 action
+    debugger;
     dispatch({
       type: "release/create",
-      payload: formValues,
+      payload: values,
     });
 
     setDrawerVisible(false);
@@ -123,7 +120,18 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
         open={drawerVisible}
       >
         {/* 表单 */}
-        <Form layout="vertical" onFinish={handleAddRelease}>
+        <Form
+          layout="vertical"
+          form={form}
+          initialValues={{
+            releaseDate: "",
+            releaseBranch: "",
+            docAddress: "",
+            appId: id,
+            envId: selectedEnvironment,
+          }}
+          onFinish={(values) => handleAddRelease(values)}
+        >
           <Form.Item label="预计发布日期" name="releaseDate">
             <DatePicker showTime defaultValue={moment()} />
           </Form.Item>
@@ -153,11 +161,22 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
 export default connect(
   ({
     app,
+    release,
   }: {
     app: {
       appDetail: AppInfo;
     };
+    release: {
+      releases: {
+        total: number;
+        list: ReleaseHistory[];
+      };
+    };
   }) => ({
     appDetail: app.appDetail,
+    release: {
+      total: release.releases.total,
+      list: release.releases.list,
+    },
   })
 )(DeployPage);
