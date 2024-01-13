@@ -28,7 +28,7 @@ public class ApprovalController {
     }
 
     @PostMapping("/get")
-    public PojoResult<ApprovalDTO> createApproval(ApprovalBasicQuery approvalBasicQuery) {
+    public PojoResult<ApprovalDTO> getApproval(ApprovalBasicQuery approvalBasicQuery) {
         return approvalService.getApproval(approvalBasicQuery);
     }
 
