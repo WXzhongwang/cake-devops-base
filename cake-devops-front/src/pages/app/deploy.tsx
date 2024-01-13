@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
 import { AppEnv, AppInfo } from "@/models/app";
-import dayjs from "dayjs";
+import { ReleaseHistory } from "@/models/release";
 import moment from "moment";
 
 interface AppDetailProps {
@@ -69,6 +69,12 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
     // 处理添加发布单的逻辑，可以在这里提交表单等
     console.log("Form Values:", formValues);
     // 提交表单后关闭抽屉
+    // 在这里可以调用相应的接口或 dispatch 创建应用的 action
+    dispatch({
+      type: "release/create",
+      payload: formValues,
+    });
+
     setDrawerVisible(false);
   };
 
@@ -117,7 +123,7 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
         open={drawerVisible}
       >
         {/* 表单 */}
-        <Form layout="vertical">
+        <Form layout="vertical" onFinish={handleAddRelease}>
           <Form.Item label="预计发布日期" name="releaseDate">
             <DatePicker showTime defaultValue={moment()} />
           </Form.Item>
@@ -135,7 +141,7 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
           >
             <Input />
           </Form.Item>
-          <Button type="primary" onClick={handleAddRelease}>
+          <Button type="primary" htmlType="submit">
             提交
           </Button>
         </Form>
