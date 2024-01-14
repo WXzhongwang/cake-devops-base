@@ -5,10 +5,8 @@ import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
-
 /**
- * 添加发布
+ * 添加回滚发布
  *
  * @author zhongshengwang
  * @description 添加发布
@@ -17,7 +15,7 @@ import java.util.Date;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CreateReleaseCommand extends BaseCommand {
+public class CreateRollbackReleaseCommand extends BaseCommand {
 
     /**
      * 应用ID
@@ -28,27 +26,6 @@ public class CreateReleaseCommand extends BaseCommand {
      */
     private String envId;
     /**
-     * 关联审批ID
-     */
-    private String approvalId;
-    /**
-     * 预计发布日期
-     */
-    private Date releaseDate;
-    /**
-     * 分支
-     */
-    private String releaseBranch;
-    /**
-     * commitId
-     */
-    private String releaseCommitId;
-    /**
-     * 正式环境发布需填写版本号
-     */
-    private String releaseVersion;
-
-    /**
      * 回滚发布标识
      */
     private String rollback;
@@ -56,14 +33,4 @@ public class CreateReleaseCommand extends BaseCommand {
      * 回滚到哪一次发布
      */
     private String rollbackId;
-
-
-    /**
-     * 文档地址
-     */
-    private String docAddress;
-    /**
-     * 备注
-     */
-    private String comment;
 }

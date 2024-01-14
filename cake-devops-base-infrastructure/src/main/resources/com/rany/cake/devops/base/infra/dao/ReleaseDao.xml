@@ -21,7 +21,8 @@
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id,
+        id
+        ,
         release_id
         , app_id, release_no, approval_id, release_date, release_branch, release_commit_id,
     release_version, env_id, release_status, rollback, rollback_id, is_deleted, gmt_create,
@@ -113,9 +114,22 @@
     <select id="selectByReleaseId" parameterType="java.lang.String" resultMap="BaseResultMap">
 
         select
-        <include refid="Base_Column_List" />
-        from release
+        <include refid="Base_Column_List"/>
+        from release_no
         where release_id = #{releaseId}
     </select>
+
+    <select id="queryRelease" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from release_no
+        <where>
+            is_deleted = '0'
+            and app_id = #{appId}
+            and env_id = #{envId}
+            order by gmt_create desc
+        </where>
+    </select>
+
 
 </mapper>

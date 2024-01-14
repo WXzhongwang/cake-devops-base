@@ -1,7 +1,9 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.ReleaseDTO;
+import com.rany.cake.devops.base.api.query.ReleasePageQuery;
 import com.rany.cake.devops.base.domain.aggregate.Release;
+import com.rany.cake.devops.base.domain.repository.param.ReleasePageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -42,4 +44,7 @@ public interface ReleaseDataAdapter extends BaseConvertor<Release, ReleaseDTO> {
     @Mapping(target = "approvalId.approvalId", source = "approvalId")
     @Mapping(target = "rollbackId.releaseId", source = "rollbackId")
     Release targetToSource(ReleaseDTO releaseDTO);
+
+
+    ReleasePageQueryParam convertParam(ReleasePageQuery releasePageQuery);
 }

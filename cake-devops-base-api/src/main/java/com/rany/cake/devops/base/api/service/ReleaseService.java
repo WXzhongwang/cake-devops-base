@@ -1,8 +1,11 @@
 package com.rany.cake.devops.base.api.service;
 
+import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
+import com.rany.cake.devops.base.api.dto.ReleaseDTO;
+import com.rany.cake.devops.base.api.query.ReleasePageQuery;
 
 /**
  * 发布
@@ -21,6 +24,8 @@ public interface ReleaseService {
      * @return 是否成功
      */
     PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand);
+
+    PageResult<ReleaseDTO> pageRelease(ReleasePageQuery releasePageQuery);
 
     /**
      * 基于变更单发布

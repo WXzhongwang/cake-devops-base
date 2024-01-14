@@ -1,9 +1,14 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
+import com.cake.framework.common.response.Page;
+import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.ReleaseId;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
+import com.rany.cake.devops.base.domain.repository.param.ReleasePageQueryParam;
+import com.rany.cake.devops.base.infra.aop.PageUtils;
+import com.rany.cake.devops.base.infra.aop.PagingQuery;
 import com.rany.cake.devops.base.infra.convertor.ReleaseDataConvertor;
 import com.rany.cake.devops.base.infra.dao.ReleaseDao;
 import com.rany.cake.devops.base.infra.mapper.ReleasePOMapper;
@@ -12,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 发布
@@ -50,5 +56,15 @@ public class ReleaseRepositoryImpl implements ReleaseRepository {
     @Override
     public int update(Release release) {
         return releaseDao.update(release);
+    }
+
+    @Override
+    @PagingQuery
+    public Page<Release> pageRelease(ReleasePageQueryParam releasePageQueryParam) {
+        List<ReleasePO> releases = releaseDao.queryRelease(releasePageQueryParam);
+        PageInfo<ReleasePO> pageInfo = new PageInfo<>(releases);
+        List<Release> releasList = releaseDataConvertor.targetToSource(releases);
+        return PageUtils.build(pageInfo, releasList);
+
     }
 }

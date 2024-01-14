@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * 审批单
  */
 @RestController
-@RequestMapping("/approval")
+@RequestMapping("/api/devops/approval")
 public class ApprovalController {
 
     @Resource

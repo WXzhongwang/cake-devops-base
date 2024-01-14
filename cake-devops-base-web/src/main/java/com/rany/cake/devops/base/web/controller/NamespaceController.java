@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * 命名空间
  */
 @RestController
-@RequestMapping("/namespace")
+@RequestMapping("/api/devops/namespace")
 public class NamespaceController {
 
     @Resource

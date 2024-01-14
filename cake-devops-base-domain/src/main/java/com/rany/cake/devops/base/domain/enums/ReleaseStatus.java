@@ -4,7 +4,7 @@ public enum ReleaseStatus {
     /**
      * 审批中
      */
-    APPROVAL,
+    AWAIT_APPROVAL,
     /**
      * 待发布
      */

@@ -1,9 +1,11 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Release;
-import com.rany.cake.devops.base.infra.po.NamespacePO;
+import com.rany.cake.devops.base.domain.repository.param.ReleasePageQueryParam;
 import com.rany.cake.devops.base.infra.po.ReleasePO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 发布
@@ -35,4 +37,7 @@ public interface ReleaseDao {
 
 
     ReleasePO selectByReleaseId(@Param("releaseId") String releaseId);
+
+
+    List<ReleasePO> queryRelease(ReleasePageQueryParam releasePageQueryParam);
 }

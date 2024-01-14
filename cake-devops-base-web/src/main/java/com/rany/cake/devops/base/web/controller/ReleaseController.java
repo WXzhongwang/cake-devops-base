@@ -1,8 +1,11 @@
 package com.rany.cake.devops.base.web.controller;
 
+import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
+import com.rany.cake.devops.base.api.dto.ReleaseDTO;
+import com.rany.cake.devops.base.api.query.ReleasePageQuery;
 import com.rany.cake.devops.base.api.service.ReleaseService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/release")
+@RequestMapping("/api/devops/release")
 public class ReleaseController {
     @Resource
     private ReleaseService releaseService;
@@ -26,6 +29,11 @@ public class ReleaseController {
     @PostMapping("/create")
     public PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand) {
         return releaseService.createRelease(createReleaseCommand);
+    }
+
+    @PostMapping("/page")
+    public PageResult<ReleaseDTO> pageRelease(ReleasePageQuery releasePageQuery) {
+        return releaseService.pageRelease(releasePageQuery);
     }
 
     /**

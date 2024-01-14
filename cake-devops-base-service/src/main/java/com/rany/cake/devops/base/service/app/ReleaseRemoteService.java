@@ -1,10 +1,14 @@
 package com.rany.cake.devops.base.service.app;
 
+import com.cake.framework.common.response.Page;
+import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
+import com.rany.cake.devops.base.api.dto.ReleaseDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
+import com.rany.cake.devops.base.api.query.ReleasePageQuery;
 import com.rany.cake.devops.base.api.service.ReleaseService;
 import com.rany.cake.devops.base.domain.aggregate.*;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
@@ -15,8 +19,12 @@ import com.rany.cake.devops.base.domain.pk.ApprovalId;
 import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.pk.ReleaseId;
 import com.rany.cake.devops.base.domain.repository.*;
+import com.rany.cake.devops.base.domain.repository.param.ReleasePageQueryParam;
+import com.rany.cake.devops.base.domain.service.ApprovalDomainService;
 import com.rany.cake.devops.base.domain.service.ReleaseDomainService;
+import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.ReleaseCenter;
+import com.rany.cake.devops.base.service.adapter.ReleaseDataAdapter;
 import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.lock.client.RedissonLockClient;
 import lombok.AllArgsConstructor;
@@ -25,6 +33,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -34,6 +44,7 @@ import java.util.Objects;
 public class ReleaseRemoteService implements ReleaseService {
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final ReleaseDomainService releaseDomainService;
+    private final ApprovalDomainService approvalDomainService;
     private final ReleaseRepository releaseRepository;
     private final AppRepository appRepository;
     private final ApprovalRepository approvalRepository;
@@ -42,6 +53,7 @@ public class ReleaseRemoteService implements ReleaseService {
     private final RedisSerialNumberGenerator redisSerialNumberGenerator;
     private final RedissonLockClient redissonLockClient;
     private final ReleaseCenter releaseCenter;
+    private final ReleaseDataAdapter releaseDataAdapter;
 
     @Override
     public PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand) {
@@ -60,17 +72,26 @@ public class ReleaseRemoteService implements ReleaseService {
                 createReleaseCommand.getReleaseDate()
         );
         release.init(appEnv);
-        if (Objects.nonNull(createReleaseCommand.getApprovalId())) {
-            Approval approval = approvalRepository.find(new ApprovalId(createReleaseCommand.getApprovalId()));
-            if (approval == null) {
-                throw new DevOpsException(DevOpsErrorMessage.APPROVAL_NOT_FOUND);
-            }
-            if (StringUtils.equals(approval.getApprovalStatus(), ApprovalStatus.APPROVED.name())) {
-                release.approved();
-            }
-        }
+        // 发起审批
+        Approval approval = new Approval(new ApprovalId(String.valueOf(snowflakeIdWorker.nextId())),
+                createReleaseCommand.getDocAddress(),
+                createReleaseCommand.getReleaseDate(),
+                ApprovalStatus.PENDING.name(),
+                createReleaseCommand.getComment());
+
+        release.setApprovalId(approval.getApprovalId());
+        approvalDomainService.save(approval);
         releaseDomainService.save(release);
         return PojoResult.succeed(Boolean.TRUE);
+    }
+
+    @Override
+    public PageResult<ReleaseDTO> pageRelease(ReleasePageQuery releasePageQuery) {
+        ReleasePageQueryParam releasePageQueryParam = releaseDataAdapter.convertParam(releasePageQuery);
+        Page<Release> page = releaseDomainService.pageRelease(releasePageQueryParam);
+        List<Release> releases = new ArrayList<>(page.getItems());
+        List<ReleaseDTO> releaseDTOList = releaseDataAdapter.sourceToTarget(releases);
+        return PageResult.succeed(PageUtils.build(page, releaseDTOList));
     }
 
     @Override

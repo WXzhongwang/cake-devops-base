@@ -1,8 +1,10 @@
 package com.rany.cake.devops.base.domain.service;
 
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.pk.ReleaseId;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
+import com.rany.cake.devops.base.domain.repository.param.ReleasePageQueryParam;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -36,5 +38,9 @@ public class ReleaseDomainService {
 
     public Release getRelease(ReleaseId releaseId) {
         return releaseRepository.find(releaseId);
+    }
+
+    public Page<Release> pageRelease(ReleasePageQueryParam releasePageQueryParam) {
+        return releaseRepository.pageRelease(releasePageQueryParam);
     }
 }
