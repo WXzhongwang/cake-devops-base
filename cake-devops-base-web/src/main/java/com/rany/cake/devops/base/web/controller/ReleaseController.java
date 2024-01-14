@@ -27,12 +27,12 @@ public class ReleaseController {
      * @return 成功
      */
     @PostMapping("/create")
-    public PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand) {
+    public PojoResult<Boolean> createRelease(@RequestBody CreateReleaseCommand createReleaseCommand) {
         return releaseService.createRelease(createReleaseCommand);
     }
 
     @PostMapping("/page")
-    public PageResult<ReleaseDTO> pageRelease(ReleasePageQuery releasePageQuery) {
+    public PageResult<ReleaseDTO> pageRelease(@RequestBody ReleasePageQuery releasePageQuery) {
         return releaseService.pageRelease(releasePageQuery);
     }
 

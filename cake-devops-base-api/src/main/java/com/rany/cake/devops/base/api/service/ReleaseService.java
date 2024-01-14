@@ -25,6 +25,12 @@ public interface ReleaseService {
      */
     PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand);
 
+    /**
+     * 分页查询发布单
+     *
+     * @param releasePageQuery
+     * @return
+     */
     PageResult<ReleaseDTO> pageRelease(ReleasePageQuery releasePageQuery);
 
     /**

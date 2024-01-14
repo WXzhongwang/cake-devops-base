@@ -49,7 +49,7 @@ public class Release extends BaseAggregateRoot implements IAggregate<ReleaseId> 
         this.releaseDate = releaseDate;
     }
 
-    public void init(AppEnv appEnv) {
+    public void init(AppEnv appEnv, String releaseBranch, String releaseCommitId, String releaseVersion) {
         this.releaseStatus = ReleaseStatus.AWAIT_APPROVAL.name();
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.gmtCreate = new Date();
@@ -58,6 +58,9 @@ public class Release extends BaseAggregateRoot implements IAggregate<ReleaseId> 
         if (appEnv.getEnv() != AppEnvEnum.PROD) {
             this.releaseStatus = ReleaseStatus.READY.name();
         }
+        this.releaseBranch = releaseBranch;
+        this.releaseCommitId = releaseCommitId;
+        this.releaseVersion = releaseVersion;
     }
 
     public void approved() {

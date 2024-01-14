@@ -67,17 +67,19 @@ public class ReleaseRemoteService implements ReleaseService {
         }
         Release release = new Release(new ReleaseId(String.valueOf(snowflakeIdWorker.nextId())),
                 new AppId(createReleaseCommand.getAppId()),
-                appEnv.getId(),
+                appEnv.getEnvId(),
                 redisSerialNumberGenerator.generateReleaseSerialNumber(),
                 createReleaseCommand.getReleaseDate()
         );
-        release.init(appEnv);
+        release.init(appEnv, createReleaseCommand.getReleaseBranch(), createReleaseCommand.getReleaseCommitId(),
+                createReleaseCommand.getReleaseVersion());
         // 发起审批
         Approval approval = new Approval(new ApprovalId(String.valueOf(snowflakeIdWorker.nextId())),
                 createReleaseCommand.getDocAddress(),
                 createReleaseCommand.getReleaseDate(),
                 ApprovalStatus.PENDING.name(),
                 createReleaseCommand.getComment());
+        approval.init();
 
         release.setApprovalId(approval.getApprovalId());
         approvalDomainService.save(approval);

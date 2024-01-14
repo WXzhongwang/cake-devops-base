@@ -6,7 +6,10 @@ import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.enums.ApprovalStatus;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -21,7 +24,6 @@ import java.util.Date;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Approval extends BaseAggregateRoot implements IAggregate<ApprovalId> {
 
@@ -30,6 +32,22 @@ public class Approval extends BaseAggregateRoot implements IAggregate<ApprovalId
     private Date changeDate;
     private String approvalStatus;
     private String comment;
+
+
+    public Approval(ApprovalId approvalId, String docAddress, Date changeDate, String approvalStatus, String comment) {
+        this.approvalId = approvalId;
+        this.docAddress = docAddress;
+        this.changeDate = changeDate;
+        this.approvalStatus = approvalStatus;
+        this.comment = comment;
+
+    }
+
+    public void init() {
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
+        this.gmtCreate = new Date();
+        this.gmtModified = this.gmtCreate;
+    }
 
     public Boolean delete() {
         this.gmtModified = DateUtil.date();
