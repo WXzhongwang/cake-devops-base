@@ -27,25 +27,27 @@ export interface ReleaseHistory {
   releaseVersion: string;
   docAddress: string;
   comment: string;
+  gmtCreate: Date;
+  releaseStatus: string;
 }
 
 export interface DeployPayload {
   releaseId: string;
 }
 
-interface CreateReleaseAction {
-  type: "release/create";
+export interface CreateReleaseAction {
+  type: "release/createRelease";
   payload: CreateReleasePayload;
 }
 
-interface DeployAction {
+export interface DeployAction {
   type: "release/deploy";
   payload: DeployPayload;
 }
 
-interface PageReleaseAction {
-  type: "release/page";
-  payload: CreateReleasePayload;
+export interface PageReleaseAction {
+  type: "release/pageRelease";
+  payload: PageReleasePayload;
 }
 
 export interface ReleaseState {
@@ -59,7 +61,7 @@ export interface ReleaseModelType {
   namespace: "release";
   state: ReleaseState;
   effects: {
-    pageReleaseList: Effect;
+    pageRelease: Effect;
     createRelease: Effect;
     deploy: Effect;
   };
@@ -77,9 +79,9 @@ const ReleaseModel: ReleaseModelType = {
     },
   },
   effects: {
-    *pageReleaseList({ payload }: PageReleaseAction, { call, put }) {
+    *pageRelease({ payload }: PageReleaseAction, { call, put }) {
       const response = yield call(releaseService.page, payload);
-      console.log(response);
+      console.log("response", response);
 
       if (response?.content) {
         yield put({
@@ -92,10 +94,10 @@ const ReleaseModel: ReleaseModelType = {
       }
     },
     *createRelease({ payload }: CreateReleaseAction, { call, put }) {
+      // debugger;
       yield call(releaseService.create, payload);
       yield put({ type: "setReleaseList" });
     },
-
     *deploy({ payload }: DeployAction, { call, put }) {
       yield call(releaseService.deploy, payload);
       yield put({ type: "setReleaseList" });

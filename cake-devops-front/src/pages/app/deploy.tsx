@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import {
   Table,
@@ -16,8 +16,9 @@ import { connect, Dispatch, useParams, history } from "umi";
 import { AppEnv, AppInfo } from "@/models/app";
 import { ReleaseHistory } from "@/models/release";
 import moment from "moment";
+import dayjs from "dayjs";
 
-interface AppDetailProps {
+interface ReleasePageProps {
   dispatch: Dispatch;
   appDetail: AppInfo | null;
   releases: {
@@ -25,14 +26,120 @@ interface AppDetailProps {
     list: ReleaseHistory[];
   };
 }
-const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
+const DeployPage: React.FC<ReleasePageProps> = ({
+  dispatch,
+  appDetail,
+  releases,
+}) => {
   const { id } = useParams();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedEnvironment, setSelectedEnvironment] = useState<
     string | undefined | null
   >(appDetail?.appEnvList?.[0]?.envId);
+  const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
 
   const [form] = Form.useForm();
+
+  const columns = [
+    {
+      title: "发布单号",
+      dataIndex: "releaseNo",
+      key: "releaseNo",
+    },
+    {
+      title: "发布时间",
+      dataIndex: "releaseDate",
+      key: "releaseDate",
+      render: (text: any, record: ReleaseHistory) => {
+        return (
+          <div>{dayjs(record?.releaseDate).format("YYYY-MM-DD HH:mm:ss")}</div>
+        );
+      },
+    },
+    {
+      title: "发布分支",
+      dataIndex: "releaseBranch",
+      key: "releaseBranch",
+    },
+    {
+      title: "提交ID",
+      dataIndex: "commitId",
+      key: "commitId",
+    },
+    {
+      title: "发布版本",
+      dataIndex: "releaseVersion",
+      key: "releaseVersion",
+    },
+    {
+      title: "创建时间",
+      dataIndex: "gmtCreate",
+      key: "gmtCreate",
+      render: (text: any, record: ReleaseHistory) => {
+        return (
+          <div>{dayjs(record?.gmtCreate).format("YYYY-MM-DD HH:mm:ss")}</div>
+        );
+      },
+    },
+    {
+      title: "发布状态",
+      dataIndex: "releaseStatus",
+      key: "releaseStatus",
+      render: (text: any, record: ReleaseHistory) => {
+        // const tagColor = record.releaseStatus === "0" ? "success" : "error";
+        let statusText = undefined;
+        if (record.releaseStatus === "AWAIT_APPROVAL") {
+          statusText = "审批中";
+        }
+        if (record.releaseStatus === "READY") {
+          statusText = "待发布";
+        }
+        if (record.releaseStatus === "PENDING") {
+          statusText = "发布中";
+        }
+        if (record.releaseStatus === "FINISHED") {
+          statusText = "已完成";
+        }
+        return statusText;
+      },
+    },
+
+    // {
+    //   title: "状态",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   render: (text: any, record: AppInfo) => {
+    //     // 根据 status 的值返回相应的 Tag
+    //     const tagColor = record.status === "0" ? "success" : "error";
+    //     const statusText = record.status === "0" ? "正常" : "停用";
+
+    //     return <Tag color={tagColor}>{statusText}</Tag>;
+    //   },
+    // },
+    {
+      title: "操作",
+      key: "action",
+      render: (text: any, record: ReleaseHistory) => (
+        // <Space size="middle">
+        //   <a onClick={() => handleView(record)}>查看</a>
+        // </Space>
+        <div></div>
+      ),
+    },
+  ];
+
+  const pageRelease = useCallback(() => {
+    if (selectedEnvironment) {
+      dispatch({
+        type: "release/pageRelease",
+        payload: {
+          ...pagination,
+          appId: id,
+          envId: selectedEnvironment,
+        },
+      });
+    }
+  }, [dispatch, pagination, id, selectedEnvironment]);
 
   useEffect(() => {
     dispatch({
@@ -42,23 +149,28 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
   }, [dispatch, id]);
 
   useEffect(() => {
+    console.log(123);
+    pageRelease();
+  }, [pageRelease]);
+
+  useEffect(() => {
     // 在appDetail更新时，如果selectedEnvironment为undefined，则设置默认值
     if (!selectedEnvironment && appDetail?.appEnvList) {
       setSelectedEnvironment(appDetail?.appEnvList?.[0].envId);
     }
   }, [selectedEnvironment, appDetail]);
 
-  const addRelease = () => {
-    // 处理添加发布单的逻辑，可以在这里打开抽屉等
-    setDrawerVisible(true);
-  };
-
-  const handleDrawerClose = () => {
-    setDrawerVisible(false);
+  const handleDrawer = () => {
+    setDrawerVisible(!drawerVisible);
   };
 
   const handleEnvironmentChange = (value: any) => {
     setSelectedEnvironment(value);
+    console.log("env change", value);
+  };
+
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    setPagination({ pageNo: page, pageSize: pageSize || 10 });
   };
 
   const handleAddRelease = (values: any) => {
@@ -66,11 +178,12 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
     console.log("Form Values:", values);
     // 提交表单后关闭抽屉
     // 在这里可以调用相应的接口或 dispatch 创建应用的 action
-    debugger;
     dispatch({
-      type: "release/create",
-      payload: values,
+      type: "release/createRelease",
+      payload: { ...values, appId: id, envId: selectedEnvironment },
     });
+
+    console.log("dispatch", dispatch);
 
     setDrawerVisible(false);
   };
@@ -98,25 +211,37 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
           title="发布流水线"
           extra={
             <div>
-              <Button onClick={addRelease}>立即发布</Button>
+              <Button onClick={handleDrawer}>立即发布</Button>
             </div>
           }
         ></Card>
         <Card
-          title="发布历史"
+          title="发布单"
           extra={
             <div>
-              <Button onClick={addRelease}>添加发布单</Button>
+              <Button onClick={handleDrawer}>添加发布单</Button>
             </div>
           }
-        ></Card>
+        >
+          <Table
+            columns={columns}
+            dataSource={releases.list}
+            rowKey={"releaseId"}
+            pagination={{
+              total: releases.total,
+              current: pagination.pageNo,
+              pageSize: pagination.pageSize,
+              onChange: handlePaginationChange,
+            }}
+          />
+        </Card>
       </Space>
 
       {/* 抽屉 */}
       <Drawer
         title="添加发布单"
         width={600}
-        onClose={handleDrawerClose}
+        onClose={handleDrawer}
         open={drawerVisible}
       >
         {/* 表单 */}
@@ -143,11 +268,25 @@ const DeployPage: React.FC<AppDetailProps> = ({ dispatch, appDetail }) => {
             <Input />
           </Form.Item>
           <Form.Item
+            label="发布版本"
+            name="releaseVersion"
+            rules={[{ required: true, message: "请输入发布版本" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
             label="文档地址"
             name="docAddress"
             rules={[{ required: true, message: "请输入文档地址" }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="备注"
+            name="comment"
+            rules={[{ required: true, message: "请输入发布分支" }]}
+          >
+            <Input.TextArea />
           </Form.Item>
           <Button type="primary" htmlType="submit">
             提交
@@ -174,7 +313,7 @@ export default connect(
     };
   }) => ({
     appDetail: app.appDetail,
-    release: {
+    releases: {
       total: release.releases.total,
       list: release.releases.list,
     },
