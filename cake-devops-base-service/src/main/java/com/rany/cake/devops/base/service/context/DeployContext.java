@@ -82,6 +82,15 @@ public class DeployContext implements Serializable {
         argMap.put(key, value);
     }
 
+    /**
+     * 进度
+     */
+    private Progress progress;
+
+    public DeployContext() {
+        this.progress = new Progress();
+    }
+
 
     /**
      * 进度监控
@@ -100,7 +109,24 @@ public class DeployContext implements Serializable {
         /**
          * 进度中会执行那些节点
          */
-        private List<Node> nodes;
+        private List<Node> steps;
+
+        /**
+         * 当前执行插件index
+         */
+        private Integer current;
+    }
+
+    /**
+     * 执行插件往前走
+     */
+    public void increment() {
+        this.progress.current++;
+    }
+
+
+    public Integer current() {
+        return this.progress.current;
     }
 
 
@@ -118,6 +144,15 @@ public class DeployContext implements Serializable {
         /**
          * 节点名称
          */
-        private String nodeName;
+        private String title;
+        /**
+         * 描述
+         */
+        private String description;
+
+        public Node(String title, String description) {
+            this.title = title;
+            this.description = description;
+        }
     }
 }

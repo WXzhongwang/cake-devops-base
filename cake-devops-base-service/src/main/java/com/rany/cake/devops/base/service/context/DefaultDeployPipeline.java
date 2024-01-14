@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * pipe
  *
@@ -21,9 +24,15 @@ public class DefaultDeployPipeline implements DeployPipeline {
     private PluginNode tail;
     private final DeployContext deployContext;
 
+    /**
+     * 进度跟踪器
+     */
+    private final ProgressObserver observer;
+
     public DefaultDeployPipeline(DeployContext deployContext) {
         this.deployContext = deployContext;
         tail = head;
+        this.observer = new ProgressUpdater();
     }
 
     @Override
@@ -31,7 +40,10 @@ public class DefaultDeployPipeline implements DeployPipeline {
         try {
             MDC.put(Constants.__TRACE_RELEASE_ID__, String.valueOf(deployContext.getRelease().getReleaseId().getReleaseId()));
             log.info("pipeline begin to start...");
-            head.getNext().execute(getDeployContext());
+            // 设置开始执行时间
+            this.deployContext.getProgress().setStartDate(new Date());
+            initialProgress();
+            head.getNext().execute(this.deployContext);
         } catch (Exception ex) {
             log.error("pipeline occur an error.", ex);
             throw ex;
@@ -59,6 +71,7 @@ public class DefaultDeployPipeline implements DeployPipeline {
             }
             PluginNode node = new PluginNode();
             node.setPlugin(plugin);
+            node.setObserver(observer);
             node.setNext(pre);
             pre = node;
         }
@@ -76,9 +89,23 @@ public class DefaultDeployPipeline implements DeployPipeline {
 
             PluginNode node = new PluginNode();
             node.setPlugin(plugin);
+            node.setObserver(observer);
             next.setNext(node);
             next = node;
         }
         tail = next;
+    }
+    
+    /**
+     * 初始化进度
+     */
+    public void initialProgress() {
+        PluginNode current = this.head;
+        this.deployContext.getProgress().setCurrent(0);
+        while (current.getNext() != null) {
+            List<DeployContext.Node> steps = this.deployContext.getProgress().getSteps();
+            steps.add(new DeployContext.Node(current.getName(), "待执行"));
+            current = current.getNext();
+        }
     }
 }

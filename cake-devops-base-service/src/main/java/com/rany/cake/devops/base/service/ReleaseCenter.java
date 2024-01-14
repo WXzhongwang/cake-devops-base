@@ -50,7 +50,7 @@ public class ReleaseCenter {
         DeployPipeline pipeline = new DefaultDeployPipeline(deployContext);
         pipeline.addLast(approvalPlugin);
         pipeline.addLast(deploymentForbiddenPlugin);
-        //pipeline.addLast(checkOutPlugin);
+        pipeline.addLast(checkOutPlugin);
         pipeline.addLast(machineSelectorPlugin);
         pipeline.addLast(sonarQubePlugin);
         pipeline.addLast(deliveryPlugin);
