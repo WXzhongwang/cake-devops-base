@@ -9,6 +9,7 @@ import {
   Form,
   Card,
   Tag,
+  Steps,
   Drawer,
   DatePicker,
 } from "antd";
@@ -103,19 +104,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         return statusText;
       },
     },
-
-    // {
-    //   title: "状态",
-    //   dataIndex: "status",
-    //   key: "status",
-    //   render: (text: any, record: AppInfo) => {
-    //     // 根据 status 的值返回相应的 Tag
-    //     const tagColor = record.status === "0" ? "success" : "error";
-    //     const statusText = record.status === "0" ? "正常" : "停用";
-
-    //     return <Tag color={tagColor}>{statusText}</Tag>;
-    //   },
-    // },
     {
       title: "操作",
       key: "action",
@@ -214,7 +202,46 @@ const DeployPage: React.FC<ReleasePageProps> = ({
               <Button onClick={handleDrawer}>立即发布</Button>
             </div>
           }
-        ></Card>
+        >
+          <Steps
+            current={0}
+            items={[
+              {
+                title: "审批校验",
+                description: "审批校验",
+              },
+              {
+                title: "封网校验",
+                description: "封网校验",
+                subTitle: "无封网要求",
+              },
+              {
+                title: "代码检出",
+                description: "代码检出",
+              },
+              {
+                title: "打包机选择",
+                description: "打包机选择",
+              },
+              {
+                title: "Sonar代码扫描",
+                description: "Sonar代码扫描",
+              },
+              {
+                title: "构建推送镜像",
+                description: "构建推送镜像",
+              },
+              {
+                title: "部署",
+                description: "部署",
+              },
+              {
+                title: "合并主干",
+                description: "合并主干",
+              },
+            ]}
+          />
+        </Card>
         <Card
           title="发布单"
           extra={
