@@ -8,10 +8,7 @@ import com.rany.cake.devops.base.domain.entity.AppEnv;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 上下文参数
@@ -83,5 +80,44 @@ public class DeployContext implements Serializable {
 
     public void putArg(String key, Object value) {
         argMap.put(key, value);
+    }
+
+
+    /**
+     * 进度监控
+     */
+    @Data
+    public static class Progress {
+        /**
+         * 整体开始时间
+         */
+        private Date startDate;
+        /**
+         * 整体结束时间
+         */
+        private Date endDate;
+
+        /**
+         * 进度中会执行那些节点
+         */
+        private List<Node> nodes;
+    }
+
+
+    @Data
+    public static class Node {
+        /**
+         * 整体开始时间
+         */
+        private Date startDate;
+        /**
+         * 整体结束时间
+         */
+        private Date endDate;
+
+        /**
+         * 节点名称
+         */
+        private String nodeName;
     }
 }

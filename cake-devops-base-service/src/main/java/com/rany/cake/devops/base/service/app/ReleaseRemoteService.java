@@ -25,6 +25,7 @@ import com.rany.cake.devops.base.domain.service.ReleaseDomainService;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.ReleaseCenter;
 import com.rany.cake.devops.base.service.adapter.ReleaseDataAdapter;
+import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.lock.client.RedissonLockClient;
 import lombok.AllArgsConstructor;
@@ -113,10 +114,18 @@ public class ReleaseRemoteService implements ReleaseService {
                 throw new DevOpsException(DevOpsErrorMessage.APPROVAL_NOT_APPROVED);
             }
         }
-        release.deploy();
-        releaseDomainService.update(release);
-        // TODO:异步开启线程去操作, 同时应该支持分布式锁，确保同一应用单一环境，有且只有一个发布
-        releaseCenter.release(release, app, appEnv, namespace, cluster);
+
+        String lockKey = String.format(Constants.CI_CD_DEPLOY_LOCK, app.getAppId(), appEnv.getEnvId());
+        try {
+            redissonLockClient.lock(lockKey);
+            releaseCenter.release(release, app, appEnv, namespace, cluster);
+            release.deploy();
+            releaseDomainService.update(release);
+        } catch (Exception ex) {
+            log.error("发生错误，请重试", ex);
+        } finally {
+            redissonLockClient.unlock(lockKey);
+        }
         return PojoResult.succeed(Boolean.TRUE);
     }
 }
