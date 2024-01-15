@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.context;
 
+import com.alibaba.fastjson.JSON;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
@@ -87,8 +88,9 @@ public class DeployContext implements Serializable {
      */
     private Progress progress;
 
-    public DeployContext() {
+    public DeployContext(String pipeKey) {
         this.progress = new Progress();
+        this.progress.setPipeKey(pipeKey);
     }
 
 
@@ -97,6 +99,10 @@ public class DeployContext implements Serializable {
      */
     @Data
     public static class Progress {
+        /**
+         * 流水线执行号
+         */
+        private String pipeKey;
         /**
          * 整体开始时间
          */
@@ -154,5 +160,9 @@ public class DeployContext implements Serializable {
             this.title = title;
             this.description = description;
         }
+    }
+
+    public String dump() {
+        return JSON.toJSONString(this.progress);
     }
 }

@@ -20,8 +20,17 @@ public class DefaultDeployPipeline implements DeployPipeline {
 
     private static final Logger log = LoggerFactory.getLogger("RabbitMq");
 
+    /**
+     * 头节点
+     */
     private final PluginNode head = new PluginNode();
+    /**
+     * 尾节点
+     */
     private PluginNode tail;
+    /**
+     * 上下文
+     */
     private final DeployContext deployContext;
 
     /**
@@ -29,10 +38,10 @@ public class DefaultDeployPipeline implements DeployPipeline {
      */
     private final ProgressObserver observer;
 
-    public DefaultDeployPipeline(DeployContext deployContext) {
+    public DefaultDeployPipeline(DeployContext deployContext, ProgressObserver observer) {
         this.deployContext = deployContext;
         tail = head;
-        this.observer = new ProgressUpdater();
+        this.observer = observer;
     }
 
     @Override
@@ -42,12 +51,15 @@ public class DefaultDeployPipeline implements DeployPipeline {
             log.info("pipeline begin to start...");
             // 设置开始执行时间
             this.deployContext.getProgress().setStartDate(new Date());
+            this.observer.updateProgress(this.deployContext);
             initialProgress();
             head.getNext().execute(this.deployContext);
         } catch (Exception ex) {
             log.error("pipeline occur an error.", ex);
             throw ex;
         } finally {
+            this.deployContext.getProgress().setEndDate(new Date());
+            this.observer.updateProgress(this.deployContext);
             MDC.clear();
         }
     }
@@ -95,7 +107,7 @@ public class DefaultDeployPipeline implements DeployPipeline {
         }
         tail = next;
     }
-    
+
     /**
      * 初始化进度
      */

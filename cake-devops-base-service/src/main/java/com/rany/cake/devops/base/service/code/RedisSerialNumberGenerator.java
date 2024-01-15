@@ -53,4 +53,22 @@ public class RedisSerialNumberGenerator {
         // 拼接流水号
         return "R" + format + String.format("%04d", serialNumber); // 这里"%04d"表示生成4位的自增部分，可根据需求调整
     }
+
+
+    /**
+     * 发布pipeline流水线号
+     *
+     * @param pipeKey 发布单号
+     * @return 发布pipeline流水线号
+     */
+    public String generatePipeNumber(String pipeKey) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        LocalDateTime now = LocalDateTime.now();
+        String format = FORMATTER.format(now);
+        String todayKey = String.format("%s_%s", pipeKey, TODAY.format(now));
+        // 生成自增部分
+        Long serialNumber = valueOperations.increment(todayKey, 1);
+        // 拼接流水号
+        return format + String.format("%04d", serialNumber); // 这里"%04d"表示生成4位的自增部分，可根据需求调整
+    }
 }

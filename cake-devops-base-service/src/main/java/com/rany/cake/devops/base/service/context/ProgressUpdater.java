@@ -1,11 +1,19 @@
 package com.rany.cake.devops.base.service.context;
 
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+
 public class ProgressUpdater implements ProgressObserver {
+
+    private final StringRedisTemplate stringRedisTemplate;
+
+    public ProgressUpdater(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
+
     @Override
     public void updateProgress(DeployContext deployContext) {
-        // 在这里执行更新进度的操作
-        // 可以调用 Redis，更新 Pipeline 执行进度
-        // 使用 deployContext 获取必要的信息
-        // ...
+        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+        valueOperations.set(deployContext.getProgress().getPipeKey(), deployContext.dump());
     }
 }
