@@ -44,6 +44,8 @@
 - [ ] **集群管理**: 集群终端、集群运维
 - [ ] **应用环境**: 创建发布单，发布pipeline，发布历史
 
+![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/WechatIMG869.jpeg)
+
 ![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/web.jpg)
 
 ## 向导
