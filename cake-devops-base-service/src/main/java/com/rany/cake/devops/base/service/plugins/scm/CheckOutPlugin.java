@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * 代码检出
+ * 代码分支
  *
  * @author zhongshengwang
- * @description 打包机器选择
+ * @description 代码分支
  * @date 2023/1/20 20:30
  * @email 18668485565163.com
  */

@@ -9,6 +9,7 @@ public class RunningConstant {
     public static final String BUILDER_PORT = "BUILDER_PORT";
     public static final String BUILDER_REMOTE_USER = "BUILDER_REMOTE_USER";
     public static final String BUILDER_REMOTE_PWD = "BUILDER_REMOTE_PASSWORD";
+    public static final String WORKSPACE_HOME = "WORKSPACE_HOME";
     /**
      * 通过调用curl接口判断实际的审批情况
      */

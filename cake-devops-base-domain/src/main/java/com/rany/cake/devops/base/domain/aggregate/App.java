@@ -14,7 +14,10 @@ import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -85,6 +88,11 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      * 状态
      */
     private String status;
+
+    /**
+     * webhook
+     */
+    private String webHook;
 
     /**
      * 业务归属

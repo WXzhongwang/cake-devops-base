@@ -12,9 +12,13 @@ import com.rany.cake.devops.base.service.context.DeployPipeline;
 import com.rany.cake.devops.base.service.context.ProgressUpdater;
 import com.rany.cake.devops.base.service.plugins.approval.ApprovalPlugin;
 import com.rany.cake.devops.base.service.plugins.approval.DeploymentForbiddenPlugin;
-import com.rany.cake.devops.base.service.plugins.ci.DeliveryPlugin;
+import com.rany.cake.devops.base.service.plugins.ci.BuildImagePlugin;
+import com.rany.cake.devops.base.service.plugins.ci.MavenBuildPlugin;
+import com.rany.cake.devops.base.service.plugins.image.PushAcrPlugin;
+import com.rany.cake.devops.base.service.plugins.image.PushHarborPlugin;
 import com.rany.cake.devops.base.service.plugins.machine.MachineSelectorPlugin;
 import com.rany.cake.devops.base.service.plugins.scm.CheckOutPlugin;
+import com.rany.cake.devops.base.service.plugins.scm.CodePlugin;
 import com.rany.cake.devops.base.service.plugins.test.SonarQubePlugin;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -39,7 +43,15 @@ public class ReleaseCenter {
     @Resource
     private CheckOutPlugin checkOutPlugin;
     @Resource
-    private DeliveryPlugin deliveryPlugin;
+    private CodePlugin codePlugin;
+    @Resource
+    private MavenBuildPlugin mavenBuildPlugin;
+    @Resource
+    private BuildImagePlugin buildImagePlugin;
+    @Resource
+    private PushAcrPlugin pushAcrPlugin;
+    @Resource
+    private PushHarborPlugin pushHarborPlugin;
     @Resource
     @Qualifier(ThreadPoolTaskConfiguration.TaskPools.CORE)
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
@@ -57,12 +69,16 @@ public class ReleaseCenter {
         deployContext.setNamespace(namespace);
 
         DeployPipeline pipeline = new DefaultDeployPipeline(deployContext, new ProgressUpdater(redisTemplate));
-        pipeline.addLast(machineSelectorPlugin);
         pipeline.addLast(approvalPlugin);
         pipeline.addLast(deploymentForbiddenPlugin);
         pipeline.addLast(checkOutPlugin);
+        pipeline.addLast(machineSelectorPlugin);
+        pipeline.addLast(codePlugin);
+        pipeline.addLast(mavenBuildPlugin);
         pipeline.addLast(sonarQubePlugin);
-        pipeline.addLast(deliveryPlugin);
+        pipeline.addLast(buildImagePlugin);
+        pipeline.addLast(pushAcrPlugin);
+        pipeline.addLast(pushHarborPlugin);
         threadPoolTaskExecutor.execute(pipeline::start);
         return Boolean.TRUE;
     }

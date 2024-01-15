@@ -1,25 +1,29 @@
-package com.rany.cake.devops.base.service.plugins.test;
+package com.rany.cake.devops.base.service.plugins.ci;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
- * sonar代码扫描
+ * 工作空间创建
  *
  * @author zhongshengwang
- * @description sonar代码扫描
- * @date 2023/1/19 18:27
+ * @description TODO
+ * @date 2023/1/20 19:41
  * @email 18668485565163.com
  */
-@Component
-public class SonarQubePlugin extends BasePlugin {
 
+@Component
+public class WorkSpacePlugin extends BasePlugin {
     @Override
     public boolean init(DeployContext context) {
         return true;
@@ -27,19 +31,24 @@ public class SonarQubePlugin extends BasePlugin {
 
     @Override
     public boolean execute(DeployContext context) {
-        context.putArg(RunningConstant.SONAR_ADDRESS_URL, "http://127.0.0.1:9000");
-        context.putArg(RunningConstant.SONAR_LOGIN, "admin");
-        context.putArg(RunningConstant.SONAR_PWD, "123456789");
-
         String host = (String) context.getArgMap().get(RunningConstant.BUILDER_IP);
         Integer port = (Integer) context.getArgMap().get(RunningConstant.BUILDER_PORT);
         String user = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_USER);
         String password = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_PWD);
-        String webHook = context.getApp().getWebHook();
-        String repo = context.getApp().getCodeRepository().getRepo();
+        String appName = context.getApp().getAppName().getName();
+        //        String repo = context.getApp().getCodeRepository().getRepo();
+        //        String branch = context.getRelease().getReleaseBranch();
+        //        String releaseVersion = context.getRelease().getReleaseNo();
 
-        String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
+        // 获取当前日期和时间
+        LocalDateTime now = LocalDateTime.now();
+        // 定义日期时间格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        // 格式化日期和时间
+        String formattedDateTime = now.format(formatter);
+        String workspace = String.format(Constants.REMOTE_BASE + "/" + appName + "/" + formattedDateTime);
         log.info("workspace directory: " + workspace);
+        context.getArgMap().put(RunningConstant.WORKSPACE_HOME, workspace);
 
         JSch jsch = new JSch();
         Session session = null;
@@ -54,14 +63,14 @@ public class SonarQubePlugin extends BasePlugin {
 
             // 连接到服务器
             session.connect();
-            JSCHTool.remoteExecute(session, "cd " + workspace);
-//            sonar_scan "$1" "$2"
-//            local repo_url=$1
-//            local webhook_url=$2
-            String executeCommand = String.join(" ", "sh", "sonar_scan.sh", repo, webHook);
-            JSCHTool.remoteExecute(session, executeCommand);
+            
+            JSCHTool.remoteExecute(session, "mkdir -p " + workspace);
+            JSCHTool.remoteExecute(session, "cd " + workspace + ";\n" +
+                    "curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.1/java-build-source.tar.gz;" +
+                    "tar -zxvf java-build-source.tar.gz;\n" +
+                    "chmod +x *.sh;\n");
         } catch (JSchException e) {
-            log.error("SonarQubePlugin error", e);
+            log.error("WorkSpacePlugin error", e);
             return false;
         } finally {
             if (session != null) {
