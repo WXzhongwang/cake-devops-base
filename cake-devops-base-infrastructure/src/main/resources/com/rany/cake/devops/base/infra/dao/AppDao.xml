@@ -18,18 +18,20 @@
         <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
         <result column="department_abbreviation" property="departmentAbbreviation" jdbcType="VARCHAR"/>
         <result column="department" property="department" jdbcType="VARCHAR"/>
+        <result column="webhook" property="webhook" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id,
+        id
+        ,
           app_id
         , app_name, description, repo, default_branch, language, develop_mode, owner, health_check,
     status, is_deleted, gmt_create, gmt_modified, department_abbreviation, department,
-    creator, modifier
+    creator, modifier, webhook
     </sql>
 
     <select id="selectByAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from app
         where app_id = #{appId}
     </select>
@@ -40,7 +42,7 @@
                          develop_mode, owner, health_check,
                          status, is_deleted, gmt_create,
                          gmt_modified, department_abbreviation,
-                         department)
+                         department, webhook)
         values (#{appId.appId},
                 #{appName.name,jdbcType=VARCHAR},
                 #{description,jdbcType=VARCHAR},
@@ -55,7 +57,8 @@
                 #{gmtCreate,jdbcType=TIMESTAMP},
                 #{gmtModified,jdbcType=TIMESTAMP},
                 #{businessOwnership.departmentAbbreviation,jdbcType=VARCHAR},
-                #{businessOwnership.department,jdbcType=VARCHAR})
+                #{businessOwnership.department,jdbcType=VARCHAR},
+                #{webHook})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.App">
@@ -75,13 +78,15 @@
             department_abbreviation = #{businessOwnership.departmentAbbreviation,jdbcType=VARCHAR},
             department              = #{businessOwnership.department,jdbcType=VARCHAR},
             creator                 = #{creator,jdbcType=VARCHAR},
-            modifier                = #{modifier,jdbcType=VARCHAR}
+            modifier                = #{modifier,jdbcType=VARCHAR},
+            webhook                 = #{webHook}
         where app_id = #{appId.appId}
     </update>
 
-    <select id="queryApp" parameterType="com.rany.cake.devops.base.domain.repository.param.AppQueryParam" resultMap="BaseResultMap">
+    <select id="queryApp" parameterType="com.rany.cake.devops.base.domain.repository.param.AppQueryParam"
+            resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from app
         <where>
             is_deleted = '0'
