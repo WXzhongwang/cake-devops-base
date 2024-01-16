@@ -1,5 +1,6 @@
 #!/bin/bash
 # send_notification.sh
+source ~/.bash_profile
 
 # 通过钉钉发送通知
 function send_dingding_notification {

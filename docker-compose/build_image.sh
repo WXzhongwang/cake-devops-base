@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+source ~/.bash_profile
 
 function build_image {
     echo "【BuildImage】开始运行..."

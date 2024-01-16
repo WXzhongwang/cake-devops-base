@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+source ~/.bash_profile
 
 function sonar_scan {
     echo "【SonarScan】开始运行..."

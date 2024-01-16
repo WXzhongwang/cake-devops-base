@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+source ~/.bash_profile
 
 function mvn_build {
     echo "【MavenBuild】开始运行..."

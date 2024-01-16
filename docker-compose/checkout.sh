@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+source ~/.bash_profile
 
 function checkout {
     echo "【Checkout】开始运行..."

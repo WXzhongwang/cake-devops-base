@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+source ~/.bash_profile
 
 function push_aliyun_image {
     echo "【PushAliyunImage】开始运行..."

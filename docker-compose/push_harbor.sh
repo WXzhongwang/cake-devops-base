@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+source ~/.bash_profile
 
 function push_harbor_image {
     echo "【PushImage】开始运行..."
