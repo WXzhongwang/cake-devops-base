@@ -7,6 +7,8 @@ public enum ApprovalStatus {
     PENDING,
 
     APPROVED,
+    
+    AUTO_APPROVED,
 
     REPEALED,
 

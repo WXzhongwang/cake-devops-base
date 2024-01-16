@@ -11,8 +11,8 @@ import com.rany.cake.devops.base.domain.base.AppConfig;
 import com.rany.cake.devops.base.domain.enums.AppRoleEnum;
 import com.rany.cake.devops.base.domain.enums.CodeLanguageEnum;
 import com.rany.cake.devops.base.domain.enums.DevelopMode;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class AppServiceTest extends BaseTests {
         // createAppCommand.setAppEnvs(Lists.newArrayList());
         createAppCommand.setHealthCheck("/ok");
         PojoResult<String> app = appService.createApp(createAppCommand);
-        Assert.assertTrue(app.getSuccess());
+        Assertions.assertTrue(app.getSuccess());
     }
 
     public void createAppEnv() {

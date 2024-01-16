@@ -1,39 +1,52 @@
 package com.rany.cake.devops.base.service.plugins.approval;
 
-import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
+import com.rany.cake.devops.base.domain.aggregate.Approval;
+import com.rany.cake.devops.base.domain.enums.ApprovalStatus;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
+import com.rany.cake.devops.base.domain.repository.ApprovalRepository;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
-import com.rany.cake.devops.base.service.plugins.RunningConstant;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 发布审批插件
- * 通过curl 特定接口，判断应用发布审批是否通过
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 发布审批插件
  * @date 2023/1/20 19:41
  * @email 18668485565163.com
  */
 @Component
 public class ApprovalPlugin extends BasePlugin {
 
+    @Resource
+    private ApprovalRepository approvalRepository;
+
     @Override
     public boolean init(DeployContext context) {
         return true;
     }
 
+    @SneakyThrows
     @Override
     public boolean execute(DeployContext context) {
         ApprovalId approvalId = context.getRelease().getApprovalId();
-        context.putArg(RunningConstant.APPROVAL_CHECK_REQUIRED, Boolean.FALSE);
-        // 线上环境，校验发布单是否通过
-        if (context.getAppEnv().getEnv().equals(AppEnvEnum.PROD)) {
-            context.putArg(RunningConstant.APPROVAL_CHECK_REQUIRED, Boolean.TRUE);
-            context.putArg(RunningConstant.APPROVAL_CHECK_ADDRESS,
-                    String.format(RunningConstant.APPROVAL_CURL_ADDRESS,
-                            approvalId.getApprovalId()));
+        while (true) {
+            Approval approval = approvalRepository.find(approvalId);
+            if (approval == null) {
+                log.warn("审批未找到:{}", approvalId.getApprovalId());
+                return false;
+            }
+            if (StringUtils.equals(approval.getApprovalStatus(), ApprovalStatus.AUTO_APPROVED.name()) ||
+                    StringUtils.equals(approval.getApprovalStatus(), ApprovalStatus.APPROVED.name())
+            ) {
+                break;
+            }
+            // Thread.sleep(2000);
         }
         return true;
     }

@@ -13,11 +13,13 @@ public class Machine extends DTO {
     private String hostId;
     private String name;
     private String hostName;
+    private String serverAddr;
     private Integer port;
     private String username;
     private String pkey;
     private String desc;
     private String verified;
+    private String status;
 
     /**
      * 打包机器权重

@@ -42,7 +42,7 @@ public class MachineSelectorPlugin extends BasePlugin {
         List<Host> packageMachineList = hostDomainService.getPackageMachineList();
         List<Machine> machines = hostDataAdapter.sourceToMachine(packageMachineList);
         Machine machine = machineSelector.doSelect(machines, context);
-        context.putArg(RunningConstant.BUILDER_IP, machine.getHostName());
+        context.putArg(RunningConstant.BUILDER_IP, machine.getServerAddr());
         context.putArg(RunningConstant.BUILDER_PORT, machine.getPort());
         context.putArg(RunningConstant.BUILDER_REMOTE_USER, machine.getUsername());
         context.putArg(RunningConstant.BUILDER_REMOTE_PWD, machine.getPkey());

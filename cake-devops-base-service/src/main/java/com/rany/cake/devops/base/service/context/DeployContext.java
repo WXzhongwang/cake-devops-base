@@ -91,6 +91,7 @@ public class DeployContext implements Serializable {
     public DeployContext(String pipeKey) {
         this.progress = new Progress();
         this.progress.setPipeKey(pipeKey);
+        this.progress.setSteps(new ArrayList<>());
     }
 
 

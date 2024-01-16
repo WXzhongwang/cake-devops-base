@@ -23,7 +23,7 @@ public class DefaultDeployPipeline implements DeployPipeline {
     /**
      * 头节点
      */
-    private final PluginNode head = new PluginNode();
+    private final PluginNode head = new PluginNode("head");
     /**
      * 尾节点
      */
@@ -81,7 +81,7 @@ public class DefaultDeployPipeline implements DeployPipeline {
             if (plugin == null) {
                 continue;
             }
-            PluginNode node = new PluginNode();
+            PluginNode node = new PluginNode(plugin.getClass().getName());
             node.setPlugin(plugin);
             node.setObserver(observer);
             node.setNext(pre);
@@ -99,7 +99,7 @@ public class DefaultDeployPipeline implements DeployPipeline {
                 continue;
             }
 
-            PluginNode node = new PluginNode();
+            PluginNode node = new PluginNode(plugin.getClass().getName());
             node.setPlugin(plugin);
             node.setObserver(observer);
             next.setNext(node);
@@ -114,7 +114,8 @@ public class DefaultDeployPipeline implements DeployPipeline {
     public void initialProgress() {
         PluginNode current = this.head;
         this.deployContext.getProgress().setCurrent(0);
-        while (current.getNext() != null) {
+        current = current.getNext();
+        while (current != null) {
             List<DeployContext.Node> steps = this.deployContext.getProgress().getSteps();
             steps.add(new DeployContext.Node(current.getName(), "待执行"));
             current = current.getNext();

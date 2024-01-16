@@ -24,10 +24,24 @@ public class PluginNode implements Plugin {
     private PluginNode next;
 
     private Plugin plugin;
+
+    /**
+     * 名称
+     */
+    @Getter
+    private String name;
     /**
      * 进度跟踪器
      */
     private ProgressObserver observer;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public PluginNode(String name) {
+        this.name = name;
+    }
 
     public void setNext(PluginNode next) {
         this.next = next;
@@ -44,17 +58,17 @@ public class PluginNode implements Plugin {
     @Override
     public boolean execute(DeployContext context) {
         context.increment();
-        DeployContext.Node node = context.getProgress().getSteps().get(context.current());
+        DeployContext.Node node = context.getProgress().getSteps().get(context.current() - 1);
         node.setStartDate(new Date());
-        context.setCurrentPluginName(this.plugin.getName());
-        context.getPluginNames().add(this.plugin.getName());
+        context.setCurrentPluginName(this.name);
+        context.getPluginNames().add(this.name);
         if (!plugin.execute(context) && stopWhenFailure()) {
-            log.info("{}执行结束", this.plugin.getName());
+            log.info("{}执行结束", this.name);
             node.setEndDate(new Date());
             observer.updateProgress(context);
             return false;
         }
-        log.info("{}执行结束", this.plugin.getName());
+        log.info("{}执行结束", this.name);
         node.setEndDate(new Date());
         observer.updateProgress(context);
         return next != null && next.execute(context);

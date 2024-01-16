@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Date;
 
@@ -43,10 +44,13 @@ public class Approval extends BaseAggregateRoot implements IAggregate<ApprovalId
 
     }
 
-    public void init() {
+    public void init(Boolean needApproval) {
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.gmtCreate = new Date();
         this.gmtModified = this.gmtCreate;
+        if (BooleanUtils.isFalse(needApproval)) {
+            this.approvalStatus = ApprovalStatus.AUTO_APPROVED.name();
+        }
     }
 
     public Boolean delete() {

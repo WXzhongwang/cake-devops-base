@@ -80,7 +80,7 @@ public class ReleaseRemoteService implements ReleaseService {
                 createReleaseCommand.getReleaseDate(),
                 ApprovalStatus.PENDING.name(),
                 createReleaseCommand.getComment());
-        approval.init();
+        approval.init(appEnv.getNeedApproval());
 
         release.setApprovalId(approval.getApprovalId());
         approvalDomainService.save(approval);

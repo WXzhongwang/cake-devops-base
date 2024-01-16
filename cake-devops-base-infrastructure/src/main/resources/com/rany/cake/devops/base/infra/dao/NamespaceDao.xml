@@ -23,7 +23,7 @@
     <sql id="Base_Column_List">
 
         id
-        namespace_id,
+        namespace_id
         , cluster_id, name, request_cpu, request_memory, limit_cpu, limit_memory, max_pods,
     max_gpu, max_services, status, is_deleted, gmt_create, gmt_modified, creator, modifier
     </sql>
@@ -107,7 +107,7 @@
     <select id="selectByNamespaceId" parameterType="java.lang.String" resultMap="BaseResultMap">
 
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from namespace
         where namespace_id = #{namespaceId}
     </select>

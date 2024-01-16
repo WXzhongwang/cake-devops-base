@@ -4,7 +4,7 @@ import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.machine.Machine;
 import com.rany.cake.devops.base.service.plugins.machine.RandomLoadBalancer;
 import com.rany.cake.devops.base.service.plugins.machine.RandomWeightLoadBalancer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class Balancer extends BaseTests {
         // 假设有三台机器
         List<Machine> machines = new ArrayList<>();
         // 进行随机轮询选择
-        Machine selectedMachine = loadBalancer.doSelect(machines, new DeployContext());
+        Machine selectedMachine = loadBalancer.doSelect(machines, new DeployContext(null));
         // 打印选择的机器信息
         System.out.println("Selected Machine: " + selectedMachine);
     }
@@ -30,7 +30,7 @@ public class Balancer extends BaseTests {
         // 假设有三台机器
         List<Machine> machines = new ArrayList<>();
         // 进行加权轮询选择
-        Machine selectedMachine = loadBalancer.doSelect(machines, new DeployContext());
+        Machine selectedMachine = loadBalancer.doSelect(machines, new DeployContext(null));
         // 打印选择的机器信息
         System.out.println("Selected Machine: " + selectedMachine);
     }

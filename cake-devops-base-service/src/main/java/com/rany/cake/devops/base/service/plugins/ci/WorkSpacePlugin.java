@@ -63,10 +63,10 @@ public class WorkSpacePlugin extends BasePlugin {
 
             // 连接到服务器
             session.connect();
-            
+
             JSCHTool.remoteExecute(session, "mkdir -p " + workspace);
             JSCHTool.remoteExecute(session, "cd " + workspace + ";\n" +
-                    "curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.1/java-build-source.tar.gz;" +
+                    "curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.2/java-build-source.tar.gz;" +
                     "tar -zxvf java-build-source.tar.gz;\n" +
                     "chmod +x *.sh;\n");
         } catch (JSchException e) {

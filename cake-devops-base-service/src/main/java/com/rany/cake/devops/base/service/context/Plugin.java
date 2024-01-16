@@ -28,17 +28,7 @@ public interface Plugin {
      */
     boolean execute(DeployContext context);
 
-
-    /**
-     * 获取插件名称
-     *
-     * @return
-     */
-    default String getName() {
-        return this.getClass().getName();
-    }
-
-
+    
     /**
      * plugin 执行失败是否可继续执行
      * 默认：仍然可以执行

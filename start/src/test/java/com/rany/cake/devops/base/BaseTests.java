@@ -4,10 +4,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@SpringBootTest(classes = CakeDevopsBaseApplication.class, properties = {
-        "websocket.enabled=false",
-        "ssh.shell.enable=false",
-        "shenyu.register.enabled=false"})
+@SpringBootTest(classes = CakeDevopsBaseApplication.class)
 @RunWith(SpringRunner.class)
 // @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 // @TestPropertySource(properties = {"websocket.enabled=false, ssh.shell.enable=false, shenyu.register.enabled=false"})
