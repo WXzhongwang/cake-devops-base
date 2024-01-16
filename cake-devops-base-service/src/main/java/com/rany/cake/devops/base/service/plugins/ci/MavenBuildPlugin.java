@@ -31,7 +31,7 @@ public class MavenBuildPlugin extends BasePlugin {
         Integer port = (Integer) context.getArgMap().get(RunningConstant.BUILDER_PORT);
         String user = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_USER);
         String password = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_PWD);
-        String webHook = context.getApp().getWebHook();
+        String webHook = context.getApp().getWebhook();
         String repo = context.getApp().getCodeRepository().getRepo();
 
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
@@ -50,12 +50,12 @@ public class MavenBuildPlugin extends BasePlugin {
 
             // 连接到服务器
             session.connect();
-            JSCHTool.remoteExecute(session, "cd " + workspace);
+            // JSCHTool.remoteExecute(session, "cd " + workspace);
 //            mvn_build "$1" "$2"
 //            local repo_url=$1
 //            local webhook_url=$2
             String executeCommand = String.join(" ", "sh", "maven_build.sh", repo, webHook);
-            JSCHTool.remoteExecute(session, executeCommand);
+            JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand);
         } catch (JSchException e) {
             log.error("MavenBuildPlugin error", e);
             return false;

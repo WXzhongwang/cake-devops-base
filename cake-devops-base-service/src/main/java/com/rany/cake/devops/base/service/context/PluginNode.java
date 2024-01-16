@@ -57,6 +57,7 @@ public class PluginNode implements Plugin {
 
     @Override
     public boolean execute(DeployContext context) {
+        log.info("{}开始执行", this.name);
         context.increment();
         DeployContext.Node node = context.getProgress().getSteps().get(context.current() - 1);
         node.setStartDate(new Date());

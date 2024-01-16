@@ -31,7 +31,7 @@ public class BuildImagePlugin extends BasePlugin {
         Integer port = (Integer) context.getArgMap().get(RunningConstant.BUILDER_PORT);
         String user = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_USER);
         String password = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_PWD);
-        String webHook = context.getApp().getWebHook();
+        String webHook = context.getApp().getWebhook();
         String repo = context.getApp().getCodeRepository().getRepo();
         String appName = context.getApp().getAppName().getName();
         String branch = context.getRelease().getReleaseBranch();
@@ -53,14 +53,14 @@ public class BuildImagePlugin extends BasePlugin {
 
             // 连接到服务器
             session.connect();
-            JSCHTool.remoteExecute(session, "cd " + workspace);
+            // JSCHTool.remoteExecute(session, "cd " + workspace);
 //            build_image "$1" "$2" "$3" "$4"
 //            local repo_url=$1
 //            local project=$2
 //            local version=$3
 //            local webhook_url=$4
             String executeCommand = String.join(" ", "sh", "build_image.sh", repo, appName, releaseVersion, webHook);
-            JSCHTool.remoteExecute(session, "cd " + workspace + ";\n" +
+            JSCHTool.remoteExecute(session, "cd " + workspace + "; " +
                     executeCommand);
         } catch (JSchException e) {
             log.error("BuildImagePlugin error", e);

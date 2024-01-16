@@ -92,7 +92,7 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
     /**
      * webhook
      */
-    private String webHook;
+    private String webhook;
 
     /**
      * 业务归属
