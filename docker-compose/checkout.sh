@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+# shellcheck disable=SC1090
 source ~/.bash_profile
 
 function checkout {

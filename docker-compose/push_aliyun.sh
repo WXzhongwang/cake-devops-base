@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+# shellcheck disable=SC1090
 source ~/.bash_profile
 
 function push_aliyun_image {
@@ -31,6 +32,7 @@ function push_aliyun_image {
          send_notification "推送镜像失败" "failed" "$repo_name" "$webhook_url"
         exit 1
     fi
+    echo "【PushAliyunImage】推送阿里云镜像成功..."
 }
 
 # 示例用法

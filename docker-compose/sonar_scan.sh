@@ -29,9 +29,10 @@ function sonar_scan {
     # shellcheck disable=SC2181
     if [ $? -ne 0 ]; then
         echo "SonarQube扫描失败"
-           send_notification "构建失败" "failed" "$repo_name" "$webhook_url"
+           send_notification "SonarQube扫描失败" "failed" "$repo_name" "$webhook_url"
         exit 1
     fi
+    echo "【SonarScan】扫描成功..."
 }
 
 # 示例用法

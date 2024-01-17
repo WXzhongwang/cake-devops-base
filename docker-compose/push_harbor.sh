@@ -31,6 +31,7 @@ function push_harbor_image {
         send_notification "推送镜像失败" "failed" "$repo_name" "$webhook_url"
         exit 1
     fi
+   echo "【PushImage】推送镜像成功..."
 }
 
 # 示例用法

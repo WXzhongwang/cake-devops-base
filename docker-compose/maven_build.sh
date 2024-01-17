@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+# shellcheck disable=SC1090
 source ~/.bash_profile
 
 function mvn_build {
@@ -27,6 +28,7 @@ function mvn_build {
         send_notification "编译失败" "failed" "$repo_name" "$webhook_url"
         exit 1
     fi
+    echo "【MavenBuild】编译成功..."
 }
 
 # 示例用法

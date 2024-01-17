@@ -3,6 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
+# shellcheck disable=SC1090
 source ~/.bash_profile
 
 function build_image {
@@ -29,6 +30,7 @@ function build_image {
         send_notification "镜像构建失败" "failed" "$repo_name" "$webhook_url"
         exit 1
     fi
+    echo "【BuildImage】镜像构建成功..."
 }
 
 build_image "$1" "$2" "$3" "$4"
