@@ -35,7 +35,7 @@ public class BuildImagePlugin extends BasePlugin {
         String repo = context.getApp().getCodeRepository().getRepo();
         String appName = context.getApp().getAppName().getName();
         String branch = context.getRelease().getReleaseBranch();
-        String releaseVersion = context.getRelease().getReleaseNo();
+        String releaseNo = context.getRelease().getReleaseNo();
 
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("workspace directory: " + workspace);
@@ -60,7 +60,7 @@ public class BuildImagePlugin extends BasePlugin {
 //            local version=$3
 //            local webhook_url=$4
             //String executeCommand = String.join(" ", "sh", "build_image.sh", repo, appName, releaseVersion, webHook);
-            String executeCommand = String.format(" sh build_image.sh '%s' %s %s '%s'", repo, appName, releaseVersion, webHook);
+            String executeCommand = String.format(" sh build_image.sh '%s' %s %s '%s'", repo, appName, releaseNo, webHook);
             JSCHTool.remoteExecute(session, "cd " + workspace + "; " +
                     executeCommand);
         } catch (JSchException e) {
