@@ -60,7 +60,7 @@ public class BuildImagePlugin extends BasePlugin {
 //            local version=$3
 //            local webhook_url=$4
             //String executeCommand = String.join(" ", "sh", "build_image.sh", repo, appName, releaseVersion, webHook);
-            String executeCommand = String.format(" sh build_image.sh '%s' %s %s '%s'", repo, appName, branch, webHook);
+            String executeCommand = String.format(" sh build_image.sh '%s' %s %s '%s'", repo, appName, releaseVersion, webHook);
             JSCHTool.remoteExecute(session, "cd " + workspace + "; " +
                     executeCommand);
         } catch (JSchException e) {

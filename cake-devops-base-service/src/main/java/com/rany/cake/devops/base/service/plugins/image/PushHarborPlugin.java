@@ -63,7 +63,7 @@ public class PushHarborPlugin extends BasePlugin {
 //            local webhook_url=$5
             //String executeCommand = String.join(" ", "sh", "push_harbor.sh", repo, appName, appName, releaseVersion, webHook);
             String executeCommand = String.format(" sh push_harbor.sh '%s' %s %s %s '%s'", repo, appName, appName, releaseVersion, webHook);
-            JSCHTool.remoteExecute(session, executeCommand);
+            JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand);
         } catch (JSchException e) {
             log.error("PushHarborPlugin error", e);
             return false;
