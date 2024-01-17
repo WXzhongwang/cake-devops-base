@@ -61,7 +61,8 @@ public class PushAcrPlugin extends BasePlugin {
 //            local project=$3
 //            local version=$4
 //            local webhook_url=$5
-            String executeCommand = String.join(" ", "sh", "push_aliyun.sh", repo, appName, appName, releaseVersion, webHook);
+            // String executeCommand = String.join(" ", "sh", "push_aliyun.sh", repo, appName, appName, releaseVersion, webHook);
+            String executeCommand = String.format(" sh push_aliyun.sh '%s' %s %s %s '%s'", repo, appName, appName, releaseVersion, webHook);
             JSCHTool.remoteExecute(session, executeCommand);
         } catch (JSchException e) {
             log.error("DeliveryPlugin error", e);

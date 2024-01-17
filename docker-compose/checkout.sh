@@ -15,14 +15,20 @@ function checkout {
     folder_name="$(pwd)/$repo_name"
 
     # 拉取远程Git仓库代码
-    git clone -b "$branch_name" "$repo_url" "$folder_name"
+    # 拉取远程 Git 仓库代码，将标准错误输出合并到标准输出
+    clone_output=$(git clone -b "$branch_name" "$repo_url" "$folder_name" 2>&1)
+
+    # 获取 git clone 的返回码
+    exit_code=$?
     # shellcheck disable=SC2181
-    if [ $? -ne 0 ]; then
-        echo "代码拉取失败"
+    if [ $exit_code -ne 0 ]; then
+        echo "Git Clone Error: $clone_output"
         # shellcheck disable=SC2154
         send_notification "代码拉取失败" "failed" "$repo_name" "$webhook_url"
         exit 1
     fi
+    echo "$clone_output"
+    echo "【Checkout】代码拉取完成..."
 }
 
 # 示例用法

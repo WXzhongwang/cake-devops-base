@@ -84,7 +84,7 @@ public class ReleaseCenter {
         pipeline.addLast(sonarQubePlugin);
         pipeline.addLast(buildImagePlugin);
         pipeline.addLast(pushAcrPlugin);
-        pipeline.addLast(pushHarborPlugin);
+        // pipeline.addLast(pushHarborPlugin);
         // threadPoolTaskExecutor.execute(pipeline::start);
         pipeline.start();
         return Boolean.TRUE;
