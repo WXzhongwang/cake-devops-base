@@ -39,4 +39,9 @@ public class AppEnvDTO extends DTO {
      * 状态
      */
     private String status;
+
+    /**
+     * 发布状态
+     */
+    private String deployStatus;
 }

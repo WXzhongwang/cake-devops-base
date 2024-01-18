@@ -11,10 +11,7 @@ import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.dto.DepartmentDTO;
-import com.rany.cake.devops.base.api.query.AppBasicQuery;
-import com.rany.cake.devops.base.api.query.AppEnvQuery;
-import com.rany.cake.devops.base.api.query.AppMemberPageQuery;
-import com.rany.cake.devops.base.api.query.AppPageQuery;
+import com.rany.cake.devops.base.api.query.*;
 import com.rany.cake.devops.base.api.service.AppMemberService;
 import com.rany.cake.devops.base.api.service.AppService;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +50,11 @@ public class AppController {
     @PostMapping("/createEnv")
     public PojoResult<String> createAppEnv(@RequestBody CreateAppEnvCommand createAppEnvCommand) {
         return appService.createAppEnv(createAppEnvCommand);
+    }
+
+    @PostMapping("/getAppEnv")
+    public PojoResult<AppEnvDTO> getAppEnv(@RequestBody AppEnvBasicQuery appEnvBasicQuery) {
+        return appService.getAppEnv(appEnvBasicQuery);
     }
 
     @PostMapping("/listEnv")

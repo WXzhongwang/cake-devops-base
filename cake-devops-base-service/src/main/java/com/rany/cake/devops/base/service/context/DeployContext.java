@@ -6,6 +6,7 @@ import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
 import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.enums.ReleaseStatus;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -165,5 +166,20 @@ public class DeployContext implements Serializable {
 
     public String dump() {
         return JSON.toJSONString(this.progress);
+    }
+
+    public void fail() {
+        this.release.setReleaseStatus(ReleaseStatus.FAILED.name());
+        this.release.setGmtModified(new Date());
+    }
+
+    public void success() {
+        this.release.setReleaseStatus(ReleaseStatus.FINISHED.name());
+        this.release.setGmtModified(new Date());
+    }
+
+    public void start() {
+        this.release.setReleaseStatus(ReleaseStatus.PENDING.name());
+        this.release.setGmtModified(new Date());
     }
 }

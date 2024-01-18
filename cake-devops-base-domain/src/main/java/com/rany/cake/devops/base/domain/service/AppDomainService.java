@@ -61,6 +61,10 @@ public class AppDomainService {
         return appRepository.find(appId);
     }
 
+    public AppEnv getAppEnv(String envId) {
+        return appRepository.getAppEnv(envId);
+    }
+
     public List<AppEnv> listAppEnv(AppId appId) {
         return appRepository.listAppEnv(appId.getAppId());
     }

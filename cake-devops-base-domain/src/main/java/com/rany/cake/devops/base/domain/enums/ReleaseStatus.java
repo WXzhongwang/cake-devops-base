@@ -19,4 +19,8 @@ public enum ReleaseStatus {
      * 已发布
      */
     FINISHED,
+    /**
+     * 发布失败
+     */
+    FAILED,
 }

@@ -8,6 +8,7 @@ import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
+import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.infra.aop.PagingQuery;
 import com.rany.cake.devops.base.infra.convertor.AppDataConvertor;
@@ -16,7 +17,6 @@ import com.rany.cake.devops.base.infra.dao.AppDao;
 import com.rany.cake.devops.base.infra.dao.AppEnvDao;
 import com.rany.cake.devops.base.infra.mapper.AppEnvPOMapper;
 import com.rany.cake.devops.base.infra.mapper.AppPOMapper;
-import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.infra.po.AppEnvPO;
 import com.rany.cake.devops.base.infra.po.AppPO;
 import org.springframework.stereotype.Service;
@@ -74,6 +74,11 @@ public class AppRepositoryImpl implements AppRepository {
     @Override
     public void saveAppEnv(AppEnv appEnv) {
         appEnvDao.save(appEnv);
+    }
+
+    @Override
+    public void updateAppEnv(AppEnv appEnv) {
+        appEnvDao.update(appEnv);
     }
 
     @Override

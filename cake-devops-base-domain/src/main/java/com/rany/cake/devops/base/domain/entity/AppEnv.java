@@ -4,12 +4,14 @@ import com.cake.framework.common.base.BaseEntity;
 import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
 import com.rany.cake.devops.base.domain.enums.CommonStatusEnum;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.domain.enums.EnvDeployStatusEnum;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +54,11 @@ public class AppEnv extends BaseEntity<String> {
      */
     private String status;
 
+    /**
+     * 发布状态
+     */
+    private String deployStatus;
+
     public AppEnv() {
     }
 
@@ -63,5 +70,16 @@ public class AppEnv extends BaseEntity<String> {
         this.env = env;
         this.status = CommonStatusEnum.ENABLE.getValue();
         this.isDeleted = DeleteStatusEnum.NO.getValue();
+        this.deployStatus = EnvDeployStatusEnum.NORMAL.getValue();
+    }
+
+    public void deploy() {
+        this.deployStatus = EnvDeployStatusEnum.DEPLOYING.getValue();
+        this.gmtModified = new Date();
+    }
+
+    public void recover() {
+        this.deployStatus = EnvDeployStatusEnum.NORMAL.getValue();
+        this.gmtModified = new Date();
     }
 }

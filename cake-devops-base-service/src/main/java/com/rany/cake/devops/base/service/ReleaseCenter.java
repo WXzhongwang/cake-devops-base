@@ -60,6 +60,8 @@ public class ReleaseCenter {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @Resource
     private RedisSerialNumberGenerator redisSerialNumberGenerator;
+    @Resource
+    private ProgressUpdater progressUpdater;
 
 
     public Boolean release(Release release, App app, AppEnv appEnv, Namespace namespace, Cluster cluster) {
@@ -71,7 +73,7 @@ public class ReleaseCenter {
         deployContext.setCluster(cluster);
         deployContext.setNamespace(namespace);
 
-        DeployPipeline pipeline = new DefaultDeployPipeline(deployContext, new ProgressUpdater(redisTemplate));
+        DeployPipeline pipeline = new DefaultDeployPipeline(deployContext, progressUpdater);
         pipeline.addLast(approvalPlugin);
         pipeline.addLast(deploymentForbiddenPlugin);
         pipeline.addLast(machineSelectorPlugin);

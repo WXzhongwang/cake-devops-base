@@ -49,13 +49,18 @@ public class DefaultDeployPipeline implements DeployPipeline {
         try {
             MDC.put(Constants.__TRACE_RELEASE_ID__, String.valueOf(deployContext.getRelease().getReleaseId().getReleaseId()));
             log.info("pipeline begin to start...");
+            this.deployContext.start();
             // 设置开始执行时间
             this.deployContext.getProgress().setStartDate(new Date());
             this.observer.updateProgress(this.deployContext);
             initialProgress();
             head.getNext().execute(this.deployContext);
+            // 标注任务执行成功
+            this.deployContext.success();
         } catch (Exception ex) {
             log.error("pipeline occur an error.", ex);
+            // 标注任务执行失败
+            this.deployContext.fail();
             throw ex;
         } finally {
             this.deployContext.getProgress().setEndDate(new Date());

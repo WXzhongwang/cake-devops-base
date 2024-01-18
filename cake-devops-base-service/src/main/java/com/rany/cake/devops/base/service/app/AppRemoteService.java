@@ -12,6 +12,7 @@ import com.rany.cake.devops.base.api.dto.*;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
 import com.rany.cake.devops.base.api.query.AppBasicQuery;
+import com.rany.cake.devops.base.api.query.AppEnvBasicQuery;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
 import com.rany.cake.devops.base.api.query.AppPageQuery;
 import com.rany.cake.devops.base.api.service.AppService;
@@ -52,7 +53,10 @@ import org.apache.commons.lang3.EnumUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -182,6 +186,13 @@ public class AppRemoteService implements AppService {
     }
 
     @Override
+    public PojoResult<AppEnvDTO> getAppEnv(AppEnvBasicQuery appEnvBasicQuery) {
+        AppEnv appEnv = appDomainService.getAppEnv(appEnvBasicQuery.getEnvId());
+        AppEnvDTO appEnvDTO = appDataAdapter.envSourceToTarget(appEnv);
+        return PojoResult.succeed(appEnvDTO);
+    }
+
+    @Override
     public ListResult<AppEnvDTO> listAppEnv(AppEnvQuery appEnvQuery) {
         App app = appDomainService.getApp(new AppId(appEnvQuery.getAppId()));
         if (app == null) {
@@ -193,7 +204,7 @@ public class AppRemoteService implements AppService {
 
     @Override
     public ListResult<DepartmentDTO> listDepartments() {
-        List<DepartmentDTO> departmentDTOS= new ArrayList<>();
+        List<DepartmentDTO> departmentDTOS = new ArrayList<>();
         List<DepartmentConfig.Department> departments = departmentConfig.getDepartments();
         for (DepartmentConfig.Department department : departments) {
             departmentDTOS.add(new DepartmentDTO().setLabel(department.getLabel()).setValue(department.getValue())

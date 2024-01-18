@@ -2,34 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.rany.cake.devops.base.infra.dao.AppEnvDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.AppEnvPO">
-        <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="cluster_id" jdbcType="VARCHAR" property="clusterId" />
-        <result column="app_id" jdbcType="VARCHAR" property="appId" />
-        <result column="domains" jdbcType="VARCHAR" property="domains" />
-        <result column="env_name" jdbcType="VARCHAR" property="envName" />
-        <result column="env" jdbcType="VARCHAR" property="env" />
-        <result column="replicas" jdbcType="INTEGER" property="replicas" />
-        <result column="cpu" jdbcType="VARCHAR" property="cpu" />
-        <result column="max_cpu" jdbcType="VARCHAR" property="maxCpu" />
-        <result column="memory" jdbcType="VARCHAR" property="memory" />
-        <result column="max_memory" jdbcType="VARCHAR" property="maxMemory" />
-        <result column="auto_scaling" jdbcType="CHAR" property="autoScaling" />
-        <result column="need_approval" jdbcType="CHAR" property="needApproval" />
-        <result column="status" jdbcType="VARCHAR" property="status" />
-        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
-        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
-        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
-        <result column="creator" jdbcType="VARCHAR" property="creator" />
-        <result column="modifier" jdbcType="VARCHAR" property="modifier" />
-        <result column="env_id" jdbcType="VARCHAR" property="envId" />
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="cluster_id" jdbcType="VARCHAR" property="clusterId"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+        <result column="domains" jdbcType="VARCHAR" property="domains"/>
+        <result column="env_name" jdbcType="VARCHAR" property="envName"/>
+        <result column="env" jdbcType="VARCHAR" property="env"/>
+        <result column="replicas" jdbcType="INTEGER" property="replicas"/>
+        <result column="cpu" jdbcType="VARCHAR" property="cpu"/>
+        <result column="max_cpu" jdbcType="VARCHAR" property="maxCpu"/>
+        <result column="memory" jdbcType="VARCHAR" property="memory"/>
+        <result column="max_memory" jdbcType="VARCHAR" property="maxMemory"/>
+        <result column="auto_scaling" jdbcType="CHAR" property="autoScaling"/>
+        <result column="need_approval" jdbcType="CHAR" property="needApproval"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="env_id" jdbcType="VARCHAR" property="envId"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, env_id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
+        id
+        , env_id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
     auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
-    modifier
+    modifier, deploy_status
     </sql>
-    <select id="selectByAppId"  resultMap="BaseResultMap">
+    <select id="selectByAppId" resultMap="BaseResultMap">
 
         select
         <include refid="Base_Column_List"/>
@@ -37,7 +38,7 @@
         where app_id = #{appId}
     </select>
 
-    <select id="selectByEnvId"  resultMap="BaseResultMap">
+    <select id="selectByEnvId" resultMap="BaseResultMap">
 
         select
         <include refid="Base_Column_List"/>
@@ -53,7 +54,7 @@
                              max_cpu, max_memory,
                              auto_scaling, need_approval, status,
                              is_deleted, gmt_create, gmt_modified,
-                             creator, modifier)
+                             creator, modifier, deploy_status)
         values (#{envId},
                 #{clusterId.clusterId},
                 #{appId.appId},
@@ -63,7 +64,8 @@
                 #{resourceStrategy.maxCpu}, #{resourceStrategy.maxMemory},
                 #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
-                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
+                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+                #{deployStatus})
     </insert>
 
 
@@ -125,6 +127,9 @@
             </if>
             <if test="modifier != null">
                 modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="deployStatus != null">
+                deploy_status = #{deployStatus},
             </if>
         </set>
         where env_id = #{envId}
