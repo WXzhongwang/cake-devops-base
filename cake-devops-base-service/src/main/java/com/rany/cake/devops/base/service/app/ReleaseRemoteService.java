@@ -119,7 +119,6 @@ public class ReleaseRemoteService implements ReleaseService {
         try {
             redissonLockClient.lock(lockKey);
             releaseCenter.release(release, app, appEnv, namespace, cluster);
-            releaseDomainService.update(release);
         } catch (Exception ex) {
             log.error("发生错误，请重试", ex);
         } finally {

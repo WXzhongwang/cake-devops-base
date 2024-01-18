@@ -181,5 +181,10 @@ public class DeployContext implements Serializable {
     public void start() {
         this.release.setReleaseStatus(ReleaseStatus.PENDING.name());
         this.release.setGmtModified(new Date());
+        this.progress.setStartDate(new Date());
+    }
+
+    public void end() {
+        this.progress.setEndDate(new Date());
     }
 }

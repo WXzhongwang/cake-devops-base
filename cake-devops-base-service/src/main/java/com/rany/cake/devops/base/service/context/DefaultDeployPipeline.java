@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,7 +50,6 @@ public class DefaultDeployPipeline implements DeployPipeline {
             log.info("pipeline begin to start...");
             this.deployContext.start();
             // 设置开始执行时间
-            this.deployContext.getProgress().setStartDate(new Date());
             this.observer.updateProgress(this.deployContext);
             initialProgress();
             head.getNext().execute(this.deployContext);
@@ -63,7 +61,7 @@ public class DefaultDeployPipeline implements DeployPipeline {
             this.deployContext.fail();
             throw ex;
         } finally {
-            this.deployContext.getProgress().setEndDate(new Date());
+            this.deployContext.end();
             this.observer.updateProgress(this.deployContext);
             MDC.clear();
         }

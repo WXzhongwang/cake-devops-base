@@ -59,6 +59,11 @@ public class AppEnv extends BaseEntity<String> {
      */
     private String deployStatus;
 
+    /**
+     * 发布进度
+     */
+    private String progress;
+
     public AppEnv() {
     }
 
@@ -73,13 +78,15 @@ public class AppEnv extends BaseEntity<String> {
         this.deployStatus = EnvDeployStatusEnum.NORMAL.getValue();
     }
 
-    public void deploy() {
+    public void deploy(String progress) {
         this.deployStatus = EnvDeployStatusEnum.DEPLOYING.getValue();
         this.gmtModified = new Date();
+        this.progress = progress;
     }
 
-    public void recover() {
+    public void recover(String progress) {
         this.deployStatus = EnvDeployStatusEnum.NORMAL.getValue();
         this.gmtModified = new Date();
+        this.progress = progress;
     }
 }

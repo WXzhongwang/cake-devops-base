@@ -6,16 +6,13 @@ import com.rany.cake.devops.base.domain.enums.ReleaseStatus;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 
+@Component
 public class ProgressUpdater implements ProgressObserver {
-
-    @Resource
-    private RedisTemplate<String, String> redisTemplate;
     @Resource
     private ReleaseRepository releaseRepository;
     @Resource
@@ -23,18 +20,19 @@ public class ProgressUpdater implements ProgressObserver {
 
     @Override
     public void updateProgress(DeployContext deployContext) {
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(deployContext.getProgress().getPipeKey(), deployContext.dump());
         Release release = deployContext.getRelease();
         AppEnv appEnv = deployContext.getAppEnv();
+        // 设定当前应用环境下最新进度
         if (StringUtils.equals(release.getReleaseStatus(), ReleaseStatus.FAILED.name()) ||
                 StringUtils.equals(release.getReleaseStatus(), ReleaseStatus.FINISHED.name())) {
-            appEnv.recover();
+            appEnv.recover(deployContext.dump());
         }
         if (StringUtils.equals(release.getReleaseStatus(), ReleaseStatus.PENDING.name())) {
-            appEnv.deploy();
+            appEnv.deploy(deployContext.dump());
         }
+        // 进度更新
         appRepository.updateAppEnv(appEnv);
+        // release状态更新
         releaseRepository.update(release);
     }
 }
