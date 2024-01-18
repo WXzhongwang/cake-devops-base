@@ -81,6 +81,7 @@ export interface AppEnv {
   autoScaling: boolean;
   needApproval: boolean;
   status: string | null;
+  deployStatus: string;
 }
 
 export interface AppAccountDTO {

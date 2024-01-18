@@ -26,11 +26,13 @@ interface ReleasePageProps {
     total: number;
     list: ReleaseHistory[];
   };
+  appEnv: AppEnv | null;
 }
 const DeployPage: React.FC<ReleasePageProps> = ({
   dispatch,
   appDetail,
   releases,
+  appEnv,
 }) => {
   const { id } = useParams();
   const [drawerVisible, setDrawerVisible] = useState(false);
