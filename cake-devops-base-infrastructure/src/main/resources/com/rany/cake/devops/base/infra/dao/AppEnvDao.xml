@@ -22,6 +22,8 @@
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
         <result column="env_id" jdbcType="VARCHAR" property="envId"/>
+        <result column="deploy_status" jdbcType="VARCHAR" property="deployStatus"/>
+        <result column="progress" jdbcType="VARCHAR" property="progress"/>
     </resultMap>
 
     <sql id="Base_Column_List">
