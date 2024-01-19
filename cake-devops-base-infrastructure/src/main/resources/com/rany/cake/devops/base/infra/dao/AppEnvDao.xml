@@ -28,7 +28,7 @@
         id
         , env_id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
     auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
-    modifier, deploy_status
+    modifier, deploy_status, progress
     </sql>
     <select id="selectByAppId" resultMap="BaseResultMap">
 
@@ -54,7 +54,7 @@
                              max_cpu, max_memory,
                              auto_scaling, need_approval, status,
                              is_deleted, gmt_create, gmt_modified,
-                             creator, modifier, deploy_status)
+                             creator, modifier, deploy_status, progress)
         values (#{envId},
                 #{clusterId.clusterId},
                 #{appId.appId},
@@ -65,7 +65,7 @@
                 #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
-                #{deployStatus})
+                #{deployStatus}, #{progress})
     </insert>
 
 
@@ -80,7 +80,7 @@
                 app_id = #{appId.appId},
             </if>
             <if test="domains != null">
-                domain =
+                domains =
                 #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
             </if>
             <if test="envName != null">
@@ -89,7 +89,7 @@
             <if test="env != null">
                 env = #{env,jdbcType=VARCHAR},
             </if>
-            <if test="replicas != null">
+            <if test="resourceStrategy.replicas != null">
                 replicas = #{resourceStrategy.replicas},
             </if>
             <if test="resourceStrategy.cpu != null">
