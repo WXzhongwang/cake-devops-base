@@ -3,6 +3,7 @@
 <mapper namespace="com.rany.cake.devops.base.infra.dao.ReleaseDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.ReleasePO">
         <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="release_id" jdbcType="VARCHAR" property="releaseId"/>
         <result column="app_id" jdbcType="VARCHAR" property="appId"/>
         <result column="release_no" jdbcType="VARCHAR" property="releaseNo"/>
         <result column="approval_id" jdbcType="VARCHAR" property="approvalId"/>
