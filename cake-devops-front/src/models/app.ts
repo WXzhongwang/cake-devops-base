@@ -82,6 +82,7 @@ export interface AppEnv {
   needApproval: boolean;
   status: string | null;
   deployStatus: string;
+  progress: string;
 }
 
 export interface AppAccountDTO {
@@ -133,6 +134,7 @@ export interface AppState {
     total: number;
     list: AppMemberDTO[];
   };
+  appEnv: AppEnv | null;
 }
 
 interface CreateAppAction {
@@ -143,6 +145,11 @@ interface CreateAppAction {
 interface CreateAppEnvAction {
   type: "app/createAppEnv";
   payload: CreateAppEnvPayload;
+}
+
+interface GetAppEnvAction {
+  type: "app/getAppEnv";
+  payload: { envId: string };
 }
 
 interface QueryAppAction {
@@ -184,12 +191,14 @@ export interface AppModelType {
     pageAppMembers: Effect;
     updateMember: Effect;
     deleteMember: Effect;
+    getAppEnv: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
     setAppDetail: Reducer<AppState>;
     setDepartments: Reducer<AppState>;
     setAppMembers: Reducer<AppState>;
+    setAppEnv: Reducer<AppState>;
   };
 }
 
@@ -206,6 +215,7 @@ const AppModel: AppModelType = {
       total: 0,
       list: [],
     },
+    appEnv: null,
   },
   effects: {
     *getAppList({ payload }: QueryAppAction, { call, put }) {
@@ -247,6 +257,15 @@ const AppModel: AppModelType = {
       const response = yield call(appService.getAppDetail, payload.id);
       yield put({
         type: "setAppDetail",
+        payload: response.content,
+      });
+    },
+
+    *getAppEnv({ payload }: GetAppEnvAction, { call, put }) {
+      console.log("payload123", payload);
+      const response = yield call(appService.getAppEnv, payload);
+      yield put({
+        type: "setAppEnv",
         payload: response.content,
       });
     },
@@ -293,6 +312,9 @@ const AppModel: AppModelType = {
         ...state,
         appMembers: { ...state.appMembers, ...action.payload },
       };
+    },
+    setAppEnv(state: any, action: { payload: any }) {
+      return { ...state, appEnv: action.payload };
     },
   },
 };

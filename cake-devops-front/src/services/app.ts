@@ -48,6 +48,13 @@ export async function getAppDetail(id: number) {
   return request(`/api/devops/app/getApp?id=${id}`);
 }
 
+export async function getAppEnv(data: any) {
+  return request(`/api/devops/app/getAppEnv`, {
+    method: "POST",
+    data,
+  });
+}
+
 export async function getDepartments() {
   return request(`/api/devops/app/getDepartments`);
 }

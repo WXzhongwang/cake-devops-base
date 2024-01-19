@@ -120,6 +120,11 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
   const pageRelease = useCallback(() => {
     if (selectedEnvironment) {
+      console.log("开始调用环境信息", selectedEnvironment);
+      dispatch({
+        type: "app/getAppEnv",
+        payload: { envId: selectedEnvironment },
+      });
       dispatch({
         type: "release/pageRelease",
         payload: {
@@ -139,7 +144,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   }, [dispatch, id]);
 
   useEffect(() => {
-    console.log(123);
     pageRelease();
   }, [pageRelease]);
 
@@ -333,6 +337,7 @@ export default connect(
   }: {
     app: {
       appDetail: AppInfo;
+      appEnv: AppEnv;
     };
     release: {
       releases: {
@@ -342,6 +347,7 @@ export default connect(
     };
   }) => ({
     appDetail: app.appDetail,
+    appEnv: app.appEnv,
     releases: {
       total: release.releases.total,
       list: release.releases.list,

@@ -131,6 +131,9 @@
             <if test="deployStatus != null">
                 deploy_status = #{deployStatus},
             </if>
+            <if test="progress != null">
+                progress = #{progress},
+            </if>
         </set>
         where env_id = #{envId}
     </update>
