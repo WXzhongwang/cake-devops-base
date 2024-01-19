@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import {
   Table,
@@ -181,6 +181,13 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
     setDrawerVisible(false);
   };
+  const parsedProgress = useMemo(() => {
+    // 只在appEnv有数据时才进行处理
+    if (appEnv && appEnv.progress) {
+      return JSON.parse(appEnv.progress);
+    }
+    return null;
+  }, [appEnv]);
 
   return (
     <PageContainer
@@ -209,7 +216,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             </div>
           }
         >
-          <Steps
+          {/* <Steps
             current={0}
             items={[
               {
@@ -246,7 +253,18 @@ const DeployPage: React.FC<ReleasePageProps> = ({
                 description: "合并主干",
               },
             ]}
-          />
+          /> */}
+          {parsedProgress && (
+            <Steps current={parsedProgress.current}>
+              {parsedProgress.steps.map((step: any, index: number) => (
+                <Steps.Step
+                  key={index}
+                  title={step.name}
+                  description={step.description}
+                />
+              ))}
+            </Steps>
+          )}
         </Card>
         <Card
           title="发布单"
