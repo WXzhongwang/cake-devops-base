@@ -21,6 +21,7 @@ import {
   message,
   Typography,
   Modal,
+  Descriptions,
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
 import { AppEnv, AppInfo } from "@/models/app";
@@ -30,6 +31,26 @@ import dayjs from "dayjs";
 import { TableRowSelection } from "antd/lib/table/interface";
 
 const { Paragraph } = Typography;
+
+// 在组件中定义 getReleaseStatusText 函数
+const getReleaseStatusText = (status: string) => {
+  switch (status) {
+    case "AWAIT_APPROVAL":
+      return "审批中";
+    case "READY":
+      return "待发布";
+    case "PENDING":
+      return "发布中";
+    case "FINISHED":
+      return "已完成";
+    case "FAILED":
+      return "发布失败";
+    case "CLOSED":
+      return "已关闭";
+    default:
+      return "未知状态";
+  }
+};
 
 interface ReleasePageProps {
   dispatch: Dispatch;
@@ -126,22 +147,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       key: "releaseStatus",
       render: (text: any, record: ReleaseRecord) => {
         // const tagColor = record.releaseStatus === "0" ? "success" : "error";
-        let statusText = undefined;
-        if (record.releaseStatus === "AWAIT_APPROVAL") {
-          statusText = "审批中";
-        }
-        if (record.releaseStatus === "READY") {
-          statusText = "待发布";
-        }
-        if (record.releaseStatus === "PENDING") {
-          statusText = "发布中";
-        }
-        if (record.releaseStatus === "FINISHED") {
-          statusText = "已完成";
-        }
-        if (record.releaseStatus === "CLOSED") {
-          statusText = "已关闭";
-        }
+        let statusText = getReleaseStatusText(record.releaseStatus);
         return statusText;
       },
     },
@@ -456,19 +462,49 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         onClose={() => setViewDrawerVisible(false)}
         open={viewDrawerVisible}
       >
-        {/* 在此处展示发布单的全部字段 */}
-        {/* 可以使用 Table 或其他适合的组件展示 */}
         {currentViewRelease && (
-          <div>
-            <p>发布单号：{currentViewRelease.releaseNo}</p>
-            <p>
-              预计发布时间：
-              {dayjs(currentViewRelease?.releaseDate).format(
-                "YYYY-MM-DD HH:mm:ss"
-              )}
-            </p>
-            {/* 其他字段... */}
-          </div>
+          <Space style={{ width: "100%" }} direction="vertical" size="small">
+            <Descriptions column={1} bordered>
+              <Descriptions.Item label="发布单号">
+                {currentViewRelease.releaseNo}
+              </Descriptions.Item>
+              <Descriptions.Item label="预计发布时间">
+                {dayjs(currentViewRelease?.releaseDate).format(
+                  "YYYY-MM-DD HH:mm:ss"
+                )}
+              </Descriptions.Item>
+              <Descriptions.Item label="发布分支">
+                {currentViewRelease.releaseBranch}
+              </Descriptions.Item>
+              <Descriptions.Item label="提交ID">
+                {currentViewRelease.commitId}
+              </Descriptions.Item>
+              <Descriptions.Item label="发布版本">
+                {currentViewRelease.releaseVersion}
+              </Descriptions.Item>
+              <Descriptions.Item label="创建时间">
+                {dayjs(currentViewRelease?.gmtCreate).format(
+                  "YYYY-MM-DD HH:mm:ss"
+                )}
+              </Descriptions.Item>
+              <Descriptions.Item label="更新时间">
+                {dayjs(currentViewRelease?.gmtModified).format(
+                  "YYYY-MM-DD HH:mm:ss"
+                )}
+              </Descriptions.Item>
+              <Descriptions.Item label="发布状态">
+                {getReleaseStatusText(currentViewRelease.releaseStatus)}
+              </Descriptions.Item>
+              {/* 其他字段按照需要添加 */}
+            </Descriptions>
+
+            <Button
+              onClick={() => setViewDrawerVisible(false)}
+              style={{ marginTop: 16 }}
+            >
+              关闭
+            </Button>
+          </Space>
         )}
       </Drawer>
     </PageContainer>

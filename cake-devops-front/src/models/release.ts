@@ -26,6 +26,7 @@ export interface ReleaseRecord {
   releaseNo: string;
   releaseDate: Date;
   releaseBranch: string;
+  commitId: string;
   releaseVersion: string;
   docAddress: string;
   comment: string;
