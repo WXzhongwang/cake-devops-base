@@ -6,6 +6,7 @@ import com.rany.cake.devops.base.domain.pk.ApprovalId;
 import com.rany.cake.devops.base.domain.repository.ApprovalRepository;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import javax.annotation.Resource;
  * @email 18668485565163.com
  */
 @Component
+@PluginName("发布审批校验")
 public class ApprovalPlugin extends BasePlugin {
 
     @Resource
@@ -46,7 +48,7 @@ public class ApprovalPlugin extends BasePlugin {
             ) {
                 break;
             }
-            // Thread.sleep(2000);
+            Thread.sleep(2000);
         }
         return true;
     }

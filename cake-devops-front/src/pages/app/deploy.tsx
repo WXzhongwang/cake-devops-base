@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import {
   Table,
@@ -12,19 +18,25 @@ import {
   Steps,
   Drawer,
   DatePicker,
+  message,
+  Typography,
+  Modal,
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
 import { AppEnv, AppInfo } from "@/models/app";
-import { ReleaseHistory } from "@/models/release";
+import { ReleaseRecord } from "@/models/release";
 import moment from "moment";
 import dayjs from "dayjs";
+import { TableRowSelection } from "antd/lib/table/interface";
+
+const { Paragraph } = Typography;
 
 interface ReleasePageProps {
   dispatch: Dispatch;
   appDetail: AppInfo | null;
   releases: {
     total: number;
-    list: ReleaseHistory[];
+    list: ReleaseRecord[];
   };
   appEnv: AppEnv | null;
 }
@@ -40,6 +52,15 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     string | undefined | null
   >(appDetail?.appEnvList?.[0]?.envId);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
+  const [deployDisabled, setDeployDisabled] = useState(false);
+  // 使用 useRef 创建一个变量来存储定时器的引用
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [selectedRow, setSelectedRow] = useState<ReleaseRecord | null>(null);
+  // 状态用于控制查看详情抽屉的显示与隐藏
+  const [viewDrawerVisible, setViewDrawerVisible] = useState(false);
+  // 记录当前查看的发布单数据
+  const [currentViewRelease, setCurrentViewRelease] =
+    useState<ReleaseRecord | null>(null);
 
   const [form] = Form.useForm();
 
@@ -48,12 +69,22 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       title: "发布单号",
       dataIndex: "releaseNo",
       key: "releaseNo",
+      render: (text: any, record: ReleaseRecord) => {
+        return (
+          <Paragraph
+            copyable={{ tooltips: ["点击复制", "复制成功"] }}
+            style={{ display: "inline" }}
+          >
+            {record?.releaseNo}
+          </Paragraph>
+        );
+      },
     },
     {
-      title: "发布时间",
+      title: "预计发布时间",
       dataIndex: "releaseDate",
       key: "releaseDate",
-      render: (text: any, record: ReleaseHistory) => {
+      render: (text: any, record: ReleaseRecord) => {
         return (
           <div>{dayjs(record?.releaseDate).format("YYYY-MM-DD HH:mm:ss")}</div>
         );
@@ -65,11 +96,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       key: "releaseBranch",
     },
     {
-      title: "提交ID",
-      dataIndex: "commitId",
-      key: "commitId",
-    },
-    {
       title: "发布版本",
       dataIndex: "releaseVersion",
       key: "releaseVersion",
@@ -78,9 +104,19 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       title: "创建时间",
       dataIndex: "gmtCreate",
       key: "gmtCreate",
-      render: (text: any, record: ReleaseHistory) => {
+      render: (text: any, record: ReleaseRecord) => {
         return (
           <div>{dayjs(record?.gmtCreate).format("YYYY-MM-DD HH:mm:ss")}</div>
+        );
+      },
+    },
+    {
+      title: "更新时间",
+      dataIndex: "gmtModified",
+      key: "gmtModified",
+      render: (text: any, record: ReleaseRecord) => {
+        return (
+          <div>{dayjs(record?.gmtModified).format("YYYY-MM-DD HH:mm:ss")}</div>
         );
       },
     },
@@ -88,7 +124,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       title: "发布状态",
       dataIndex: "releaseStatus",
       key: "releaseStatus",
-      render: (text: any, record: ReleaseHistory) => {
+      render: (text: any, record: ReleaseRecord) => {
         // const tagColor = record.releaseStatus === "0" ? "success" : "error";
         let statusText = undefined;
         if (record.releaseStatus === "AWAIT_APPROVAL") {
@@ -103,20 +139,51 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         if (record.releaseStatus === "FINISHED") {
           statusText = "已完成";
         }
+        if (record.releaseStatus === "CLOSED") {
+          statusText = "已关闭";
+        }
         return statusText;
       },
     },
     {
       title: "操作",
       key: "action",
-      render: (text: any, record: ReleaseHistory) => (
-        // <Space size="middle">
-        //   <a onClick={() => handleView(record)}>查看</a>
-        // </Space>
-        <div></div>
+      render: (text: any, record: ReleaseRecord) => (
+        <Space size="middle">
+          {/* 查看按钮 */}
+          <a onClick={() => handleViewDetails(record)}>查看</a>
+          {/* 关闭按钮 */}
+          {record.releaseStatus !== "PENDING" && (
+            <a onClick={() => handleConfirmClose(record)}>关闭</a>
+          )}
+        </Space>
       ),
     },
   ];
+
+  // 处理关闭按钮的点击事件
+  const handleConfirmClose = (record: ReleaseRecord) => {
+    // 弹出二次确认框
+    Modal.confirm({
+      title: "确认关闭",
+      content: "确定要关闭审批单吗？",
+      onOk: () => {
+        // 确认关闭后，可以在此处调用 dispatch 进行相关操作
+        // 调用关闭接口等
+        dispatch({
+          type: "release/close",
+          payload: { releaseId: record.releaseId },
+        });
+        pageRelease();
+      },
+    });
+  };
+
+  // 处理查看按钮的点击事件
+  const handleViewDetails = (record: ReleaseRecord) => {
+    setCurrentViewRelease(record);
+    setViewDrawerVisible(true);
+  };
 
   const pageRelease = useCallback(() => {
     if (selectedEnvironment) {
@@ -133,8 +200,22 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           envId: selectedEnvironment,
         },
       });
+
+      const deployStatus = appEnv?.deployStatus;
+      if (deployStatus?.toString() === "1") {
+        setDeployDisabled(true);
+        // 设置定时器，每 3 秒调用一次获取环境详情接口
+        timerRef.current = setInterval(() => {
+          dispatch({
+            type: "app/getAppEnv",
+            payload: { envId: selectedEnvironment },
+          });
+        }, 3000);
+      } else {
+        setDeployDisabled(false);
+      }
     }
-  }, [dispatch, pagination, id, selectedEnvironment]);
+  }, [dispatch, pagination, id, selectedEnvironment, appEnv?.deployStatus]);
 
   useEffect(() => {
     dispatch({
@@ -147,12 +228,52 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     pageRelease();
   }, [pageRelease]);
 
+  console.log("appEnv", appEnv);
+
   useEffect(() => {
     // 在appDetail更新时，如果selectedEnvironment为undefined，则设置默认值
     if (!selectedEnvironment && appDetail?.appEnvList) {
       setSelectedEnvironment(appDetail?.appEnvList?.[0].envId);
     }
   }, [selectedEnvironment, appDetail]);
+
+  // 在组件卸载时清除定时器
+  useEffect(() => {
+    return () => {
+      // 清除定时器
+      if (timerRef.current !== null) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
+  const rowSelection: TableRowSelection<ReleaseRecord> = {
+    type: "radio",
+    onChange: (selectedRowKeys: React.Key[], selectedRows: ReleaseRecord[]) => {
+      setSelectedRow(selectedRows[0]);
+    },
+  };
+
+  const handleRelease = () => {
+    if (!selectedRow) {
+      // 提示用户选择发布单
+      message.warning("请选择符合条件的发布单");
+      return;
+    }
+
+    // 检查是否有符合条件的发布单
+    if (
+      selectedRow &&
+      ["FAILED", "FINISHED", "READY"].includes(selectedRow.releaseStatus)
+    ) {
+      dispatch({
+        type: "release/deploy",
+        payload: { releaseId: selectedRow.releaseId },
+      });
+      // 清空选择
+      setSelectedRow(null);
+    }
+  };
 
   const handleDrawer = () => {
     setDrawerVisible(!drawerVisible);
@@ -212,55 +333,35 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           title="发布流水线"
           extra={
             <div>
-              <Button onClick={handleDrawer}>立即发布</Button>
+              <Button
+                key="release"
+                onClick={handleRelease}
+                disabled={deployDisabled || !selectedRow}
+              >
+                立即发布
+              </Button>
             </div>
           }
         >
-          {/* <Steps
-            current={0}
-            items={[
-              {
-                title: "审批校验",
-                description: "审批校验",
-              },
-              {
-                title: "封网校验",
-                description: "封网校验",
-                subTitle: "无封网要求",
-              },
-              {
-                title: "代码检出",
-                description: "代码检出",
-              },
-              {
-                title: "打包机选择",
-                description: "打包机选择",
-              },
-              {
-                title: "Sonar代码扫描",
-                description: "Sonar代码扫描",
-              },
-              {
-                title: "构建推送镜像",
-                description: "构建推送镜像",
-              },
-              {
-                title: "部署",
-                description: "部署",
-              },
-              {
-                title: "合并主干",
-                description: "合并主干",
-              },
-            ]}
-          /> */}
           {parsedProgress && (
-            <Steps current={parsedProgress.current}>
+            <Steps current={parsedProgress.current} size="small">
               {parsedProgress.steps.map((step: any, index: number) => (
                 <Steps.Step
                   key={index}
-                  title={step.name}
-                  description={step.description}
+                  title={step.title}
+                  description={
+                    step.description === "AWAIT_EXECUTE" ? (
+                      <div>待执行</div>
+                    ) : step.description === "EXECUTED" ? (
+                      <div>
+                        已执行
+                        <br></br>
+                        耗时:{step.cost}秒
+                      </div>
+                    ) : (
+                      step.description
+                    )
+                  }
                 />
               ))}
             </Steps>
@@ -278,6 +379,9 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             columns={columns}
             dataSource={releases.list}
             rowKey={"releaseId"}
+            rowSelection={{
+              ...rowSelection,
+            }}
             pagination={{
               total: releases.total,
               current: pagination.pageNo,
@@ -344,6 +448,29 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           </Button>
         </Form>
       </Drawer>
+
+      {/* 发布单详情抽屉 */}
+      <Drawer
+        title="发布单详情"
+        width={600}
+        onClose={() => setViewDrawerVisible(false)}
+        open={viewDrawerVisible}
+      >
+        {/* 在此处展示发布单的全部字段 */}
+        {/* 可以使用 Table 或其他适合的组件展示 */}
+        {currentViewRelease && (
+          <div>
+            <p>发布单号：{currentViewRelease.releaseNo}</p>
+            <p>
+              预计发布时间：
+              {dayjs(currentViewRelease?.releaseDate).format(
+                "YYYY-MM-DD HH:mm:ss"
+              )}
+            </p>
+            {/* 其他字段... */}
+          </div>
+        )}
+      </Drawer>
     </PageContainer>
   );
 };
@@ -360,7 +487,7 @@ export default connect(
     release: {
       releases: {
         total: number;
-        list: ReleaseHistory[];
+        list: ReleaseRecord[];
       };
     };
   }) => ({

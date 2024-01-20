@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.service.app;
 import com.cake.framework.common.response.Page;
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
+import com.rany.cake.devops.base.api.command.release.CloseReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
 import com.rany.cake.devops.base.api.dto.ReleaseDTO;
@@ -124,6 +125,17 @@ public class ReleaseRemoteService implements ReleaseService {
         } finally {
             redissonLockClient.unlock(lockKey);
         }
+        return PojoResult.succeed(Boolean.TRUE);
+    }
+
+    @Override
+    public PojoResult<Boolean> close(CloseReleaseCommand command) {
+        Release release = releaseRepository.find(new ReleaseId(String.valueOf(command.getReleaseId())));
+        if (release == null) {
+            throw new DevOpsException(DevOpsErrorMessage.RELEASE_NOT_FOUND);
+        }
+        release.closed();
+        releaseDomainService.update(release);
         return PojoResult.succeed(Boolean.TRUE);
     }
 }

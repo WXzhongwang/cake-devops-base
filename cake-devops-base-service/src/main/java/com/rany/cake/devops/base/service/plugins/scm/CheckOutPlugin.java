@@ -9,6 +9,7 @@ import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import javax.annotation.Resource;
  * @email 18668485565163.com
  */
 @Component
+@PluginName("代码分支检出")
 public class CheckOutPlugin extends BasePlugin {
     @Override
     public boolean init(DeployContext context) {

@@ -6,6 +6,7 @@ import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.util.List;
  * @email 18668485565163.com
  */
 @Component
+@PluginName("工作机选择")
 public class MachineSelectorPlugin extends BasePlugin {
     @Resource
     private HostDomainService hostDomainService;

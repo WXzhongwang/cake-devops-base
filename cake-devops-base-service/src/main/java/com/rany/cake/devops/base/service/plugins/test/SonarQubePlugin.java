@@ -6,6 +6,7 @@ import com.jcraft.jsch.Session;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
  * @email 18668485565163.com
  */
 @Component
+@PluginName("sonar代码扫描")
 public class SonarQubePlugin extends BasePlugin {
 
     @Override

@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class DeployCommand extends BaseCommand {
+public class CloseReleaseCommand extends BaseCommand {
 
     /**
      * 发布ID

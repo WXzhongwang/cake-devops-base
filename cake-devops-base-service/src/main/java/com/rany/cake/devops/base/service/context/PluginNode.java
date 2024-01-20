@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.context;
 
+import com.rany.cake.devops.base.domain.enums.NodeStatus;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,7 @@ import java.util.Date;
  * 插件节点
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 插件节点
  * @date 2023/1/15 20:56
  * @email 18668485565163.com
  */
@@ -66,17 +67,22 @@ public class PluginNode implements Plugin {
         if (!plugin.execute(context) && stopWhenFailure()) {
             log.info("{}执行结束", this.name);
             node.setEndDate(new Date());
+            node.setDescription(NodeStatus.EXECUTED.name());
             observer.updateProgress(context);
             return false;
         }
         log.info("{}执行结束", this.name);
         node.setEndDate(new Date());
+        node.setDescription(NodeStatus.EXECUTED.name());
         observer.updateProgress(context);
         return next != null && next.execute(context);
     }
 
     @Override
     public boolean init(DeployContext context) {
-        return plugin.init(context);
+        if (!plugin.init(context)) {
+            return false;
+        }
+        return next != null && next.init(context);
     }
 }

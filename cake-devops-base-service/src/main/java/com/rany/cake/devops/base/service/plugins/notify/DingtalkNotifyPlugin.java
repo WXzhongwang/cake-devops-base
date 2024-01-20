@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.service.plugins.notify;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 
 /**
  * 钉钉通知
@@ -12,6 +13,7 @@ import com.rany.cake.devops.base.service.plugins.RunningConstant;
  * @date 2023/1/19 18:27
  * @email 18668485565163.com
  */
+@PluginName("钉钉通知")
 public class DingtalkNotifyPlugin extends BasePlugin {
 
     @Override

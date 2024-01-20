@@ -6,19 +6,21 @@ import com.jcraft.jsch.Session;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import org.springframework.stereotype.Component;
 
 /**
- * 拉去代码插件
+ * 拉取代码插件
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 拉取代码插件
  * @date 2023/1/20 19:41
  * @email 18668485565163.com
  */
 
 @Component
+@PluginName("拉取代码")
 public class CodePlugin extends BasePlugin {
     @Override
     public boolean init(DeployContext context) {
@@ -31,11 +33,9 @@ public class CodePlugin extends BasePlugin {
         Integer port = (Integer) context.getArgMap().get(RunningConstant.BUILDER_PORT);
         String user = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_USER);
         String password = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_PWD);
-        String appName = context.getApp().getAppName().getName();
         String webHook = context.getApp().getWebhook();
         String repo = context.getApp().getCodeRepository().getRepo();
         String branch = context.getRelease().getReleaseBranch();
-        String releaseVersion = context.getRelease().getReleaseNo();
 
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("workspace directory: " + workspace);

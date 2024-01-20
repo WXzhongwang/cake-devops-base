@@ -19,11 +19,4 @@ public interface Bootstrap {
      * 关闭
      */
     void shutdown();
-
-    /**
-     * 获取执行上下文
-     *
-     * @return
-     */
-    DeployContext getDeployContext();
 }

@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
+import com.rany.cake.devops.base.api.command.release.CloseReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
 import com.rany.cake.devops.base.api.dto.ReleaseDTO;
@@ -40,4 +41,6 @@ public interface ReleaseService {
      * @return 立即发布
      */
     PojoResult<Boolean> deploy(DeployCommand deployCommand);
+
+    PojoResult<Boolean> close(CloseReleaseCommand command);
 }

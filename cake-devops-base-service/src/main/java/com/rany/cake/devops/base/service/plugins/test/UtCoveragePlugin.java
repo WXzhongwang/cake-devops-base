@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.service.plugins.test;
 
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
  * @email 18668485565163.com
  */
 @Component
+@PluginName("单元测试覆盖")
 public class UtCoveragePlugin extends BasePlugin {
     @Override
     public boolean init(DeployContext context) {

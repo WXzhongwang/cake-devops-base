@@ -4,6 +4,7 @@ import {
   CreateReleasePayload,
   DeployPayload,
   PageReleasePayload,
+  ClosePayload,
 } from "@/models/release";
 
 export async function create(data: CreateReleasePayload) {
@@ -21,7 +22,14 @@ export async function page(data: PageReleasePayload) {
 }
 
 export async function deploy(data: DeployPayload) {
-  return request("/api/devops/app/deploy", {
+  return request("/api/devops/release/deploy", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function close(data: ClosePayload) {
+  return request("/api/devops/release/close", {
     method: "POST",
     data,
   });

@@ -23,4 +23,9 @@ public enum ReleaseStatus {
      * 发布失败
      */
     FAILED,
+
+    /**
+     * 已关闭
+     */
+    CLOSED,
 }

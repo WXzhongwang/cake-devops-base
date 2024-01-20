@@ -19,15 +19,18 @@ export interface PageReleasePayload {
   pageSize: number;
 }
 
-export interface ReleaseHistory {
+export interface ReleaseRecord {
+  releaseId: string;
   appId: string;
   envId: string;
+  releaseNo: string;
   releaseDate: Date;
   releaseBranch: string;
   releaseVersion: string;
   docAddress: string;
   comment: string;
   gmtCreate: Date;
+  gmtModified: Date;
   releaseStatus: string;
 }
 
@@ -35,9 +38,18 @@ export interface DeployPayload {
   releaseId: string;
 }
 
+export interface ClosePayload {
+  releaseId: string;
+}
+
 export interface CreateReleaseAction {
   type: "release/createRelease";
   payload: CreateReleasePayload;
+}
+
+export interface CloseReleaseAction {
+  type: "release/close";
+  payload: ClosePayload;
 }
 
 export interface DeployAction {
@@ -53,7 +65,7 @@ export interface PageReleaseAction {
 export interface ReleaseState {
   releases: {
     total: number;
-    list: ReleaseHistory[];
+    list: ReleaseRecord[];
   };
 }
 
@@ -64,6 +76,7 @@ export interface ReleaseModelType {
     pageRelease: Effect;
     createRelease: Effect;
     deploy: Effect;
+    close: Effect;
   };
   reducers: {
     setReleaseList: Reducer<ReleaseState>;
@@ -100,6 +113,10 @@ const ReleaseModel: ReleaseModelType = {
     },
     *deploy({ payload }: DeployAction, { call, put }) {
       yield call(releaseService.deploy, payload);
+      yield put({ type: "setReleaseList" });
+    },
+    *close({ payload }: CloseReleaseAction, { call, put }) {
+      yield call(releaseService.close, payload);
       yield put({ type: "setReleaseList" });
     },
   },

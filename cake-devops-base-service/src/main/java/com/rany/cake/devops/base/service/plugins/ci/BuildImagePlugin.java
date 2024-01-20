@@ -6,6 +6,7 @@ import com.jcraft.jsch.Session;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
+@PluginName("镜像构建")
 public class BuildImagePlugin extends BasePlugin {
     @Override
     public boolean init(DeployContext context) {

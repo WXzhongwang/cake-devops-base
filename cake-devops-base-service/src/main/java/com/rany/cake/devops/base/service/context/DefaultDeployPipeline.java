@@ -1,11 +1,12 @@
 package com.rany.cake.devops.base.service.context;
 
+import com.rany.cake.devops.base.domain.enums.NodeStatus;
 import com.rany.cake.devops.base.service.base.Constants;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-
-import java.util.List;
+import org.springframework.core.annotation.AnnotationUtils;
 
 /**
  * pipe
@@ -51,7 +52,7 @@ public class DefaultDeployPipeline implements DeployPipeline {
             this.deployContext.start();
             // 设置开始执行时间
             this.observer.updateProgress(this.deployContext);
-            initialProgress();
+            head.getNext().init(this.deployContext);
             head.getNext().execute(this.deployContext);
             // 标注任务执行成功
             this.deployContext.success();
@@ -73,11 +74,6 @@ public class DefaultDeployPipeline implements DeployPipeline {
     }
 
     @Override
-    public DeployContext getDeployContext() {
-        return this.deployContext;
-    }
-
-    @Override
     public void addFirst(Plugin... plugins) {
         PluginNode pre = head.getNext();
         for (Plugin plugin : plugins) {
@@ -89,6 +85,15 @@ public class DefaultDeployPipeline implements DeployPipeline {
             node.setObserver(observer);
             node.setNext(pre);
             pre = node;
+
+            PluginName pluginNameAnnotation = AnnotationUtils.findAnnotation(plugin.getClass(), PluginName.class);
+            String pluginName = plugin.getClass().getName();
+            if (pluginNameAnnotation != null) {
+                pluginName = pluginNameAnnotation.value();
+            }
+            DeployContext.Node executionNode = new DeployContext.Node(pluginName,
+                    NodeStatus.AWAIT_EXECUTE.name());
+            this.deployContext.addFirst(executionNode);
         }
 
         head.setNext(pre);
@@ -107,21 +112,15 @@ public class DefaultDeployPipeline implements DeployPipeline {
             node.setObserver(observer);
             next.setNext(node);
             next = node;
+
+            PluginName pluginNameAnnotation = AnnotationUtils.findAnnotation(plugin.getClass(), PluginName.class);
+            String pluginName = plugin.getClass().getName();
+            if (pluginNameAnnotation != null) {
+                pluginName = pluginNameAnnotation.value();
+            }
+            DeployContext.Node executionNode = new DeployContext.Node(pluginName, NodeStatus.AWAIT_EXECUTE.name());
+            this.deployContext.addLast(executionNode);
         }
         tail = next;
-    }
-
-    /**
-     * 初始化进度
-     */
-    public void initialProgress() {
-        PluginNode current = this.head;
-        this.deployContext.getProgress().setCurrent(0);
-        current = current.getNext();
-        while (current != null) {
-            List<DeployContext.Node> steps = this.deployContext.getProgress().getSteps();
-            steps.add(new DeployContext.Node(current.getName(), "待执行"));
-            current = current.getNext();
-        }
     }
 }

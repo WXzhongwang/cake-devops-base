@@ -7,6 +7,7 @@ import com.jcraft.jsch.Session;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import org.springframework.stereotype.Component;
 
@@ -14,12 +15,13 @@ import org.springframework.stereotype.Component;
  * 推送镜像到Harbor
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 推送镜像到Harbor
  * @date 2023/1/20 19:41
  * @email 18668485565163.com
  */
 
 @Component
+@PluginName("推送镜像到Harbor")
 public class PushHarborPlugin extends BasePlugin {
     @Override
     public boolean init(DeployContext context) {

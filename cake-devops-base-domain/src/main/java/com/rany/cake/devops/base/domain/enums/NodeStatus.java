@@ -1,26 +1,21 @@
 package com.rany.cake.devops.base.domain.enums;
 
-public enum ReleaseStatus {
-    /**
-     * 审批中
-     */
-    AWAIT_APPROVAL,
-    /**
-     * 待发布
-     */
-    READY,
 
+/**
+ * 节点状态
+ *
+ * @author zhongshengwang
+ * @description TODO
+ * @date 2023/1/12 23:42
+ * @email 18668485565163.com
+ */
+public enum NodeStatus {
     /**
-     * 发布中
+     * 待执行
      */
-    PENDING,
-
+    AWAIT_EXECUTE,
     /**
-     * 已发布
+     * 已执行
      */
-    FINISHED,
-    /**
-     * 发布失败
-     */
-    FAILED,
+    EXECUTED,
 }

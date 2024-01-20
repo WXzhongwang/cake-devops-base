@@ -66,7 +66,12 @@ public class Release extends BaseAggregateRoot implements IAggregate<ReleaseId> 
     public void approved() {
         this.releaseStatus = ReleaseStatus.READY.name();
     }
-    
+
+    public void closed() {
+        this.releaseStatus = ReleaseStatus.CLOSED.name();
+        this.gmtModified = new Date();
+    }
+
 
     @Override
     public ReleaseId getBizID() {

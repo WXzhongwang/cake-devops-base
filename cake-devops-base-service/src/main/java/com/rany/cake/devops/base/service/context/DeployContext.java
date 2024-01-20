@@ -92,7 +92,8 @@ public class DeployContext implements Serializable {
     public DeployContext(String pipeKey) {
         this.progress = new Progress();
         this.progress.setPipeKey(pipeKey);
-        this.progress.setSteps(new ArrayList<>());
+        this.progress.setCurrent(0);
+        this.progress.setSteps(new LinkedList<>());
     }
 
 
@@ -117,7 +118,7 @@ public class DeployContext implements Serializable {
         /**
          * 进度中会执行那些节点
          */
-        private List<Node> steps;
+        private LinkedList<Node> steps;
 
         /**
          * 当前执行插件index
@@ -158,9 +159,24 @@ public class DeployContext implements Serializable {
          */
         private String description;
 
+        /**
+         * 计算耗时
+         */
+        private Long cost;
+
         public Node(String title, String description) {
             this.title = title;
             this.description = description;
+        }
+
+        public void setEndDate(Date endDate) {
+            this.endDate = endDate;
+            long endTimeStamp = endDate.getTime();
+            long startTimestamp = startDate.getTime();
+            // 计算相差的毫秒数
+            long diff = endTimeStamp - startTimestamp;
+            // 将毫秒数转换为秒数
+            this.cost = diff / 1000;
         }
     }
 
@@ -186,5 +202,13 @@ public class DeployContext implements Serializable {
 
     public void end() {
         this.progress.setEndDate(new Date());
+    }
+
+    public void addLast(Node node) {
+        this.progress.getSteps().addLast(node);
+    }
+
+    public void addFirst(Node node) {
+        this.progress.getSteps().addFirst(node);
     }
 }

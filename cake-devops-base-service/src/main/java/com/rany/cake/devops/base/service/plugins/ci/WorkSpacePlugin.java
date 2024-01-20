@@ -7,6 +7,7 @@ import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
+import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +18,13 @@ import java.time.format.DateTimeFormatter;
  * 工作空间创建
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 创建工作空间
  * @date 2023/1/20 19:41
  * @email 18668485565163.com
  */
 
 @Component
+@PluginName("创建工作空间")
 public class WorkSpacePlugin extends BasePlugin {
     @Override
     public boolean init(DeployContext context) {
@@ -36,9 +38,6 @@ public class WorkSpacePlugin extends BasePlugin {
         String user = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_USER);
         String password = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_PWD);
         String appName = context.getApp().getAppName().getName();
-        //        String repo = context.getApp().getCodeRepository().getRepo();
-        //        String branch = context.getRelease().getReleaseBranch();
-        //        String releaseVersion = context.getRelease().getReleaseNo();
 
         // 获取当前日期和时间
         LocalDateTime now = LocalDateTime.now();

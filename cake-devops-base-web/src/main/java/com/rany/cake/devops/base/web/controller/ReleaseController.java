@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.web.controller;
 
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
+import com.rany.cake.devops.base.api.command.release.CloseReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
 import com.rany.cake.devops.base.api.dto.ReleaseDTO;
@@ -45,5 +46,16 @@ public class ReleaseController {
     @PostMapping("/deploy")
     public PojoResult<Boolean> deploy(@RequestBody DeployCommand deployCommand) {
         return releaseService.deploy(deployCommand);
+    }
+
+    /**
+     * 关闭变更单发布
+     *
+     * @param command 基于变更单发布
+     * @return 成功
+     */
+    @PostMapping("/close")
+    public PojoResult<Boolean> close(@RequestBody CloseReleaseCommand command) {
+        return releaseService.close(command);
     }
 }

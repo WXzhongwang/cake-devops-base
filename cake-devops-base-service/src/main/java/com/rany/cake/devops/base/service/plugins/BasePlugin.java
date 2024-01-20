@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * 基础插件
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 基础插件
  * @date 2023/2/1 19:48
  * @email 18668485565163.com
  */
