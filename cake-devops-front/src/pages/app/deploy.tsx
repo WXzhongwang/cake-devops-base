@@ -280,22 +280,22 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   const handleRelease = () => {
     if (!selectedRow) {
       // 提示用户选择发布单
-      message.warning("请选择符合条件的发布单");
+      message.warning("请选择符合条件的变更单");
+      return;
+    }
+    if (selectedRow.releaseStatus === "CLOSED") {
+      // 提示用户选择发布单
+      message.warning("已关闭的变更单不允许发布");
       return;
     }
 
     // 检查是否有符合条件的发布单
-    if (
-      selectedRow &&
-      ["FAILED", "FINISHED", "READY"].includes(selectedRow.releaseStatus)
-    ) {
-      dispatch({
-        type: "release/deploy",
-        payload: { releaseId: selectedRow.releaseId },
-      });
-      // 清空选择
-      setSelectedRow(null);
-    }
+    dispatch({
+      type: "release/deploy",
+      payload: { releaseId: selectedRow.releaseId },
+    });
+    // 清空选择
+    setSelectedRow(null);
   };
 
   const handleDrawer = () => {
