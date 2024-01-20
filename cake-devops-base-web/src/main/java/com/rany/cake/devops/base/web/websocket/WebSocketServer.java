@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @Slf4j
-@ServerEndpoint(value = "/api/ws/cake-devops/{releaseId}")
+@ServerEndpoint(value = "/api/ws/devops/{pipeKey}")
 @Component
 public class WebSocketServer {
 
@@ -29,18 +29,18 @@ public class WebSocketServer {
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("releaseId") String releaseId) {
+    public void onOpen(Session session, @PathParam("pipeKey") String pipeKey) {
         try {
             session.setMaxIdleTimeout(Constants.WEBSOCKET_TIMEOUT);
-            log.info("current releaseId:{}", releaseId);
+            log.info("current pipeKey:{}", pipeKey);
             this.session = session;
-            if (webSocketMap.containsKey(releaseId)) {
-                CopyOnWriteArraySet<WebSocketServer> webSocketServers = webSocketMap.get(releaseId);
+            if (webSocketMap.containsKey(pipeKey)) {
+                CopyOnWriteArraySet<WebSocketServer> webSocketServers = webSocketMap.get(pipeKey);
                 webSocketServers.add(this);
             } else {
                 CopyOnWriteArraySet<WebSocketServer> servers = new CopyOnWriteArraySet<>();
                 servers.add(this);
-                webSocketMap.put(releaseId, servers);
+                webSocketMap.put(pipeKey, servers);
             }
             sendMessage("socket连接成功");
         } catch (Exception e) {
@@ -52,8 +52,8 @@ public class WebSocketServer {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose(@PathParam("releaseId") String releaseId) {
-        CopyOnWriteArraySet<WebSocketServer> socketServers = webSocketMap.get(releaseId);
+    public void onClose(@PathParam("pipeKey") String pipeKey) {
+        CopyOnWriteArraySet<WebSocketServer> socketServers = webSocketMap.get(pipeKey);
         socketServers.remove(this);  //从set中删除
     }
 

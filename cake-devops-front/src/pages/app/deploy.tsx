@@ -29,6 +29,7 @@ import { ReleaseRecord } from "@/models/release";
 import moment from "moment";
 import dayjs from "dayjs";
 import { TableRowSelection } from "antd/lib/table/interface";
+import DeployLogDrawer from "./components/deploy-log-drawer";
 
 const { Paragraph } = Typography;
 
@@ -85,6 +86,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   appEnv,
 }) => {
   const { id } = useParams();
+  // 发布单详情抽屉
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedEnvironment, setSelectedEnvironment] = useState<
     string | undefined | null
@@ -99,6 +101,10 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   // 记录当前查看的发布单数据
   const [currentViewRelease, setCurrentViewRelease] =
     useState<ReleaseRecord | null>(null);
+  // 在组件中定义状态来控制是否显示查看发布日志按钮和抽屉
+  const [logDrawerVisible, setLogDrawerVisible] = useState(false);
+  // 新增 pipeKey 状态用于传递给查看发布日志的抽屉
+  const [pipeKey, setPipeKey] = useState<string>("");
 
   const [form] = Form.useForm();
 
@@ -298,7 +304,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     setSelectedRow(null);
   };
 
-  const handleDrawer = () => {
+  const handleCreateReleaseDrawer = () => {
     setDrawerVisible(!drawerVisible);
   };
 
@@ -325,6 +331,14 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
     setDrawerVisible(false);
   };
+
+  // 新增 handleViewLogs 方法
+  const handleViewLogs = (pipeKey: string) => {
+    console.log("pipeKey", pipeKey);
+    setPipeKey(pipeKey);
+    setLogDrawerVisible(true);
+  };
+
   const parsedProgress = useMemo(() => {
     // 只在appEnv有数据时才进行处理
     if (appEnv && appEnv.progress) {
@@ -356,6 +370,12 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           title="发布流水线"
           extra={
             <div>
+              {parsedProgress?.pipeKey && (
+                <Button onClick={() => handleViewLogs(parsedProgress?.pipeKey)}>
+                  查看发布日志
+                </Button>
+              )}
+
               <Button
                 key="release"
                 onClick={handleRelease}
@@ -366,6 +386,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             </div>
           }
         >
+          {/* 存在发布进度 */}
           {parsedProgress && (
             <Steps current={parsedProgress.current} size="small">
               {parsedProgress.steps.map((step: any, index: number) => (
@@ -394,7 +415,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           title="发布单"
           extra={
             <div>
-              <Button onClick={handleDrawer}>添加发布单</Button>
+              <Button onClick={handleCreateReleaseDrawer}>添加发布单</Button>
             </div>
           }
         >
@@ -415,11 +436,11 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         </Card>
       </Space>
 
-      {/* 抽屉 */}
+      {/* 新建发布单抽屉 */}
       <Drawer
         title="添加发布单"
         width={600}
-        onClose={handleDrawer}
+        onClose={handleCreateReleaseDrawer}
         open={drawerVisible}
       >
         {/* 表单 */}
@@ -564,6 +585,14 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           </Space>
         )}
       </Drawer>
+
+      <DeployLogDrawer
+        open={logDrawerVisible}
+        onClose={() => {
+          setLogDrawerVisible(false);
+        }}
+        pipeKey={pipeKey}
+      ></DeployLogDrawer>
     </PageContainer>
   );
 };
