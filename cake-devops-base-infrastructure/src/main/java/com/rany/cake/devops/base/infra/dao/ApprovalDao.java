@@ -4,6 +4,8 @@ import com.rany.cake.devops.base.domain.aggregate.Approval;
 import com.rany.cake.devops.base.infra.po.ApprovalPO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 审批
  *
@@ -25,6 +27,8 @@ public interface ApprovalDao {
 
 
     ApprovalPO selectByApprovalId(@Param("approvalId") String approvalId);
+
+    List<ApprovalPO> selectByApprovalIds(@Param("approvalIds") List<String> approvalIds);
 
 
     /**

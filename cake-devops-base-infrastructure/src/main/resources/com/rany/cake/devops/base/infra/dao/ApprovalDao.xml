@@ -17,7 +17,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,
+        id
+        ,
         approval_id
         , doc_address, change_date, approval_status, comment, is_deleted, gmt_create, gmt_modified,
         creator, modifier
@@ -35,10 +36,20 @@
     </insert>
 
     <select id="selectByApprovalId" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from approval
-    where approval_id = #{approvalId}
+        select
+        <include refid="Base_Column_List"/>
+        from approval
+        where approval_id = #{approvalId}
+    </select>
+
+    <select id="selectByApprovalIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from approval
+        where approval_id in
+        <foreach collection="approvalIds" index="index" item="approvalId" open="(" separator="," close=")">
+            #{approvalId}
+        </foreach>
     </select>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Approval">

@@ -33,6 +33,14 @@ export interface ReleaseRecord {
   gmtCreate: Date;
   gmtModified: Date;
   releaseStatus: string;
+  approvalDTO: ApprovalDTO | null;
+}
+export interface ApprovalDTO {
+  approvalId: string;
+  docAddress: string;
+  changeDate: Date;
+  approvalStatus: string;
+  comment: string;
 }
 
 export interface DeployPayload {

@@ -21,4 +21,6 @@ public class ReleaseDTO extends DTO {
     private String releaseStatus;
     private String rollback;
     private String rollbackId;
+
+    private ApprovalDTO approvalDTO;
 }

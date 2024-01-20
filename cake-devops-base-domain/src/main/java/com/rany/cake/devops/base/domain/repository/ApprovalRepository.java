@@ -4,6 +4,8 @@ import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.Approval;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
 
+import java.util.List;
+
 /**
  * 审批表仓储
  *
@@ -15,4 +17,6 @@ import com.rany.cake.devops.base.domain.pk.ApprovalId;
 public interface ApprovalRepository extends Repository<Approval, ApprovalId> {
 
     int update(Approval approval);
+
+    List<Approval> findByIds(List<String> approvalIds);
 }

@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 审批
@@ -50,5 +51,11 @@ public class ApprovalRepositoryImpl implements ApprovalRepository {
     @Override
     public int update(Approval approval) {
         return approvalDao.update(approval);
+    }
+
+    @Override
+    public List<Approval> findByIds(List<String> approvalIds) {
+        List<ApprovalPO> approvalPOS = approvalDao.selectByApprovalIds(approvalIds);
+        return approvalDataConvertor.targetToSource(approvalPOS);
     }
 }

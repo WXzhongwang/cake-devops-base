@@ -3,9 +3,12 @@ package com.rany.cake.devops.base.service.app;
 import com.cake.framework.common.response.Page;
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.rany.cake.devops.base.api.command.release.CloseReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
+import com.rany.cake.devops.base.api.dto.ApprovalDTO;
 import com.rany.cake.devops.base.api.dto.ReleaseDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
@@ -25,6 +28,7 @@ import com.rany.cake.devops.base.domain.service.ApprovalDomainService;
 import com.rany.cake.devops.base.domain.service.ReleaseDomainService;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.ReleaseCenter;
+import com.rany.cake.devops.base.service.adapter.ApprovalDataAdapter;
 import com.rany.cake.devops.base.service.adapter.ReleaseDataAdapter;
 import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
@@ -38,6 +42,7 @@ import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @ShenyuService("/release/**")
@@ -56,6 +61,7 @@ public class ReleaseRemoteService implements ReleaseService {
     private final RedissonLockClient redissonLockClient;
     private final ReleaseCenter releaseCenter;
     private final ReleaseDataAdapter releaseDataAdapter;
+    private final ApprovalDataAdapter approvalDataAdapter;
 
     @Override
     public PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand) {
@@ -95,6 +101,16 @@ public class ReleaseRemoteService implements ReleaseService {
         Page<Release> page = releaseDomainService.pageRelease(releasePageQueryParam);
         List<Release> releases = new ArrayList<>(page.getItems());
         List<ReleaseDTO> releaseDTOList = releaseDataAdapter.sourceToTarget(releases);
+        List<String> approvalIdList = releaseDTOList.stream().map(ReleaseDTO::getApprovalId).filter(Objects::nonNull).collect(Collectors.toList());
+        List<Approval> approvalList = approvalRepository.findByIds(approvalIdList);
+        List<ApprovalDTO> approvalDTOS = approvalDataAdapter.sourceToTarget(approvalList);
+        ImmutableMap<String, ApprovalDTO> approvalMap = Maps.uniqueIndex(approvalDTOS, ApprovalDTO::getApprovalId);
+        for (ReleaseDTO releaseDTO : releaseDTOList) {
+            if (StringUtils.isNotEmpty(releaseDTO.getApprovalId())) {
+                ApprovalDTO approvalDTO = approvalMap.get(releaseDTO.getApprovalId());
+                releaseDTO.setApprovalDTO(approvalDTO);
+            }
+        }
         return PageResult.succeed(PageUtils.build(page, releaseDTOList));
     }
 

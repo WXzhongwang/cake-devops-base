@@ -52,6 +52,23 @@ const getReleaseStatusText = (status: string) => {
   }
 };
 
+const getApprovalStatusText = (status: string) => {
+  switch (status) {
+    case "PENDING":
+      return "审批中";
+    case "APPROVED":
+      return "已同意";
+    case "AUTO_APPROVED":
+      return "免批通过";
+    case "REPEALED":
+      return "已撤销";
+    case "REJECTED":
+      return "已驳回";
+    default:
+      return "未知状态";
+  }
+};
+
 interface ReleasePageProps {
   dispatch: Dispatch;
   appDetail: AppInfo | null;
@@ -464,9 +481,19 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       >
         {currentViewRelease && (
           <Space style={{ width: "100%" }} direction="vertical" size="small">
-            <Descriptions column={1} bordered>
+            <Descriptions
+              labelStyle={{ width: "160px" }}
+              column={1}
+              bordered
+              title="基础信息"
+            >
               <Descriptions.Item label="发布单号">
-                {currentViewRelease.releaseNo}
+                <Paragraph
+                  copyable={{ tooltips: ["点击复制", "复制成功"] }}
+                  style={{ display: "inline" }}
+                >
+                  {currentViewRelease.releaseNo}
+                </Paragraph>
               </Descriptions.Item>
               <Descriptions.Item label="预计发布时间">
                 {dayjs(currentViewRelease?.releaseDate).format(
@@ -475,9 +502,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
               </Descriptions.Item>
               <Descriptions.Item label="发布分支">
                 {currentViewRelease.releaseBranch}
-              </Descriptions.Item>
-              <Descriptions.Item label="提交ID">
-                {currentViewRelease.commitId}
               </Descriptions.Item>
               <Descriptions.Item label="发布版本">
                 {currentViewRelease.releaseVersion}
@@ -497,6 +521,39 @@ const DeployPage: React.FC<ReleasePageProps> = ({
               </Descriptions.Item>
               {/* 其他字段按照需要添加 */}
             </Descriptions>
+
+            {/* 审批详情 */}
+            {currentViewRelease.approvalDTO && (
+              <Descriptions
+                labelStyle={{ width: "160px" }}
+                column={1}
+                bordered
+                title="审批单详情"
+              >
+                <Descriptions.Item label="发布单号">
+                  <Paragraph
+                    copyable={{ tooltips: ["点击复制", "复制成功"] }}
+                    style={{ display: "inline" }}
+                  >
+                    {currentViewRelease.approvalDTO.approvalId}
+                  </Paragraph>
+                </Descriptions.Item>
+                <Descriptions.Item label="发起时间">
+                  {dayjs(currentViewRelease.approvalDTO?.changeDate).format(
+                    "YYYY-MM-DD HH:mm:ss"
+                  )}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="文档地址">
+                  {currentViewRelease.approvalDTO?.docAddress}
+                </Descriptions.Item>
+                <Descriptions.Item label="审批状态">
+                  {getApprovalStatusText(
+                    currentViewRelease.approvalDTO.approvalStatus
+                  )}
+                </Descriptions.Item>
+              </Descriptions>
+            )}
 
             <Button
               onClick={() => setViewDrawerVisible(false)}
