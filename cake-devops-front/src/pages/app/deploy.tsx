@@ -388,7 +388,11 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         >
           {/* 存在发布进度 */}
           {parsedProgress && (
-            <Steps current={parsedProgress.current} size="small">
+            <Steps
+              current={parsedProgress.current}
+              status={parsedProgress.status}
+              size="small"
+            >
               {parsedProgress.steps.map((step: any, index: number) => (
                 <Steps.Step
                   key={index}
