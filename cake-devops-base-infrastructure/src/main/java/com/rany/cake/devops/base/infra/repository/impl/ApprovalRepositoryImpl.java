@@ -9,9 +9,11 @@ import com.rany.cake.devops.base.infra.dao.ApprovalDao;
 import com.rany.cake.devops.base.infra.mapper.ApprovalPOMapper;
 import com.rany.cake.devops.base.infra.po.ApprovalPO;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,6 +57,9 @@ public class ApprovalRepositoryImpl implements ApprovalRepository {
 
     @Override
     public List<Approval> findByIds(List<String> approvalIds) {
+        if (CollectionUtils.isEmpty(approvalIds)) {
+            return Collections.emptyList();
+        }
         List<ApprovalPO> approvalPOS = approvalDao.selectByApprovalIds(approvalIds);
         return approvalDataConvertor.targetToSource(approvalPOS);
     }

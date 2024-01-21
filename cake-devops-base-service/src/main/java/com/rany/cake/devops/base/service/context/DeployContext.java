@@ -107,6 +107,11 @@ public class DeployContext implements Serializable {
          */
         private String pipeKey;
         /**
+         * 状态，当某个插件执行失败，则返回失败
+         * status:error
+         */
+        private String status;
+        /**
          * 整体开始时间
          */
         private Date startDate;
@@ -187,17 +192,20 @@ public class DeployContext implements Serializable {
     public void fail() {
         this.release.setReleaseStatus(ReleaseStatus.FAILED.name());
         this.release.setGmtModified(new Date());
+        this.progress.setStatus("error");
     }
 
     public void success() {
         this.release.setReleaseStatus(ReleaseStatus.FINISHED.name());
         this.release.setGmtModified(new Date());
+        this.progress.setStatus("finish");
     }
 
     public void start() {
         this.release.setReleaseStatus(ReleaseStatus.PENDING.name());
         this.release.setGmtModified(new Date());
         this.progress.setStartDate(new Date());
+        this.progress.setStatus("process");
     }
 
     public void end() {

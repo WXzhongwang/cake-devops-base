@@ -53,7 +53,11 @@ public class DefaultDeployPipeline implements DeployPipeline {
             // 设置开始执行时间
             this.observer.updateProgress(this.deployContext);
             head.getNext().init(this.deployContext);
-            head.getNext().execute(this.deployContext);
+            if (!head.getNext().execute(this.deployContext)) {
+                // 标注任务执行失败
+                this.deployContext.fail();
+                return;
+            }
             // 标注任务执行成功
             this.deployContext.success();
         } catch (Exception ex) {

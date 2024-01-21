@@ -31,11 +31,11 @@ public interface Plugin {
 
     /**
      * plugin 执行失败是否可继续执行
-     * 默认：仍然可以执行
+     * 默认：停止执行
      *
      * @return plugin 执行失败是否可继续执行
      */
     default boolean stopWhenFailure() {
-        return false;
+        return true;
     }
 }
