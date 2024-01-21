@@ -8,6 +8,7 @@ import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 @Slf4j
 @Component
@@ -25,12 +26,22 @@ public class LogConsumer {
             ackMode = "MANUAL",
             concurrency = "1"
     )
-    public void listenerPush(String msg, Channel channel, Message message) {
-        log.debug("consumer>>>接收到的消息>>>{}", msg);
-        msg.split(" - ")[0].trim().replace("[", "").replace("]", "");
-        String pipeKey = msg.substring(0, msg.indexOf(" - ")).trim().replace("[", "").replace("]", "");
-        msg = msg.substring(msg.indexOf(" - ") + 2);
-        //调用websocket发送日志信息到页面上
-        webSocketService.sendMessage(pipeKey, msg);
+    public void listenerPush(String msg, Channel channel, Message message) throws IOException {
+        try {
+            log.debug("consumer>>>接收到的消息>>>{}", msg);
+            msg.split(" - ")[0].trim().replace("[", "").replace("]", "");
+            String pipeKey = msg.substring(0, msg.indexOf(" - ")).trim().replace("[", "").replace("]", "");
+            msg = msg.substring(msg.indexOf(" - ") + 2);
+            //调用websocket发送日志信息到页面上
+            webSocketService.sendMessage(pipeKey, msg);
+
+            // 手动确认消息
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (Exception ex) {
+            log.error("error", ex);
+            // 拒绝消息，不进行重试
+            channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
+        }
+
     }
 }

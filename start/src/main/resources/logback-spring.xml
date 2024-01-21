@@ -46,7 +46,7 @@
 
     <appender name="RABBITMQ" class="org.springframework.amqp.rabbit.logback.AmqpAppender">
         <layout>
-            <pattern>[%X{__releaseId__}] - %d{HH:mm:ss.SSS} %msg%n</pattern>
+            <pattern>[%X{__pipe_key__}] - %d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</pattern>
         </layout>
         <!--rabbitmq地址 -->
         <addresses>${rabbitmq-address}</addresses>

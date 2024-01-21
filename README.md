@@ -19,6 +19,7 @@
 - [x] **kubernetes**: 容器集群管理系统 http://docs.kubernetes.org.cn/
 - [x] **kuboard**: 图形化管理工具 http://kuboard.cn
 - [x] **AliYun ACR容器镜像服务**: 容器镜像服务(镜像加速中心)https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
+- [x] **websocket+rabbitmq**: 日志推送
 
 ## 远景
 
@@ -36,6 +37,7 @@
 - [x] **应用管理**: 应用人员管理（分管不同的人员职能及角色），查询，更新，删除
 - [x] **应用管理**: 部署页面更新，增加发布单
 - [x] **基础能力**: pipeline增加进度监听器，使用观察者模式
+- [x] **应用环境**: websocket+rabbitmq 采集日志并推送客户端实时展示发布进度
 
 ## 待计划开始
 
@@ -43,6 +45,8 @@
 - [ ] **集群管理**: 集群列表
 - [ ] **集群管理**: 集群终端、集群运维
 - [ ] **应用环境**: 创建发布单，发布pipeline，发布历史
+
+![log_display.png](https://github.com/WXzhongwang/cake-devops-base/blob/main/images%2Flog_display.png)
 
 ![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/WechatIMG869.jpeg)
 
