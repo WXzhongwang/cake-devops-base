@@ -60,7 +60,10 @@ public class CodePlugin extends BasePlugin {
             //    local folder_name=$3
             //    local webhook_url=$4
             String executeCommand = String.format(" sh checkout.sh '%s' %s '%s'", repo, branch, webHook);
-            JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand);
+            if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
+                log.error("代码拉取失败");
+                return false;
+            }
         } catch (JSchException e) {
             log.error("CodePlugin error", e);
             return false;

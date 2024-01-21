@@ -58,7 +58,10 @@ public class MavenBuildPlugin extends BasePlugin {
 //            local webhook_url=$2
             //String executeCommand = String.join(" ", "sh", "maven_build.sh", repo, webHook);
             String executeCommand = String.format(" sh maven_build.sh '%s' '%s'", repo, webHook);
-            JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand);
+            if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
+                log.error("maven编译打包失败");
+                return false;
+            }
         } catch (JSchException e) {
             log.error("MavenBuildPlugin error", e);
             return false;

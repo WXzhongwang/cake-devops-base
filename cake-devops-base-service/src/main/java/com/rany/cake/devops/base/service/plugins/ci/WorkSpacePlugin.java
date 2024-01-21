@@ -63,11 +63,17 @@ public class WorkSpacePlugin extends BasePlugin {
             // 连接到服务器
             session.connect();
 
-            JSCHTool.remoteExecute(session, "mkdir -p " + workspace);
-            JSCHTool.remoteExecute(session, "cd " + workspace + ";" +
+            if (!JSCHTool.remoteExecute(session, "mkdir -p " + workspace)) {
+                log.error("创建工作目录失败");
+                return false;
+            }
+            if (!JSCHTool.remoteExecute(session, "cd " + workspace + ";" +
                     " curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.2/java-build-source.tar.gz; " +
                     " tar -zxvf java-build-source.tar.gz;" +
-                    " chmod +x *.sh;");
+                    " chmod +x *.sh;")) {
+                log.error("脚本下载失败");
+                return false;
+            }
         } catch (JSchException e) {
             log.error("WorkSpacePlugin error", e);
             return false;

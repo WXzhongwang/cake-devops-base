@@ -63,8 +63,11 @@ public class BuildImagePlugin extends BasePlugin {
 //            local webhook_url=$4
             //String executeCommand = String.join(" ", "sh", "build_image.sh", repo, appName, releaseVersion, webHook);
             String executeCommand = String.format(" sh build_image.sh '%s' %s %s '%s'", repo, appName, releaseNo, webHook);
-            JSCHTool.remoteExecute(session, "cd " + workspace + "; " +
-                    executeCommand);
+            if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " +
+                    executeCommand)) {
+                log.error("镜像构架失败");
+                return false;
+            }
         } catch (JSchException e) {
             log.error("BuildImagePlugin error", e);
             return false;

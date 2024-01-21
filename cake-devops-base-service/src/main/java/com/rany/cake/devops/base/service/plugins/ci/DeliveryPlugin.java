@@ -66,8 +66,7 @@ public class DeliveryPlugin extends BasePlugin {
             // 连接到服务器
             session.connect();
 
-            JSCHTool.remoteExecute(session, "ls -l");
-            JSCHTool.remoteExecute(session, "pwd");
+            
             JSCHTool.remoteExecute(session, "mkdir -p " + workspace);
             // J：此选项告诉 -O, --remote-name 选项使用服务器指定的 Content-Disposition 文件名，而不是从 URL 中提取文件名。
             // L：如果服务器报告请求的页面已移动到不同的位置（用 Location: 标头和 3XX 响应代码指示），此选项将使 curl 在新位置重做请求。

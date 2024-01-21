@@ -61,7 +61,10 @@ public class SonarQubePlugin extends BasePlugin {
 //            local repo_url=$1
 //            local webhook_url=$2
             String executeCommand = String.format(" sh sonar_scan.sh '%s'  '%s'", repo, webHook);
-            JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand);
+            if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
+                log.error("执行SonarScan失败");
+                return false;
+            }
         } catch (JSchException e) {
             log.error("SonarQubePlugin error", e);
             return false;

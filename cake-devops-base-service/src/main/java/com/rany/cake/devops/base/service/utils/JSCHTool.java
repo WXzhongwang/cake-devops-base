@@ -14,9 +14,10 @@ import java.nio.file.Paths;
 public class JSCHTool {
     protected static final Logger log = LoggerFactory.getLogger("RabbitMq");
 
-    public static void remoteExecute(Session session, String command) throws JSchException {
+    public static boolean remoteExecute(Session session, String command) throws JSchException {
         log.info(">> {}", command);
         ChannelExec channel = null;
+        boolean executionSuccess = false;
         try {
             channel = (ChannelExec) session.openChannel("exec");
             channel.setCommand(command);
@@ -37,6 +38,17 @@ public class JSCHTool {
                     }
                 }
             }
+
+            // 获取远程 Shell 的退出状态
+            int exitStatus = channel.getExitStatus();
+
+            // 根据退出状态判断是否执行成功
+            if (exitStatus == 0) {
+                log.info("Shell command executed successfully");
+                executionSuccess = true;
+            } else {
+                log.error("Shell command execution failed with exit status: {}", exitStatus);
+            }
         } catch (IOException e) {
             log.error("IOException occur:", e);
         } finally {
@@ -48,6 +60,8 @@ public class JSCHTool {
                 }
             }
         }
+
+        return executionSuccess;
     }
 
     public static long scpTo(Session session, String source, String destination) {
