@@ -31,7 +31,7 @@ public final class Constants {
     public static final String AUTHORIZED_KEYS = "~/.ssh/authorized_keys";
     public static final String REMOTE_BASE = "/Users/yuanjinxiu/ci";
     public static final String WELCOME = "Dear {}, Welcome to SSH-Server<{}>@{} \n";
-    public static final String __TRACE_RELEASE_ID__ = "__releaseId__";
+    public static final String __TRACE_PIPE_KEY__ = "__pipe_key__";
     public static final String CI_CD_DEPLOY_LOCK = "cake:lock:%s:%s";
 
 

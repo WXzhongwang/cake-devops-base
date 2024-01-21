@@ -15,10 +15,10 @@ public class WebSocketService {
     @Resource
     private WebSocketServer webSocketServer;
 
-    public void sendMessage(String releaseId, String logMessage) {
+    public void sendMessage(String pipeKey, String logMessage) {
         try {
             ConcurrentHashMap<String, CopyOnWriteArraySet<WebSocketServer>> map = webSocketServer.getWebSocketMap();
-            CopyOnWriteArraySet<WebSocketServer> servers = map.get(releaseId);
+            CopyOnWriteArraySet<WebSocketServer> servers = map.get(pipeKey);
             if (servers != null && !servers.isEmpty()) {
                 for (WebSocketServer server : servers) {
                     server.sendMessage(logMessage);

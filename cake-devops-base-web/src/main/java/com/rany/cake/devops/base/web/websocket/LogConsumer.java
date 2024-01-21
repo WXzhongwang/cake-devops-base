@@ -28,9 +28,9 @@ public class LogConsumer {
     public void listenerPush(String msg, Channel channel, Message message) {
         log.debug("consumer>>>接收到的消息>>>{}", msg);
         msg.split(" - ")[0].trim().replace("[", "").replace("]", "");
-        String releaseId = msg.substring(0, msg.indexOf(" - ")).trim().replace("[", "").replace("]", "");
+        String pipeKey = msg.substring(0, msg.indexOf(" - ")).trim().replace("[", "").replace("]", "");
         msg = msg.substring(msg.indexOf(" - ") + 2);
         //调用websocket发送日志信息到页面上
-        webSocketService.sendMessage(releaseId, msg);
+        webSocketService.sendMessage(pipeKey, msg);
     }
 }

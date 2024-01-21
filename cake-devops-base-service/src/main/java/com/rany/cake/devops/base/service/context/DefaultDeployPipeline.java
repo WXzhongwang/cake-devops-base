@@ -47,7 +47,7 @@ public class DefaultDeployPipeline implements DeployPipeline {
     @Override
     public void start() {
         try {
-            MDC.put(Constants.__TRACE_RELEASE_ID__, String.valueOf(deployContext.getRelease().getReleaseId().getReleaseId()));
+            MDC.put(Constants.__TRACE_PIPE_KEY__, this.deployContext.getProgress().getPipeKey());
             log.info("pipeline begin to start...");
             this.deployContext.start();
             // 设置开始执行时间
