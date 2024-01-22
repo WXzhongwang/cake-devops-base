@@ -1,5 +1,6 @@
 // src/components/HostTable.tsx
 import React, { useEffect, useState } from "react";
+import { history } from "umi";
 import { Table, Space, Form, Button, Input, Tag } from "antd";
 import { HostModel } from "@/models/host"; // 请根据实际情况导入你的数据模型
 
@@ -66,12 +67,20 @@ const HostTable: React.FC<HostTableProps> = ({
       key: "action",
       render: (text: any, record: HostModel) => (
         <Space size="middle">
-          {/* 根据需要添加其他操作，比如查看、编辑、删除等 */}
-          {/* <a onClick={() => handleView(record)}>查看</a> */}
+          <Button onClick={() => handleViewClick(record.hostId)}>查看</Button>
         </Space>
       ),
     },
   ];
+
+  // 处理点击查看操作
+  const handleViewClick = (hostId: string) => {
+    // 构造主机详情页面的路由路径
+    const hostDetailPath = `/host/detail/${hostId}`;
+
+    // 跳转到主机详情页面
+    history.push(hostDetailPath);
+  };
 
   return (
     <Table

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Loophole, LLC
+ * Copyright (C) 2015 Loophole, LLC
  * <p>
  * This program is free software: you can redistribute it and/or  modify
  * it under the terms of the GNU Affero General Public License, version 3,
@@ -27,44 +27,22 @@
  */
 package com.rany.cake.devops.base.service.terminal;
 
-import com.alibaba.nacos.common.utils.CollectionUtils;
-import com.rany.cake.devops.base.service.utils.JSONUtil;
-import com.rany.cake.devops.base.service.utils.SessionOutputUtil;
-import com.rany.cake.devops.base.service.utils.SleepUtils;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.websocket.Session;
-import java.io.IOException;
-import java.util.List;
+public class UserSessionsOutput {
 
+    //instance id, host output
+    Map<String, SessionOutput> sessionOutputMap = new ConcurrentHashMap<>();
 
-/**
- * class to send output to web socket client
- */
-@Slf4j
-public class SentOutputTask implements Runnable {
-
-    Session session;
-    String sessionId;
-
-    public SentOutputTask(String sessionId, Session session) {
-        this.sessionId = sessionId;
-        this.session = session;
+    public Map<String, SessionOutput> getSessionOutputMap() {
+        return sessionOutputMap;
     }
 
-    @Override
-    public void run() {
-        try {
-            while (session.isOpen()) {
-                List<SessionOutput> outputList = SessionOutputUtil.getOutput(sessionId);
-                if (CollectionUtils.isNotEmpty(outputList)) {
-                    String jsonStr = JSONUtil.writeValueAsString(outputList);
-                    session.getBasicRemote().sendText(jsonStr);
-                }
-                SleepUtils.millisecondsSleep(25L);
-            }
-        } catch (IOException ignored) {
-        }
+    public void setSessionOutputMap(Map<String, SessionOutput> sessionOutputMap) {
+        this.sessionOutputMap = sessionOutputMap;
     }
-
 }
+
+
+

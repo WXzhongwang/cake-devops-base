@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.web.websocket;
 
 import com.rany.cake.devops.base.domain.aggregate.TerminalSession;
 import com.rany.cake.devops.base.domain.base.HostInfo;
+import com.rany.cake.devops.base.domain.enums.SessionTypeEnum;
 import com.rany.cake.devops.base.domain.factory.TerminalSessionFactory;
 import com.rany.cake.devops.base.domain.repository.TerminalSessionRepository;
 import com.rany.cake.devops.base.service.base.Constants;
@@ -11,6 +12,7 @@ import com.rany.cake.devops.base.service.terminal.ServerTerminalMessageHandlerFa
 import com.rany.cake.devops.base.service.terminal.enums.MessageState;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -41,10 +43,10 @@ public class ServerTerminalController extends SocketBaseController {
 
     private static final HostInfo SERVER_INFO = HostInfo.build();
 
-    @Resource
+    @Autowired
     private TerminalSessionFactory terminalSessionFactory;
 
-    @Resource
+    @Autowired
     private TerminalSessionRepository terminalSessionRepository;
 
     private TerminalSession terminalSession;
@@ -63,11 +65,14 @@ public class ServerTerminalController extends SocketBaseController {
     public void onOpen(Session session) {
         try {
             log.info("Server terminal session try to connect: instanceIP={}, sessionId={}", SERVER_INFO.getHostAddress(), sessionId);
+            TerminalSession terminalSession = terminalSessionFactory.build(sessionId, SERVER_INFO, SessionTypeEnum.WEB_TERMINAL);
+            terminalSessionRepository.save(terminalSession);
+            this.terminalSession = terminalSession;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             // 线程启动
             serverTerminalExecutor.execute(new SentOutputTask(sessionId, session));
         } catch (Exception e) {
-            log.error("Server terminal create connection error: {}", e.getMessage());
+            log.error("Server terminal create connection error: {}", e.getMessage(), e);
         }
     }
 

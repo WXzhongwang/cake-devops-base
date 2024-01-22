@@ -1,9 +1,8 @@
 package com.rany.cake.devops.base.service.terminal;
 
+
 /**
- * @Author baiyi
- * @Date 2020/1/7 1:52 下午
- * @Version 1.0
+ * session holder
  */
 public class SessionHolder {
 

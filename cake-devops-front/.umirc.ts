@@ -9,6 +9,7 @@ export default defineConfig({
     { path: "/apps", component: "app/app-list", name: "应用中心" },
     { path: "/app/info/:id", component: "app/app-detail" },
     { path: "/app/deploy/:id", component: "app/deploy" },
+    { path: "/host/detail/:id", component: "ops/host-detail" },
     {
       path: "/ops",
       routes: [
