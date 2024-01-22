@@ -12,7 +12,6 @@ import com.rany.cake.devops.base.service.terminal.ServerTerminalMessageHandlerFa
 import com.rany.cake.devops.base.service.terminal.enums.MessageState;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -43,11 +42,10 @@ public class ServerTerminalController extends SocketBaseController {
 
     private static final HostInfo SERVER_INFO = HostInfo.build();
 
-    @Autowired
-    private TerminalSessionFactory terminalSessionFactory;
+    private static TerminalSessionFactory terminalSessionFactory;
 
-    @Autowired
-    private TerminalSessionRepository terminalSessionRepository;
+
+    private static TerminalSessionRepository terminalSessionRepository;
 
     private TerminalSession terminalSession;
 
@@ -56,6 +54,16 @@ public class ServerTerminalController extends SocketBaseController {
     @Resource
     public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor serverTerminalExecutor) {
         ServerTerminalController.serverTerminalExecutor = serverTerminalExecutor;
+    }
+
+    @Resource
+    public void setTerminalSessionRepository(TerminalSessionRepository terminalSessionRepository) {
+        ServerTerminalController.terminalSessionRepository = terminalSessionRepository;
+    }
+
+    @Resource
+    public void setTerminalSessionFactory(TerminalSessionFactory terminalSessionFactory) {
+        ServerTerminalController.terminalSessionFactory = terminalSessionFactory;
     }
 
     /**
