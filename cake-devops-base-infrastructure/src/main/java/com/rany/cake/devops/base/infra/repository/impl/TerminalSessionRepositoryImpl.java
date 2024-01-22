@@ -43,6 +43,6 @@ public class TerminalSessionRepositoryImpl implements TerminalSessionRepository 
 
     @Override
     public void save(@NotNull TerminalSession terminalSession) {
-        terminalSessionDao.update(terminalSession);
+        terminalSessionDao.save(terminalSession);
     }
 }
