@@ -21,9 +21,9 @@ import javax.websocket.server.ServerEndpoint;
 import java.util.UUID;
 
 /**
- * @Author baiyi
- * @Date 2021/5/28 9:15 上午
- * @Version 1.0
+ * 终端管理
+ *
+ * @author zhongshengwang
  */
 @Slf4j
 @ServerEndpoint(value = "/api/ws/terminal")

@@ -11,6 +11,13 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+
+/**
+ * 部署日志
+ * WebSocketServer
+ *
+ * @author zhongshengwang
+ */
 @Slf4j
 @ServerEndpoint(value = "/api/ws/devops/{pipeKey}")
 @Component
