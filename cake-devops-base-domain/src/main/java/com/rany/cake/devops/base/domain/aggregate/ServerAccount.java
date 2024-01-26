@@ -44,7 +44,7 @@ public class ServerAccount extends BaseAggregateRoot implements IAggregate<Serve
     /**
      * publicKey
      */
-    private String credential2;
+    private String publicKey;
     /**
      * 密码短语
      */

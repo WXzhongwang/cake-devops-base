@@ -18,6 +18,8 @@ public final class Constants {
     public static final String SYSTEM_NAME = "cake-devops";
     public static final String SYSTEM_VERSION = "1.0.0";
     public final static String TRACE_ID = "traceId";
+
+    public static final String CREATED_BY = "Created by cake";
     /**
      * 默认端口
      */
