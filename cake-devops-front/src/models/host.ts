@@ -3,6 +3,55 @@
 import { Effect, Reducer, Subscription } from "umi";
 import * as api from "@/services/host";
 
+export interface ServerAccount {
+  serverAccountId: string;
+  hostId: string;
+  authMode: string;
+  username: string;
+  displayName: string;
+  accountType: number;
+  protocol: string;
+  active: boolean;
+  credential: string;
+  publicKey: string;
+  passphrase: string;
+}
+
+export interface CreateServerAccountPayload {
+  hostId: string;
+  authMode: string;
+  username: string;
+  displayName: string;
+  accountType: number;
+  protocol: string;
+  active: boolean;
+  credential: string;
+  publicKey: string;
+  passphrase: string;
+}
+
+export interface DeleteServerAccountPayload {
+  serverAccountId: string;
+}
+
+export interface QueryServerAccountsPayload {
+  pageNo: number;
+  pageSize: number;
+}
+
+export interface UpdateServerAccountPayload {
+  hostAccountId: string;
+  authMode?: string;
+  username?: string;
+  displayName?: string;
+  accountType?: number;
+  protocol?: string;
+  active?: boolean;
+  credential?: string;
+  publicKey?: string;
+  passphrase?: string;
+}
+
 export interface HostModel {
   hostId: string;
   name: string;
@@ -65,11 +114,33 @@ export interface HostModelState {
   hosts: HostModel[];
   hostGroups: HostGroupModel[];
   total: number;
+  serverAccounts: ServerAccount[];
+  serverAccountTotal: number;
 }
 
 interface QueryHostAction {
   type: "host/fetchHosts";
   payload: QueryHostPayload;
+}
+
+interface CreateServerAccountAction {
+  type: "host/createServerAccount";
+  payload: CreateServerAccountPayload;
+}
+
+interface UpdateServerAccountAction {
+  type: "host/updateServerAccount";
+  payload: UpdateServerAccountPayload;
+}
+
+interface DeleteServerAccountAction {
+  type: "host/deleteServerAccount";
+  payload: DeleteServerAccountPayload;
+}
+
+interface QueryServerAccountsAction {
+  type: "host/queryServerAccounts";
+  payload: QueryServerAccountsPayload;
 }
 
 export interface HostModelType {
@@ -82,10 +153,15 @@ export interface HostModelType {
     fetchHostGroups: Effect;
     createHostGroup: Effect;
     updateHostGroup: Effect;
+    createServerAccount: Effect;
+    updateServerAccount: Effect;
+    deleteServerAccount: Effect;
+    queryServerAccounts: Effect;
   };
   reducers: {
     saveHosts: Reducer<HostModelState>;
     saveHostGroups: Reducer<HostModelState>;
+    saveServerAccounts: Reducer<HostModelState>;
   };
 }
 
@@ -96,6 +172,7 @@ const HostModel: HostModelType = {
     hosts: [],
     total: 0,
     hostGroups: [],
+    hostAccounts: [],
   },
 
   effects: {
@@ -146,6 +223,37 @@ const HostModel: HostModelType = {
       // 更新成功后重新获取主机分组数据
       yield put({ type: "fetchHostGroups" });
     },
+
+    *createServerAccount({ payload }, { call, put }) {
+      // 调用 API 创建主机账号
+      yield call(api.createServerAccount, payload);
+      // 创建成功后重新获取主机账号数据
+      yield put({ type: "queryServerAccounts" });
+    },
+
+    *updateServerAccount({ payload }, { call, put }) {
+      // 调用 API 更新主机账号
+      yield call(api.updateServerAccount, payload);
+      // 更新成功后重新获取主机账号数据
+      yield put({ type: "queryServerAccounts" });
+    },
+
+    *deleteServerAccount({ payload }, { call, put }) {
+      // 调用 API 删除主机账号
+      yield call(api.deleteServerAccount, payload);
+      // 删除成功后重新获取主机账号数据
+      yield put({
+        type: "queryServerAccounts",
+        payload: { pageNo: 1, pageSize: 10 },
+      });
+    },
+
+    *queryServerAccounts({ payload }, { call, put }) {
+      // 调用 API 分页查询主机账号
+      const response = yield call(api.queryServerAccounts, payload);
+      // 触发保存主机账号数据的 reducer
+      yield put({ type: "saveServerAccounts", payload: response.content });
+    },
   },
 
   reducers: {
@@ -159,6 +267,13 @@ const HostModel: HostModelType = {
 
     saveHostGroups(state, action) {
       return { ...state, hostGroups: action.payload };
+    },
+    saveServerAccounts(state, action) {
+      return {
+        ...state,
+        serverAccounts: action.payload.items,
+        serverAccountTotal: action.payload.total,
+      };
     },
   },
 };

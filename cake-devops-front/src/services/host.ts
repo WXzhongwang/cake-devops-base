@@ -6,6 +6,10 @@ import {
   UpdateHostPayload,
   CreateHostGroupPayload,
   UpdateHostGroupPayload,
+  CreateServerAccountPayload,
+  UpdateServerAccountPayload,
+  DeleteServerAccountPayload,
+  QueryServerAccountsPayload,
 } from "@/models/host";
 
 export async function fetchHosts(data: QueryHostPayload) {
@@ -47,6 +51,38 @@ export async function createHostGroup(data: CreateHostGroupPayload) {
 
 export async function updateHostGroup(data: UpdateHostGroupPayload) {
   return request("/api/devops/host-group/createGroup", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function createServerAccount(data: CreateServerAccountPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host-account/create", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function updateServerAccount(data: UpdateServerAccountPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host-account/update", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function deleteServerAccount(data: DeleteServerAccountPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host-account/delete", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function queryServerAccounts(data: QueryServerAccountsPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host-account/page", {
     method: "POST",
     data,
   });
