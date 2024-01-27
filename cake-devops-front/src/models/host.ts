@@ -37,6 +37,11 @@ export interface DeleteServerAccountPayload {
 export interface QueryServerAccountsPayload {
   pageNo: number;
   pageSize: number;
+  authMode: string;
+  username: string;
+  accountType: string;
+  protocol: string;
+  active: string;
 }
 
 export interface UpdateServerAccountPayload {

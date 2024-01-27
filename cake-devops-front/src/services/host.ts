@@ -58,7 +58,7 @@ export async function updateHostGroup(data: UpdateHostGroupPayload) {
 
 export async function createServerAccount(data: CreateServerAccountPayload) {
   console.log("payload", data);
-  return request("/api/devops/host-account/create", {
+  return request("/api/devops/server-account/create", {
     method: "POST",
     data,
   });
@@ -66,7 +66,7 @@ export async function createServerAccount(data: CreateServerAccountPayload) {
 
 export async function updateServerAccount(data: UpdateServerAccountPayload) {
   console.log("payload", data);
-  return request("/api/devops/host-account/update", {
+  return request("/api/devops/server-account/update", {
     method: "POST",
     data,
   });
@@ -74,7 +74,7 @@ export async function updateServerAccount(data: UpdateServerAccountPayload) {
 
 export async function deleteServerAccount(data: DeleteServerAccountPayload) {
   console.log("payload", data);
-  return request("/api/devops/host-account/delete", {
+  return request("/api/devops/server-account/delete", {
     method: "POST",
     data,
   });
@@ -82,7 +82,7 @@ export async function deleteServerAccount(data: DeleteServerAccountPayload) {
 
 export async function queryServerAccounts(data: QueryServerAccountsPayload) {
   console.log("payload", data);
-  return request("/api/devops/host-account/page", {
+  return request("/api/devops/server-account/page", {
     method: "POST",
     data,
   });

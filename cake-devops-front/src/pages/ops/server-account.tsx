@@ -3,6 +3,7 @@ import { PageContainer } from "@ant-design/pro-components";
 import { Table, Space, Input, Select, Button, Form, Card, Tag } from "antd";
 import { connect, Dispatch, history } from "umi";
 import { ServerAccount } from "@/models/host";
+import ServerAccountDrawer from "./components/create-server-account";
 
 const { Option } = Select;
 
@@ -23,8 +24,37 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
     username: "",
     accountType: "",
     protocol: "",
-    active: undefined,
+    active: "1",
   });
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [servers, setServers] = useState<string[]>([]);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    // 获取服务器列表
+    fetchServers();
+  }, []);
+
+  const fetchServers = () => {
+    // 假设这里调用后端接口获取服务器列表
+    const mockServers = ["Server 1", "Server 2", "Server 3"];
+    setServers(mockServers);
+  };
+
+  const handleAddAccount = () => {
+    setDrawerVisible(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerVisible(false);
+    form.resetFields();
+  };
+
+  const handleSaveAccount = (values: ServerAccount) => {
+    console.log("Form values:", values);
+    // 调用后端接口保存账号信息
+    // dispatch({ type: 'host/createHostAccount', payload: values });
+  };
 
   useEffect(() => {
     getServerAccounts();
@@ -32,7 +62,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
 
   const getServerAccounts = () => {
     dispatch({
-      type: "host/getServerAccounts", // 请根据实际的 model 和 effect 路径调整
+      type: "host/queryServerAccounts", // 请根据实际的 model 和 effect 路径调整
       payload: { ...pagination, ...filters },
     });
   };
@@ -141,7 +171,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
                     username: "",
                     accountType: "",
                     protocol: "",
-                    active: undefined,
+                    active: "1",
                   });
                 }}
               >
@@ -149,6 +179,10 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
               </Button>
             </Form.Item>
           </Form>
+
+          <Button type="primary" onClick={handleAddAccount}>
+            新增账号
+          </Button>
 
           <Table
             columns={columns}
@@ -163,6 +197,13 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
           />
         </Space>
       </Card>
+
+      <ServerAccountDrawer
+        visible={drawerVisible}
+        servers={servers}
+        onClose={handleCloseDrawer}
+        onSave={handleSaveAccount}
+      />
     </PageContainer>
   );
 };
