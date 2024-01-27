@@ -34,6 +34,12 @@ export default {
             icon: <ApiFilled />,
             component: "ops/host-list",
           },
+          {
+            path: "/ops/server-account",
+            name: "主机账号管理",
+            icon: <ApiFilled />,
+            component: "ops/server-account",
+          },
         ],
       },
       // {

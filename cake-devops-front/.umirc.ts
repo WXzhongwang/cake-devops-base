@@ -23,6 +23,11 @@ export default defineConfig({
           component: "ops/host-list",
           name: "主机管理",
         },
+        {
+          path: "/ops/server-account",
+          component: "ops/server-account",
+          name: "主机账号管理",
+        },
       ],
     },
   ],
