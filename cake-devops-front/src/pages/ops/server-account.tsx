@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import { Table, Space, Input, Select, Button, Form, Card, Tag } from "antd";
 import { connect, Dispatch, history } from "umi";
-import { ServerAccount } from "@/models/host";
+import { ServerAccount, HostModel } from "@/models/host";
 import ServerAccountDrawer from "./components/create-server-account";
 
 const { Option } = Select;
 
 interface ServerAccountListProps {
   dispatch: Dispatch;
+  hosts: HostModel[];
   serverAccounts: ServerAccount[];
   serverAccountTotal: number;
 }
@@ -17,6 +18,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
   dispatch,
   serverAccounts,
   serverAccountTotal,
+  hosts,
 }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
@@ -27,19 +29,14 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
     active: "1",
   });
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [servers, setServers] = useState<string[]>([]);
+  // const [servers, setServers] = useState<HostModel[]>([]);
   const [form] = Form.useForm();
 
   useEffect(() => {
     // 获取服务器列表
-    fetchServers();
+    dispatch({ type: "host/fetchHosts" });
+    //    setServers(hosts);
   }, []);
-
-  const fetchServers = () => {
-    // 假设这里调用后端接口获取服务器列表
-    const mockServers = ["Server 1", "Server 2", "Server 3"];
-    setServers(mockServers);
-  };
 
   const handleAddAccount = () => {
     setDrawerVisible(true);
@@ -128,6 +125,8 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
     history.push(`/host/account/info/${record.hostId}`);
   };
 
+  console.log("hosts", hosts);
+
   return (
     <PageContainer title="主机账号管理">
       <Card>
@@ -200,7 +199,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
 
       <ServerAccountDrawer
         visible={drawerVisible}
-        servers={servers}
+        servers={hosts}
         onClose={handleCloseDrawer}
         onSave={handleSaveAccount}
       />
@@ -215,9 +214,11 @@ export default connect(
     host: {
       serverAccounts: ServerAccount[];
       serverAccountTotal: number;
+      hosts: HostModel[];
     };
   }) => {
     return {
+      hosts: host.hosts,
       serverAccounts: host.serverAccounts,
       serverAccountTotal: host.serverAccountTotal,
     };

@@ -60,7 +60,8 @@ export interface UpdateServerAccountPayload {
 export interface HostModel {
   hostId: string;
   name: string;
-  hostname: string;
+  hostName: string;
+  serverAddr: string;
   port: number;
   username: string;
   pkey: string;
@@ -177,7 +178,8 @@ const HostModel: HostModelType = {
     hosts: [],
     total: 0,
     hostGroups: [],
-    hostAccounts: [],
+    serverAccounts: [],
+    serverAccountTotal: 0,
   },
 
   effects: {
