@@ -57,6 +57,12 @@ public class ServerAccount extends BaseAggregateRoot implements IAggregate<Serve
         this.hostId = hostId;
     }
 
+    public void init() {
+        this.gmtCreate = DateUtil.date();
+        this.gmtModified = DateUtil.date();
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
+    }
+
     public Boolean delete() {
         this.gmtModified = DateUtil.date();
         this.isDeleted = DeleteStatusEnum.YES.getValue();

@@ -52,9 +52,11 @@ public class ServerAccountRemoteService implements ServerAccountService {
         serverAccount.setUsername(command.getUsername());
         serverAccount.setDisplayName(command.getDisplayName());
         serverAccount.setProtocol(command.getProtocol());
+        serverAccount.setActive(command.getActive());
         serverAccount.setCredential(command.getCredential());
         serverAccount.setPassphrase(command.getPassphrase());
         serverAccount.setPublicKey(command.getPublicKey());
+        serverAccount.init();
         serverAccountDomainService.save(serverAccount);
         return PojoResult.succeed(serverAccount.getServerAccountId().getServerAccountId());
     }

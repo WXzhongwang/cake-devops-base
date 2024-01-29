@@ -27,6 +27,8 @@ public class CreateServerAccountCommand extends BaseCommand {
     private Integer accountType;
     private String protocol;
 
+    private Boolean active;
+
     /**
      * 凭据内容
      */
