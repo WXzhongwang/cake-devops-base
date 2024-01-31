@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 
 /**
- * 编辑服务账号
+ * 服务账号
  *
  * @author zhongshengwang
  * @description 服务账号
@@ -15,18 +15,26 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ModifyServerAccountCommand extends BaseCommand {
+public class CreateServerKeyCommand extends BaseCommand {
 
-    private String serverAccountId;
-   
-    private String username;
+    /**
+     * 显示名称
+     */
     private String displayName;
-    private String authMode;
+    
     /**
      * 0普通账户/1管理员
      */
     private Integer accountType;
+    /**
+     * 默认ssh
+     */
     private String protocol;
+
+    /**
+     * 是否活跃
+     */
+    private Boolean active;
 
     /**
      * 凭据内容

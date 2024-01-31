@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.rany.cake.devops.base.infra.dao.ServerAccountDao">
-    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.ServerAccountPO">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.ServerKeyDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.ServerKeyPO">
         <id column="id" property="id" jdbcType="BIGINT"/>
-        <result column="server_account_id" property="serverAccountId" jdbcType="VARCHAR"/>
-        <result column="host_id" property="hostId" jdbcType="VARCHAR"/>
-        <result column="auth_mode" property="authMode" jdbcType="VARCHAR"/>
-        <result column="username" property="username" jdbcType="VARCHAR"/>
         <result column="display_name" property="displayName" jdbcType="VARCHAR"/>
         <result column="account_type" property="accountType" jdbcType="VARCHAR"/>
         <result column="protocol" property="protocol" jdbcType="VARCHAR"/>
@@ -23,40 +19,43 @@
     <sql id="Base_Column_List">
 
         id
-        , server_account_id, host_id, auth_mode, username, display_name, account_type,
+        , server_key_id, username, display_name, account_type,
     protocol, active, credential, public_key, passphrase, is_deleted, gmt_create, gmt_modified,
     creator, modifier
     </sql>
 
-    <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.ServerAccount">
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.ServerKey">
 
-        insert into server_account (server_account_id, host_id,
-                                    auth_mode, username, display_name,
-                                    account_type, protocol, active,
-                                    credential, public_key, passphrase,
-                                    is_deleted, gmt_create, gmt_modified,
-                                    creator, modifier)
-        values (#{serverAccountId.serverAccountId,jdbcType=VARCHAR}, #{hostId.hostId,jdbcType=VARCHAR},
-                #{authMode,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{displayName,jdbcType=VARCHAR},
-                #{accountType,jdbcType=VARCHAR}, #{protocol,jdbcType=VARCHAR}, #{active,jdbcType=TINYINT},
-                #{credential,jdbcType=VARCHAR}, #{publicKey,jdbcType=VARCHAR}, #{passphrase,jdbcType=VARCHAR},
+        insert into server_key (server_key_id,
+                                auth_mode, username, display_name,
+                                account_type, protocol, active,
+                                credential, public_key, passphrase,
+                                is_deleted, gmt_create, gmt_modified,
+                                creator, modifier)
+        values (#{serverKeyId.serverKeyId,jdbcType=VARCHAR},
+                #{username,jdbcType=VARCHAR},
+                #{displayName,jdbcType=VARCHAR},
+                #{accountType,jdbcType=VARCHAR},
+                #{protocol,jdbcType=VARCHAR},
+                #{active,jdbcType=TINYINT},
+                #{credential,jdbcType=VARCHAR},
+                #{publicKey,jdbcType=VARCHAR},
+                #{passphrase,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
     </insert>
 
-    <select id="selectByServerAccountId" resultMap="BaseResultMap">
+    <select id="selectByServerKeyId" resultMap="BaseResultMap">
 
         select
         <include refid="Base_Column_List"/>
-        from server_account
-        where server_account_id = #{serverAccountId}
+        from server_key
+        where server_key_id = #{keyId}
     </select>
 
-    <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.ServerAccount">
-        update server_account
-        set host_id      = #{hostId.hostId,jdbcType=VARCHAR},
-            auth_mode    = #{authMode,jdbcType=VARCHAR},
-            username     = #{username,jdbcType=VARCHAR},
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.ServerKey">
+        update server_key
+        set username     = #{username,jdbcType=VARCHAR},
             display_name = #{displayName,jdbcType=VARCHAR},
             account_type = #{accountType,jdbcType=VARCHAR},
             protocol     = #{protocol,jdbcType=VARCHAR},
@@ -69,21 +68,18 @@
             gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
             creator      = #{creator,jdbcType=VARCHAR},
             modifier     = #{modifier,jdbcType=VARCHAR}
-        where server_account_id = #{serverAccountId.serverAccountId}
+        where server_key_id = #{serverKeyId.serverKeyId}
     </update>
 
 
-    <select id="queryServerAccount"
-            parameterType="com.rany.cake.devops.base.domain.repository.param.ServerAccountQueryParam"
+    <select id="queryServerKey"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.ServerKeyQueryParam"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from server_account
+        from server_key
         <where>
             is_deleted = '0'
-            <if test="hostId != null and hostId != ''">
-                and host_id = #{hostId}
-            </if>
             <if test="username != null and username != ''">
                 and username = #{username}
             </if>

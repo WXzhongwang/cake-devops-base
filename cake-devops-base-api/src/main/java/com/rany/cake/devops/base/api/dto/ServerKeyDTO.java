@@ -6,14 +6,13 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ServerAccountDTO extends DTO {
-    private String serverAccountId;
-    private String hostId;
+public class ServerKeyDTO extends DTO {
 
-    private String authMode;
+    private String serverKeyId;
 
-    private String username;
-
+    /**
+     * 展示名称
+     */
     private String displayName;
 
     /**
@@ -21,6 +20,9 @@ public class ServerAccountDTO extends DTO {
      */
     private Integer accountType;
 
+    /**
+     * 协议
+     */
     private String protocol;
 
     /**

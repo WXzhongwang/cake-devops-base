@@ -30,8 +30,13 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
     private String hostName;
     private String serverAddr;
     private Integer port;
+    /**
+     * 1. 基础账号密码认证
+     * 2. 秘钥认证
+     */
+    private Integer authType;
     private String username;
-    private String pkey;
+    private String pwd;
     private String desc;
     private String verified;
     private String status;
@@ -44,6 +49,14 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
      */
     private HostExtend hostExtend;
 
+    /**
+     * 代理ID
+     */
+    private String proxyId;
+    /**
+     * 秘钥ID
+     */
+    private String keyId;
 
     public Host(HostId hostId, String name, String hostName, String serverAddr, Integer port) {
         this.hostId = hostId;

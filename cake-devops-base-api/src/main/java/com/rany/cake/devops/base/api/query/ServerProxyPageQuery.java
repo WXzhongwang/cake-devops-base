@@ -6,9 +6,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ServerAccountPageQuery extends BaseQuery {
-    private String hostId;
-    private String displayName;
+public class ServerProxyPageQuery extends BaseQuery {
     private String username;
-    private String accountType;
 }

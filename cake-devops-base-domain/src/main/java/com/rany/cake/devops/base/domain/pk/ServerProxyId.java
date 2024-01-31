@@ -6,22 +6,22 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * TODO
+ * 代理ID
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 秘钥ID
  * @date 2023/1/12 22:49
  * @email 18668485565163.com
  */
 @Data
 @NoArgsConstructor
-public class ServerAccountId implements Identifier {
-    String serverAccountId;
+public class ServerProxyId implements Identifier {
+    String serverProxyId;
 
-    public ServerAccountId(String serverAccountId) {
-        if (StringUtils.isEmpty(serverAccountId)) {
+    public ServerProxyId(String serverProxyId) {
+        if (StringUtils.isEmpty(serverProxyId)) {
             throw new IllegalArgumentException();
         }
-        this.serverAccountId = serverAccountId;
+        this.serverProxyId = serverProxyId;
     }
 }

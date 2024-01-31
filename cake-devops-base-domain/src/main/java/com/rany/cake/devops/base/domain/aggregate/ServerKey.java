@@ -4,8 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
-import com.rany.cake.devops.base.domain.pk.HostId;
-import com.rany.cake.devops.base.domain.pk.ServerAccountId;
+import com.rany.cake.devops.base.domain.pk.ServerKeyId;
 import lombok.*;
 
 @Data
@@ -13,19 +12,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ServerAccount extends BaseAggregateRoot implements IAggregate<ServerAccountId> {
+public class ServerKey extends BaseAggregateRoot implements IAggregate<ServerKeyId> {
 
-    private ServerAccountId serverAccountId;
+    private ServerKeyId serverKeyId;
 
     /**
-     * 关联主机
+     * 显示名称
      */
-    private HostId hostId;
-
-    private String authMode;
-
-    private String username;
-
     private String displayName;
 
     /**
@@ -33,6 +26,9 @@ public class ServerAccount extends BaseAggregateRoot implements IAggregate<Serve
      */
     private Integer accountType;
 
+    /**
+     * 默认ssh
+     */
     private String protocol;
 
     /**
@@ -52,9 +48,8 @@ public class ServerAccount extends BaseAggregateRoot implements IAggregate<Serve
      */
     private String passphrase;
 
-    public ServerAccount(ServerAccountId serverAccountId, HostId hostId) {
-        this.serverAccountId = serverAccountId;
-        this.hostId = hostId;
+    public ServerKey(ServerKeyId serverKeyId) {
+        this.serverKeyId = serverKeyId;
     }
 
     public void init() {
@@ -75,7 +70,7 @@ public class ServerAccount extends BaseAggregateRoot implements IAggregate<Serve
     }
 
     @Override
-    public ServerAccountId getBizID() {
-        return serverAccountId;
+    public ServerKeyId getBizID() {
+        return serverKeyId;
     }
 }

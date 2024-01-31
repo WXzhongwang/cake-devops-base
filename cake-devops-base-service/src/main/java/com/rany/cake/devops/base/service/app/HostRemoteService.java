@@ -49,7 +49,7 @@ public class HostRemoteService implements HostService {
         Host host = new Host(new HostId(String.valueOf(snowflakeIdWorker.nextId())), createHostCommand.getName(),
                 createHostCommand.getHostName(), createHostCommand.getServerAddr(), createHostCommand.getPort());
         host.setUsername(createHostCommand.getUsername());
-        host.setPkey(createHostCommand.getPkey());
+        host.setPwd(createHostCommand.getPkey());
 
         List<GroupHost> groupHosts = new ArrayList<>();
         for (String hostGroupId : createHostCommand.getHostGroupIds()) {
@@ -90,7 +90,7 @@ public class HostRemoteService implements HostService {
         host.setName(modifyHostCommand.getName());
         host.setPort(modifyHostCommand.getPort());
         host.setUsername(modifyHostCommand.getUsername());
-        host.setPkey(modifyHostCommand.getPkey());
+        host.setPwd(modifyHostCommand.getPkey());
         host.modify();
         hostDomainService.update(host);
         return PojoResult.succeed(Boolean.TRUE);

@@ -104,8 +104,23 @@
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
 
-        <table schema="cake_devops" tableName="server_account"
-               domainObjectName="ServerAccountPO" enableCountByExample="false"
+        <table schema="cake_devops" tableName="server_key"
+               domainObjectName="ServerKeyPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="server_proxy"
+               domainObjectName="ServerProxyPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="system_env"
+               domainObjectName="SystemEnvPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="webhook_config"
+               domainObjectName="WebhookConfigPO" enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
