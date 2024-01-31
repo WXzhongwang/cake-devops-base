@@ -114,11 +114,7 @@
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
-        <table schema="cake_devops" tableName="system_env"
-               domainObjectName="SystemEnvPO" enableCountByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false" enableUpdateByExample="false">
-        </table>
+
         <table schema="cake_devops" tableName="webhook_config"
                domainObjectName="WebhookConfigPO" enableCountByExample="false"
                enableDeleteByExample="false"
@@ -126,6 +122,11 @@
         </table>
         <table schema="cake_devops" tableName="server_monitor"
                domainObjectName="ServerMonitorPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="system_env"
+               domainObjectName="SystemEnvPO" enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
