@@ -6,10 +6,10 @@ import {
   UpdateHostPayload,
   CreateHostGroupPayload,
   UpdateHostGroupPayload,
-  CreateServerAccountPayload,
-  UpdateServerAccountPayload,
-  DeleteServerAccountPayload,
-  QueryServerAccountsPayload,
+  CreateServerKeyPayload,
+  UpdateServerKeyPayload,
+  DeleteServerKeyPayload,
+  QueryServerKeysPayload,
 } from "@/models/host";
 
 export async function fetchHosts(data: QueryHostPayload) {
@@ -56,33 +56,33 @@ export async function updateHostGroup(data: UpdateHostGroupPayload) {
   });
 }
 
-export async function createServerAccount(data: CreateServerAccountPayload) {
+export async function createServerKey(data: CreateServerKeyPayload) {
   console.log("payload", data);
-  return request("/api/devops/server-account/create", {
+  return request("/api/devops/server-key/create", {
     method: "POST",
     data,
   });
 }
 
-export async function updateServerAccount(data: UpdateServerAccountPayload) {
+export async function updateServerKey(data: UpdateServerKeyPayload) {
   console.log("payload", data);
-  return request("/api/devops/server-account/update", {
+  return request("/api/devops/server-key/update", {
     method: "POST",
     data,
   });
 }
 
-export async function deleteServerAccount(data: DeleteServerAccountPayload) {
+export async function deleteServerKey(data: DeleteServerKeyPayload) {
   console.log("payload", data);
-  return request("/api/devops/server-account/delete", {
+  return request("/api/devops/server-key/delete", {
     method: "POST",
     data,
   });
 }
 
-export async function queryServerAccounts(data: QueryServerAccountsPayload) {
+export async function queryServerKeys(data: QueryServerKeysPayload) {
   console.log("payload", data);
-  return request("/api/devops/server-account/page", {
+  return request("/api/devops/server-key/page", {
     method: "POST",
     data,
   });

@@ -24,9 +24,29 @@ export default defineConfig({
           name: "主机管理",
         },
         {
-          path: "/ops/server-account",
-          component: "ops/server-account",
-          name: "主机账号管理",
+          path: "/ops/server-key",
+          component: "ops/server-key",
+          name: "主机秘钥管理",
+        },
+        {
+          path: "/ops/server-proxy",
+          component: "ops/server-proxy",
+          name: "主机代理管理",
+        },
+      ],
+    },
+    {
+      path: "/system",
+      routes: [
+        {
+          path: "/system/webhook-config",
+          component: "system/webhook-config",
+          name: "Webhook配置",
+        },
+        {
+          path: "/system/alarm-group",
+          component: "system/alarm-group",
+          name: "告警组",
         },
       ],
     },

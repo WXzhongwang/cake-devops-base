@@ -2,30 +2,27 @@ import React, { useEffect, useState } from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import { Table, Space, Input, Select, Button, Form, Card, Tag } from "antd";
 import { connect, Dispatch, history } from "umi";
-import { ServerAccount, HostModel } from "@/models/host";
-import ServerAccountDrawer from "./components/create-server-account";
+import { ServerKey, HostModel } from "@/models/host";
+import ServerAccountDrawer from "./components/create-server-key";
 
 const { Option } = Select;
 
 interface ServerAccountListProps {
   dispatch: Dispatch;
   hosts: HostModel[];
-  serverAccounts: ServerAccount[];
-  serverAccountTotal: number;
+  serverKeys: ServerKey[];
+  serverKeyTotal: number;
 }
 
 const ServerAccountList: React.FC<ServerAccountListProps> = ({
   dispatch,
-  serverAccounts,
-  serverAccountTotal,
+  serverKeys,
+  serverKeyTotal,
   hosts,
 }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
-    authMode: "",
-    username: "",
-    accountType: "",
-    protocol: "",
+    displayName: "",
     active: "1",
   });
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -38,7 +35,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
     //    setServers(hosts);
   }, []);
 
-  const handleAddAccount = () => {
+  const handleAddKey = () => {
     setDrawerVisible(true);
   };
 
@@ -47,32 +44,24 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
     form.resetFields();
   };
 
-  const handleSaveAccount = (values: ServerAccount) => {
+  const handleSaveKey = (values: ServerKey) => {
     console.log("Form values:", values);
     // 调用后端接口保存账号信息
-    // dispatch({ type: 'host/createHostAccount', payload: values });
+    dispatch({ type: "host/createServerKey", payload: values });
   };
 
   useEffect(() => {
-    getServerAccounts();
+    getServerKeys();
   }, [pagination, filters]);
 
-  const getServerAccounts = () => {
+  const getServerKeys = () => {
     dispatch({
-      type: "host/queryServerAccounts", // 请根据实际的 model 和 effect 路径调整
+      type: "host/queryServerKeys", // 请根据实际的 model 和 effect 路径调整
       payload: { ...pagination, ...filters },
     });
   };
 
   const columns = [
-    {
-      title: "用户名",
-      dataIndex: "username",
-      key: "username",
-      render: (text: any, record: ServerAccount) => (
-        <a onClick={() => handleView(record)}>{record.username}</a>
-      ),
-    },
     {
       title: "显示名称",
       dataIndex: "displayName",
@@ -82,7 +71,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
       title: "账户类型",
       dataIndex: "accountType",
       key: "accountType",
-      render: (text: any, record: ServerAccount) => (
+      render: (text: any, record: ServerKey) => (
         <Tag color={record.accountType === 1 ? "red" : "blue"}>
           {record.accountType === 1 ? "管理员" : "普通账户"}
         </Tag>
@@ -97,7 +86,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
       title: "活跃状态",
       dataIndex: "active",
       key: "active",
-      render: (text: any, record: ServerAccount) => (
+      render: (text: any, record: ServerKey) => (
         <Tag color={record.active ? "green" : "gray"}>
           {record.active ? "活跃" : "不活跃"}
         </Tag>
@@ -106,7 +95,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
     {
       title: "操作",
       key: "action",
-      render: (text: any, record: ServerAccount) => (
+      render: (text: any, record: ServerKey) => (
         <Space size="middle">
           <a onClick={() => handleView(record)}>查看</a>
         </Space>
@@ -118,17 +107,17 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
     setPagination({ pageNo: page, pageSize: pageSize || 10 });
   };
 
-  const handleView = (record: ServerAccount) => {
+  const handleView = (record: ServerKey) => {
     // 处理查看操作
-    console.log("查看主机账号详情", record);
+    console.log("查看主机秘钥详情", record);
     // 示例：跳转到详情页，使用 history.push
-    history.push(`/host/account/info/${record.hostId}`);
+    history.push(`/host/account/info/${record.id}`);
   };
 
   console.log("hosts", hosts);
 
   return (
-    <PageContainer title="主机账号管理">
+    <PageContainer title="主机秘钥管理">
       <Card>
         <Space size="middle" direction="vertical" style={{ width: "100%" }}>
           <Form
@@ -138,20 +127,8 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
               setFilters(values);
             }}
           >
-            <Form.Item name="authMode" label="认证模式">
-              <Input placeholder="请输入认证模式" />
-            </Form.Item>
-            <Form.Item name="username" label="用户名">
+            <Form.Item name="displayName" label="用户名">
               <Input placeholder="请输入用户名" />
-            </Form.Item>
-            <Form.Item name="accountType" label="账户类型">
-              <Select placeholder="请选择账户类型" allowClear>
-                <Option value={0}>普通账户</Option>
-                <Option value={1}>管理员</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item name="protocol" label="协议">
-              <Input placeholder="请输入协议" />
             </Form.Item>
             <Form.Item name="active" label="活跃状态">
               <Select placeholder="请选择活跃状态" allowClear>
@@ -166,10 +143,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
               <Button
                 onClick={() => {
                   setFilters({
-                    authMode: "",
-                    username: "",
-                    accountType: "",
-                    protocol: "",
+                    displayName: "",
                     active: "1",
                   });
                 }}
@@ -179,16 +153,16 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
             </Form.Item>
           </Form>
 
-          <Button type="primary" onClick={handleAddAccount}>
-            新增账号
+          <Button type="primary" onClick={handleAddKey}>
+            新增秘钥
           </Button>
 
           <Table
             columns={columns}
-            dataSource={serverAccounts}
-            rowKey={"serverAccountId"}
+            dataSource={serverKeys}
+            rowKey={"id"}
             pagination={{
-              total: serverAccountTotal, // 请替换为实际的总数
+              total: serverKeyTotal, // 请替换为实际的总数
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               onChange: handlePaginationChange,
@@ -201,7 +175,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
         visible={drawerVisible}
         servers={hosts}
         onClose={handleCloseDrawer}
-        onSave={handleSaveAccount}
+        onSave={handleSaveKey}
       />
     </PageContainer>
   );
@@ -212,15 +186,15 @@ export default connect(
     host,
   }: {
     host: {
-      serverAccounts: ServerAccount[];
-      serverAccountTotal: number;
+      serverKeys: ServerKey[];
+      serverKeyTotal: number;
       hosts: HostModel[];
     };
   }) => {
     return {
       hosts: host.hosts,
-      serverAccounts: host.serverAccounts,
-      serverAccountTotal: host.serverAccountTotal,
+      serverKeys: host.serverKeys,
+      serverKeyTotal: host.serverKeyTotal,
     };
   }
 )(ServerAccountList);

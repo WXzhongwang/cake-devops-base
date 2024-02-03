@@ -3,11 +3,20 @@
 import { Effect, Reducer, Subscription } from "umi";
 import * as api from "@/services/host";
 
-export interface ServerAccount {
-  serverAccountId: string;
-  hostId: string;
-  authMode: string;
-  username: string;
+export interface ServerKey {
+  id: string;
+  displayName: string;
+  accountType: number;
+  protocol: string;
+  active: boolean;
+  credential: string;
+  publicKey: string;
+  passphrase: string;
+  gmtCreate: Date;
+  gmtModified: Date;
+}
+
+export interface CreateServerKeyPayload {
   displayName: string;
   accountType: number;
   protocol: string;
@@ -17,37 +26,20 @@ export interface ServerAccount {
   passphrase: string;
 }
 
-export interface CreateServerAccountPayload {
-  hostId: string;
-  authMode: string;
-  username: string;
-  displayName: string;
-  accountType: number;
-  protocol: string;
-  active: boolean;
-  credential: string;
-  publicKey: string;
-  passphrase: string;
+export interface DeleteServerKeyPayload {
+  serverKeyId: string;
 }
 
-export interface DeleteServerAccountPayload {
-  serverAccountId: string;
-}
-
-export interface QueryServerAccountsPayload {
+export interface QueryServerKeysPayload {
   pageNo: number;
   pageSize: number;
-  authMode: string;
-  username: string;
-  accountType: string;
-  protocol: string;
+  displayname: string;
   active: string;
+  accountType: number;
 }
 
-export interface UpdateServerAccountPayload {
-  hostAccountId: string;
-  authMode?: string;
-  username?: string;
+export interface UpdateServerKeyPayload {
+  id: string;
   displayName?: string;
   accountType?: number;
   protocol?: string;
@@ -63,9 +55,13 @@ export interface HostModel {
   hostName: string;
   serverAddr: string;
   port: number;
+  authType: number;
   username: string;
-  pkey: string;
+  pwd: string;
   status: string;
+
+  proxyId: string;
+  keyId: string;
 }
 
 export interface QueryHostPayload {
@@ -120,8 +116,8 @@ export interface HostModelState {
   hosts: HostModel[];
   hostGroups: HostGroupModel[];
   total: number;
-  serverAccounts: ServerAccount[];
-  serverAccountTotal: number;
+  serverKeys: ServerKey[];
+  serverKeyTotal: number;
 }
 
 interface QueryHostAction {
@@ -129,24 +125,24 @@ interface QueryHostAction {
   payload: QueryHostPayload;
 }
 
-interface CreateServerAccountAction {
+interface CreateServerKeyAction {
   type: "host/createServerAccount";
-  payload: CreateServerAccountPayload;
+  payload: CreateServerKeyPayload;
 }
 
-interface UpdateServerAccountAction {
+interface UpdateServerKeyAction {
   type: "host/updateServerAccount";
-  payload: UpdateServerAccountPayload;
+  payload: UpdateServerKeyPayload;
 }
 
-interface DeleteServerAccountAction {
+interface DeleteServerKeyAction {
   type: "host/deleteServerAccount";
-  payload: DeleteServerAccountPayload;
+  payload: DeleteServerKeyPayload;
 }
 
-interface QueryServerAccountsAction {
+interface QueryServerKeysAction {
   type: "host/queryServerAccounts";
-  payload: QueryServerAccountsPayload;
+  payload: QueryServerKeysPayload;
 }
 
 export interface HostModelType {
@@ -159,15 +155,15 @@ export interface HostModelType {
     fetchHostGroups: Effect;
     createHostGroup: Effect;
     updateHostGroup: Effect;
-    createServerAccount: Effect;
-    updateServerAccount: Effect;
-    deleteServerAccount: Effect;
-    queryServerAccounts: Effect;
+    createServerKey: Effect;
+    updateServerKey: Effect;
+    deleteServerKey: Effect;
+    queryServerKeys: Effect;
   };
   reducers: {
     saveHosts: Reducer<HostModelState>;
     saveHostGroups: Reducer<HostModelState>;
-    saveServerAccounts: Reducer<HostModelState>;
+    saveServerKeys: Reducer<HostModelState>;
   };
 }
 
@@ -178,8 +174,8 @@ const HostModel: HostModelType = {
     hosts: [],
     total: 0,
     hostGroups: [],
-    serverAccounts: [],
-    serverAccountTotal: 0,
+    serverKeys: [],
+    serverKeyTotal: 0,
   },
 
   effects: {
@@ -231,35 +227,35 @@ const HostModel: HostModelType = {
       yield put({ type: "fetchHostGroups" });
     },
 
-    *createServerAccount({ payload }, { call, put }) {
+    *createServerKey({ payload }, { call, put }) {
       // 调用 API 创建主机账号
-      yield call(api.createServerAccount, payload);
+      yield call(api.createServerKey, payload);
       // 创建成功后重新获取主机账号数据
-      yield put({ type: "queryServerAccounts" });
+      yield put({ type: "queryServerKeys" });
     },
 
-    *updateServerAccount({ payload }, { call, put }) {
+    *updateServerKey({ payload }, { call, put }) {
       // 调用 API 更新主机账号
-      yield call(api.updateServerAccount, payload);
+      yield call(api.updateServerKey, payload);
       // 更新成功后重新获取主机账号数据
-      yield put({ type: "queryServerAccounts" });
+      yield put({ type: "queryServerKeys" });
     },
 
-    *deleteServerAccount({ payload }, { call, put }) {
+    *deleteServerKey({ payload }, { call, put }) {
       // 调用 API 删除主机账号
-      yield call(api.deleteServerAccount, payload);
+      yield call(api.deleteServerKey, payload);
       // 删除成功后重新获取主机账号数据
       yield put({
-        type: "queryServerAccounts",
+        type: "queryServerKeys",
         payload: { pageNo: 1, pageSize: 10 },
       });
     },
 
-    *queryServerAccounts({ payload }, { call, put }) {
+    *queryServerKeys({ payload }, { call, put }) {
       // 调用 API 分页查询主机账号
-      const response = yield call(api.queryServerAccounts, payload);
+      const response = yield call(api.queryServerKeys, payload);
       // 触发保存主机账号数据的 reducer
-      yield put({ type: "saveServerAccounts", payload: response.content });
+      yield put({ type: "saveServerKeys", payload: response.content });
     },
   },
 
@@ -275,11 +271,11 @@ const HostModel: HostModelType = {
     saveHostGroups(state, action) {
       return { ...state, hostGroups: action.payload };
     },
-    saveServerAccounts(state, action) {
+    saveServerKeys(state, action) {
       return {
         ...state,
-        serverAccounts: action.payload.items,
-        serverAccountTotal: action.payload.total,
+        serverKeys: action.payload.items,
+        serverKeyTotal: action.payload.total,
       };
     },
   },

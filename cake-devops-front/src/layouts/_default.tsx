@@ -35,10 +35,35 @@ export default {
             component: "ops/host-list",
           },
           {
-            path: "/ops/server-account",
-            name: "主机账号管理",
+            path: "/ops/server-key",
+            name: "主机秘钥管理",
             icon: <ApiFilled />,
-            component: "ops/server-account",
+            component: "ops/server-key",
+          },
+          {
+            path: "/ops/server-proxy",
+            name: "主机代理管理",
+            icon: <ApiFilled />,
+            component: "ops/server-proxy",
+          },
+        ],
+      },
+      {
+        path: "/system",
+        name: "系统设置",
+        icon: <CrownFilled />,
+        routes: [
+          {
+            path: "/system/webhook-config",
+            name: "Webhook",
+            icon: <TabletFilled />,
+            component: "system/webhook-config",
+          },
+          {
+            path: "/system/alarm-group",
+            name: "告警组",
+            icon: <TabletFilled />,
+            component: "system/alarm-group",
           },
         ],
       },

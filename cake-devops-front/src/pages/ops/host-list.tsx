@@ -180,6 +180,7 @@ const HostPage: React.FC<HostListProps> = ({
                 onClose={handleCreateHostDrawer}
                 onSubmit={handleAddHostSubmit}
                 hostGroups={hostGroups}
+                machineProxies={[]}
               />
 
               <HostTable
