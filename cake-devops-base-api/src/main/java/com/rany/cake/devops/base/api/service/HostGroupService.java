@@ -11,10 +11,10 @@ import com.rany.cake.devops.base.api.query.HostGroupBasicQuery;
 import com.rany.cake.devops.base.api.query.HostGroupTreeQuery;
 
 /**
- * 主机服务
+ * 主机分组服务
  *
  * @author zhongshengwang
- * @description 主机服务
+ * @description 主机分组服务
  * @date 2023/1/15 17:33
  * @email 18668485565163.com
  */
@@ -30,6 +30,7 @@ public interface HostGroupService {
 
     /**
      * 主机组树查询
+     *
      * @param hostGroupTreeQuery
      * @return
      */

@@ -21,8 +21,7 @@ public interface AppMemberService {
 
 
     PageResult<AppAccountDTO> pageQueryMember(MemberPageQuery memberPageQuery);
-
-
+    
     PageResult<AppMemberDTO> pageAppMembers(AppMemberPageQuery appMemberPageQuery);
 
     PojoResult<Boolean> updateMember(UpdateAppMemberCommand updateAppMemberCommand);

@@ -17,6 +17,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class DeleteServerKeyCommand extends BaseCommand {
 
-    private String serverKeyId;
+    private Long serverKeyId;
 
 }

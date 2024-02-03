@@ -1,9 +1,8 @@
 package com.rany.cake.devops.base.infra.convertor;
 
-import com.rany.cake.devops.base.domain.aggregate.ServerKey;
+import com.rany.cake.devops.base.domain.entity.ServerKey;
 import com.rany.cake.devops.base.infra.po.ServerKeyPO;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 /**
  * 服务器账号
@@ -23,7 +22,6 @@ public interface ServerKeyDataConvertor extends BaseConvertor<ServerKey, ServerK
      * @param serverKey 聚合根
      * @return PO
      */
-    @Mapping(source = "serverKeyId.serverKeyId", target = "serverKeyId")
     @Override
     ServerKeyPO sourceToTarget(ServerKey serverKey);
 
@@ -35,6 +33,5 @@ public interface ServerKeyDataConvertor extends BaseConvertor<ServerKey, ServerK
      */
 
     @Override
-    @Mapping(target = "serverKeyId.serverKeyId", source = "serverKeyId")
     ServerKey targetToSource(ServerKeyPO serverKeyPO);
 }

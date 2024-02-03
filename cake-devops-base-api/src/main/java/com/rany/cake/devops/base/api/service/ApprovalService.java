@@ -5,6 +5,14 @@ import com.rany.cake.devops.base.api.command.approval.*;
 import com.rany.cake.devops.base.api.dto.ApprovalDTO;
 import com.rany.cake.devops.base.api.query.ApprovalBasicQuery;
 
+/**
+ * 审批服务
+ *
+ * @author zhongshengwang
+ * @description 应用服务
+ * @date 2023/1/15 17:33
+ * @email 18668485565163.com
+ */
 public interface ApprovalService {
 
 

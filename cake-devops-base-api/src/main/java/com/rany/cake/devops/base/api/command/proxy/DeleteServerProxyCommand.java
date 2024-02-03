@@ -17,6 +17,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class DeleteServerProxyCommand extends BaseCommand {
 
-    private String proxyId;
+    private Long serverProxyId;
 
 }

@@ -2,11 +2,10 @@ package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.ServerKeyDTO;
 import com.rany.cake.devops.base.api.query.ServerKeyPageQuery;
-import com.rany.cake.devops.base.domain.aggregate.ServerKey;
+import com.rany.cake.devops.base.domain.entity.ServerKey;
 import com.rany.cake.devops.base.domain.repository.param.ServerKeyQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 /**
  * 主机秘钥
@@ -26,7 +25,6 @@ public interface ServerKeyDataAdapter extends BaseConvertor<ServerKey, ServerKey
      * @param serverKey 聚合根
      * @return PO
      */
-    @Mapping(source = "serverKeyId.serverKeyId", target = "serverKeyId")
     ServerKeyDTO sourceToTarget(ServerKey serverKey);
 
     /**
@@ -35,8 +33,6 @@ public interface ServerKeyDataAdapter extends BaseConvertor<ServerKey, ServerKey
      * @param serverKeyDTO PO
      * @return 聚合根
      */
-
-    @Mapping(target = "serverKeyId.serverKeyId", source = "serverKeyId")
     ServerKey targetToSource(ServerKeyDTO serverKeyDTO);
 
 

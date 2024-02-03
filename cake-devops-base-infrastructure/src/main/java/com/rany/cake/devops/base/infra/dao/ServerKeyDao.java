@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.infra.dao;
 
-import com.rany.cake.devops.base.domain.aggregate.ServerKey;
+import com.rany.cake.devops.base.domain.entity.ServerKey;
 import com.rany.cake.devops.base.domain.repository.param.ServerKeyQueryParam;
 import com.rany.cake.devops.base.infra.po.ServerKeyPO;
 import org.apache.ibatis.annotations.Param;
@@ -32,7 +32,7 @@ public interface ServerKeyDao {
      * @param keyId 账号ID
      * @return 单个账号
      */
-    ServerKeyPO selectByServerKeyId(@Param("keyId") String keyId);
+    ServerKeyPO selectByServerKeyId(@Param("keyId") Long keyId);
 
 
     List<ServerKeyPO> queryServerKey(ServerKeyQueryParam serverKeyQueryParam);

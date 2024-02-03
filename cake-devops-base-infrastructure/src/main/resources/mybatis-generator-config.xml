@@ -130,5 +130,21 @@
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
+
+        <table schema="cake_devops" tableName="alarm_group"
+               domainObjectName="AlarmGroupPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="alarm_group_notify"
+               domainObjectName="AlarmGroupNotifyPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="alarm_group_user"
+               domainObjectName="AlarmGroupUserPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
     </context>
 </generatorConfiguration>

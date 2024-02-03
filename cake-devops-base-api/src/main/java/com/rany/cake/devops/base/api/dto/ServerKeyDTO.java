@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ServerKeyDTO extends DTO {
 
-    private String serverKeyId;
+    private String id;
 
     /**
      * 展示名称

@@ -9,10 +9,10 @@ import com.rany.cake.devops.base.api.dto.ReleaseDTO;
 import com.rany.cake.devops.base.api.query.ReleasePageQuery;
 
 /**
- * 发布
+ * 变更
  *
  * @author zhongshengwang
- * @description 发布
+ * @description 变更
  * @date 2023/1/15 21:14
  * @email 18668485565163.com
  */
@@ -29,8 +29,8 @@ public interface ReleaseService {
     /**
      * 分页查询发布单
      *
-     * @param releasePageQuery
-     * @return
+     * @param releasePageQuery 分页
+     * @return 分页
      */
     PageResult<ReleaseDTO> pageRelease(ReleasePageQuery releasePageQuery);
 
@@ -42,5 +42,11 @@ public interface ReleaseService {
      */
     PojoResult<Boolean> deploy(DeployCommand deployCommand);
 
+    /**
+     * 关闭变更
+     *
+     * @param command 关闭
+     * @return 是否成功
+     */
     PojoResult<Boolean> close(CloseReleaseCommand command);
 }

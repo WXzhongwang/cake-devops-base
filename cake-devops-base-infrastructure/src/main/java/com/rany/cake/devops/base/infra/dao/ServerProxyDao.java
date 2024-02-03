@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.infra.dao;
 
-import com.rany.cake.devops.base.domain.aggregate.ServerProxy;
+import com.rany.cake.devops.base.domain.entity.ServerProxy;
 import com.rany.cake.devops.base.domain.repository.param.ServerProxyQueryParam;
 import com.rany.cake.devops.base.infra.po.ServerProxyPO;
 import org.apache.ibatis.annotations.Param;
@@ -32,7 +32,7 @@ public interface ServerProxyDao {
      * @param proxyId 账号ID
      * @return 单个账号
      */
-    ServerProxyPO selectByServerProxyId(@Param("proxyId") String proxyId);
+    ServerProxyPO selectByServerProxyId(@Param("proxyId") Long proxyId);
 
 
     List<ServerProxyPO> queryServerProxy(ServerProxyQueryParam serverProxyQueryParam);

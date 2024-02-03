@@ -7,7 +7,7 @@ import com.rany.cake.devops.base.api.command.account.CreateServerKeyCommand;
 import com.rany.cake.devops.base.api.command.account.DeleteServerKeyCommand;
 import com.rany.cake.devops.base.api.command.account.ModifyServerKeyCommand;
 import com.rany.cake.devops.base.api.dto.ServerKeyDTO;
-import com.rany.cake.devops.base.api.query.ServerAccountBasicQuery;
+import com.rany.cake.devops.base.api.query.ServerKeyBasicQuery;
 import com.rany.cake.devops.base.api.query.ServerKeyPageQuery;
 import com.rany.cake.devops.base.api.service.ServerKeyService;
 import org.springframework.web.bind.annotation.*;
@@ -22,15 +22,15 @@ public class ServerKeyController {
     private ServerKeyService serverKeyService;
 
     @PostMapping("/create")
-    public PojoResult<String> create(@RequestBody CreateServerKeyCommand command) {
+    public PojoResult<Long> create(@RequestBody CreateServerKeyCommand command) {
         return serverKeyService.createServerKey(command);
     }
 
     @GetMapping("/get")
-    public PojoResult<ServerKeyDTO> get(@RequestParam("id") String serverAccountId) {
-        ServerAccountBasicQuery serverAccountBasicQuery = new ServerAccountBasicQuery();
-        serverAccountBasicQuery.setServerAccountId(serverAccountId);
-        return serverKeyService.getServerKey(serverAccountBasicQuery);
+    public PojoResult<ServerKeyDTO> get(@RequestParam("id") Long serverAccountId) {
+        ServerKeyBasicQuery serverKeyBasicQuery = new ServerKeyBasicQuery();
+        serverKeyBasicQuery.setServerKeyId(serverAccountId);
+        return serverKeyService.getServerKey(serverKeyBasicQuery);
     }
 
     @PostMapping("/update")

@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ServerAccountBasicQuery extends BaseQuery {
+public class WebhookBasicQuery extends BaseQuery {
 
-    private String serverAccountId;
+    private Long webhookId;
 }

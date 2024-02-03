@@ -12,8 +12,9 @@ public class HostDTO extends DTO {
     private String hostName;
     private String serverAddr;
     private Integer port;
+    private Integer authType;
     private String username;
-    private String pkey;
+    private String pwd;
     private String desc;
     private String verified;
     private String status;

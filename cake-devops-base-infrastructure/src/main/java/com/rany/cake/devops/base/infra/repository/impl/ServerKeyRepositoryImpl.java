@@ -2,9 +2,8 @@ package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
-import com.rany.cake.devops.base.domain.aggregate.ServerKey;
+import com.rany.cake.devops.base.domain.entity.ServerKey;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
-import com.rany.cake.devops.base.domain.pk.ServerKeyId;
 import com.rany.cake.devops.base.domain.repository.ServerKeyRepository;
 import com.rany.cake.devops.base.domain.repository.param.ServerKeyQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
@@ -34,8 +33,8 @@ public class ServerKeyRepositoryImpl implements ServerKeyRepository {
     }
 
     @Override
-    public ServerKey find(@NotNull ServerKeyId serverKeyId) {
-        ServerKeyPO serverKeyPO = serverKeyDao.selectByServerKeyId(serverKeyId.getServerKeyId());
+    public ServerKey find(@NotNull Long serverKeyId) {
+        ServerKeyPO serverKeyPO = serverKeyDao.selectByServerKeyId(serverKeyId);
         return serverKeyDataConvertor.targetToSource(serverKeyPO);
     }
 

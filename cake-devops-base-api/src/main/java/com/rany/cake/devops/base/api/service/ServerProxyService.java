@@ -2,10 +2,10 @@ package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.account.ModifyServerKeyCommand;
 import com.rany.cake.devops.base.api.command.proxy.CreateServerProxyCommand;
 import com.rany.cake.devops.base.api.command.proxy.DeleteServerProxyCommand;
-import com.rany.cake.devops.base.api.dto.ServerKeyDTO;
+import com.rany.cake.devops.base.api.command.proxy.ModifyServerProxyCommand;
+import com.rany.cake.devops.base.api.dto.ServerProxyDTO;
 import com.rany.cake.devops.base.api.query.ServerProxyBasicQuery;
 import com.rany.cake.devops.base.api.query.ServerProxyPageQuery;
 
@@ -25,7 +25,7 @@ public interface ServerProxyService {
      * @param command 创建
      * @return 主机账号ID
      */
-    PojoResult<String> createServerKey(CreateServerProxyCommand command);
+    PojoResult<String> createServerProxy(CreateServerProxyCommand command);
 
     /**
      * 更新
@@ -33,7 +33,7 @@ public interface ServerProxyService {
      * @param command 更新
      * @return success
      */
-    PojoResult<Boolean> modifyServerKey(ModifyServerKeyCommand command);
+    PojoResult<Boolean> modifyServerProxy(ModifyServerProxyCommand command);
 
     /**
      * 删除
@@ -41,7 +41,7 @@ public interface ServerProxyService {
      * @param command 删除
      * @return success
      */
-    PojoResult<Boolean> deleteServerKey(DeleteServerProxyCommand command);
+    PojoResult<Boolean> deleteServerProxy(DeleteServerProxyCommand command);
 
     /**
      * 获取详情
@@ -49,7 +49,7 @@ public interface ServerProxyService {
      * @param basicQuery 详情
      * @return 详情
      */
-    PojoResult<ServerKeyDTO> getServerProxy(ServerProxyBasicQuery basicQuery);
+    PojoResult<ServerProxyDTO> getServerProxy(ServerProxyBasicQuery basicQuery);
 
 
     /**
@@ -58,5 +58,5 @@ public interface ServerProxyService {
      * @param pageQuery 查询
      * @return 列表
      */
-    PageResult<ServerKeyDTO> pageServerProxy(ServerProxyPageQuery pageQuery);
+    PageResult<ServerProxyDTO> pageServerProxy(ServerProxyPageQuery pageQuery);
 }

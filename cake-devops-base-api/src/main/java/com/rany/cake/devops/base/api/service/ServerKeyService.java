@@ -6,7 +6,7 @@ import com.rany.cake.devops.base.api.command.account.CreateServerKeyCommand;
 import com.rany.cake.devops.base.api.command.account.DeleteServerKeyCommand;
 import com.rany.cake.devops.base.api.command.account.ModifyServerKeyCommand;
 import com.rany.cake.devops.base.api.dto.ServerKeyDTO;
-import com.rany.cake.devops.base.api.query.ServerAccountBasicQuery;
+import com.rany.cake.devops.base.api.query.ServerKeyBasicQuery;
 import com.rany.cake.devops.base.api.query.ServerKeyPageQuery;
 
 /**
@@ -25,7 +25,7 @@ public interface ServerKeyService {
      * @param command 创建
      * @return 主机账号ID
      */
-    PojoResult<String> createServerKey(CreateServerKeyCommand command);
+    PojoResult<Long> createServerKey(CreateServerKeyCommand command);
 
     /**
      * 更新
@@ -49,7 +49,7 @@ public interface ServerKeyService {
      * @param basicQuery 详情
      * @return 详情
      */
-    PojoResult<ServerKeyDTO> getServerKey(ServerAccountBasicQuery basicQuery);
+    PojoResult<ServerKeyDTO> getServerKey(ServerKeyBasicQuery basicQuery);
 
 
     /**

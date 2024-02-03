@@ -3,7 +3,6 @@
 <mapper namespace="com.rany.cake.devops.base.infra.dao.ServerProxyDao">
     <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.ServerProxyPO">
         <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="proxy_id" jdbcType="VARCHAR" property="proxyId"/>
         <result column="proxy_host" jdbcType="VARCHAR" property="proxyHost"/>
         <result column="proxy_port" jdbcType="INTEGER" property="proxyPort"/>
         <result column="proxy_username" jdbcType="VARCHAR" property="proxyUsername"/>
@@ -26,22 +25,21 @@
         select
         <include refid="Base_Column_List"/>
         from server_proxy
-        where proxy_id = #{proxyId}
+        where id = #{proxyId}
     </select>
 
-    <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.ServerProxy">
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.ServerProxy">
 
-        insert into server_proxy (proxy_id, proxy_host, proxy_port,
+        insert into server_proxy (proxy_host, proxy_port,
                                   proxy_username, proxy_password, proxy_type,
                                   description, is_deleted, gmt_create,
                                   gmt_modified)
-        values (#{serverProxyId.serverProxyId.},
-                #{proxyHost,jdbcType=VARCHAR}, #{proxyPort,jdbcType=INTEGER},
+        values (#{proxyHost,jdbcType=VARCHAR}, #{proxyPort,jdbcType=INTEGER},
                 #{proxyUsername,jdbcType=VARCHAR}, #{proxyPassword,jdbcType=VARCHAR}, #{proxyType,jdbcType=INTEGER},
                 #{description,jdbcType=VARCHAR}, #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
                 #{gmtModified,jdbcType=TIMESTAMP})
     </insert>
-    <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.ServerProxy">
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.ServerProxy">
         update server_proxy
         set proxy_host     = #{proxyHost,jdbcType=VARCHAR},
             proxy_port     = #{proxyPort,jdbcType=INTEGER},
@@ -52,7 +50,7 @@
             is_deleted     = #{isDeleted,jdbcType=VARCHAR},
             gmt_create     = #{gmtCreate,jdbcType=TIMESTAMP},
             gmt_modified   = #{gmtModified,jdbcType=TIMESTAMP}
-        where proxy_id = #{serverProxyId.serverProxyId}
+        where id = #{id}
     </update>
 
 

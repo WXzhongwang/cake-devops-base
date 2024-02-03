@@ -19,21 +19,19 @@
     <sql id="Base_Column_List">
 
         id
-        , server_key_id, username, display_name, account_type,
+        , display_name, account_type,
     protocol, active, credential, public_key, passphrase, is_deleted, gmt_create, gmt_modified,
     creator, modifier
     </sql>
 
-    <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.ServerKey">
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.ServerKey">
 
-        insert into server_key (server_key_id,
-                                auth_mode, username, display_name,
+        insert into server_key (display_name,
                                 account_type, protocol, active,
                                 credential, public_key, passphrase,
                                 is_deleted, gmt_create, gmt_modified,
                                 creator, modifier)
-        values (#{serverKeyId.serverKeyId,jdbcType=VARCHAR},
-                #{username,jdbcType=VARCHAR},
+        values (#{username,jdbcType=VARCHAR},
                 #{displayName,jdbcType=VARCHAR},
                 #{accountType,jdbcType=VARCHAR},
                 #{protocol,jdbcType=VARCHAR},
@@ -53,11 +51,10 @@
         where server_key_id = #{keyId}
     </select>
 
-    <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.ServerKey">
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.ServerKey">
         update server_key
-        set username     = #{username,jdbcType=VARCHAR},
-            display_name = #{displayName,jdbcType=VARCHAR},
-            account_type = #{accountType,jdbcType=VARCHAR},
+        set display_name = #{displayName,jdbcType=VARCHAR},
+            account_type = #{accountType},
             protocol     = #{protocol,jdbcType=VARCHAR},
             active       = #{active,jdbcType=TINYINT},
             credential   = #{credential,jdbcType=VARCHAR},
@@ -68,7 +65,7 @@
             gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
             creator      = #{creator,jdbcType=VARCHAR},
             modifier     = #{modifier,jdbcType=VARCHAR}
-        where server_key_id = #{serverKeyId.serverKeyId}
+        where id = #{id}
     </update>
 
 
@@ -80,14 +77,14 @@
         from server_key
         <where>
             is_deleted = '0'
-            <if test="username != null and username != ''">
-                and username = #{username}
-            </if>
             <if test="displayName != null and displayName != ''">
                 and display_name = #{displayName}
             </if>
             <if test="accountType != null and accountType != ''">
                 and account_type = #{accountType}
+            </if>
+            <if test="active != null">
+                and active = #{active}
             </if>
         </where>
     </select>

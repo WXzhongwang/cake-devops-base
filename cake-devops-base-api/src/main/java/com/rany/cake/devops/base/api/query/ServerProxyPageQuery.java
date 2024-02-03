@@ -7,5 +7,4 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ServerProxyPageQuery extends BaseQuery {
-    private String username;
 }

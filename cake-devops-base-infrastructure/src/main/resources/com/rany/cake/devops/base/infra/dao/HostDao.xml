@@ -7,8 +7,11 @@
         <result column="host_id" jdbcType="VARCHAR" property="hostId"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="host_name" jdbcType="VARCHAR" property="hostName"/>
+        <result column="server_addr" jdbcType="VARCHAR" property="serverAddr"/>
         <result column="port" jdbcType="INTEGER" property="port"/>
+        <result column="auth_type" jdbcType="INTEGER" property="authType"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="pwd" jdbcType="VARCHAR" property="pwd"/>
         <result column="status" jdbcType="VARCHAR" property="status"/>
         <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
@@ -17,16 +20,15 @@
         <result column="verified" jdbcType="CHAR" property="verified"/>
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
-        <result column="pkey" jdbcType="VARCHAR" property="pkey"/>
-        <result column="server_addr" jdbcType="VARCHAR" property="serverAddr"/>
     </resultMap>
 
     <sql id="Base_Column_List">
 
         id
         ,host_id
-        , name, host_name, port, username, status, is_deleted, gmt_create, gmt_modified,
-        `desc`, verified, creator, modifier, pkey, server_addr
+        , name, host_name,
+        server_addr, port, username, pwd, status, is_deleted, gmt_create, gmt_modified,
+        `desc`, verified, creator, modifier
     </sql>
 
 
@@ -43,16 +45,27 @@
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.Host">
 
-        insert into host (host_id, name, host_name,
-                          port, username, status,
+        insert into host (host_id, name, host_name, server_addr,
+                          port, auth_type, username, pwd, status,
                           is_deleted, gmt_create, gmt_modified,
                           `desc`, verified, creator,
-                          modifier, pkey, server_addr)
-        values (#{hostId.hostId}, #{name,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR},
-                #{port,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
-                #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
-                #{desc,jdbcType=VARCHAR}, #{verified,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR},
-                #{modifier,jdbcType=VARCHAR}, #{pkey}, #{serverAddr})
+                          modifier)
+        values (#{hostId.hostId},
+                #{name,jdbcType=VARCHAR},
+                #{hostName,jdbcType=VARCHAR},
+                #{serverAddr},
+                #{authType},
+                #{port,jdbcType=INTEGER},
+                #{username,jdbcType=VARCHAR},
+                #{pwd},
+                #{status,jdbcType=VARCHAR},
+                #{isDeleted,jdbcType=VARCHAR},
+                #{gmtCreate,jdbcType=TIMESTAMP},
+                #{gmtModified,jdbcType=TIMESTAMP},
+                #{desc,jdbcType=VARCHAR},
+                #{verified,jdbcType=TINYINT},
+                #{creator,jdbcType=VARCHAR},
+                #{modifier,jdbcType=VARCHAR})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Host">
@@ -64,11 +77,20 @@
             <if test="hostName != null">
                 host_name = #{hostName,jdbcType=VARCHAR},
             </if>
+            <if test="serverAddr != null">
+                server_addr = #{serverAddr},
+            </if>
             <if test="port != null">
                 port = #{port,jdbcType=INTEGER},
             </if>
+            <if test="authType != null">
+                auth_type = #{authType},
+            </if>
             <if test="username != null">
                 username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="pwd != null">
+                pwd = #{pwd},
             </if>
             <if test="status != null">
                 status = #{status,jdbcType=VARCHAR},
@@ -93,12 +115,6 @@
             </if>
             <if test="modifier != null">
                 modifier = #{modifier,jdbcType=VARCHAR},
-            </if>
-            <if test="pkey != null">
-                pkey = #{pkey},
-            </if>
-            <if test="serverAddr != null">
-                server_addr = #{serverAddr},
             </if>
         </set>
         where host_id = #{hostId.hostId}

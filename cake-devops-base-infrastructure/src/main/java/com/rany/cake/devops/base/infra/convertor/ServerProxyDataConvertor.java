@@ -1,9 +1,8 @@
 package com.rany.cake.devops.base.infra.convertor;
 
-import com.rany.cake.devops.base.domain.aggregate.ServerProxy;
+import com.rany.cake.devops.base.domain.entity.ServerProxy;
 import com.rany.cake.devops.base.infra.po.ServerProxyPO;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 /**
  * 服务器账号
@@ -23,7 +22,6 @@ public interface ServerProxyDataConvertor extends BaseConvertor<ServerProxy, Ser
      * @param serverKey 聚合根
      * @return PO
      */
-    @Mapping(source = "serverProxyId.serverProxyId", target = "proxyId")
     @Override
     ServerProxyPO sourceToTarget(ServerProxy serverKey);
 
@@ -35,6 +33,5 @@ public interface ServerProxyDataConvertor extends BaseConvertor<ServerProxy, Ser
      */
 
     @Override
-    @Mapping(target = "serverProxyId.serverProxyId", source = "proxyId")
     ServerProxy targetToSource(ServerProxyPO serverKeyPO);
 }

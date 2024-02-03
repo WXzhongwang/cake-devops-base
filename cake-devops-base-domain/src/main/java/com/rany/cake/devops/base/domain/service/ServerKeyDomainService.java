@@ -1,8 +1,7 @@
 package com.rany.cake.devops.base.domain.service;
 
 import com.cake.framework.common.response.Page;
-import com.rany.cake.devops.base.domain.aggregate.ServerKey;
-import com.rany.cake.devops.base.domain.pk.ServerKeyId;
+import com.rany.cake.devops.base.domain.entity.ServerKey;
 import com.rany.cake.devops.base.domain.repository.ServerKeyRepository;
 import com.rany.cake.devops.base.domain.repository.param.ServerKeyQueryParam;
 import lombok.AllArgsConstructor;
@@ -30,7 +29,7 @@ public class ServerKeyDomainService {
         serverKeyRepository.update(serverKey);
     }
 
-    public ServerKey getServerKey(ServerKeyId serverKeyId) {
+    public ServerKey getServerKey(Long serverKeyId) {
         return serverKeyRepository.find(serverKeyId);
     }
 

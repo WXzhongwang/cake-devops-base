@@ -2,9 +2,8 @@ package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
-import com.rany.cake.devops.base.domain.aggregate.ServerProxy;
+import com.rany.cake.devops.base.domain.entity.ServerProxy;
 import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
-import com.rany.cake.devops.base.domain.pk.ServerProxyId;
 import com.rany.cake.devops.base.domain.repository.ServerProxyRepository;
 import com.rany.cake.devops.base.domain.repository.param.ServerProxyQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
@@ -44,8 +43,8 @@ public class ServerProxyRepositoryImpl implements ServerProxyRepository {
     }
 
     @Override
-    public ServerProxy find(@NotNull ServerProxyId serverProxyId) {
-        ServerProxyPO serverProxyPO = serverProxyDao.selectByServerProxyId(serverProxyId.getServerProxyId());
+    public ServerProxy find(Long serverProxyId) {
+        ServerProxyPO serverProxyPO = serverProxyDao.selectByServerProxyId(serverProxyId);
         return serverProxyDataConvertor.targetToSource(serverProxyPO);
     }
 

@@ -7,12 +7,11 @@ import com.rany.cake.devops.base.api.command.account.CreateServerKeyCommand;
 import com.rany.cake.devops.base.api.command.account.DeleteServerKeyCommand;
 import com.rany.cake.devops.base.api.command.account.ModifyServerKeyCommand;
 import com.rany.cake.devops.base.api.dto.ServerKeyDTO;
-import com.rany.cake.devops.base.api.query.ServerAccountBasicQuery;
+import com.rany.cake.devops.base.api.query.ServerKeyBasicQuery;
 import com.rany.cake.devops.base.api.query.ServerKeyPageQuery;
 import com.rany.cake.devops.base.api.service.ServerKeyService;
-import com.rany.cake.devops.base.domain.aggregate.ServerKey;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
-import com.rany.cake.devops.base.domain.pk.ServerKeyId;
+import com.rany.cake.devops.base.domain.entity.ServerKey;
 import com.rany.cake.devops.base.domain.repository.param.ServerKeyQueryParam;
 import com.rany.cake.devops.base.domain.service.ServerKeyDomainService;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
@@ -43,8 +42,8 @@ public class ServerKeyRemoteService implements ServerKeyService {
     private final ServerKeyDataAdapter serverKeyDataAdapter;
 
     @Override
-    public PojoResult<String> createServerKey(CreateServerKeyCommand command) {
-        ServerKey serverKey = new ServerKey(new ServerKeyId(String.valueOf(snowflakeIdWorker.nextId())));
+    public PojoResult<Long> createServerKey(CreateServerKeyCommand command) {
+        ServerKey serverKey = new ServerKey();
         serverKey.setAccountType(command.getAccountType());
         serverKey.setDisplayName(command.getDisplayName());
         serverKey.setProtocol(command.getProtocol());
@@ -54,12 +53,12 @@ public class ServerKeyRemoteService implements ServerKeyService {
         serverKey.setPublicKey(command.getPublicKey());
         serverKey.init();
         serverKeyDomainService.save(serverKey);
-        return PojoResult.succeed(serverKey.getServerKeyId().getServerKeyId());
+        return PojoResult.succeed(serverKey.getId());
     }
 
     @Override
     public PojoResult<Boolean> modifyServerKey(ModifyServerKeyCommand command) {
-        ServerKey serverKey = serverKeyDomainService.getServerKey(new ServerKeyId(command.getServerKeyId()));
+        ServerKey serverKey = serverKeyDomainService.getServerKey(command.getServerKeyId());
         serverKey.setDisplayName(command.getDisplayName());
         serverKey.setAccountType(command.getAccountType());
         serverKey.setPassphrase(command.getPassphrase());
@@ -73,15 +72,15 @@ public class ServerKeyRemoteService implements ServerKeyService {
 
     @Override
     public PojoResult<Boolean> deleteServerKey(DeleteServerKeyCommand command) {
-        ServerKey serverKey = serverKeyDomainService.getServerKey(new ServerKeyId(command.getServerKeyId()));
+        ServerKey serverKey = serverKeyDomainService.getServerKey(command.getServerKeyId());
         serverKey.delete();
         serverKeyDomainService.update(serverKey);
         return PojoResult.succeed(Boolean.TRUE);
     }
 
     @Override
-    public PojoResult<ServerKeyDTO> getServerKey(ServerAccountBasicQuery basicQuery) {
-        ServerKey serverKey = serverKeyDomainService.getServerKey(new ServerKeyId(basicQuery.getServerAccountId()));
+    public PojoResult<ServerKeyDTO> getServerKey(ServerKeyBasicQuery basicQuery) {
+        ServerKey serverKey = serverKeyDomainService.getServerKey(basicQuery.getServerKeyId());
         return PojoResult.succeed(serverKeyDataAdapter.sourceToTarget(serverKey));
     }
 

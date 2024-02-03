@@ -16,5 +16,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ServerProxyBasicQuery extends BaseQuery {
 
-    private String proxyId;
+    private Long serverProxyId;
 }

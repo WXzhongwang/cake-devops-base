@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.WebhookConfigDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.WebhookConfigPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="webhook_name" jdbcType="VARCHAR" property="webhookName"/>
+        <result column="webhook_url" jdbcType="VARCHAR" property="webhookUrl"/>
+        <result column="webhook_type" jdbcType="INTEGER" property="webhookType"/>
+        <result column="webhook_config" jdbcType="VARCHAR" property="webhookConfig"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+        id
+        , webhook_name, webhook_url, webhook_type, webhook_config, is_deleted, gmt_create,
+    gmt_modified
+    </sql>
+
+    <select id="queryWebHookConfig"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.WebhookConfigQueryParam"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from webhook_config
+        <where>
+            is_deleted = '0'
+            <if test="name != null and name != ''">
+                and webhook_name = #{username}
+            </if>
+            <if test="url != null and url != ''">
+                and webhook_url = #{webhook_url}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ModifyServerKeyCommand extends BaseCommand {
 
-    private String serverKeyId;
+    private Long serverKeyId;
 
     private String displayName;
 

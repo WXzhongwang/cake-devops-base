@@ -5,9 +5,7 @@ import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.host.CreateHostCommand;
 import com.rany.cake.devops.base.api.command.host.DeleteHostCommand;
 import com.rany.cake.devops.base.api.command.host.ModifyHostCommand;
-import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.HostDTO;
-import com.rany.cake.devops.base.api.query.AppPageQuery;
 import com.rany.cake.devops.base.api.query.HostBasicQuery;
 import com.rany.cake.devops.base.api.query.HostPageQuery;
 
@@ -24,21 +22,22 @@ public interface HostService {
     /**
      * 创建主机
      *
-     * @param createHostCommand
-     * @return
+     * @param createHostCommand 创建
+     * @return result
      */
     PojoResult<String> createHostCommand(CreateHostCommand createHostCommand);
 
     /**
      * 获取主机信息
      *
-     * @param hostBasicQuery
-     * @return
+     * @param hostBasicQuery 详情
+     * @return 详情
      */
     PojoResult<HostDTO> getHost(HostBasicQuery hostBasicQuery);
 
     /**
      * 分页查询主机列表
+     *
      * @param hostPageQuery 分页查询
      * @return app集合
      */
@@ -48,16 +47,16 @@ public interface HostService {
     /**
      * 删除主机
      *
-     * @param deleteHostCommand
-     * @return
+     * @param deleteHostCommand 删除
+     * @return 成功
      */
     PojoResult<Boolean> deleteHost(DeleteHostCommand deleteHostCommand);
 
     /**
      * 更新主机基本信息
      *
-     * @param modifyHostCommand
-     * @return
+     * @param modifyHostCommand 更新
+     * @return 成功
      */
     PojoResult<Boolean> modifyHost(ModifyHostCommand modifyHostCommand);
 }
