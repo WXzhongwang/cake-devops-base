@@ -18,33 +18,33 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/devops/script-template")
 public class ScriptTemplateController {
 
-    private ScriptTemplateService webhookConfigService;
+    private ScriptTemplateService scriptTemplateService;
 
 
     @PostMapping("/create")
     public PojoResult<String> create(@RequestBody CreateScriptTemplateCommand command) {
-        return webhookConfigService.createScriptTemplate(command);
+        return scriptTemplateService.createScriptTemplate(command);
     }
 
     @GetMapping("/get")
     public PojoResult<ScriptTemplateDTO> get(@RequestParam("id") Long templateId) {
         ScriptTemplateBasicQuery webhookBasicQuery = new ScriptTemplateBasicQuery();
         webhookBasicQuery.setTemplateId(templateId);
-        return webhookConfigService.getScriptTemplate(webhookBasicQuery);
+        return scriptTemplateService.getScriptTemplate(webhookBasicQuery);
     }
 
     @PostMapping("/update")
     public PojoResult<Boolean> update(@RequestBody ModifyScriptTemplateCommand command) {
-        return webhookConfigService.modifyScriptTemplate(command);
+        return scriptTemplateService.modifyScriptTemplate(command);
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> delete(@RequestBody DeleteScriptTemplateCommand command) {
-        return webhookConfigService.deleteScriptTemplate(command);
+        return scriptTemplateService.deleteScriptTemplate(command);
     }
 
     @PostMapping("/page")
     public PageResult<ScriptTemplateDTO> page(@RequestBody ScriptTemplatePageQuery webhookPageQuery) {
-        return webhookConfigService.pageScriptTemplate(webhookPageQuery);
+        return scriptTemplateService.pageScriptTemplate(webhookPageQuery);
     }
 }
