@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.repository.param.AlarmGroupQueryParam;
+import com.rany.cake.devops.base.infra.po.AlarmGroupNotifyPO;
 import com.rany.cake.devops.base.infra.po.AlarmGroupPO;
 import com.rany.cake.devops.base.infra.po.AlarmGroupUserPO;
 import org.apache.ibatis.annotations.Param;
@@ -19,5 +20,13 @@ public interface AlarmGroupDao {
 
     int batchSaveUser(@Param("users") List<AlarmGroupUserPO> users);
 
-    int batchSaveNotify(@Param("notifies") List<AlarmGroupUserPO> users);
+    int deleteNotifies(@Param("groupId") Long groupId);
+
+    List<AlarmGroupNotifyPO> selectNotifies(@Param("groupId") Long groupId);
+
+    int deleteUsers(@Param("groupId") Long groupId);
+
+    List<AlarmGroupUserPO> selectUsers(@Param("groupId") Long groupId);
+
+    int batchSaveNotify(@Param("notifies") List<AlarmGroupNotifyPO> users);
 }

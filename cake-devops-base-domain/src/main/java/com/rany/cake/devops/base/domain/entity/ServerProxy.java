@@ -15,4 +15,5 @@ public class ServerProxy extends BaseEntity<Long> {
     private String proxyUsername;
     private String proxyPassword;
     private Integer proxyType;
+    private Integer description;
 }

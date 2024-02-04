@@ -13,14 +13,38 @@
         id
         , group_name, group_description, is_deleted, gmt_create, gmt_modified
     </sql>
-    <insert id="batchSaveUser">
 
+    <insert id="batchSaveUser" parameterType="java.util.List">
+        INSERT INTO alarm_group_users (group_id, account_id, username, is_deleted, gmt_create, gmt_modified)
+        VALUES
+        <foreach collection="users" item="record" separator=",">
+            (#{record.groupId}, #{record.accountId}, #{record.username}, #{record.isDeleted},
+            #{record.gmtCreate}, #{record.gmtModified})
+        </foreach>
 
     </insert>
-    <insert id="batchSaveNotify">
 
+    <update id="deleteUsers">
+        update alarm_group_users
+        set is_deleted = '1'
+        where group_id = #{groupId}
+    </update>
+
+    <update id="deleteNotifies">
+        update alarm_group_notify
+        set is_deleted = '1'
+        where group_id = #{groupId}
+    </update>
+
+    <insert id="batchSaveNotify" parameterType="java.util.List">
+        INSERT INTO alarm_group_notify (group_id, notify_id, notify_type, is_deleted, gmt_create, gmt_modified)
+        VALUES
+        <foreach collection="notifies" item="record" separator=",">
+            (#{record.groupId}, #{record.notifyId}, #{record.notifyType}, #{record.isDeleted},
+            #{record.gmtCreate}, #{record.gmtModified})
+        </foreach>
     </insert>
-    
+
     <!--告警组用户-->
     <resultMap id="BaseUserResultMap" type="com.rany.cake.devops.base.infra.po.AlarmGroupUserPO">
 
@@ -57,12 +81,29 @@
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from webhook_config
+        from alarm_group
         <where>
             is_deleted = '0'
             <if test="groupName != null and groupName != ''">
                 and group_name = #{groupName}
             </if>
         </where>
+    </select>
+    <select id="selectNotifies" resultType="com.rany.cake.devops.base.infra.po.AlarmGroupNotifyPO"
+            resultMap="BaseNotifyResultMap">
+        select
+        <include refid="Base_Notify_Column_List"/>
+        from alarm_group_notify
+        where group_id = #{groupId}
+        and is_deleted = '0'
+    </select>
+    
+    <select id="selectUsers" resultType="com.rany.cake.devops.base.infra.po.AlarmGroupUserPO"
+            resultMap="BaseUserResultMap">
+        select
+        <include refid="Base_Notify_Column_List"/>
+        from alarm_group_users
+        where group_id = #{groupId}
+        and is_deleted = '0'
     </select>
 </mapper>

@@ -8,6 +8,8 @@ import com.rany.cake.devops.base.infra.po.AlarmGroupPO;
 import com.rany.cake.devops.base.infra.po.AlarmGroupUserPO;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 /**
  * 告警组
  *
@@ -29,9 +31,13 @@ public interface AlarmGroupDataConvertor extends BaseConvertor<AlarmGroup, Alarm
     @Override
     AlarmGroupPO sourceToTarget(AlarmGroup alarmGroup);
 
-    AlarmGroupNotifyPO sourceToTarget(AlarmGroupNotify alarmGroupNotify);
+    AlarmGroupNotifyPO convertNotify(AlarmGroupNotify alarmGroupNotify);
 
-    AlarmGroupUserPO sourceToTarget(AlarmGroupUser alarmGroupUser);
+    List<AlarmGroupNotifyPO> convertNotify(List<AlarmGroupNotify> alarmGroupNotify);
+
+    AlarmGroupUserPO convertUser(AlarmGroupUser alarmGroupUser);
+
+    List<AlarmGroupUserPO> convertUser(List<AlarmGroupUser> alarmGroupUser);
 
     /**
      * 转实体
@@ -43,7 +49,13 @@ public interface AlarmGroupDataConvertor extends BaseConvertor<AlarmGroup, Alarm
     @Override
     AlarmGroup targetToSource(AlarmGroupPO alarmGroupPO);
 
-    AlarmGroupNotify sourceToTarget(AlarmGroupNotifyPO alarmGroupNotifyPO);
+    AlarmGroupNotify reConvertNotify(AlarmGroupNotifyPO alarmGroupNotifyPO);
 
-    AlarmGroupUser sourceToTarget(AlarmGroupUserPO alarmGroupUserPO);
+
+    List<AlarmGroupNotify> reConvertNotify(List<AlarmGroupNotifyPO> alarmGroupNotifyPO);
+
+    AlarmGroupUser reConvertUser(AlarmGroupUserPO alarmGroupUserPO);
+
+
+    List<AlarmGroupUser> reConvertUser(List<AlarmGroupUserPO> alarmGroupUserPO);
 }
