@@ -1,6 +1,8 @@
 package com.rany.cake.devops.base.domain.repository;
 
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.domain.entity.AlarmGroup;
+import com.rany.cake.devops.base.domain.repository.param.AlarmGroupQueryParam;
 
 public interface AlarmGroupRepository {
     AlarmGroup find(Long id);
@@ -8,4 +10,8 @@ public interface AlarmGroupRepository {
     void remove(AlarmGroup group);
 
     void save(AlarmGroup group);
+
+    void update(AlarmGroup group);
+
+    Page<AlarmGroup> page(AlarmGroupQueryParam queryParam);
 }

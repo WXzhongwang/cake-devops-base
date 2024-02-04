@@ -146,5 +146,10 @@
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
+        <table schema="cake_devops" tableName="script_template"
+               domainObjectName="ScriptTemplatePO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
     </context>
 </generatorConfiguration>

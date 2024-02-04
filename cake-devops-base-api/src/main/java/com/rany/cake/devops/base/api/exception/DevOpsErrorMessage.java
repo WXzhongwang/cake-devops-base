@@ -26,6 +26,8 @@ public enum DevOpsErrorMessage {
     OPS_CONNECTED_ERROR("39000", "连接失败"),
     PROXY_NOT_FOUND("39000", "代理未找到"),
     HOOK_NOT_FOUND("40000", "webhook未找到"),
+    SCRIPT_TEMPLATE_NOT_FOUND("41000", "模版未找到"),
+    ALARM_GROUP_NOT_FOUND("42000", "告警组未找到"),
 
     ;
 

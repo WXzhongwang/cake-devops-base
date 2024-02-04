@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.AlarmGroupDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.AlarmGroupPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="group_name" jdbcType="VARCHAR" property="groupName"/>
+        <result column="group_description" jdbcType="VARCHAR" property="groupDescription"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , group_name, group_description, is_deleted, gmt_create, gmt_modified
+    </sql>
+    <insert id="batchSaveUser">
+
+
+    </insert>
+    <insert id="batchSaveNotify">
+
+    </insert>
+    
+    <!--告警组用户-->
+    <resultMap id="BaseUserResultMap" type="com.rany.cake.devops.base.infra.po.AlarmGroupUserPO">
+
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="group_id" jdbcType="BIGINT" property="groupId"/>
+        <result column="account_id" jdbcType="BIGINT" property="accountId"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_User_Column_List">
+        id
+        , group_id, account_id, username, is_deleted, gmt_create, gmt_modified
+    </sql>
+
+    <resultMap id="BaseNotifyResultMap" type="com.rany.cake.devops.base.infra.po.AlarmGroupNotifyPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="group_id" jdbcType="BIGINT" property="groupId"/>
+        <result column="notify_id" jdbcType="BIGINT" property="notifyId"/>
+        <result column="notify_type" jdbcType="INTEGER" property="notifyType"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Notify_Column_List">
+        id
+        , group_id, notify_id, notify_type, is_deleted, gmt_create, gmt_modified
+    </sql>
+
+    <!-- 查询告警组 -->
+    <select id="queryAlarmGroup"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.AlarmGroupQueryParam"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from webhook_config
+        <where>
+            is_deleted = '0'
+            <if test="groupName != null and groupName != ''">
+                and group_name = #{groupName}
+            </if>
+        </where>
+    </select>
+</mapper>
