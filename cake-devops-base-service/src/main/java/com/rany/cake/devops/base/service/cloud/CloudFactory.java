@@ -2,7 +2,7 @@ package com.rany.cake.devops.base.service.cloud;
 
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
-import com.rany.cake.devops.base.domain.enums.ClusterTypeEnum;
+import com.rany.cake.devops.base.util.enums.ClusterTypeEnum;
 import org.springframework.stereotype.Component;
 
 /**

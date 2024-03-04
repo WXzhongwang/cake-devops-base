@@ -3,9 +3,9 @@ package com.rany.cake.devops.base.domain.aggregate;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.entity.ClusterExtend;
-import com.rany.cake.devops.base.domain.enums.ClusterTypeEnum;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.type.ClusterName;
+import com.rany.cake.devops.base.util.enums.ClusterTypeEnum;
 import lombok.*;
 
 import java.util.List;

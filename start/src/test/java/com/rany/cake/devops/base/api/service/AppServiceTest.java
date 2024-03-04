@@ -8,9 +8,9 @@ import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.domain.base.AppConfig;
-import com.rany.cake.devops.base.domain.enums.AppRoleEnum;
-import com.rany.cake.devops.base.domain.enums.CodeLanguageEnum;
-import com.rany.cake.devops.base.domain.enums.DevelopMode;
+import com.rany.cake.devops.base.util.enums.AppRoleEnum;
+import com.rany.cake.devops.base.util.enums.CodeLanguageEnum;
+import com.rany.cake.devops.base.util.enums.DevelopMode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

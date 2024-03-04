@@ -2,8 +2,8 @@ package com.rany.cake.devops.base.service.code;
 
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
-import com.rany.cake.devops.base.domain.enums.CodePlatformEnum;
 import com.rany.cake.devops.base.service.code.gitlab.GitLabCodeService;
+import com.rany.cake.devops.base.util.enums.CodePlatformEnum;
 import org.springframework.stereotype.Component;
 
 /**

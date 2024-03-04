@@ -4,9 +4,9 @@ import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.entity.HostExtend;
-import com.rany.cake.devops.base.domain.enums.CommonStatusEnum;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.HostId;
+import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.*;
 
 import java.util.List;

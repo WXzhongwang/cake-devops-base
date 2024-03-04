@@ -1,12 +1,12 @@
 package com.rany.cake.devops.base.service.plugins.approval;
 
 import com.rany.cake.devops.base.domain.aggregate.Approval;
-import com.rany.cake.devops.base.domain.enums.ApprovalStatus;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
 import com.rany.cake.devops.base.domain.repository.ApprovalRepository;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
+import com.rany.cake.devops.base.util.enums.ApprovalStatus;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

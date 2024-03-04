@@ -2,8 +2,8 @@ package com.rany.cake.devops.base.domain.aggregate;
 
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
-import com.rany.cake.devops.base.domain.enums.SessionTypeEnum;
 import com.rany.cake.devops.base.domain.pk.TerminalSessionId;
+import com.rany.cake.devops.base.util.enums.SessionTypeEnum;
 import lombok.*;
 
 import java.util.Date;

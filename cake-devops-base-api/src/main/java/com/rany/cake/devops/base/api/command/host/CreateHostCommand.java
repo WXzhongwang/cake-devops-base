@@ -28,6 +28,9 @@ public class CreateHostCommand extends BaseCommand {
      */
     private String hostName;
 
+    /**
+     * 服务地址
+     */
     private String serverAddr;
 
     /**

@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.domain.entity;
 
 import com.cake.framework.common.base.BaseEntity;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

@@ -1,8 +1,8 @@
 package com.rany.cake.devops.base.service.context;
 
-import com.rany.cake.devops.base.domain.enums.NodeStatus;
 import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
+import com.rany.cake.devops.base.util.enums.NodeStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;

@@ -2,11 +2,11 @@ package com.rany.cake.devops.base.domain.aggregate;
 
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
-import com.rany.cake.devops.base.domain.enums.CommonStatusEnum;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.type.NamespaceName;
+import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.*;
 
 import java.util.Date;

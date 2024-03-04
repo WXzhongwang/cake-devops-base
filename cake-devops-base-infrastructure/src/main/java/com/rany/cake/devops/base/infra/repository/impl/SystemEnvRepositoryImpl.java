@@ -1,11 +1,11 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.rany.cake.devops.base.domain.entity.SystemEnv;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.repository.SystemEnvRepository;
 import com.rany.cake.devops.base.infra.convertor.SystemEnvDataConvertor;
 import com.rany.cake.devops.base.infra.mapper.SystemEnvPOMapper;
 import com.rany.cake.devops.base.infra.po.SystemEnvPO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import org.springframework.stereotype.Service;
 
 @Service

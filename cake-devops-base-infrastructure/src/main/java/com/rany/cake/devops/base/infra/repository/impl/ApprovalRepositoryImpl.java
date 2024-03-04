@@ -1,13 +1,13 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.rany.cake.devops.base.domain.aggregate.Approval;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
 import com.rany.cake.devops.base.domain.repository.ApprovalRepository;
 import com.rany.cake.devops.base.infra.convertor.ApprovalDataConvertor;
 import com.rany.cake.devops.base.infra.dao.ApprovalDao;
 import com.rany.cake.devops.base.infra.mapper.ApprovalPOMapper;
 import com.rany.cake.devops.base.infra.po.ApprovalPO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;

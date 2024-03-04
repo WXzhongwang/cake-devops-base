@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
@@ -9,6 +8,7 @@ import com.rany.cake.devops.base.infra.convertor.NamespaceDataConvertor;
 import com.rany.cake.devops.base.infra.dao.NamespaceDao;
 import com.rany.cake.devops.base.infra.mapper.NamespacePOMapper;
 import com.rany.cake.devops.base.infra.po.NamespacePO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

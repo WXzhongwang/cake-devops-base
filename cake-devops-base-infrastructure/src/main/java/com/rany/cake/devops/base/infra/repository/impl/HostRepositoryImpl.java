@@ -4,7 +4,6 @@ import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.entity.GroupHost;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
@@ -16,6 +15,7 @@ import com.rany.cake.devops.base.infra.dao.HostDao;
 import com.rany.cake.devops.base.infra.mapper.HostPOMapper;
 import com.rany.cake.devops.base.infra.po.GroupHostPO;
 import com.rany.cake.devops.base.infra.po.HostPO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

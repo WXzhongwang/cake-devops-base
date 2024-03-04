@@ -3,8 +3,8 @@ package com.rany.cake.devops.base.domain.aggregate;
 import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.HostGroupId;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.*;
 
 import java.util.List;

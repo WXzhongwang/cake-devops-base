@@ -3,7 +3,6 @@ package com.rany.cake.devops.base.infra.repository.impl;
 import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.aggregate.Release;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.ReleaseId;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
 import com.rany.cake.devops.base.domain.repository.param.ReleasePageQueryParam;
@@ -13,6 +12,7 @@ import com.rany.cake.devops.base.infra.convertor.ReleaseDataConvertor;
 import com.rany.cake.devops.base.infra.dao.ReleaseDao;
 import com.rany.cake.devops.base.infra.mapper.ReleasePOMapper;
 import com.rany.cake.devops.base.infra.po.ReleasePO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

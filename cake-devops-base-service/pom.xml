@@ -87,13 +87,6 @@
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo</artifactId>
         </dependency>
-        <!--jenkins-java-client-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.offbytwo.jenkins</groupId>-->
-        <!--            <artifactId>jenkins-client</artifactId>-->
-        <!--            <version>0.3.8</version>-->
-        <!--        </dependency>-->
-
 
         <!--K8S-->
         <dependency>

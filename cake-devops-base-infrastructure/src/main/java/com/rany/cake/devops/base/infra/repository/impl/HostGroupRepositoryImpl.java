@@ -1,13 +1,13 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.HostGroupId;
 import com.rany.cake.devops.base.domain.repository.HostGroupRepository;
 import com.rany.cake.devops.base.infra.convertor.HostGroupDataConvertor;
 import com.rany.cake.devops.base.infra.dao.HostGroupDao;
 import com.rany.cake.devops.base.infra.mapper.HostGroupPOMapper;
 import com.rany.cake.devops.base.infra.po.HostGroupPO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

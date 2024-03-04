@@ -1,13 +1,13 @@
 package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.repository.ClusterRepository;
 import com.rany.cake.devops.base.infra.convertor.ClusterDataConvertor;
 import com.rany.cake.devops.base.infra.dao.ClusterDao;
 import com.rany.cake.devops.base.infra.mapper.ClusterPOMapper;
 import com.rany.cake.devops.base.infra.po.ClusterPO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

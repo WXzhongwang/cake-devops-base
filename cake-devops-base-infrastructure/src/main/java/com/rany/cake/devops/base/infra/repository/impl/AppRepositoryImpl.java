@@ -5,7 +5,6 @@ import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
 import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
@@ -19,6 +18,7 @@ import com.rany.cake.devops.base.infra.mapper.AppEnvPOMapper;
 import com.rany.cake.devops.base.infra.mapper.AppPOMapper;
 import com.rany.cake.devops.base.infra.po.AppEnvPO;
 import com.rany.cake.devops.base.infra.po.AppPO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

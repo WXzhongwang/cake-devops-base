@@ -3,8 +3,8 @@ package com.rany.cake.devops.base.domain.factory;
 import com.rany.cake.devops.base.domain.aggregate.TerminalSession;
 import com.rany.cake.devops.base.domain.base.HostInfo;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
-import com.rany.cake.devops.base.domain.enums.SessionTypeEnum;
 import com.rany.cake.devops.base.domain.pk.TerminalSessionId;
+import com.rany.cake.devops.base.util.enums.SessionTypeEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class TerminalSessionFactory {
-    
+
     private final SnowflakeIdWorker snowflakeIdWorker;
 
     /**

@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.service.context;
 
-import com.rany.cake.devops.base.domain.enums.NodeStatus;
+import com.rany.cake.devops.base.util.enums.NodeStatus;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

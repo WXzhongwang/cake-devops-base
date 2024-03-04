@@ -3,7 +3,6 @@ package com.rany.cake.devops.base.infra.repository.impl;
 import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.entity.WebhookConfig;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.repository.WebhookConfigRepository;
 import com.rany.cake.devops.base.domain.repository.param.WebhookConfigQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
@@ -12,6 +11,7 @@ import com.rany.cake.devops.base.infra.convertor.WebhookConfigDataConvertor;
 import com.rany.cake.devops.base.infra.dao.WebhookConfigDao;
 import com.rany.cake.devops.base.infra.mapper.WebhookConfigPOMapper;
 import com.rany.cake.devops.base.infra.po.WebhookConfigPO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

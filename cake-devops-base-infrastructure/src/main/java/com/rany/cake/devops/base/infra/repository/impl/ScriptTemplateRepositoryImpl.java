@@ -3,7 +3,6 @@ package com.rany.cake.devops.base.infra.repository.impl;
 import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
 import com.rany.cake.devops.base.domain.entity.ScriptTemplate;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.repository.ScriptTemplateRepository;
 import com.rany.cake.devops.base.domain.repository.param.ScriptTemplateQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
@@ -12,6 +11,7 @@ import com.rany.cake.devops.base.infra.convertor.ScriptTemplateDataConvertor;
 import com.rany.cake.devops.base.infra.dao.ScriptTemplateDao;
 import com.rany.cake.devops.base.infra.mapper.ScriptTemplatePOMapper;
 import com.rany.cake.devops.base.infra.po.ScriptTemplatePO;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

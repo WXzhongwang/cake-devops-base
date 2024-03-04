@@ -3,12 +3,12 @@ package com.rany.cake.devops.base.domain.aggregate;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
-import com.rany.cake.devops.base.domain.enums.AppEnvEnum;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
-import com.rany.cake.devops.base.domain.enums.ReleaseStatus;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
 import com.rany.cake.devops.base.domain.pk.ReleaseId;
+import com.rany.cake.devops.base.util.enums.AppEnvEnum;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.util.enums.ReleaseStatus;
 import lombok.*;
 
 import java.util.Date;

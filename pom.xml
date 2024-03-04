@@ -50,6 +50,7 @@
         <module>cake-devops-base-web</module>
         <module>cake-devops-base-ssh</module>
         <module>start</module>
+        <module>cake-devops-base-util</module>
     </modules>
 
     <dependencyManagement>
@@ -216,6 +217,11 @@
             <dependency>
                 <groupId>com.rany.cake.devops</groupId>
                 <artifactId>cake-devops-base-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rany.cake.devops</groupId>
+                <artifactId>cake-devops-base-util</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

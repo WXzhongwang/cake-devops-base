@@ -6,7 +6,7 @@ import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
 import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
-import com.rany.cake.devops.base.domain.enums.ReleaseStatus;
+import com.rany.cake.devops.base.util.enums.ReleaseStatus;
 import lombok.Data;
 
 import java.io.Serializable;

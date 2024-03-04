@@ -4,10 +4,10 @@ import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.google.common.collect.Lists;
-import com.rany.cake.devops.base.domain.enums.CommonStatusEnum;
-import com.rany.cake.devops.base.domain.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
+import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 

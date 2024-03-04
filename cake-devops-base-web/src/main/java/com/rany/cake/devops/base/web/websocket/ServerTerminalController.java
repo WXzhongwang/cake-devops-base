@@ -3,13 +3,13 @@ package com.rany.cake.devops.base.web.websocket;
 
 import com.rany.cake.devops.base.domain.aggregate.TerminalSession;
 import com.rany.cake.devops.base.domain.base.HostInfo;
-import com.rany.cake.devops.base.domain.enums.SessionTypeEnum;
 import com.rany.cake.devops.base.domain.factory.TerminalSessionFactory;
 import com.rany.cake.devops.base.domain.repository.TerminalSessionRepository;
 import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.terminal.SentOutputTask;
 import com.rany.cake.devops.base.service.terminal.ServerTerminalMessageHandlerFactory;
 import com.rany.cake.devops.base.service.terminal.enums.MessageState;
+import com.rany.cake.devops.base.util.enums.SessionTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;

@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.service.plugins.scm;
 
 import com.rany.cake.devops.base.domain.aggregate.Release;
-import com.rany.cake.devops.base.domain.enums.CodePlatformEnum;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.service.code.BaseCodeService;
 import com.rany.cake.devops.base.service.code.CodeFactory;
@@ -10,6 +9,7 @@ import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
+import com.rany.cake.devops.base.util.enums.CodePlatformEnum;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
