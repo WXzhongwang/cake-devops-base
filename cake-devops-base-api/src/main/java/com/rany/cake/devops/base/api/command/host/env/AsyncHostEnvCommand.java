@@ -17,9 +17,9 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class AsyncHostEnvCommand extends BaseCommand {
-    
-    private Long machineId;
+
+    private String hostId;
 
 
-    private List<Long> targetMachineIdList;
+    private List<String> targetHostIdList;
 }

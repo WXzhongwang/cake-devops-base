@@ -16,6 +16,10 @@ import com.rany.cake.devops.base.domain.repository.HostEnvRepository;
 import com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.HostEnvDataAdapter;
+import com.rany.cake.devops.base.util.EnvViewType;
+import com.rany.cake.toolkit.lang.collect.MutableLinkedHashMap;
+import com.rany.cake.toolkit.lang.utils.Maps;
+import com.rany.cake.toolkit.lang.utils.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
@@ -24,9 +28,10 @@ import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Service
-@ShenyuService("/cluster/**")
+@ShenyuService("/host-env/**")
 @Slf4j
 @AllArgsConstructor
 public class HostEnvRemoteService implements HostEnvService {
@@ -87,16 +92,38 @@ public class HostEnvRemoteService implements HostEnvService {
 
     @Override
     public PojoResult<Boolean> asyncHostEnv(AsyncHostEnvCommand command) {
-        return null;
+        // 查询列表
+        Map<String, String> env = Maps.newLinkedMap();
+        HostEnvQueryParam queryParam = new HostEnvQueryParam();
+        queryParam.setHostId(command.getHostId());
+        List<HostEnv> list = hostEnvRepository.list(queryParam);
+        list.forEach(e -> env.put(e.getAttrKey(), e.getAttrValue()));
+        // 逐个复制
+        for (String host : command.getTargetHostIdList()) {
+            hostEnvRepository.saveEnv(host, env);
+        }
+        return PojoResult.succeed(Boolean.TRUE);
     }
 
     @Override
     public PojoResult<String> view(HostEnvViewQuery query) {
-        return null;
+        EnvViewType viewType = Valid.notNull(EnvViewType.of(query.getViewType()));
+        // 查询列表
+        Map<String, String> env = Maps.newLinkedMap();
+        HostEnvQueryParam queryParam = new HostEnvQueryParam();
+        queryParam.setHostId(query.getHostId());
+        List<HostEnv> list = hostEnvRepository.list(queryParam);
+        list.forEach(e -> env.put(e.getAttrKey(), e.getAttrValue()));
+        String value = viewType.toValue(env);
+        return PojoResult.succeed(value);
     }
 
     @Override
     public PojoResult<String> saveView(HostEnvViewSaveCommand command) {
-        return null;
+        String value = Valid.notBlank(command.getHostId());
+        EnvViewType viewType = Valid.notNull(EnvViewType.of(command.getViewType()));
+        MutableLinkedHashMap<String, String> result = viewType.toMap(value);
+        hostEnvRepository.saveEnv(command.getHostId(), result);
+        return PojoResult.succeed(value);
     }
 }

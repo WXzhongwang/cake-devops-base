@@ -16,8 +16,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class HostEnvViewSaveCommand extends BaseCommand {
 
-    private String config;
-    
+    private String hostId;
+    private String value;
+
     /**
      * 视图类型
      */

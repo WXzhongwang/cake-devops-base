@@ -9,4 +9,5 @@ import lombok.EqualsAndHashCode;
 public class HostEnvViewQuery extends BaseQuery {
 
     private String hostId;
+    private Integer viewType;
 }
