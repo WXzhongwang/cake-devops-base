@@ -12,10 +12,14 @@ import com.rany.cake.devops.base.infra.dao.HostEnvDao;
 import com.rany.cake.devops.base.infra.mapper.HostEnvPOMapper;
 import com.rany.cake.devops.base.infra.po.HostEnvPO;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
+@AllArgsConstructor
 @Service
 public class HostEnvRepositoryImpl implements HostEnvRepository {
     private HostEnvPOMapper hostEnvPOMapper;
