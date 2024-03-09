@@ -7,4 +7,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class HostEnvQueryParam extends BasePageParam {
     private String name;
+    private String hostId;
 }

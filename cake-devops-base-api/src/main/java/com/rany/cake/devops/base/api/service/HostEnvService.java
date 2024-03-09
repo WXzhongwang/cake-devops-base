@@ -1,0 +1,84 @@
+package com.rany.cake.devops.base.api.service;
+
+import com.cake.framework.common.response.PageResult;
+import com.cake.framework.common.response.PojoResult;
+import com.rany.cake.devops.base.api.command.host.env.*;
+import com.rany.cake.devops.base.api.dto.HostEnvDTO;
+import com.rany.cake.devops.base.api.query.HostEnvBasicQuery;
+import com.rany.cake.devops.base.api.query.HostEnvPageQuery;
+import com.rany.cake.devops.base.api.query.HostEnvViewQuery;
+
+/**
+ * 环境变量服务
+ *
+ * @author zhongshengwang
+ * @description 环境变量服务
+ * @date 2023/1/15 21:18
+ * @email 18668485565163.com
+ */
+public interface HostEnvService {
+
+    /**
+     * 创建
+     *
+     * @param command 创建
+     * @return id
+     */
+    PojoResult<String> createHostEnv(CreateHostEnvCommand command);
+
+    /**
+     * 编辑
+     *
+     * @param command 命令
+     * @return 成功
+     */
+    PojoResult<Boolean> modifyHostEnv(ModifyHostEnvCommand command);
+
+    /**
+     * 删除
+     *
+     * @param command 命令
+     * @return 成功
+     */
+    PojoResult<Boolean> deleteHostEnv(DeleteHostEnvCommand command);
+
+    /**
+     * 查看单个
+     *
+     * @param query 查询
+     * @return 详情
+     */
+    PojoResult<HostEnvDTO> getHostEnv(HostEnvBasicQuery query);
+
+    /**
+     * 分页
+     *
+     * @param query 查询
+     * @return 分页结果
+     */
+    PageResult<HostEnvDTO> pageHostEnv(HostEnvPageQuery query);
+
+    /**
+     * 同步主机变量
+     *
+     * @param command 命令
+     * @return 成功
+     */
+    PojoResult<Boolean> asyncHostEnv(AsyncHostEnvCommand command);
+
+    /**
+     * 以视图方式查看
+     *
+     * @param query 查询
+     * @return 结果
+     */
+    PojoResult<String> view(HostEnvViewQuery query);
+
+    /**
+     * 保存视图
+     *
+     * @param command 保存视图
+     * @return 查看视图
+     */
+    PojoResult<String> saveView(HostEnvViewSaveCommand command);
+}

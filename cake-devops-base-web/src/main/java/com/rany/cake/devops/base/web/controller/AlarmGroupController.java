@@ -23,6 +23,7 @@ public class AlarmGroupController {
     private AlarmGroupService webhookConfigService;
 
     @PostMapping("/create")
+    // @EventLog(value = EventType.ADD_ALARM_GROUP)
     public PojoResult<String> create(@RequestBody CreateAlarmGroupCommand command) {
         return webhookConfigService.createAlarmGroup(command);
     }
