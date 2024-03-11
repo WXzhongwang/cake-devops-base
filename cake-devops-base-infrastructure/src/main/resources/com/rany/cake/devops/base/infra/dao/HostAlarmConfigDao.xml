@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.HostAlarmConfigDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.HostAlarmConfigPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="host_id" jdbcType="VARCHAR" property="hostId"/>
+        <result column="alarm_type" jdbcType="INTEGER" property="alarmType"/>
+        <result column="alarm_threshold" jdbcType="DOUBLE" property="alarmThreshold"/>
+        <result column="trigger_threshold" jdbcType="INTEGER" property="triggerThreshold"/>
+        <result column="notify_silence" jdbcType="INTEGER" property="notifySilence"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , host_id, alarm_type, alarm_threshold, trigger_threshold, notify_silence, is_deleted,
+    gmt_create, gmt_modified
+    </sql>
+
+    <select id="queryHostAlarmConfig" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host_alarm_config
+        where host_id = #{hostId}
+    </select>
+
+    <delete id="deleteByHostId" parameterType="java.lang.String">
+        delete
+        from host_alarm_config
+        where host_id = #{hostId}
+    </delete>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.HostAlarmConfig">
+        insert into host_alarm_config (host_id, alarm_type,
+                                       alarm_threshold, trigger_threshold, notify_silence,
+                                       is_deleted, gmt_create, gmt_modified)
+        values (#{hostId,jdbcType=VARCHAR}, #{alarmType,jdbcType=INTEGER},
+                #{alarmThreshold,jdbcType=DOUBLE}, #{triggerThreshold,jdbcType=INTEGER},
+                #{notifySilence,jdbcType=INTEGER},
+                #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
+  
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.HostAlarmConfig">
+        update host_alarm_config
+        set host_id           = #{hostId,jdbcType=VARCHAR},
+            alarm_type        = #{alarmType,jdbcType=INTEGER},
+            alarm_threshold   = #{alarmThreshold,jdbcType=DOUBLE},
+            trigger_threshold = #{triggerThreshold,jdbcType=INTEGER},
+            notify_silence    = #{notifySilence,jdbcType=INTEGER},
+            is_deleted        = #{isDeleted,jdbcType=VARCHAR},
+            gmt_create        = #{gmtCreate,jdbcType=TIMESTAMP},
+            gmt_modified      = #{gmtModified,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

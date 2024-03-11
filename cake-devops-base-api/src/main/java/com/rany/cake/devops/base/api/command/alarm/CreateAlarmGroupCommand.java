@@ -26,7 +26,7 @@ public class CreateAlarmGroupCommand extends BaseCommand {
     private List<Long> accountIds;
 
     /**
-     * 停止方式ID
+     * 通知方式ID
      */
     private List<Long> notifyIdList;
 }

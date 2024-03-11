@@ -4,6 +4,9 @@ import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.domain.entity.AlarmGroup;
 import com.rany.cake.devops.base.domain.repository.param.AlarmGroupQueryParam;
 
+/**
+ * 报警组
+ */
 public interface AlarmGroupRepository {
     AlarmGroup find(Long id);
 
