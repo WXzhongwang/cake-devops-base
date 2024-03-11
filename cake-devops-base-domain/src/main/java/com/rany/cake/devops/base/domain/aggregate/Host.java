@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.domain.aggregate;
 import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
+import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.entity.HostExtend;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
@@ -78,6 +79,16 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
 
     public Boolean modify() {
         this.gmtModified = DateUtil.date();
+        return Boolean.TRUE;
+    }
+
+    public Boolean copy(HostId hostId, List<GroupHost> groupHosts) {
+        this.gmtCreate = DateUtil.date();
+        this.gmtModified = DateUtil.date();
+        this.hostId = hostId;
+        for (GroupHost groupHost : groupHosts) {
+            groupHost.setHostId(this.hostId.getHostId());
+        }
         return Boolean.TRUE;
     }
 

@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.pk.HostId;
@@ -76,6 +77,12 @@ public class HostRepositoryImpl implements HostRepository {
         List<String> hostIds = groupHostPOS.stream().map(GroupHostPO::getHostId).collect(Collectors.toList());
         List<HostPO> hostPOS = hostDao.selectByPrimaryKeyList(hostIds);
         return hostDataConvertor.targetToSource(hostPOS);
+    }
+
+    @Override
+    public List<GroupHost> getGroupHostByHostId(HostId hostId) {
+        List<GroupHostPO> groupHostPOS = groupHostDao.selectByGroupIds(Lists.newArrayList(hostId.getHostId()));
+        return hostDataConvertor.reconvert(groupHostPOS);
     }
 
     @Override

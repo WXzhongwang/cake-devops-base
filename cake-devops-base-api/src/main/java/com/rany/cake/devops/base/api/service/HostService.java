@@ -2,9 +2,7 @@ package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.host.CreateHostCommand;
-import com.rany.cake.devops.base.api.command.host.DeleteHostCommand;
-import com.rany.cake.devops.base.api.command.host.ModifyHostCommand;
+import com.rany.cake.devops.base.api.command.host.*;
 import com.rany.cake.devops.base.api.dto.HostDTO;
 import com.rany.cake.devops.base.api.query.HostBasicQuery;
 import com.rany.cake.devops.base.api.query.HostPageQuery;
@@ -25,7 +23,23 @@ public interface HostService {
      * @param createHostCommand 创建
      * @return result
      */
-    PojoResult<String> createHostCommand(CreateHostCommand createHostCommand);
+    PojoResult<String> createHost(CreateHostCommand createHostCommand);
+
+    /**
+     * 复制机器
+     *
+     * @param copyHostCommand 复制
+     * @return 机器ID
+     */
+    PojoResult<String> copyHost(CopyHostCommand copyHostCommand);
+
+    /**
+     * ping主机
+     *
+     * @param copyHostCommand ping主机
+     * @return
+     */
+    PojoResult<String> ping(PingHostCommand copyHostCommand);
 
     /**
      * 获取主机信息

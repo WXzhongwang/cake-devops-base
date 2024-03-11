@@ -28,10 +28,10 @@
     </select>
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.GroupHost">
-        insert into group_host (id, group_id, host_id,
+        insert into group_host (group_id, host_id,
                                 is_deleted, gmt_create, gmt_modified,
                                 creator, modifier)
-        values (#{id,jdbcType=BIGINT}, #{groupId}, #{hostId},
+        values (#{groupId}, #{hostId},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
     </insert>

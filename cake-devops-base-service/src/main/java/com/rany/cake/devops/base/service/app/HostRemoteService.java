@@ -3,10 +3,9 @@ package com.rany.cake.devops.base.service.app;
 import com.cake.framework.common.response.Page;
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.host.CreateHostCommand;
-import com.rany.cake.devops.base.api.command.host.DeleteHostCommand;
-import com.rany.cake.devops.base.api.command.host.ModifyHostCommand;
+import com.rany.cake.devops.base.api.command.host.*;
 import com.rany.cake.devops.base.api.dto.HostDTO;
+import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.query.HostBasicQuery;
 import com.rany.cake.devops.base.api.query.HostPageQuery;
 import com.rany.cake.devops.base.api.service.HostService;
@@ -18,6 +17,9 @@ import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
+import com.rany.cake.devops.base.service.base.Constants;
+import com.rany.cake.toolkit.lang.net.IPs;
+import com.rany.uic.common.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
@@ -45,7 +47,7 @@ public class HostRemoteService implements HostService {
 
 
     @Override
-    public PojoResult<String> createHostCommand(CreateHostCommand createHostCommand) {
+    public PojoResult<String> createHost(CreateHostCommand createHostCommand) {
         Host host = new Host(new HostId(String.valueOf(snowflakeIdWorker.nextId())), createHostCommand.getName(),
                 createHostCommand.getHostName(), createHostCommand.getServerAddr(), createHostCommand.getPort());
         host.setUsername(createHostCommand.getUsername());
@@ -58,6 +60,29 @@ public class HostRemoteService implements HostService {
         }
         hostDomainService.save(host, groupHosts);
         return PojoResult.succeed(host.getHostId().getHostId());
+    }
+
+    @Override
+    public PojoResult<String> copyHost(CopyHostCommand copyHostCommand) {
+        HostId hostId = new HostId(copyHostCommand.getHostId());
+        Host host = hostDomainService.getHost(hostId);
+        List<GroupHost> groupHost = hostDomainService.getGroupHost(hostId);
+        HostId newHostId = new HostId(String.valueOf(snowflakeIdWorker.nextId()));
+        host.copy(newHostId, groupHost);
+        hostDomainService.save(host, groupHost);
+        return PojoResult.succeed(host.getHostId().getHostId());
+    }
+
+    @Override
+    public PojoResult<String> ping(PingHostCommand pingHostCommand) {
+        // 查询超时时间
+        Host host = hostDomainService.getHost(new HostId(pingHostCommand.getHostId()));
+        Integer connectTimeout = hostDomainService.getConnectionTimeout(new HostId(pingHostCommand.getHostId()));
+        if (!IPs.ping(host.getServerAddr(), connectTimeout)) {
+            throw new BusinessException(DevOpsErrorMessage.OPS_CONNECTED_ERROR.getCode(),
+                    DevOpsErrorMessage.OPS_CONNECTED_ERROR.getMessage());
+        }
+        return PojoResult.succeed(Constants.PONG);
     }
 
     @Override

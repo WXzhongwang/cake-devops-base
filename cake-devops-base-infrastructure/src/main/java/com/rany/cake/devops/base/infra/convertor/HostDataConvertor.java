@@ -1,9 +1,13 @@
 package com.rany.cake.devops.base.infra.convertor;
 
 import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.domain.entity.GroupHost;
+import com.rany.cake.devops.base.infra.po.GroupHostPO;
 import com.rany.cake.devops.base.infra.po.HostPO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.List;
 
 /**
  * 主机
@@ -27,6 +31,10 @@ public interface HostDataConvertor extends BaseConvertor<Host, HostPO> {
     @Override
     HostPO sourceToTarget(Host host);
 
+    GroupHostPO convert(GroupHost groupHost);
+
+    List<GroupHostPO> convert(List<GroupHost> groupHosts);
+
     /**
      * PO转聚合根
      *
@@ -37,4 +45,8 @@ public interface HostDataConvertor extends BaseConvertor<Host, HostPO> {
     @Override
     @Mapping(target = "hostId.hostId", source = "hostId")
     Host targetToSource(HostPO hostPO);
+
+    GroupHost reconvert(GroupHostPO groupHost);
+
+    List<GroupHost> reconvert(List<GroupHostPO> groupHosts);
 }

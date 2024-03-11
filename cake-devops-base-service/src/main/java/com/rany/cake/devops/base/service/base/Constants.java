@@ -20,6 +20,7 @@ public final class Constants {
     public final static String TRACE_ID = "traceId";
 
     public static final String CREATED_BY = "Created by cake";
+    public static final String PONG = "pong";
     /**
      * 默认端口
      */

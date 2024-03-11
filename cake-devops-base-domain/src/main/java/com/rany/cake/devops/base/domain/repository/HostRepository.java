@@ -23,6 +23,8 @@ public interface HostRepository extends Repository<Host, HostId> {
 
     List<Host> getHostsByGroupIds(List<String> groupIds);
 
+    List<GroupHost> getGroupHostByHostId(HostId hostId);
+
     Page<Host> pageHost(HostPageQueryParam hostPageQueryParam);
 
     void saveGroupHosts(List<GroupHost> groupHosts);
