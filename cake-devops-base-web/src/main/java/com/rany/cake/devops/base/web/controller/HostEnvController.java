@@ -22,29 +22,29 @@ public class HostEnvController {
     @Resource
     private HostEnvService hostEnvService;
 
-    @PostMapping("/pageHostEnv")
+    @PostMapping("/page")
     public PageResult<HostEnvDTO> pageHostEnv(@RequestBody(required = false) HostEnvPageQuery hostPageQuery) {
         return hostEnvService.pageHostEnv(hostPageQuery);
     }
 
-    @GetMapping("/getHostEnv")
+    @GetMapping("/get")
     public PojoResult<HostEnvDTO> getHostEnv(@RequestParam("id") String hostEnvId) {
         HostEnvBasicQuery hostBasicQuery = new HostEnvBasicQuery();
         hostBasicQuery.setEnvId(hostEnvId);
         return hostEnvService.getHostEnv(hostBasicQuery);
     }
 
-    @PostMapping("/createHostEnv")
+    @PostMapping("/create")
     public PojoResult<String> createHostEnv(@RequestBody CreateHostEnvCommand createHostEnvCommand) {
         return hostEnvService.createHostEnv(createHostEnvCommand);
     }
 
-    @PostMapping("/updateHostEnv")
+    @PostMapping("/update")
     public PojoResult<Boolean> updateHostEnv(@RequestBody ModifyHostEnvCommand modifyHostCommand) {
         return hostEnvService.modifyHostEnv(modifyHostCommand);
     }
 
-    @PostMapping("/deleteHostEnv")
+    @PostMapping("/delete")
     public PojoResult<Boolean> deleteHostEnv(@RequestBody DeleteHostEnvCommand deleteHostEnvCommand) {
         return hostEnvService.deleteHostEnv(deleteHostEnvCommand);
     }
