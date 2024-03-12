@@ -31,6 +31,13 @@
         where host_id = #{hostId}
     </delete>
 
+    <delete id="delete">
+        delete
+        from host_alarm_config
+        where host_id = #{hostId}
+          and alarm_type = #{alarmType}
+    </delete>
+
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.HostAlarmConfig">
         insert into host_alarm_config (host_id, alarm_type,
                                        alarm_threshold, trigger_threshold, notify_silence,
@@ -40,7 +47,7 @@
                 #{notifySilence,jdbcType=INTEGER},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
     </insert>
-  
+
     <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.HostAlarmConfig">
         update host_alarm_config
         set host_id           = #{hostId,jdbcType=VARCHAR},

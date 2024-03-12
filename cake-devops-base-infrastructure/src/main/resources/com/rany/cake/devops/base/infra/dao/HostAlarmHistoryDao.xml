@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.HostAlarmHistoryDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.HostAlarmHistoryPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="host_id" jdbcType="VARCHAR" property="hostId"/>
+        <result column="alarm_type" jdbcType="INTEGER" property="alarmType"/>
+        <result column="alarm_value" jdbcType="DOUBLE" property="alarmValue"/>
+        <result column="alarm_time" jdbcType="TIMESTAMP" property="alarmTime"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , host_id, alarm_type, alarm_value, alarm_time, is_deleted, gmt_create, gmt_modified
+    </sql>
+    <select id="queryHostAlarmHistory" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from host_alarm_history
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByHostId" parameterType="java.lang.Long">
+
+        delete
+        from host_alarm_history
+        where host_id = #{hostId}
+    </delete>
+
+    <delete id="delete">
+        delete
+        from host_alarm_history
+        where host_id = #{hostId}
+          and alarm_type = #{alarmType}
+    </delete>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.HostAlarmHistory">
+
+        insert into host_alarm_history (host_id, alarm_type,
+                                        alarm_value, alarm_time, is_deleted,
+                                        gmt_create, gmt_modified)
+        values (#{hostId,jdbcType=VARCHAR}, #{alarmType,jdbcType=INTEGER},
+                #{alarmValue,jdbcType=DOUBLE}, #{alarmTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=VARCHAR},
+                #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
+</mapper>

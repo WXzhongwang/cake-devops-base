@@ -1,6 +1,8 @@
 package com.rany.cake.devops.base.domain.entity;
 
+import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseEntity;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,4 +20,10 @@ public class HostAlarmConfig extends BaseEntity<Long> {
     private Double alarmThreshold;
     private Integer triggerThreshold;
     private Integer notifySilence;
+
+    public void init() {
+        this.gmtCreate = DateUtil.date();
+        this.gmtModified = DateUtil.date();
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
+    }
 }

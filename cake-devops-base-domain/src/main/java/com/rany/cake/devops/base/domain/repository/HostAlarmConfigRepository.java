@@ -11,6 +11,10 @@ import java.util.List;
 public interface HostAlarmConfigRepository {
     List<HostAlarmConfig> find(HostId hostId);
 
+    void deleteAlarmConfig(String hostId, Integer alarmType);
+
+    void deleteAlarmConfig(String hostId);
+
     void save(HostAlarmConfig alarmConfig);
 
     void update(HostAlarmConfig alarmConfig);

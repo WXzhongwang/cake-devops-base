@@ -11,6 +11,8 @@ import java.util.List;
 public interface HostAlarmGroupRepository {
     List<HostAlarmGroup> find(HostId hostId);
 
+    int delete(String hostId);
+
     void save(HostAlarmGroup alarmGroup);
 
     void save(List<HostAlarmGroup> alarmGroupList);

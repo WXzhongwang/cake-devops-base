@@ -6,6 +6,7 @@ import com.rany.cake.devops.base.domain.repository.HostAlarmConfigRepository;
 import com.rany.cake.devops.base.infra.convertor.HostAlarmConfigDataConvertor;
 import com.rany.cake.devops.base.infra.dao.HostAlarmConfigDao;
 import com.rany.cake.devops.base.infra.mapper.HostAlarmConfigPOMapper;
+import com.rany.cake.devops.base.infra.po.HostAlarmConfigPO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,16 +23,27 @@ public class HostAlarmConfigRepositoryImpl implements HostAlarmConfigRepository 
 
     @Override
     public List<HostAlarmConfig> find(HostId hostId) {
-        return null;
+        List<HostAlarmConfigPO> hostAlarmConfigPOS = hostAlarmConfigDao.queryHostAlarmConfig(hostId.getHostId());
+        return hostAlarmConfigDataConvertor.targetToSource(hostAlarmConfigPOS);
     }
 
     @Override
-    public void save(HostAlarmConfig env) {
-
+    public void deleteAlarmConfig(String hostId, Integer alarmType) {
+        hostAlarmConfigDao.delete(hostId, alarmType);
     }
 
     @Override
-    public void update(HostAlarmConfig env) {
+    public void deleteAlarmConfig(String hostId) {
+        hostAlarmConfigDao.deleteByHostId(hostId);
+    }
 
+    @Override
+    public void save(HostAlarmConfig alarmConfig) {
+        hostAlarmConfigDao.save(alarmConfig);
+    }
+
+    @Override
+    public void update(HostAlarmConfig alarmConfig) {
+        hostAlarmConfigDao.update(alarmConfig);
     }
 }

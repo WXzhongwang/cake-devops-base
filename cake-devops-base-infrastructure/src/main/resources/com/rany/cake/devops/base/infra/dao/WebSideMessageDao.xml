@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rany.cake.devops.base.infra.dao.WebSideMessageDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.WebSideMessagePO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="message_classify" property="messageClassify" jdbcType="TINYINT"/>
+        <result column="message_type" property="messageType" jdbcType="INTEGER"/>
+        <result column="read_status" property="readStatus" jdbcType="TINYINT"/>
+        <result column="to_user_id" property="toUserId" jdbcType="BIGINT"/>
+        <result column="to_user_name" property="toUserName" jdbcType="VARCHAR"/>
+        <result column="rel_id" property="relId" jdbcType="BIGINT"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.rany.cake.devops.base.infra.po.WebSideMessagePO"
+               extends="BaseResultMap">
+        <result column="send_message" property="sendMessage" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , message_classify, message_type, read_status, to_user_id, to_user_name, rel_id,
+        is_deleted, gmt_create, gmt_modified
+    </sql>
+    <sql id="Blob_Column_List">
+        send_message
+    </sql>
+
+    <select id="getUnreadCount" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long">
+        select count(1)
+        from web_side_message
+        where is_deleted = '0'
+          and to_user_id = #{userId}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from web_side_message
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.WebSideMessage">
+        insert into web_side_message (message_classify, message_type,
+                                      read_status, to_user_id, to_user_name,
+                                      rel_id, is_deleted, gmt_create,
+                                      gmt_modified, send_message)
+        values (#{messageClassify,jdbcType=TINYINT}, #{messageType,jdbcType=INTEGER},
+                #{readStatus,jdbcType=TINYINT}, #{toUserId,jdbcType=BIGINT}, #{toUserName,jdbcType=VARCHAR},
+                #{relId,jdbcType=BIGINT}, #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
+                #{gmtModified,jdbcType=TIMESTAMP}, #{sendMessage,jdbcType=LONGVARCHAR})
+    </insert>
+
+
+    <update id="setAllRead" parameterType="java.lang.Long">
+        update web_side_message
+        set read_status = 2
+        where to_user_id = #{userId}
+          and is_deleted = '0'
+    </update>
+
+    <update id="readMessage">
+        update web_side_message
+        set read_status = 1
+        where is_deleted = '0'
+        <if test="idList != null and idList.size() > 0">
+            and id in
+            <foreach collection="idList" index="index" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </update>
+
+    <update id="deleteAllRead">
+        update web_side_message
+        set is_deleted = '1'
+        where read_status = 1
+          and to_user_id = #{userId}
+    </update>
+
+
+    <update id="deleteMessage">
+        update web_side_message
+        set is_deleted = '1'
+        where
+        <if test="idList != null and idList.size() > 0">
+            id in
+            <foreach collection="idList" index="index" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </update>
+
+
+    <select id="queryWebSideMessage"
+            resultMap="ResultMapWithBLOBs"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.WebSideMessagePageQueryParam">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from web_side_message
+        where to_user_id = #{userId}
+        <if test="readStatus != null">
+            and read_status = #{readStatus}
+        </if>
+        order by gmt_create desc
+    </select>
+</mapper>
