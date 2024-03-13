@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -47,6 +48,16 @@ public class AlarmGroupRepositoryImpl implements AlarmGroupRepository {
         List<AlarmGroupNotify> alarmGroupNotifies = alarmGroupDataConvertor.reConvertNotify(alarmGroupNotifyPOS);
         alarmGroup.setNotifies(alarmGroupNotifies);
         return alarmGroup;
+    }
+
+    @Override
+    public List<AlarmGroup> findByGroupIds(List<Long> groupIds) {
+        List<AlarmGroup> alarmGroupList = new ArrayList<>();
+        for (Long groupId : groupIds) {
+            AlarmGroup alarmGroup = this.find(groupId);
+            alarmGroupList.add(alarmGroup);
+        }
+        return alarmGroupList;
     }
 
     @Override

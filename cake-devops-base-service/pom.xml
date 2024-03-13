@@ -88,6 +88,11 @@
             <artifactId>dubbo</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>alibaba-dingtalk-service-sdk</artifactId>
+        </dependency>
+
         <!--K8S-->
         <dependency>
             <groupId>io.kubernetes</groupId>

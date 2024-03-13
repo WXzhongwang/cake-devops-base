@@ -31,7 +31,7 @@ public class AppServiceTest extends BaseTests {
     private AppService appService;
 
     @Resource
-    private AppConfig tenantConfig;
+    private AppConfig appConfig;
 
     public static final String ACCOUNT_ID = "781488231601549312L";
 

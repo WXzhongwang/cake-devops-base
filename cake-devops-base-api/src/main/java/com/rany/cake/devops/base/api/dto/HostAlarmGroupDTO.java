@@ -10,5 +10,5 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 public class HostAlarmGroupDTO extends DTO {
     private String hostId;
-    private String alarmGroupId;
+    private Long alarmGroupId;
 }

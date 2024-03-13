@@ -11,13 +11,15 @@ import com.rany.cake.devops.base.api.query.WebhookPageQuery;
 import com.rany.cake.devops.base.api.service.WebhookConfigService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+
 /**
  * webhook 配置
  */
 @RestController
 @RequestMapping("/api/devops/webhook")
 public class WebhookController {
-
+    @Resource
     private WebhookConfigService webhookConfigService;
 
 

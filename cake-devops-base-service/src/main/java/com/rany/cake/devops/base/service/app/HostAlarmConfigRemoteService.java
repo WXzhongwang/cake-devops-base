@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@ShenyuService("/host-alarm/**")
+@ShenyuService("/host-alarm-config/**")
 @Slf4j
 @AllArgsConstructor
 public class HostAlarmConfigRemoteService implements HostAlarmConfigService {
@@ -65,7 +65,7 @@ public class HostAlarmConfigRemoteService implements HostAlarmConfigService {
     @Override
     public PojoResult<Boolean> setHostAlarmGroup(SetHostAlarmGroupCommand command) {
         ArrayList<HostAlarmGroup> alarmGroupList = new ArrayList<>();
-        for (String groupId : command.getGroupIdList()) {
+        for (Long groupId : command.getGroupIdList()) {
             HostAlarmGroup alarmGroup = new HostAlarmGroup();
             alarmGroup.setAlarmGroupId(groupId);
             alarmGroup.setHostId(command.getHostId());

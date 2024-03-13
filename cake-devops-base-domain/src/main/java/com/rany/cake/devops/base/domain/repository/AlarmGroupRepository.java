@@ -4,11 +4,15 @@ import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.domain.entity.AlarmGroup;
 import com.rany.cake.devops.base.domain.repository.param.AlarmGroupQueryParam;
 
+import java.util.List;
+
 /**
  * 报警组
  */
 public interface AlarmGroupRepository {
-    AlarmGroup find(Long id);
+    AlarmGroup find(Long groupId);
+
+    List<AlarmGroup> findByGroupIds(List<Long> groupIds);
 
     void remove(AlarmGroup group);
 

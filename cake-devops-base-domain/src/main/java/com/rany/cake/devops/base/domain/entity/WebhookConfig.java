@@ -12,6 +12,6 @@ public class WebhookConfig extends BaseEntity<Long> {
 
     private String webhookName;
     private String webhookUrl;
-    private String webhookType;
+    private Integer webhookType;
     private String webhookConfig;
 }

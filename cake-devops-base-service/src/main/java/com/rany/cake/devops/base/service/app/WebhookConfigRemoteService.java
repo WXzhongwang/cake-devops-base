@@ -40,7 +40,7 @@ public class WebhookConfigRemoteService implements WebhookConfigService {
     public PojoResult<String> createWebhook(CreateWebhookCommand command) {
         WebhookConfig env = new WebhookConfig();
         env.setWebhookName(command.getWebhookName());
-        env.setWebhookType(WebHookType.DINGDING.name());
+        env.setWebhookType(WebHookType.DINGDING.getType());
         env.setWebhookUrl(command.getWebhookUrl());
         env.setWebhookConfig(command.getWebhookConfig());
         webhookConfigRepository.save(env);
@@ -54,7 +54,7 @@ public class WebhookConfigRemoteService implements WebhookConfigService {
             throw new DevOpsException(DevOpsErrorMessage.HOOK_NOT_FOUND);
         }
         webhookConfig.setWebhookName(command.getWebhookName());
-        webhookConfig.setWebhookType(WebHookType.DINGDING.name());
+        webhookConfig.setWebhookType(WebHookType.DINGDING.getType());
         webhookConfig.setWebhookUrl(command.getWebhookUrl());
         webhookConfig.setWebhookConfig(command.getWebhookConfig());
         webhookConfigRepository.update(webhookConfig);

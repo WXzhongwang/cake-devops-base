@@ -18,5 +18,5 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class SetHostAlarmGroupCommand extends BaseCommand {
     private String hostId;
-    private List<String> groupIdList;
+    private List<Long> groupIdList;
 }

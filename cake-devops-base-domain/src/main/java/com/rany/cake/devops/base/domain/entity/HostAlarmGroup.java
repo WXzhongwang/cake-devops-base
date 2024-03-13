@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 public class HostAlarmGroup extends BaseEntity<Long> {
 
     private String hostId;
-    private String alarmGroupId;
+    private Long alarmGroupId;
 
     public HostAlarmGroup() {
         this.gmtCreate = DateUtil.date();

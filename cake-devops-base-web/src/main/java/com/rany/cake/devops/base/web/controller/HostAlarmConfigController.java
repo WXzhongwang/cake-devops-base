@@ -1,12 +1,16 @@
 package com.rany.cake.devops.base.web.controller;
 
 import com.cake.framework.common.response.ListResult;
+import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmConfigCommand;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmGroupCommand;
 import com.rany.cake.devops.base.api.dto.HostAlarmConfigDTO;
 import com.rany.cake.devops.base.api.dto.HostAlarmConfigWrapperDTO;
+import com.rany.cake.devops.base.api.dto.HostAlarmHistoryDTO;
+import com.rany.cake.devops.base.api.query.HostAlarmHistoryPageQuery;
 import com.rany.cake.devops.base.api.service.HostAlarmConfigService;
+import com.rany.cake.devops.base.api.service.HostAlarmService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,6 +26,8 @@ public class HostAlarmConfigController {
 
     @Resource
     private HostAlarmConfigService hostAlarmConfigService;
+    @Resource
+    private HostAlarmService hostAlarmService;
 
 
     @GetMapping("/get-config")
@@ -42,6 +48,11 @@ public class HostAlarmConfigController {
     @GetMapping("/get-config-list")
     public ListResult<HostAlarmConfigDTO> getAlarmConfigList(@RequestParam("hostId") String hostId) {
         return hostAlarmConfigService.selectAlarmConfigByHostId(hostId);
+    }
+
+    @GetMapping("/history")
+    public PageResult<HostAlarmHistoryDTO> pageHistory(@RequestBody HostAlarmHistoryPageQuery query) {
+        return hostAlarmService.pageHistory(query);
     }
 
     @GetMapping("/delete")

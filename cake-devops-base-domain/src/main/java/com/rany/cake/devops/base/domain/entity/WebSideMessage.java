@@ -18,6 +18,6 @@ public class WebSideMessage extends BaseEntity<Long> {
     private Byte readStatus;
     private Long toUserId;
     private String toUserName;
-    private Long relId;
+    private String relId;
     private String sendMessage;
 }
