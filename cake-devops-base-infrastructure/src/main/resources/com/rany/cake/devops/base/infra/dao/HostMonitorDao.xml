@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.HostMonitorDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.HostMonitorPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="host_id" property="hostId" jdbcType="VARCHAR"/>
+        <result column="monitor_status" property="monitorStatus" jdbcType="INTEGER"/>
+        <result column="monitor_url" property="monitorUrl" jdbcType="VARCHAR"/>
+        <result column="access_token" property="accessToken" jdbcType="VARCHAR"/>
+        <result column="agent_version" property="agentVersion" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="CHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+
+        id
+        , host_id, monitor_status, monitor_url, access_token, agent_version, is_deleted,
+        gmt_create, gmt_modified, creator, modifier
+    </sql>
+
+    <select id="selectByHostId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host_monitor
+        where host_id = #{hostId}
+    </select>
+
+    <select id="queryByParam" resultMap="BaseResultMap"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.HostMonitorPageQueryParam">
+        select m.id,
+        m.host_id,
+        m.monitor_status,
+        m.monitor_url,
+        m.access_token,
+        m.agent_version,
+        m.is_deleted,
+        m.gmt_create,
+        m.gmt_modified,
+        m.creator,
+        m.modifier
+        from host_monitor m
+        left join host h on h.host_id = m.host_id
+        <where>
+            m.is_deleted = '0'
+            and h.is_deleted = '0'
+            <if test="hostName != null and hostName != ''">
+                and h.host_name like ('%', #{hostName},'%')
+            </if>
+            <if test="serverAddr != null and serverAddr != ''">
+                and h.server_addr like ('%', #{serverAddr},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.HostMonitor">
+        insert into host_monitor (host_id, monitor_status,
+                                  monitor_url, access_token, agent_version,
+                                  is_deleted, gmt_create, gmt_modified,
+                                  creator, modifier)
+        values (#{hostId,jdbcType=VARCHAR}, #{monitorStatus,jdbcType=INTEGER},
+                #{monitorUrl,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR}, #{agentVersion,jdbcType=VARCHAR},
+                #{isDeleted,jdbcType=CHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
+    </insert>
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.HostMonitor">
+        update host_monitor
+        <set>
+            <if test="hostId != null">
+                host_id = #{hostId,jdbcType=VARCHAR},
+            </if>
+            <if test="monitorStatus != null">
+                monitor_status = #{monitorStatus,jdbcType=INTEGER},
+            </if>
+            <if test="monitorUrl != null">
+                monitor_url = #{monitorUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="accessToken != null">
+                access_token = #{accessToken,jdbcType=VARCHAR},
+            </if>
+            <if test="agentVersion != null">
+                agent_version = #{agentVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=CHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

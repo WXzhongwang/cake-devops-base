@@ -23,24 +23,24 @@ public interface HostGroupService {
     /**
      * 创建主机组
      *
-     * @param createHostCommand
-     * @return
+     * @param createHostCommand command
+     * @return 主机ID
      */
     PojoResult<String> createHostGroup(CreateGroupCommand createHostCommand);
 
     /**
      * 主机组树查询
      *
-     * @param hostGroupTreeQuery
-     * @return
+     * @param hostGroupTreeQuery query
+     * @return 主机组树
      */
     ListResult<HostGroupTreeDTO> getHostGroupTree(HostGroupTreeQuery hostGroupTreeQuery);
 
     /**
      * 获取主机组信息
      *
-     * @param hostGroupBasicQuery
-     * @return
+     * @param hostGroupBasicQuery query
+     * @return 主机组信息
      */
     PojoResult<HostGroupDTO> getHostGroup(HostGroupBasicQuery hostGroupBasicQuery);
 
@@ -48,16 +48,16 @@ public interface HostGroupService {
     /**
      * 删除主机组
      *
-     * @param deleteGroupCommand
-     * @return
+     * @param deleteGroupCommand command
+     * @return success
      */
     PojoResult<Boolean> deleteHostGroup(DeleteGroupCommand deleteGroupCommand);
 
     /**
      * 更新主机组基本信息
      *
-     * @param modifyGroupCommand
-     * @return
+     * @param modifyGroupCommand command
+     * @return success
      */
     PojoResult<Boolean> modifyHostGroup(ModifyGroupCommand modifyGroupCommand);
 }

@@ -120,8 +120,13 @@
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
-        <table schema="cake_devops" tableName="server_monitor"
-               domainObjectName="ServerMonitorPO" enableCountByExample="false"
+        <table schema="cake_devops" tableName="server_load_monitor"
+               domainObjectName="ServerLoadMonitorPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+        <table schema="cake_devops" tableName="host_monitor"
+               domainObjectName="HostMonitorPO" enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>

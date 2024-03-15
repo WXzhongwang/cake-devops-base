@@ -6,13 +6,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * 主机监控信息
+ * 主机运行负载监控信息
  * author zhongshengwang
  */
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ServerMonitor extends BaseEntity<Long> {
+public class ServerLoadMonitor extends BaseEntity<Long> {
 
     private Long hostId;
 

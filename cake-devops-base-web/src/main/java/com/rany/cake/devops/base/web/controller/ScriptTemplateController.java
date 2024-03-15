@@ -12,7 +12,7 @@ import com.rany.cake.devops.base.api.service.ScriptTemplateService;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * webhook 配置
+ * script 配置
  */
 @RestController
 @RequestMapping("/api/devops/script-template")
