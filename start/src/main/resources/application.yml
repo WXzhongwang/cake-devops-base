@@ -30,8 +30,8 @@ dubbo:
     basePackages: com.rany.cake.devops
 
 spring:
-#  resources:
-#    static-locations: classpath:/static/
+  #  resources:
+  #    static-locations: classpath:/static/
   profiles:
     active: dev
   redis:
@@ -173,3 +173,13 @@ easy:
         msg: 用户未登录
     redis:
       address: redis://127.0.0.1:6379
+
+machine:
+  monitor:
+    latest:
+      version: 1.0.0
+    default:
+      url: "http://{}:9220"
+      access:
+        header: accessToken
+        token: agent_access

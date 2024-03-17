@@ -17,6 +17,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 主机监控配置
+ *
+ * @author zhongshengwang
+ */
 @Service
 @AllArgsConstructor
 public class HostMonitorRepositoryImpl implements HostMonitorRepository {

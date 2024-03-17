@@ -21,6 +21,8 @@ public interface HostRepository extends Repository<Host, HostId> {
 
     int update(Host host);
 
+    List<Host> findByIds(List<String> hostIds);
+
     List<Host> getHostsByGroupIds(List<String> groupIds);
 
     List<GroupHost> getGroupHostByHostId(HostId hostId);

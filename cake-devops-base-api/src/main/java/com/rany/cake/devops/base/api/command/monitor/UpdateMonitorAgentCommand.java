@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 public class UpdateMonitorAgentCommand extends BaseCommand {
 
     private Long id;
-    private String hostId;
-    private Boolean upgrade;
+    private String accessToken;
+    private String url;
 }

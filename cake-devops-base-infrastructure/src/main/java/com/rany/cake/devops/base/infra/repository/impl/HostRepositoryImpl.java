@@ -72,6 +72,12 @@ public class HostRepositoryImpl implements HostRepository {
     }
 
     @Override
+    public List<Host> findByIds(List<String> hostIds) {
+        List<HostPO> hostPOS = hostDao.selectByPrimaryKeyList(hostIds);
+        return hostDataConvertor.targetToSource(hostPOS);
+    }
+
+    @Override
     public List<Host> getHostsByGroupIds(List<String> groupIds) {
         List<GroupHostPO> groupHostPOS = groupHostDao.selectByGroupIds(groupIds);
         List<String> hostIds = groupHostPOS.stream().map(GroupHostPO::getHostId).collect(Collectors.toList());
