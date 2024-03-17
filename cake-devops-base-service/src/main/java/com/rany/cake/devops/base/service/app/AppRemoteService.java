@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
+import com.cake.framework.common.exception.BusinessException;
 import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
 import com.cake.framework.common.response.PageResult;
@@ -45,7 +46,6 @@ import com.rany.uic.api.query.account.AccountQuery;
 import com.rany.uic.common.dto.account.AccountDTO;
 import com.rany.uic.common.enums.CommonStatusEnum;
 import com.rany.uic.common.exception.BusinessErrorMessage;
-import com.rany.uic.common.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;

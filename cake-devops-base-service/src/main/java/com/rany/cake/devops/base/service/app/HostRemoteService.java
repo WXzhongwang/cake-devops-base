@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
+import com.cake.framework.common.exception.BusinessException;
 import com.cake.framework.common.response.Page;
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
@@ -19,7 +20,6 @@ import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
 import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.toolkit.lang.net.IPs;
-import com.rany.uic.common.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
@@ -79,8 +79,7 @@ public class HostRemoteService implements HostService {
         Host host = hostDomainService.getHost(new HostId(pingHostCommand.getHostId()));
         Integer connectTimeout = hostDomainService.getConnectionTimeout(new HostId(pingHostCommand.getHostId()));
         if (!IPs.ping(host.getServerAddr(), connectTimeout)) {
-            throw new BusinessException(DevOpsErrorMessage.OPS_CONNECTED_ERROR.getCode(),
-                    DevOpsErrorMessage.OPS_CONNECTED_ERROR.getMessage());
+            throw new BusinessException(DevOpsErrorMessage.OPS_CONNECTED_ERROR);
         }
         return PojoResult.succeed(Constants.PONG);
     }

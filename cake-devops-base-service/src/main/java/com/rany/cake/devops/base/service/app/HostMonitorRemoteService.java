@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
+import com.cake.framework.common.exception.BusinessException;
 import com.cake.framework.common.response.Page;
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
@@ -9,6 +10,7 @@ import com.rany.cake.devops.base.api.command.monitor.SyncMonitorAgentCommand;
 import com.rany.cake.devops.base.api.command.monitor.UpdateMonitorAgentCommand;
 import com.rany.cake.devops.base.api.dto.HostDTO;
 import com.rany.cake.devops.base.api.dto.HostMonitorDTO;
+import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.query.HostMonitorPageQuery;
 import com.rany.cake.devops.base.api.service.HostMonitorService;
 import com.rany.cake.devops.base.domain.aggregate.Host;
@@ -94,7 +96,12 @@ public class HostMonitorRemoteService implements HostMonitorService {
 
     @Override
     public PojoResult<Boolean> installAgent(InstallMonitorAgentCommand command) {
-
+        Host host = hostRepository.find(new HostId(command.getHostId()));
+        HostDTO hostDTO = hostDataAdapter.sourceToTarget(host);
+        HostMonitor monitor = hostMonitorRepository.findByHostId(command.getHostId());
+        if (!Strings.eq(monitor.getMonitorStatus(), MonitorStatus.STARTING.getStatus())) {
+            throw new BusinessException(DevOpsErrorMessage.AGENT_STATUS_RUNNING);
+        }
         return null;
     }
 
