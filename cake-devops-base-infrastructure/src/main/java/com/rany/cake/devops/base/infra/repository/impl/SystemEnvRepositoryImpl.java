@@ -6,12 +6,14 @@ import com.rany.cake.devops.base.infra.convertor.SystemEnvDataConvertor;
 import com.rany.cake.devops.base.infra.mapper.SystemEnvPOMapper;
 import com.rany.cake.devops.base.infra.po.SystemEnvPO;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class SystemEnvRepositoryImpl implements SystemEnvRepository {
-    private SystemEnvPOMapper systemEnvPOMapper;
-    private SystemEnvDataConvertor systemEnvDataConvertor;
+    private final SystemEnvPOMapper systemEnvPOMapper;
+    private final SystemEnvDataConvertor systemEnvDataConvertor;
 
     @Override
     public SystemEnv find(Long id) {
