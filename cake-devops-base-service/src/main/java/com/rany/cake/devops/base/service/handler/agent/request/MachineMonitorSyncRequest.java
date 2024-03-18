@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 机器监控同步请求
  *
- * @author Jiahang Li
+ * @author zhongshengwang
  * @version 1.0.0
  * @since 2022/9/1 14:49
  */

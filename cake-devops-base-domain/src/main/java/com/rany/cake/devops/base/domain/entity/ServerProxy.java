@@ -11,7 +11,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 public class ServerProxy extends BaseEntity<Long> {
     private String proxyHost;
-    private String proxyPort;
+    private Integer proxyPort;
     private String proxyUsername;
     private String proxyPassword;
     private Integer proxyType;

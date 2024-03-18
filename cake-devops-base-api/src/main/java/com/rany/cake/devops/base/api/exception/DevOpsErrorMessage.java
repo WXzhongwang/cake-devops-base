@@ -33,6 +33,8 @@ public enum DevOpsErrorMessage implements ResponseCode {
     AGENT_STATUS_RUNNING("46000", "Agent运行中"),
 
 
+    TIMEOUT_EXCEPTION_MESSAGE("", "连接超时"),
+    
     ;
 
     private final String code;

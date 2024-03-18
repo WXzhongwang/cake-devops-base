@@ -20,7 +20,7 @@ public class ModifyServerProxyCommand extends BaseCommand {
     private Long serverProxyId;
 
     private String proxyHost;
-    private String proxyPort;
+    private Integer proxyPort;
     private String proxyUsername;
     private String proxyPassword;
     private Integer proxyType;

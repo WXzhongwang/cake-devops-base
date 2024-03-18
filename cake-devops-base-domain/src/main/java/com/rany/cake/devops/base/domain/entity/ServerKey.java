@@ -44,6 +44,11 @@ public class ServerKey extends BaseEntity<Long> {
      */
     private String passphrase;
 
+    /**
+     * 增加密钥存放路径
+     */
+    private String keyPath;
+
     public void init() {
         this.gmtCreate = DateUtil.date();
         this.gmtModified = DateUtil.date();

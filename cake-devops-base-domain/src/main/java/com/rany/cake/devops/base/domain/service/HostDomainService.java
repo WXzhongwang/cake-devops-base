@@ -5,12 +5,10 @@ import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
 import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.entity.HostEnv;
+import com.rany.cake.devops.base.domain.entity.ServerKey;
 import com.rany.cake.devops.base.domain.entity.ServerProxy;
 import com.rany.cake.devops.base.domain.pk.HostId;
-import com.rany.cake.devops.base.domain.repository.HostEnvRepository;
-import com.rany.cake.devops.base.domain.repository.HostGroupRepository;
-import com.rany.cake.devops.base.domain.repository.HostRepository;
-import com.rany.cake.devops.base.domain.repository.ServerProxyRepository;
+import com.rany.cake.devops.base.domain.repository.*;
 import com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.util.MachineConst;
@@ -37,6 +35,7 @@ import java.util.Optional;
 public class HostDomainService {
     private final HostRepository hostRepository;
     private final ServerProxyRepository serverProxyRepository;
+    private final ServerKeyRepository serverKeyRepository;
     private final HostEnvRepository hostEnvRepository;
     private final HostGroupRepository hostGroupRepository;
 
@@ -100,5 +99,9 @@ public class HostDomainService {
 
     public ServerProxy getServerProxy(Long proxyId) {
         return serverProxyRepository.find(proxyId);
+    }
+
+    public ServerKey getServerKey(Long serverKeyId) {
+        return serverKeyRepository.find(serverKeyId);
     }
 }

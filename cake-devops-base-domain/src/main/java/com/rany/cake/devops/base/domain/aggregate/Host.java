@@ -53,11 +53,12 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
     /**
      * 代理ID
      */
-    private String proxyId;
+    private Long proxyId;
+    
     /**
      * 秘钥ID
      */
-    private String keyId;
+    private Long keyId;
 
     public Host(HostId hostId, String name, String hostName, String serverAddr, Integer port) {
         this.hostId = hostId;
