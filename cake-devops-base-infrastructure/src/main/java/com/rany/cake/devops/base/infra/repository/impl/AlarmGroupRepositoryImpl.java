@@ -17,6 +17,7 @@ import com.rany.cake.devops.base.infra.po.AlarmGroupNotifyPO;
 import com.rany.cake.devops.base.infra.po.AlarmGroupPO;
 import com.rany.cake.devops.base.infra.po.AlarmGroupUserPO;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +25,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@AllArgsConstructor
 @Slf4j
 @Service
 public class AlarmGroupRepositoryImpl implements AlarmGroupRepository {
-    private AlarmGroupPOMapper alarmGroupPOMapper;
-    private AlarmGroupDao alarmGroupDao;
-    private AlarmGroupNotifyPOMapper alarmGroupNotifyPOMapper;
-    private AlarmGroupUserPOMapper alarmGroupUserPOMapper;
-    private AlarmGroupDataConvertor alarmGroupDataConvertor;
+    private final AlarmGroupPOMapper alarmGroupPOMapper;
+    private final AlarmGroupDao alarmGroupDao;
+    private final AlarmGroupNotifyPOMapper alarmGroupNotifyPOMapper;
+    private final AlarmGroupUserPOMapper alarmGroupUserPOMapper;
+    private final AlarmGroupDataConvertor alarmGroupDataConvertor;
 
     @Override
     public AlarmGroup find(Long id) {
