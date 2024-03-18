@@ -12,15 +12,17 @@ import com.rany.cake.devops.base.infra.dao.WebhookConfigDao;
 import com.rany.cake.devops.base.infra.mapper.WebhookConfigPOMapper;
 import com.rany.cake.devops.base.infra.po.WebhookConfigPO;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class WebhookConfigRepositoryImpl implements WebhookConfigRepository {
-    private WebhookConfigPOMapper webhookConfigPOMapper;
-    private WebhookConfigDao webhookConfigDAO;
-    private WebhookConfigDataConvertor webhookConfigDataConvertor;
+    private final WebhookConfigPOMapper webhookConfigPOMapper;
+    private final WebhookConfigDao webhookConfigDAO;
+    private final WebhookConfigDataConvertor webhookConfigDataConvertor;
 
     @Override
     public WebhookConfig find(Long id) {

@@ -48,7 +48,7 @@
         select
         <include refid="Base_Column_List"/>
         from server_key
-        where server_key_id = #{keyId}
+        where id = #{keyId}
     </select>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.ServerKey">

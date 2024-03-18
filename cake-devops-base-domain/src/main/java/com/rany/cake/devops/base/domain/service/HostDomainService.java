@@ -5,10 +5,12 @@ import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
 import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.entity.HostEnv;
+import com.rany.cake.devops.base.domain.entity.ServerProxy;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.HostEnvRepository;
 import com.rany.cake.devops.base.domain.repository.HostGroupRepository;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
+import com.rany.cake.devops.base.domain.repository.ServerProxyRepository;
 import com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.util.MachineConst;
@@ -34,6 +36,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class HostDomainService {
     private final HostRepository hostRepository;
+    private final ServerProxyRepository serverProxyRepository;
     private final HostEnvRepository hostEnvRepository;
     private final HostGroupRepository hostGroupRepository;
 
@@ -82,5 +85,20 @@ public class HostDomainService {
         String value = Optional.ofNullable(hostEnv).map(HostEnv::getAttrValue).orElse(Strings.EMPTY);
         int timeout = Strings.isInteger(value) ? Integer.parseInt(value) : MachineConst.CONNECT_TIMEOUT;
         return Math.max(timeout, 0);
+    }
+
+    public Integer getConnectRetryTimes(HostId hostId) {
+        HostEnvQueryParam queryParam = new HostEnvQueryParam();
+        queryParam.setHostId(hostId.getHostId());
+        List<HostEnv> list = hostEnvRepository.list(queryParam);
+        HostEnv hostEnv = list.stream().filter(p -> Strings.eq(MachineEnvAttr.CONNECT_RETRY_TIMES.getKey(), p.getAttrKey()))
+                .findFirst().orElse(null);
+        String value = Optional.ofNullable(hostEnv).map(HostEnv::getAttrValue).orElse(Strings.EMPTY);
+        int times = Strings.isInteger(value) ? Integer.parseInt(value) : MachineConst.CONNECT_RETRY_TIMES;
+        return Math.max(times, 0);
+    }
+
+    public ServerProxy getServerProxy(Long proxyId) {
+        return serverProxyRepository.find(proxyId);
     }
 }
