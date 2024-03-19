@@ -40,5 +40,6 @@ public class ModifyServerKeyCommand extends BaseCommand {
      * 密码短语
      */
     private String passphrase;
+    private String keyPath;
 
 }

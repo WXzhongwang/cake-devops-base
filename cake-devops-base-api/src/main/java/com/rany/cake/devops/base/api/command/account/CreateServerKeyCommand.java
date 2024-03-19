@@ -6,10 +6,10 @@ import lombok.EqualsAndHashCode;
 
 
 /**
- * 服务账号
+ * 密钥
  *
  * @author zhongshengwang
- * @description 服务账号
+ * @description 密钥
  * @date 2022/12/30 22:00
  * @email 18668485565163.com
  */
@@ -21,7 +21,7 @@ public class CreateServerKeyCommand extends BaseCommand {
      * 显示名称
      */
     private String displayName;
-    
+
     /**
      * 0普通账户/1管理员
      */
@@ -49,4 +49,8 @@ public class CreateServerKeyCommand extends BaseCommand {
      */
     private String passphrase;
 
+    /**
+     * 密钥文件存放路径
+     */
+    private String keyPath;
 }

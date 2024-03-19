@@ -44,11 +44,22 @@ public class CreateHostCommand extends BaseCommand {
     private String username;
 
     /**
-     * pkey
+     * pwd
      */
-    private String pkey;
+    private String pwd;
 
 
+    /**
+     * 主机组
+     */
     private List<String> hostGroupIds;
 
+    /**
+     * 密钥ID
+     */
+    private Long keyId;
+    /**
+     * 代理ID
+     */
+    private Long proxyId;
 }

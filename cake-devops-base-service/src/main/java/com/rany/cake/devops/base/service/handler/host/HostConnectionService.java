@@ -11,10 +11,8 @@ import com.rany.cake.devops.base.util.MachineConst;
 import com.rany.cake.devops.base.util.MessageConst;
 import com.rany.cake.devops.base.util.enums.MachineAuthType;
 import com.rany.cake.devops.base.util.enums.ProxyType;
-import com.rany.cake.devops.base.util.system.SystemEnvAttr;
 import com.rany.cake.toolkit.lang.exception.AuthenticationException;
 import com.rany.cake.toolkit.lang.exception.ConnectionRuntimeException;
-import com.rany.cake.toolkit.lang.io.Files1;
 import com.rany.cake.toolkit.lang.io.Streams;
 import com.rany.cake.toolkit.lang.utils.Exceptions;
 import com.rany.cake.toolkit.lang.utils.Strings;
@@ -34,6 +32,8 @@ public class HostConnectionService {
 
     @Resource
     private HostDomainService hostDomainService;
+    @Resource
+    private ServerKeyComponent serverKeyComponent;
 
     public void testConnect(String hostId) {
         HostId hostPk = new HostId(hostId);
@@ -131,8 +131,7 @@ public class HostConnectionService {
         try {
             // 加载秘钥
             if (Objects.equals(MachineAuthType.SECRET_KEY.getType(), machine.getAuthType())) {
-                String keyPath = Files1.getPath(SystemEnvAttr.KEY_PATH.getValue(), key.getKeyPath());
-                // String keyPath = MachineKeyService.getKeyPath(key.getSecretKeyPath());
+                String keyPath = serverKeyComponent.getKeyPath(key.getKeyPath());
                 String password = key.getPassphrase();
                 if (Strings.isEmpty(password)) {
                     sessionHolder.addIdentity(keyPath);

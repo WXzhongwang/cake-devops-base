@@ -40,4 +40,13 @@ public class ModifyHostCommand extends BaseCommand {
      * pkey
      */
     private String pkey;
+
+    /**
+     * 密钥ID
+     */
+    private Long keyId;
+    /**
+     * 代理ID
+     */
+    private Long proxyId;
 }

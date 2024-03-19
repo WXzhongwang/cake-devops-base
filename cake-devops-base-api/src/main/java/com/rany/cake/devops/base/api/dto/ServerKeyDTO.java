@@ -29,4 +29,9 @@ public class ServerKeyDTO extends DTO {
      * 是否活跃可用
      */
     private Boolean active;
+
+    /**
+     * 密钥文件存放地址
+     */
+    private String keyPath;
 }

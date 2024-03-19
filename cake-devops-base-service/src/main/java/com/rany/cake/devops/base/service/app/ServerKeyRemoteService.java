@@ -51,6 +51,7 @@ public class ServerKeyRemoteService implements ServerKeyService {
         serverKey.setCredential(command.getCredential());
         serverKey.setPassphrase(command.getPassphrase());
         serverKey.setPublicKey(command.getPublicKey());
+        serverKey.setKeyPath(command.getKeyPath());
         serverKey.init();
         serverKeyDomainService.save(serverKey);
         return PojoResult.succeed(serverKey.getId());
