@@ -82,7 +82,7 @@ public class HostConnectionService {
                 .map(hostDomainService::getServerProxy)
                 .orElse(null);
         // 查询超时时间
-        Integer timeout = Optional.ofNullable(host.getHostId())
+        int timeout = Optional.ofNullable(host.getHostId())
                 .map(hostDomainService::getConnectionTimeout)
                 .orElse(MachineConst.CONNECT_TIMEOUT);
 

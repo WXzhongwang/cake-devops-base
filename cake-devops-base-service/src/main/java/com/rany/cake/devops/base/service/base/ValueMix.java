@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.base;
 
+import com.rany.cake.devops.base.domain.base.PropertiesConst;
 import com.rany.cake.toolkit.lang.codec.Base62s;
 import com.rany.cake.toolkit.lang.crypto.Signatures;
 import com.rany.cake.toolkit.lang.crypto.enums.PaddingMode;

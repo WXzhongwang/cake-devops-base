@@ -22,10 +22,13 @@ import com.rany.cake.devops.base.domain.repository.param.HostMonitorPageQueryPar
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
 import com.rany.cake.devops.base.service.adapter.HostMonitorDataAdapter;
-import com.rany.cake.devops.base.service.base.MonitorConst;
-import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.service.handler.agent.MonitorAgents;
+import com.rany.cake.devops.base.util.MessageConst;
 import com.rany.cake.devops.base.util.enums.MonitorStatus;
+import com.rany.cake.devops.base.util.system.SystemEnvAttr;
+import com.rany.cake.toolkit.lang.io.Files1;
 import com.rany.cake.toolkit.lang.utils.Strings;
+import com.rany.cake.toolkit.lang.utils.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
@@ -54,6 +57,7 @@ public class HostMonitorRemoteService implements HostMonitorService {
     private final HostRepository hostRepository;
     private final HostMonitorDataAdapter hostMonitorDataAdapter;
     private final HostDataAdapter hostDataAdapter;
+    private final MonitorAgents monitorAgents;
 
     @Override
     public PageResult<HostMonitorDTO> pageHostMonitor(HostMonitorPageQuery hostMonitorPageQuery) {
@@ -76,19 +80,7 @@ public class HostMonitorRemoteService implements HostMonitorService {
     public PojoResult<HostMonitorDTO> findByHostId(String hostId) {
         Host host = hostRepository.find(new HostId(hostId));
         HostDTO hostDTO = hostDataAdapter.sourceToTarget(host);
-
         HostMonitor monitor = hostMonitorRepository.findByHostId(hostId);
-        if (monitor == null) {
-            // 不存在则插入
-            monitor = new HostMonitor();
-            monitor.setHostId(hostId);
-            monitor.setMonitorStatus(MonitorStatus.NOT_START.getStatus());
-            monitor.setMonitorUrl(Strings.format(MonitorConst.DEFAULT_URL_FORMAT, host.getServerAddr()));
-            monitor.setAccessToken(MonitorConst.DEFAULT_ACCESS_TOKEN);
-            monitor.setIsDeleted(DeleteStatusEnum.NO.getValue());
-            monitor.setAccessToken(MonitorConst.DEFAULT_ACCESS_TOKEN);
-            hostMonitorRepository.save(monitor);
-        }
         HostMonitorDTO hostMonitorDTO = hostMonitorDataAdapter.sourceToTarget(monitor);
         hostMonitorDTO.setHost(hostDTO);
         return PojoResult.succeed(hostMonitorDTO);
@@ -96,23 +88,95 @@ public class HostMonitorRemoteService implements HostMonitorService {
 
     @Override
     public PojoResult<Boolean> installAgent(InstallMonitorAgentCommand command) {
-        Host host = hostRepository.find(new HostId(command.getHostId()));
-        HostDTO hostDTO = hostDataAdapter.sourceToTarget(host);
         HostMonitor monitor = hostMonitorRepository.findByHostId(command.getHostId());
         if (!Strings.eq(monitor.getMonitorStatus(), MonitorStatus.STARTING.getStatus())) {
             throw new BusinessException(DevOpsErrorMessage.AGENT_STATUS_RUNNING);
         }
-        return null;
+        boolean reinstall = command.getUpgrade();
+        if (!command.getUpgrade()) {
+            // 同步并且获取插件版本
+            String version = monitorAgents.syncMonitorAgent(command.getHostId(), monitor.getMonitorUrl(), monitor.getAccessToken());
+            if (version == null) {
+                // 未获取到版本则重新安装
+                reinstall = true;
+            } else {
+                // 状态改为运行中
+                monitor.setAgentVersion(version);
+                monitor.setMonitorStatus(MonitorStatus.RUNNING.getStatus());
+            }
+        }
+        if (reinstall) {
+            // 重新安装
+            String path = SystemEnvAttr.MACHINE_MONITOR_AGENT_PATH.getValue();
+            Valid.isTrue(Files1.isFile(path), Strings.format(MessageConst.AGENT_FILE_NON_EXIST, path));
+            // 状态改为启动中
+            monitor.setMonitorStatus(MonitorStatus.STARTING.getStatus());
+            // 创建安装任务
+            //Threads.start(new MonitorAgentInstallTask(machineId, Currents.getUser()), SchedulerPools.AGENT_INSTALL_SCHEDULER);
+        }
+        hostMonitorRepository.update(monitor);
+        return PojoResult.succeed(Boolean.TRUE);
     }
 
     @Override
-    public PojoResult<Boolean> syncAgent(SyncMonitorAgentCommand command) {
-
-        return null;
+    public PojoResult<String> syncAgent(SyncMonitorAgentCommand command) {
+        return PojoResult.succeed(monitorAgents.syncMonitorAgent(command.getHostId(),
+                command.getUrl(), command.getAccessToken()));
     }
 
     @Override
     public PojoResult<Boolean> updateMonitorConfig(UpdateMonitorAgentCommand command) {
-        return null;
+        HostMonitor monitor = hostMonitorRepository.findByHostId(command.getHostId());
+
+        // 同步状态
+        if (monitor.getMonitorStatus().equals(MonitorStatus.NOT_START.getStatus()) ||
+                monitor.getMonitorStatus().equals(MonitorStatus.RUNNING.getStatus())) {
+            // 同步并且获取插件版本
+            String monitorVersion = monitorAgents.syncMonitorAgent(command.getHostId(), command.getUrl(),
+                    command.getAccessToken());
+            if (monitorVersion == null) {
+                // 未启动
+                monitor.setMonitorStatus(MonitorStatus.NOT_START.getStatus());
+            } else {
+                monitor.setAgentVersion(monitorVersion);
+                monitor.setMonitorStatus(MonitorStatus.RUNNING.getStatus());
+            }
+        }
+        hostMonitorRepository.update(monitor);
+        return PojoResult.succeed(Boolean.TRUE);
     }
+
+    @Override
+    public PojoResult<String> getMonitorVersion(String url, String accessToken) {
+        return PojoResult.succeed(monitorAgents.getMonitorVersion(url, accessToken));
+    }
+
+    @Override
+    public PojoResult<HostMonitorDTO> checkMonitorStatus(String hostId) {
+        // 获取监控配置
+        HostMonitor monitor = hostMonitorRepository.findByHostId(hostId);
+        HostMonitorDTO hostMonitorDTO = hostMonitorDataAdapter.sourceToTarget(monitor);
+        Host host = hostRepository.find(new HostId(hostId));
+        HostDTO hostDTO = hostDataAdapter.sourceToTarget(host);
+        hostMonitorDTO.setHost(hostDTO);
+
+        // 启动中直接返回
+        if (monitor.getMonitorStatus().equals(MonitorStatus.STARTING.getStatus())) {
+            return PojoResult.succeed(hostMonitorDTO);
+        }
+        // 同步并且获取插件版本
+        String monitorVersion = monitorAgents.syncMonitorAgent(hostId,
+                monitor.getMonitorUrl(), monitor.getAccessToken());
+        if (monitorVersion == null) {
+            // 未启动
+            monitor.setMonitorStatus(MonitorStatus.NOT_START.getStatus());
+        } else {
+            // 启动中
+            monitor.setAgentVersion(monitorVersion);
+            monitor.setMonitorStatus(MonitorStatus.RUNNING.getStatus());
+        }
+        hostMonitorRepository.update(monitor);
+        return PojoResult.succeed(hostMonitorDTO);
+    }
+
 }

@@ -48,7 +48,6 @@ public class MachineAlarmExecutor {
     private AppMemberAdapter appMemberAdapter;
     @Resource
     private WebhookConfigRepository webhookConfigRepository;
-
     @Resource
     private AlarmWebhookPusher alarmWebhookPusher;
     @Resource

@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.service.base;
+package com.rany.cake.devops.base.domain.base;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

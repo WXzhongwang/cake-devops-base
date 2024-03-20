@@ -44,12 +44,12 @@ public interface HostMonitorService {
     PojoResult<Boolean> installAgent(InstallMonitorAgentCommand command);
 
     /**
-     * 同步监控
+     * 同步机器插件信息
      *
      * @param command command
      * @return 同步
      */
-    PojoResult<Boolean> syncAgent(SyncMonitorAgentCommand command);
+    PojoResult<String> syncAgent(SyncMonitorAgentCommand command);
 
     /**
      * 更新监控配置
@@ -58,5 +58,22 @@ public interface HostMonitorService {
      * @return 更新
      */
     PojoResult<Boolean> updateMonitorConfig(UpdateMonitorAgentCommand command);
+
+    /**
+     * 获取版本
+     *
+     * @param url         url
+     * @param accessToken accessToken
+     * @return version
+     */
+    PojoResult<String> getMonitorVersion(String url, String accessToken);
+
+    /**
+     * 检测监控插件状态
+     *
+     * @param hostId 主机ID
+     * @return 监控信息
+     */
+    PojoResult<HostMonitorDTO> checkMonitorStatus(String hostId);
 
 }

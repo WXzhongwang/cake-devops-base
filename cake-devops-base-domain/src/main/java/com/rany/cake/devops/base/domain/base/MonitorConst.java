@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.service.base;
+package com.rany.cake.devops.base.domain.base;
 
 import com.rany.cake.devops.base.util.Const;
 import com.rany.cake.devops.base.util.ResourceLoader;

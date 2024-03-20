@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.service.handler.http;
 
-import com.rany.cake.devops.base.service.base.MonitorConst;
+import com.rany.cake.devops.base.domain.base.MonitorConst;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;

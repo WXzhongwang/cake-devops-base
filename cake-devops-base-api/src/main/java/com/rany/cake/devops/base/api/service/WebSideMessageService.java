@@ -35,7 +35,7 @@ public interface WebSideMessageService {
     /**
      * 已读站内信
      *
-     * @param messageIdList idList
+     * @param command command
      * @return effect
      */
     PojoResult<Integer> readMessage(ReadWebSideMessageCommand command);

@@ -6,9 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class UpdateMonitorAgentCommand extends BaseCommand {
-
-    private String hostId;
+public class TestConnectMonitorAgentCommand extends BaseCommand {
     private String accessToken;
     private String url;
 }
