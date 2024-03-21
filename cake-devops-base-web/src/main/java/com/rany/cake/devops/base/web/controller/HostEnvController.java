@@ -28,9 +28,9 @@ public class HostEnvController {
     }
 
     @GetMapping("/get")
-    public PojoResult<HostEnvDTO> getHostEnv(@RequestParam("id") String hostEnvId) {
+    public PojoResult<HostEnvDTO> getHostEnv(@RequestParam("id") Long envId) {
         HostEnvBasicQuery hostBasicQuery = new HostEnvBasicQuery();
-        hostBasicQuery.setEnvId(hostEnvId);
+        hostBasicQuery.setEnvId(envId);
         return hostEnvService.getHostEnv(hostBasicQuery);
     }
 
