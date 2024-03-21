@@ -41,7 +41,7 @@ public class HostEnvRemoteService implements HostEnvService {
     @Override
     public PojoResult<String> createHostEnv(CreateHostEnvCommand command) {
         HostEnv env = new HostEnv();
-        env.setMachineId(command.getHostId());
+        env.setHostId(command.getHostId());
         env.setAttrKey(command.getAttrKey());
         env.setAttrValue(command.getAttrValue());
         hostEnvRepository.save(env);
@@ -50,11 +50,11 @@ public class HostEnvRemoteService implements HostEnvService {
 
     @Override
     public PojoResult<Boolean> modifyHostEnv(ModifyHostEnvCommand command) {
-        HostEnv env = hostEnvRepository.find(Long.valueOf(command.getEnvId()));
+        HostEnv env = hostEnvRepository.find(command.getId());
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.MACHINE_ENV_NOT_FOUND);
         }
-        env.setMachineId(command.getEnvId());
+        env.setHostId(command.getHostId());
         env.setAttrKey(command.getAttrKey());
         env.setAttrValue(command.getAttrValue());
         hostEnvRepository.update(env);
@@ -63,7 +63,7 @@ public class HostEnvRemoteService implements HostEnvService {
 
     @Override
     public PojoResult<Boolean> deleteHostEnv(DeleteHostEnvCommand command) {
-        HostEnv env = hostEnvRepository.find(Long.valueOf(command.getEnvId()));
+        HostEnv env = hostEnvRepository.find(command.getEnvId());
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.MACHINE_ENV_NOT_FOUND);
         }
@@ -73,7 +73,7 @@ public class HostEnvRemoteService implements HostEnvService {
 
     @Override
     public PojoResult<HostEnvDTO> getHostEnv(HostEnvBasicQuery query) {
-        HostEnv env = hostEnvRepository.find(Long.valueOf(query.getEnvId()));
+        HostEnv env = hostEnvRepository.find(query.getEnvId());
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.MACHINE_ENV_NOT_FOUND);
         }

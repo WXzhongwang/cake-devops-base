@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.SystemEnvDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.SystemEnvPO">
+
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="attr_key" jdbcType="VARCHAR" property="attrKey"/>
+        <result column="attr_value" jdbcType="VARCHAR" property="attrValue"/>
+        <result column="system_env" jdbcType="INTEGER" property="systemEnv"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+        id
+        , attr_key, attr_value, system_env, description, is_deleted, gmt_create, gmt_modified
+    </sql>
+
+    <select id="querySystemEnv"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.SystemEnvPageQueryParam"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from system_env
+        where is_deleted = '0'
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.infra.po.SystemEnvPO">
+
+        insert into system_env (id, attr_key, attr_value,
+                                system_env, description, is_deleted,
+                                gmt_create, gmt_modified)
+        values (#{id,jdbcType=BIGINT}, #{attrKey,jdbcType=VARCHAR}, #{attrValue,jdbcType=VARCHAR},
+                #{systemEnv,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{isDeleted,jdbcType=VARCHAR},
+                #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.SystemEnv">
+
+        update system_env
+        <set>
+            <if test="attrKey != null">
+                attr_key = #{attrKey,jdbcType=VARCHAR},
+            </if>
+            <if test="attrValue != null">
+                attr_value = #{attrValue,jdbcType=VARCHAR},
+            </if>
+            <if test="systemEnv != null">
+                system_env = #{systemEnv,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

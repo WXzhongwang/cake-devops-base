@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class HostEnv extends BaseEntity<Long> {
 
-    private String machineId;
+    private String hostId;
     private String attrKey;
     private String attrValue;
     private String description;

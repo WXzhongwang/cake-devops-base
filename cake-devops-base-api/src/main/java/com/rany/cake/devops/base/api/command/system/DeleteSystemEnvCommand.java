@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.api.command.host.env;
+package com.rany.cake.devops.base.api.command.system;
 
 import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import lombok.Data;
@@ -14,9 +14,9 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class DeleteHostEnvCommand extends BaseCommand {
+public class DeleteSystemEnvCommand extends BaseCommand {
     /**
      * 环境变量ID
      */
-    private Long envId;
+    private Long id;
 }

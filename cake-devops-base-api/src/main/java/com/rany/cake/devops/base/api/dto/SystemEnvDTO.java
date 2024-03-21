@@ -5,13 +5,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 主机环境变量
+ * 系统环境变量
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class HostEnvDTO extends DTO {
+public class SystemEnvDTO extends DTO {
     private Long id;
-    private String hostId;
     private String attrKey;
     private String attrValue;
     private String description;

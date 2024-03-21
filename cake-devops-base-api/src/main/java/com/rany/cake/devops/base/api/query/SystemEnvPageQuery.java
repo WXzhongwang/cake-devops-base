@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class HostEnvBasicQuery extends BaseQuery {
-
-    private Long envId;
+public class SystemEnvPageQuery extends BaseQuery {
+    private String name;
 }

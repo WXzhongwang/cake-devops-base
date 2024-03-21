@@ -28,13 +28,13 @@ public enum DevOpsErrorMessage implements ResponseCode {
     PROXY_NOT_FOUND("39000", "代理未找到"),
     HOOK_NOT_FOUND("40000", "webhook未找到"),
     MACHINE_ENV_NOT_FOUND("40000", "主机环境未找到"),
+
     SCRIPT_TEMPLATE_NOT_FOUND("41000", "模版未找到"),
     ALARM_GROUP_NOT_FOUND("42000", "告警组未找到"),
     AGENT_STATUS_RUNNING("46000", "Agent运行中"),
+    SYSTEM_ENV_NOT_FOUND("4800", "系统环境未找到"),
+    TIMEOUT_EXCEPTION_MESSAGE("5100", "连接超时"),
 
-
-    TIMEOUT_EXCEPTION_MESSAGE("", "连接超时"),
-    
     ;
 
     private final String code;
