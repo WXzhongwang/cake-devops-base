@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.rany.cake.devops.base.api.command.release.CloseReleaseCommand;
@@ -64,7 +62,7 @@ public class ReleaseRemoteService implements ReleaseService {
     private final ApprovalDataAdapter approvalDataAdapter;
 
     @Override
-    public PojoResult<Boolean> createRelease(CreateReleaseCommand createReleaseCommand) {
+    public Boolean createRelease(CreateReleaseCommand createReleaseCommand) {
         App app = appRepository.find(new AppId(createReleaseCommand.getAppId()));
         if (app == null) {
             throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
@@ -92,11 +90,11 @@ public class ReleaseRemoteService implements ReleaseService {
         release.setApprovalId(approval.getApprovalId());
         approvalDomainService.save(approval);
         releaseDomainService.save(release);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PageResult<ReleaseDTO> pageRelease(ReleasePageQuery releasePageQuery) {
+    public Page<ReleaseDTO> pageRelease(ReleasePageQuery releasePageQuery) {
         ReleasePageQueryParam releasePageQueryParam = releaseDataAdapter.convertParam(releasePageQuery);
         Page<Release> page = releaseDomainService.pageRelease(releasePageQueryParam);
         List<Release> releases = new ArrayList<>(page.getItems());
@@ -111,11 +109,11 @@ public class ReleaseRemoteService implements ReleaseService {
                 releaseDTO.setApprovalDTO(approvalDTO);
             }
         }
-        return PageResult.succeed(PageUtils.build(page, releaseDTOList));
+        return PageUtils.build(page, releaseDTOList);
     }
 
     @Override
-    public PojoResult<Boolean> deploy(DeployCommand deployCommand) {
+    public Boolean deploy(DeployCommand deployCommand) {
         Release release = releaseRepository.find(new ReleaseId(String.valueOf(deployCommand.getReleaseId())));
         if (release == null) {
             throw new DevOpsException(DevOpsErrorMessage.RELEASE_NOT_FOUND);
@@ -141,17 +139,17 @@ public class ReleaseRemoteService implements ReleaseService {
         } finally {
             redissonLockClient.unlock(lockKey);
         }
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> close(CloseReleaseCommand command) {
+    public Boolean close(CloseReleaseCommand command) {
         Release release = releaseRepository.find(new ReleaseId(String.valueOf(command.getReleaseId())));
         if (release == null) {
             throw new DevOpsException(DevOpsErrorMessage.RELEASE_NOT_FOUND);
         }
         release.closed();
         releaseDomainService.update(release);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 }

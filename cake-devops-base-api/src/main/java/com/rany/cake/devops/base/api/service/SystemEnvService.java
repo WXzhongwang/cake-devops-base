@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.system.CreateSystemEnvCommand;
 import com.rany.cake.devops.base.api.command.system.DeleteSystemEnvCommand;
 import com.rany.cake.devops.base.api.command.system.ModifySystemEnvCommand;
@@ -11,6 +10,7 @@ import com.rany.cake.devops.base.api.query.SystemEnvPageQuery;
 
 import java.util.Map;
 
+
 public interface SystemEnvService {
 
     /**
@@ -19,7 +19,7 @@ public interface SystemEnvService {
      * @param command 创建
      * @return id
      */
-    PojoResult<String> createSystemEnv(CreateSystemEnvCommand command);
+    String createSystemEnv(CreateSystemEnvCommand command);
 
     /**
      * 保存环境变量
@@ -27,7 +27,7 @@ public interface SystemEnvService {
      * @param envMap 变量map
      * @return VOID
      */
-    PojoResult<Void> saveEnv(Map<String, String> envMap);
+    void saveEnv(Map<String, String> envMap);
 
     /**
      * 编辑
@@ -35,7 +35,7 @@ public interface SystemEnvService {
      * @param command 命令
      * @return 成功
      */
-    PojoResult<Boolean> modifySystemEnv(ModifySystemEnvCommand command);
+    Boolean modifySystemEnv(ModifySystemEnvCommand command);
 
     /**
      * 删除
@@ -43,7 +43,7 @@ public interface SystemEnvService {
      * @param command 命令
      * @return 成功
      */
-    PojoResult<Boolean> deleteSystemEnv(DeleteSystemEnvCommand command);
+    Boolean deleteSystemEnv(DeleteSystemEnvCommand command);
 
     /**
      * 查看单个
@@ -51,9 +51,15 @@ public interface SystemEnvService {
      * @param query 查询
      * @return 详情
      */
-    PojoResult<SystemEnvDTO> getSystemEnv(SystemEnvBasicQuery query);
+    SystemEnvDTO getSystemEnv(SystemEnvBasicQuery query);
 
-    PojoResult<SystemEnvDTO> getSystemEnv(String envName);
+    /**
+     * 按名称获取系统变量名称
+     *
+     * @param envName 系统变量名称
+     * @return 系统变量
+     */
+    SystemEnvDTO getSystemEnv(String envName);
 
     /**
      * 分页
@@ -61,5 +67,5 @@ public interface SystemEnvService {
      * @param query 查询
      * @return 分页结果
      */
-    PageResult<SystemEnvDTO> pageSystemEnv(SystemEnvPageQuery query);
+    Page<SystemEnvDTO> pageSystemEnv(SystemEnvPageQuery query);
 }

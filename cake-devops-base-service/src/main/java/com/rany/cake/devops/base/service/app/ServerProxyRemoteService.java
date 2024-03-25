@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.proxy.CreateServerProxyCommand;
 import com.rany.cake.devops.base.api.command.proxy.DeleteServerProxyCommand;
 import com.rany.cake.devops.base.api.command.proxy.ModifyServerProxyCommand;
@@ -45,7 +43,7 @@ public class ServerProxyRemoteService implements ServerProxyService {
     private ServerProxyDataAdapter serverProxyDataAdapter;
 
     @Override
-    public PojoResult<String> createServerProxy(CreateServerProxyCommand command) {
+    public String createServerProxy(CreateServerProxyCommand command) {
         ServerProxy serverProxy = new ServerProxy();
         serverProxy.setProxyHost(command.getProxyHost());
         serverProxy.setProxyPort(command.getProxyPort());
@@ -53,11 +51,11 @@ public class ServerProxyRemoteService implements ServerProxyService {
         serverProxy.setProxyUsername(command.getProxyUsername());
         serverProxy.setProxyPassword(command.getProxyPassword());
         serverProxyRepository.save(serverProxy);
-        return PojoResult.succeed(serverProxy.getId().toString());
+        return serverProxy.getId().toString();
     }
 
     @Override
-    public PojoResult<Boolean> modifyServerProxy(ModifyServerProxyCommand command) {
+    public Boolean modifyServerProxy(ModifyServerProxyCommand command) {
         ServerProxy serverProxy = serverProxyRepository.find(command.getServerProxyId());
         if (serverProxy == null) {
             throw new DevOpsException(DevOpsErrorMessage.PROXY_NOT_FOUND);
@@ -68,37 +66,36 @@ public class ServerProxyRemoteService implements ServerProxyService {
         serverProxy.setProxyUsername(command.getProxyUsername());
         serverProxy.setProxyPassword(command.getProxyPassword());
         serverProxyRepository.update(serverProxy);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> deleteServerProxy(DeleteServerProxyCommand command) {
+    public Boolean deleteServerProxy(DeleteServerProxyCommand command) {
         ServerProxy serverProxy = serverProxyRepository.find(command.getServerProxyId());
         if (serverProxy == null) {
             throw new DevOpsException(DevOpsErrorMessage.PROXY_NOT_FOUND);
         }
         serverProxy.setIsDeleted(DeleteStatusEnum.YES.getValue());
         serverProxyRepository.update(serverProxy);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<ServerProxyDTO> getServerProxy(ServerProxyBasicQuery basicQuery) {
+    public ServerProxyDTO getServerProxy(ServerProxyBasicQuery basicQuery) {
         ServerProxy serverProxy = serverProxyRepository.find(basicQuery.getServerProxyId());
         if (serverProxy == null) {
             throw new DevOpsException(DevOpsErrorMessage.PROXY_NOT_FOUND);
         }
         ServerProxyDTO serverProxyDTO = serverProxyDataAdapter.sourceToTarget(serverProxy);
-        return PojoResult.succeed(serverProxyDTO);
+        return serverProxyDTO;
     }
 
     @Override
-    public PageResult<ServerProxyDTO> pageServerProxy(ServerProxyPageQuery pageQuery) {
+    public Page<ServerProxyDTO> pageServerProxy(ServerProxyPageQuery pageQuery) {
         ServerProxyQueryParam serverProxyQueryParam = serverProxyDataAdapter.convertParam(pageQuery);
         Page<ServerProxy> page = serverProxyRepository.pageServerProxy(serverProxyQueryParam);
         Collection<ServerProxy> items = page.getItems();
         List<ServerProxyDTO> serverProxyDTOList = serverProxyDataAdapter.sourceToTarget(new ArrayList<>(items));
-        Page<ServerProxyDTO> build = PageUtils.build(page, serverProxyDTOList);
-        return PageResult.succeed(build);
+        return PageUtils.build(page, serverProxyDTOList);
     }
 }

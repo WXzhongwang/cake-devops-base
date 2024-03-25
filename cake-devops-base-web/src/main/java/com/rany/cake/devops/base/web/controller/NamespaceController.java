@@ -24,11 +24,11 @@ public class NamespaceController {
 
     @PostMapping("/create")
     public PojoResult<String> createApp(CreateNamespaceCommand createNamespaceCommand) {
-        return namespaceService.createNamespace(createNamespaceCommand);
+        return PojoResult.succeed(namespaceService.createNamespace(createNamespaceCommand));
     }
 
     @PostMapping("/listAll")
     public ListResult<NamespaceDTO> listAll(NamespaceQuery namespaceQuery) {
-        return namespaceService.listNamespace(namespaceQuery);
+        return ListResult.succeed(namespaceService.listNamespace(namespaceQuery));
     }
 }

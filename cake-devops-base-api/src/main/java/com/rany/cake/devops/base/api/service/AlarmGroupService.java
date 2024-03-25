@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.alarm.CreateAlarmGroupCommand;
 import com.rany.cake.devops.base.api.command.alarm.DeleteAlarmGroupCommand;
 import com.rany.cake.devops.base.api.command.alarm.ModifyAlarmGroupCommand;
@@ -25,7 +24,7 @@ public interface AlarmGroupService {
      * @param command 创建
      * @return webhookId
      */
-    PojoResult<String> createAlarmGroup(CreateAlarmGroupCommand command);
+    String createAlarmGroup(CreateAlarmGroupCommand command);
 
     /**
      * 更新
@@ -33,7 +32,7 @@ public interface AlarmGroupService {
      * @param command 更新
      * @return success
      */
-    PojoResult<Boolean> modifyAlarmGroup(ModifyAlarmGroupCommand command);
+    Boolean modifyAlarmGroup(ModifyAlarmGroupCommand command);
 
     /**
      * 删除
@@ -41,7 +40,7 @@ public interface AlarmGroupService {
      * @param command 删除
      * @return success
      */
-    PojoResult<Boolean> deleteAlarmGroup(DeleteAlarmGroupCommand command);
+    Boolean deleteAlarmGroup(DeleteAlarmGroupCommand command);
 
     /**
      * 获取详情
@@ -49,7 +48,7 @@ public interface AlarmGroupService {
      * @param basicQuery 详情
      * @return 详情
      */
-    PojoResult<AlarmGroupDTO> getAlarmGroup(AlarmGroupBasicQuery basicQuery);
+    AlarmGroupDTO getAlarmGroup(AlarmGroupBasicQuery basicQuery);
 
 
     /**
@@ -58,5 +57,5 @@ public interface AlarmGroupService {
      * @param pageQuery 查询
      * @return 列表
      */
-    PageResult<AlarmGroupDTO> pageAlarmGroup(AlarmGroupPageQuery pageQuery);
+    Page<AlarmGroupDTO> pageAlarmGroup(AlarmGroupPageQuery pageQuery);
 }

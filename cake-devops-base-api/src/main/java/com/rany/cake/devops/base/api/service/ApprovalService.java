@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.approval.*;
 import com.rany.cake.devops.base.api.dto.ApprovalDTO;
 import com.rany.cake.devops.base.api.query.ApprovalBasicQuery;
@@ -22,7 +21,7 @@ public interface ApprovalService {
      * @param createApprovalCommand 创建审批单
      * @return 成功
      */
-    PojoResult<String> createApproval(CreateApprovalCommand createApprovalCommand);
+    String createApproval(CreateApprovalCommand createApprovalCommand);
 
     /**
      * 获取审批单信息
@@ -30,7 +29,7 @@ public interface ApprovalService {
      * @param approvalBasicQuery 获取审批单信息
      * @return 审批信息
      */
-    PojoResult<ApprovalDTO> getApproval(ApprovalBasicQuery approvalBasicQuery);
+    ApprovalDTO getApproval(ApprovalBasicQuery approvalBasicQuery);
 
 
     /**
@@ -39,7 +38,7 @@ public interface ApprovalService {
      * @param deleteApprovalCommand 删除审批单
      * @return 成功
      */
-    PojoResult<Boolean> deleteApproval(DeleteApprovalCommand deleteApprovalCommand);
+    Boolean deleteApproval(DeleteApprovalCommand deleteApprovalCommand);
 
     /**
      * 更新审批单基本信息
@@ -47,7 +46,7 @@ public interface ApprovalService {
      * @param modifyApprovalCommand 更新审批单基本信息
      * @return 成功
      */
-    PojoResult<Boolean> modifyApproval(ModifyApprovalCommand modifyApprovalCommand);
+    Boolean modifyApproval(ModifyApprovalCommand modifyApprovalCommand);
 
 
     /**
@@ -56,7 +55,7 @@ public interface ApprovalService {
      * @param approveApprovalCommand 通过审批单
      * @return 成功
      */
-    PojoResult<Boolean> approveApproval(ApproveApprovalCommand approveApprovalCommand);
+    Boolean approveApproval(ApproveApprovalCommand approveApprovalCommand);
 
     /**
      * 撤销审批单
@@ -64,7 +63,7 @@ public interface ApprovalService {
      * @param repealApprovalCommand 撤销审批单
      * @return 成功
      */
-    PojoResult<Boolean> repealApproval(RepealApprovalCommand repealApprovalCommand);
+    Boolean repealApproval(RepealApprovalCommand repealApprovalCommand);
 
     /**
      * 拒绝审批单
@@ -72,5 +71,5 @@ public interface ApprovalService {
      * @param rejectApprovalCommand 拒绝审批单
      * @return 成功
      */
-    PojoResult<Boolean> rejectApproval(RejectApprovalCommand rejectApprovalCommand);
+    Boolean rejectApproval(RejectApprovalCommand rejectApprovalCommand);
 }

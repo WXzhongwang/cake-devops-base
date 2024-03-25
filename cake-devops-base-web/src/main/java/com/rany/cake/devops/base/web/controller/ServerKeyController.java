@@ -44,14 +44,14 @@ public class ServerKeyController {
         FileWriters.writeFast(path, keyFileData);
         command.setKeyPath(file);
         serverKeyComponent.checkLoadKey(path, password);
-        return serverKeyService.createServerKey(request.getCommand());
+        return PojoResult.succeed(serverKeyService.createServerKey(request.getCommand()));
     }
 
     @GetMapping("/get")
     public PojoResult<ServerKeyDTO> get(@RequestParam("id") Long serverAccountId) {
         ServerKeyBasicQuery serverKeyBasicQuery = new ServerKeyBasicQuery();
         serverKeyBasicQuery.setServerKeyId(serverAccountId);
-        return serverKeyService.getServerKey(serverKeyBasicQuery);
+        return PojoResult.succeed(serverKeyService.getServerKey(serverKeyBasicQuery));
     }
 
     @PostMapping("/update")
@@ -79,21 +79,20 @@ public class ServerKeyController {
 
         ServerKeyBasicQuery serverKeyBasicQuery = new ServerKeyBasicQuery();
         serverKeyBasicQuery.setServerKeyId(command.getServerKeyId());
-        PojoResult<ServerKeyDTO> serverKey = serverKeyService.getServerKey(serverKeyBasicQuery);
-        ServerKeyDTO serverKeyDTO = serverKey.getContent();
+        ServerKeyDTO serverKeyDTO = serverKeyService.getServerKey(serverKeyBasicQuery);
         // 检查秘钥
         String checkPath = updateFile ? command.getKeyPath() : serverKeyDTO.getKeyPath();
         serverKeyComponent.checkLoadKey(serverKeyComponent.getKeyPath(checkPath), password);
-        return serverKeyService.modifyServerKey(command);
+        return PojoResult.succeed(serverKeyService.modifyServerKey(command));
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> delete(@RequestBody DeleteServerKeyCommand command) {
-        return serverKeyService.deleteServerKey(command);
+        return PojoResult.succeed(serverKeyService.deleteServerKey(command));
     }
 
     @PostMapping("/page")
     public PageResult<ServerKeyDTO> page(@RequestBody ServerKeyPageQuery serverKeyPageQuery) {
-        return serverKeyService.pageServerKey(serverKeyPageQuery);
+        return PageResult.succeed(serverKeyService.pageServerKey(serverKeyPageQuery));
     }
 }

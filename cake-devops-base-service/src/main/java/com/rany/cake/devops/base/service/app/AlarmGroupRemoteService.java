@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.alarm.CreateAlarmGroupCommand;
 import com.rany.cake.devops.base.api.command.alarm.DeleteAlarmGroupCommand;
 import com.rany.cake.devops.base.api.command.alarm.ModifyAlarmGroupCommand;
@@ -39,7 +37,7 @@ public class AlarmGroupRemoteService implements AlarmGroupService {
     private AlarmGroupDataAdapter alarmGroupDataAdapter;
 
     @Override
-    public PojoResult<String> createAlarmGroup(CreateAlarmGroupCommand command) {
+    public String createAlarmGroup(CreateAlarmGroupCommand command) {
         AlarmGroup alarmGroup = new AlarmGroup();
         alarmGroup.setGroupName(command.getGroupName());
         alarmGroup.setGroupDescription(command.getGroupDescription());
@@ -53,11 +51,11 @@ public class AlarmGroupRemoteService implements AlarmGroupService {
             user.setNotifyType(AlarmGroupNotifyType.WEBHOOK.getType());
         }
         alarmGroupRepository.save(alarmGroup);
-        return PojoResult.succeed(alarmGroup.getId().toString());
+        return alarmGroup.getId().toString();
     }
 
     @Override
-    public PojoResult<Boolean> modifyAlarmGroup(ModifyAlarmGroupCommand command) {
+    public Boolean modifyAlarmGroup(ModifyAlarmGroupCommand command) {
         AlarmGroup alarmGroup = alarmGroupRepository.find(command.getAlarmGroupId());
         if (alarmGroup == null) {
             throw new DevOpsException(DevOpsErrorMessage.ALARM_GROUP_NOT_FOUND);
@@ -65,35 +63,34 @@ public class AlarmGroupRemoteService implements AlarmGroupService {
         alarmGroup.setGroupName(command.getGroupName());
         alarmGroup.setGroupDescription(command.getGroupDescription());
         alarmGroupRepository.update(alarmGroup);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> deleteAlarmGroup(DeleteAlarmGroupCommand command) {
+    public Boolean deleteAlarmGroup(DeleteAlarmGroupCommand command) {
         AlarmGroup alarmGroup = alarmGroupRepository.find(command.getAlarmGroupId());
         if (alarmGroup == null) {
             throw new DevOpsException(DevOpsErrorMessage.ALARM_GROUP_NOT_FOUND);
         }
         alarmGroupRepository.remove(alarmGroup);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<AlarmGroupDTO> getAlarmGroup(AlarmGroupBasicQuery basicQuery) {
+    public AlarmGroupDTO getAlarmGroup(AlarmGroupBasicQuery basicQuery) {
         AlarmGroup alarmGroup = alarmGroupRepository.find(basicQuery.getAlarmGroupId());
         if (alarmGroup == null) {
             throw new DevOpsException(DevOpsErrorMessage.ALARM_GROUP_NOT_FOUND);
         }
-        return PojoResult.succeed(alarmGroupDataAdapter.sourceToTarget(alarmGroup));
+        return alarmGroupDataAdapter.sourceToTarget(alarmGroup);
     }
 
     @Override
-    public PageResult<AlarmGroupDTO> pageAlarmGroup(AlarmGroupPageQuery pageQuery) {
+    public Page<AlarmGroupDTO> pageAlarmGroup(AlarmGroupPageQuery pageQuery) {
         AlarmGroupQueryParam alarmGroupQueryParam = alarmGroupDataAdapter.convertParam(pageQuery);
         Page<AlarmGroup> page = alarmGroupRepository.page(alarmGroupQueryParam);
         Collection<AlarmGroup> items = page.getItems();
         List<AlarmGroupDTO> webHookConfigDTOS = alarmGroupDataAdapter.sourceToTarget(new ArrayList<>(items));
-        Page<AlarmGroupDTO> build = PageUtils.build(page, webHookConfigDTOS);
-        return PageResult.succeed(build);
+        return PageUtils.build(page, webHookConfigDTOS);
     }
 }

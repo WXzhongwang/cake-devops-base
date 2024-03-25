@@ -23,28 +23,28 @@ public class ScriptTemplateController {
 
     @PostMapping("/create")
     public PojoResult<String> create(@RequestBody CreateScriptTemplateCommand command) {
-        return scriptTemplateService.createScriptTemplate(command);
+        return PojoResult.succeed(scriptTemplateService.createScriptTemplate(command));
     }
 
     @GetMapping("/get")
     public PojoResult<ScriptTemplateDTO> get(@RequestParam("id") Long templateId) {
         ScriptTemplateBasicQuery webhookBasicQuery = new ScriptTemplateBasicQuery();
         webhookBasicQuery.setTemplateId(templateId);
-        return scriptTemplateService.getScriptTemplate(webhookBasicQuery);
+        return PojoResult.succeed(scriptTemplateService.getScriptTemplate(webhookBasicQuery));
     }
 
     @PostMapping("/update")
     public PojoResult<Boolean> update(@RequestBody ModifyScriptTemplateCommand command) {
-        return scriptTemplateService.modifyScriptTemplate(command);
+        return PojoResult.succeed(scriptTemplateService.modifyScriptTemplate(command));
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> delete(@RequestBody DeleteScriptTemplateCommand command) {
-        return scriptTemplateService.deleteScriptTemplate(command);
+        return PojoResult.succeed(scriptTemplateService.deleteScriptTemplate(command));
     }
 
     @PostMapping("/page")
     public PageResult<ScriptTemplateDTO> page(@RequestBody ScriptTemplatePageQuery webhookPageQuery) {
-        return scriptTemplateService.pageScriptTemplate(webhookPageQuery);
+        return PageResult.succeed(scriptTemplateService.pageScriptTemplate(webhookPageQuery));
     }
 }

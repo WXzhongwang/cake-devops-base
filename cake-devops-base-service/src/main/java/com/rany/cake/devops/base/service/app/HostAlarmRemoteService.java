@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
 import com.rany.cake.devops.base.api.dto.HostAlarmHistoryDTO;
 import com.rany.cake.devops.base.api.query.HostAlarmHistoryPageQuery;
 import com.rany.cake.devops.base.api.service.HostAlarmService;
@@ -28,11 +27,11 @@ public class HostAlarmRemoteService implements HostAlarmService {
     private final HostAlarmHistoryDataAdapter hostAlarmHistoryDataAdapter;
 
     @Override
-    public PageResult<HostAlarmHistoryDTO> pageHistory(HostAlarmHistoryPageQuery hostAlarmHistoryPageQuery) {
+    public Page<HostAlarmHistoryDTO> pageHistory(HostAlarmHistoryPageQuery hostAlarmHistoryPageQuery) {
         HostAlarmHistoryPageQueryParam queryParam = hostAlarmHistoryDataAdapter.convertParam(hostAlarmHistoryPageQuery);
         Page<HostAlarmHistory> page = hostAlarmHistoryRepository.pageQueryAlarmHistory(queryParam);
         Collection<HostAlarmHistory> items = page.getItems();
         List<HostAlarmHistoryDTO> alarmHistoryDTOList = hostAlarmHistoryDataAdapter.sourceToTarget(new ArrayList<>(items));
-        return PageResult.succeed(PageUtils.build(page, alarmHistoryDTOList));
+        return PageUtils.build(page, alarmHistoryDTOList);
     }
 }

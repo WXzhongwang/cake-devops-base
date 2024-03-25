@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.template.CreateScriptTemplateCommand;
 import com.rany.cake.devops.base.api.command.template.DeleteScriptTemplateCommand;
 import com.rany.cake.devops.base.api.command.template.ModifyScriptTemplateCommand;
@@ -36,17 +34,17 @@ public class ScriptTemplateRemoteService implements ScriptTemplateService {
     private ScriptTemplateDataAdapter scriptTemplateDataAdapter;
 
     @Override
-    public PojoResult<String> createScriptTemplate(CreateScriptTemplateCommand command) {
+    public String createScriptTemplate(CreateScriptTemplateCommand command) {
         ScriptTemplate scriptTemplate = new ScriptTemplate();
         scriptTemplate.setTemplateName(command.getTemplateName());
         scriptTemplate.setTemplateValue(command.getTemplateValue());
         scriptTemplate.setDescription(command.getDescription());
         scriptTemplateRepository.save(scriptTemplate);
-        return PojoResult.succeed(scriptTemplate.getId().toString());
+        return scriptTemplate.getId().toString();
     }
 
     @Override
-    public PojoResult<Boolean> modifyScriptTemplate(ModifyScriptTemplateCommand command) {
+    public Boolean modifyScriptTemplate(ModifyScriptTemplateCommand command) {
         ScriptTemplate scriptTemplate = scriptTemplateRepository.find(command.getTemplateId());
         if (scriptTemplate == null) {
             throw new DevOpsException(DevOpsErrorMessage.SCRIPT_TEMPLATE_NOT_FOUND);
@@ -55,35 +53,34 @@ public class ScriptTemplateRemoteService implements ScriptTemplateService {
         scriptTemplate.setTemplateValue(command.getTemplateValue());
         scriptTemplate.setDescription(command.getDescription());
         scriptTemplateRepository.update(scriptTemplate);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> deleteScriptTemplate(DeleteScriptTemplateCommand command) {
+    public Boolean deleteScriptTemplate(DeleteScriptTemplateCommand command) {
         ScriptTemplate scriptTemplate = scriptTemplateRepository.find(command.getTemplateId());
         if (scriptTemplate == null) {
             throw new DevOpsException(DevOpsErrorMessage.SCRIPT_TEMPLATE_NOT_FOUND);
         }
         scriptTemplateRepository.remove(scriptTemplate);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<ScriptTemplateDTO> getScriptTemplate(ScriptTemplateBasicQuery basicQuery) {
+    public ScriptTemplateDTO getScriptTemplate(ScriptTemplateBasicQuery basicQuery) {
         ScriptTemplate scriptTemplate = scriptTemplateRepository.find(basicQuery.getTemplateId());
         if (scriptTemplate == null) {
             throw new DevOpsException(DevOpsErrorMessage.SCRIPT_TEMPLATE_NOT_FOUND);
         }
-        return PojoResult.succeed(scriptTemplateDataAdapter.sourceToTarget(scriptTemplate));
+        return scriptTemplateDataAdapter.sourceToTarget(scriptTemplate);
     }
 
     @Override
-    public PageResult<ScriptTemplateDTO> pageScriptTemplate(ScriptTemplatePageQuery pageQuery) {
+    public Page<ScriptTemplateDTO> pageScriptTemplate(ScriptTemplatePageQuery pageQuery) {
         ScriptTemplateQueryParam scriptTemplateQueryParam = scriptTemplateDataAdapter.convertParam(pageQuery);
         Page<ScriptTemplate> page = scriptTemplateRepository.page(scriptTemplateQueryParam);
         Collection<ScriptTemplate> items = page.getItems();
         List<ScriptTemplateDTO> webHookConfigDTOS = scriptTemplateDataAdapter.sourceToTarget(new ArrayList<>(items));
-        Page<ScriptTemplateDTO> build = PageUtils.build(page, webHookConfigDTOS);
-        return PageResult.succeed(build);
+        return PageUtils.build(page, webHookConfigDTOS);
     }
 }

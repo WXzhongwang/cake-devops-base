@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.dto.HostAlarmHistoryDTO;
 import com.rany.cake.devops.base.api.query.HostAlarmHistoryPageQuery;
 
@@ -20,6 +20,6 @@ public interface HostAlarmService {
      * @param hostAlarmHistoryPageQuery 查询告警历史
      * @return 告警历史
      */
-    PageResult<HostAlarmHistoryDTO> pageHistory(HostAlarmHistoryPageQuery hostAlarmHistoryPageQuery);
+    Page<HostAlarmHistoryDTO> pageHistory(HostAlarmHistoryPageQuery hostAlarmHistoryPageQuery);
 
 }

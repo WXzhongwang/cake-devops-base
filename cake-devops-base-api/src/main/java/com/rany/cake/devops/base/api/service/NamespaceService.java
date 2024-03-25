@@ -1,10 +1,10 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.ListResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.namespace.CreateNamespaceCommand;
 import com.rany.cake.devops.base.api.dto.NamespaceDTO;
 import com.rany.cake.devops.base.api.query.NamespaceQuery;
+
+import java.util.List;
 
 /**
  * 命名空间服务
@@ -22,7 +22,7 @@ public interface NamespaceService {
      * @param createAppCommand 创建命名空间
      * @return 命名空间ID
      */
-    PojoResult<String> createNamespace(CreateNamespaceCommand createAppCommand);
+    String createNamespace(CreateNamespaceCommand createAppCommand);
 
     /**
      * 查询集群命名空间
@@ -30,6 +30,6 @@ public interface NamespaceService {
      * @param namespaceQuery 查询集群命名空间
      * @return 命名空间集合
      */
-    ListResult<NamespaceDTO> listNamespace(NamespaceQuery namespaceQuery);
+    List<NamespaceDTO> listNamespace(NamespaceQuery namespaceQuery);
 
 }

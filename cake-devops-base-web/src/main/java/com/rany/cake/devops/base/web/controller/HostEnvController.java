@@ -24,43 +24,43 @@ public class HostEnvController {
 
     @PostMapping("/page")
     public PageResult<HostEnvDTO> pageHostEnv(@RequestBody(required = false) HostEnvPageQuery hostPageQuery) {
-        return hostEnvService.pageHostEnv(hostPageQuery);
+        return PageResult.succeed(hostEnvService.pageHostEnv(hostPageQuery));
     }
 
     @GetMapping("/get")
     public PojoResult<HostEnvDTO> getHostEnv(@RequestParam("id") Long envId) {
         HostEnvBasicQuery hostBasicQuery = new HostEnvBasicQuery();
         hostBasicQuery.setEnvId(envId);
-        return hostEnvService.getHostEnv(hostBasicQuery);
+        return PojoResult.succeed(hostEnvService.getHostEnv(hostBasicQuery));
     }
 
     @PostMapping("/create")
     public PojoResult<String> createHostEnv(@RequestBody CreateHostEnvCommand createHostEnvCommand) {
-        return hostEnvService.createHostEnv(createHostEnvCommand);
+        return PojoResult.succeed(hostEnvService.createHostEnv(createHostEnvCommand));
     }
 
     @PostMapping("/update")
     public PojoResult<Boolean> updateHostEnv(@RequestBody ModifyHostEnvCommand modifyHostCommand) {
-        return hostEnvService.modifyHostEnv(modifyHostCommand);
+        return PojoResult.succeed(hostEnvService.modifyHostEnv(modifyHostCommand));
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> deleteHostEnv(@RequestBody DeleteHostEnvCommand deleteHostEnvCommand) {
-        return hostEnvService.deleteHostEnv(deleteHostEnvCommand);
+        return PojoResult.succeed(hostEnvService.deleteHostEnv(deleteHostEnvCommand));
     }
 
     @PostMapping("/async")
     public PojoResult<Boolean> asyncHostEnv(@RequestBody AsyncHostEnvCommand asyncHostEnvCommand) {
-        return hostEnvService.asyncHostEnv(asyncHostEnvCommand);
+        return PojoResult.succeed(hostEnvService.asyncHostEnv(asyncHostEnvCommand));
     }
 
     @PostMapping("/view")
     public PojoResult<String> view(@RequestBody HostEnvViewQuery hostEnvViewQuery) {
-        return hostEnvService.view(hostEnvViewQuery);
+        return PojoResult.succeed(hostEnvService.view(hostEnvViewQuery));
     }
 
     @PostMapping("/saveView")
     public PojoResult<String> saveView(@RequestBody HostEnvViewSaveCommand saveCommand) {
-        return hostEnvService.saveView(saveCommand);
+        return PojoResult.succeed(hostEnvService.saveView(saveCommand));
     }
 }

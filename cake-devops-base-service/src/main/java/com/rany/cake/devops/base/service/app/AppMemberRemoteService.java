@@ -4,7 +4,6 @@ package com.rany.cake.devops.base.service.app;
 import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
 import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Maps;
 import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
@@ -48,7 +47,7 @@ public class AppMemberRemoteService implements AppMemberService {
     private final AppMemberDomainService appMemberDomainService;
 
     @Override
-    public PageResult<AppAccountDTO> pageQueryMember(MemberPageQuery memberPageQuery) {
+    public Page<AppAccountDTO> pageQueryMember(MemberPageQuery memberPageQuery) {
         AccountPageQuery accountQuery = new AccountPageQuery();
         accountQuery.setAccountName(memberPageQuery.getName());
         accountQuery.setTenantId(tenantConfig.getTenantId());
@@ -58,12 +57,11 @@ public class AppMemberRemoteService implements AppMemberService {
         Page<AccountDTO> content = accounts.getContent();
         Collection<AccountDTO> items = content.getItems();
         List<AppAccountDTO> dtoList = appMemberAdapter.toDTO(new ArrayList<>(items));
-        Page<AppAccountDTO> build = PageUtils.build(content, dtoList);
-        return PageResult.succeed(build);
+        return PageUtils.build(content, dtoList);
     }
 
     @Override
-    public PageResult<AppMemberDTO> pageAppMembers(AppMemberPageQuery appMemberPageQuery) {
+    public Page<AppMemberDTO> pageAppMembers(AppMemberPageQuery appMemberPageQuery) {
         AppMemberPageQueryParam param = appMemberAdapter.toParam(appMemberPageQuery);
         Page<AppMember> appMemberPage = appMemberDomainService.pageByAppId(param);
         List<AppMember> members = new ArrayList<>(appMemberPage.getItems());
@@ -85,22 +83,22 @@ public class AppMemberRemoteService implements AppMemberService {
                 }
             }
         }
-        return PageResult.succeed(PageUtils.build(appMemberPage, appMemberDTOList));
+        return PageUtils.build(appMemberPage, appMemberDTOList);
     }
 
     @Override
-    public PojoResult<Boolean> updateMember(UpdateAppMemberCommand updateAppMemberCommand) {
+    public Boolean updateMember(UpdateAppMemberCommand updateAppMemberCommand) {
         AppMember appMember = appMemberDomainService.findByMemberId(updateAppMemberCommand.getMemberId());
         appMember.update(updateAppMemberCommand.getRoles(), updateAppMemberCommand.getStatus());
         appMemberDomainService.update(appMember);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> deleteMember(DeleteAppMemberCommand deleteAppMemberCommand) {
+    public Boolean deleteMember(DeleteAppMemberCommand deleteAppMemberCommand) {
         AppMember appMember = appMemberDomainService.findByMemberId(deleteAppMemberCommand.getMemberId());
         appMember.delete();
         appMemberDomainService.update(appMember);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 }

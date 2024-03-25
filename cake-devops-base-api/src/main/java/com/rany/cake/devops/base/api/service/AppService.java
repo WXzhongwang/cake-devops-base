@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.ListResult;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
 import com.rany.cake.devops.base.api.dto.AppDTO;
@@ -12,6 +10,8 @@ import com.rany.cake.devops.base.api.query.AppBasicQuery;
 import com.rany.cake.devops.base.api.query.AppEnvBasicQuery;
 import com.rany.cake.devops.base.api.query.AppEnvQuery;
 import com.rany.cake.devops.base.api.query.AppPageQuery;
+
+import java.util.List;
 
 /**
  * 应用服务
@@ -29,7 +29,7 @@ public interface AppService {
      * @param createAppCommand 创建应用
      * @return 应用ID
      */
-    PojoResult<String> createApp(CreateAppCommand createAppCommand);
+    String createApp(CreateAppCommand createAppCommand);
 
     /**
      * 获取应用详情
@@ -37,7 +37,7 @@ public interface AppService {
      * @param appBasicQuery 应用详情
      * @return
      */
-    PojoResult<AppDTO> getApp(AppBasicQuery appBasicQuery);
+    AppDTO getApp(AppBasicQuery appBasicQuery);
 
 
     /**
@@ -46,7 +46,7 @@ public interface AppService {
      * @param appPageQuery 应用查询
      * @return app集合
      */
-    PageResult<AppDTO> pageApp(AppPageQuery appPageQuery);
+    Page<AppDTO> pageApp(AppPageQuery appPageQuery);
 
 
     /**
@@ -55,7 +55,7 @@ public interface AppService {
      * @param createAppEnvCommand 创建应用环境
      * @return 环境ID
      */
-    PojoResult<String> createAppEnv(CreateAppEnvCommand createAppEnvCommand);
+    String createAppEnv(CreateAppEnvCommand createAppEnvCommand);
 
 
     /**
@@ -64,7 +64,7 @@ public interface AppService {
      * @param appEnvBasicQuery 查询单一应用环境
      * @return 环境ID
      */
-    PojoResult<AppEnvDTO> getAppEnv(AppEnvBasicQuery appEnvBasicQuery);
+    AppEnvDTO getAppEnv(AppEnvBasicQuery appEnvBasicQuery);
 
     /**
      * 查询应用环境
@@ -72,13 +72,13 @@ public interface AppService {
      * @param appEnvQuery 查询体
      * @return 环境列表
      */
-    ListResult<AppEnvDTO> listAppEnv(AppEnvQuery appEnvQuery);
+    List<AppEnvDTO> listAppEnv(AppEnvQuery appEnvQuery);
 
     /**
      * 查询所有团队
      *
      * @return 团队列表
      */
-    ListResult<DepartmentDTO> listDepartments();
+    List<DepartmentDTO> listDepartments();
 
 }

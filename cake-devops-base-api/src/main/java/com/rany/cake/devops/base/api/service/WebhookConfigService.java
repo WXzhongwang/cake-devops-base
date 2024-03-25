@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.wehook.CreateWebhookCommand;
 import com.rany.cake.devops.base.api.command.wehook.DeleteWebhookCommand;
 import com.rany.cake.devops.base.api.command.wehook.ModifyWebHookCommand;
@@ -25,7 +24,7 @@ public interface WebhookConfigService {
      * @param command 创建
      * @return webhookId
      */
-    PojoResult<String> createWebhook(CreateWebhookCommand command);
+    String createWebhook(CreateWebhookCommand command);
 
     /**
      * 更新
@@ -33,7 +32,7 @@ public interface WebhookConfigService {
      * @param command 更新
      * @return success
      */
-    PojoResult<Boolean> modifyWebhook(ModifyWebHookCommand command);
+    Boolean modifyWebhook(ModifyWebHookCommand command);
 
     /**
      * 删除
@@ -41,7 +40,7 @@ public interface WebhookConfigService {
      * @param command 删除
      * @return success
      */
-    PojoResult<Boolean> deleteWebhook(DeleteWebhookCommand command);
+    Boolean deleteWebhook(DeleteWebhookCommand command);
 
     /**
      * 获取详情
@@ -49,7 +48,7 @@ public interface WebhookConfigService {
      * @param basicQuery 详情
      * @return 详情
      */
-    PojoResult<WebHookConfigDTO> getWebhook(WebhookBasicQuery basicQuery);
+    WebHookConfigDTO getWebhook(WebhookBasicQuery basicQuery);
 
 
     /**
@@ -58,5 +57,5 @@ public interface WebhookConfigService {
      * @param pageQuery 查询
      * @return 列表
      */
-    PageResult<WebHookConfigDTO> pageWebhook(WebhookPageQuery pageQuery);
+    Page<WebHookConfigDTO> pageWebhook(WebhookPageQuery pageQuery);
 }

@@ -1,7 +1,5 @@
 package com.rany.cake.devops.base.service.app;
 
-import com.cake.framework.common.response.ListResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.namespace.CreateNamespaceCommand;
 import com.rany.cake.devops.base.api.dto.NamespaceDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
@@ -44,7 +42,7 @@ public class NamespaceRemoteService implements NamespaceService {
 
 
     @Override
-    public PojoResult<String> createNamespace(CreateNamespaceCommand createNamespaceCommand) {
+    public String createNamespace(CreateNamespaceCommand createNamespaceCommand) {
         Cluster cluster = clusterDomainService.getCluster(new ClusterId(createNamespaceCommand.getClusterId()));
         if (cluster == null) {
             throw new DevOpsException(DevOpsErrorMessage.CLUSTER_NOT_FOUND);
@@ -75,16 +73,16 @@ public class NamespaceRemoteService implements NamespaceService {
         }
         namespace.init();
         namespaceDomainService.save(namespace);
-        return PojoResult.succeed(namespace.getNamespaceId().getNamespaceId());
+        return namespace.getNamespaceId().getNamespaceId();
     }
 
     @Override
-    public ListResult<NamespaceDTO> listNamespace(NamespaceQuery namespaceQuery) {
+    public List<NamespaceDTO> listNamespace(NamespaceQuery namespaceQuery) {
         Cluster cluster = clusterDomainService.getCluster(new ClusterId(namespaceQuery.getClusterId()));
         if (cluster == null) {
             throw new DevOpsException(DevOpsErrorMessage.CLUSTER_NOT_FOUND);
         }
         List<Namespace> namespaces = namespaceDomainService.listNamespace(cluster.getClusterId());
-        return ListResult.succeed(namespaceDataAdapter.sourceToTarget(namespaces));
+        return namespaceDataAdapter.sourceToTarget(namespaces);
     }
 }

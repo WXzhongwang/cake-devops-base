@@ -36,6 +36,9 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
      * 2. 秘钥认证
      */
     private Integer authType;
+    /**
+     * 登录账号名
+     */
     private String username;
     private String pwd;
     private String desc;
@@ -54,7 +57,7 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
      * 代理ID
      */
     private Long proxyId;
-    
+
     /**
      * 秘钥ID
      */

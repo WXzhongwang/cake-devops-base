@@ -5,12 +5,10 @@ import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.dto.AppAccountDTO;
 import com.rany.cake.devops.base.api.query.MemberPageQuery;
 import com.rany.cake.devops.base.api.service.AppMemberService;
-import com.rany.cake.devops.base.service.adapter.AppMemberAdapter;
 import com.rany.cake.dingtalk.sdk.beans.SsoUser;
 import com.rany.cake.dingtalk.sdk.configuration.SsoConstants;
 import com.rany.cake.dingtalk.sdk.utils.SsoTokenLoginHelper;
 import com.rany.cake.dingtalk.sdk.utils.SsoUtil;
-import com.rany.cake.dingtalk.starter.annotation.CurrentUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +35,6 @@ public class UserController {
 
     @PostMapping("/queryMembers")
     public PageResult<AppAccountDTO> getUser(MemberPageQuery memberPageQuery) {
-        return appMemberService.pageQueryMember(memberPageQuery);
+        return PageResult.succeed(appMemberService.pageQueryMember(memberPageQuery));
     }
 }

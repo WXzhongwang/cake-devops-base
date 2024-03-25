@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.account.CreateServerKeyCommand;
 import com.rany.cake.devops.base.api.command.account.DeleteServerKeyCommand;
 import com.rany.cake.devops.base.api.command.account.ModifyServerKeyCommand;
@@ -42,7 +40,7 @@ public class ServerKeyRemoteService implements ServerKeyService {
     private final ServerKeyDataAdapter serverKeyDataAdapter;
 
     @Override
-    public PojoResult<Long> createServerKey(CreateServerKeyCommand command) {
+    public Long createServerKey(CreateServerKeyCommand command) {
         ServerKey serverKey = new ServerKey();
         serverKey.setAccountType(command.getAccountType());
         serverKey.setDisplayName(command.getDisplayName());
@@ -54,11 +52,11 @@ public class ServerKeyRemoteService implements ServerKeyService {
         serverKey.setKeyPath(command.getKeyPath());
         serverKey.init();
         serverKeyDomainService.save(serverKey);
-        return PojoResult.succeed(serverKey.getId());
+        return serverKey.getId();
     }
 
     @Override
-    public PojoResult<Boolean> modifyServerKey(ModifyServerKeyCommand command) {
+    public Boolean modifyServerKey(ModifyServerKeyCommand command) {
         ServerKey serverKey = serverKeyDomainService.getServerKey(command.getServerKeyId());
         serverKey.setDisplayName(command.getDisplayName());
         serverKey.setAccountType(command.getAccountType());
@@ -68,29 +66,29 @@ public class ServerKeyRemoteService implements ServerKeyService {
         serverKey.setPublicKey(command.getPublicKey());
         serverKey.modify();
         serverKeyDomainService.update(serverKey);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> deleteServerKey(DeleteServerKeyCommand command) {
+    public Boolean deleteServerKey(DeleteServerKeyCommand command) {
         ServerKey serverKey = serverKeyDomainService.getServerKey(command.getServerKeyId());
         serverKey.delete();
         serverKeyDomainService.update(serverKey);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<ServerKeyDTO> getServerKey(ServerKeyBasicQuery basicQuery) {
+    public ServerKeyDTO getServerKey(ServerKeyBasicQuery basicQuery) {
         ServerKey serverKey = serverKeyDomainService.getServerKey(basicQuery.getServerKeyId());
-        return PojoResult.succeed(serverKeyDataAdapter.sourceToTarget(serverKey));
+        return serverKeyDataAdapter.sourceToTarget(serverKey);
     }
 
     @Override
-    public PageResult<ServerKeyDTO> pageServerKey(ServerKeyPageQuery serverKeyPageQuery) {
+    public Page<ServerKeyDTO> pageServerKey(ServerKeyPageQuery serverKeyPageQuery) {
         ServerKeyQueryParam serverKeyQueryParam = serverKeyDataAdapter.convertParam(serverKeyPageQuery);
         Page<ServerKey> page = serverKeyDomainService.pageServerAccount(serverKeyQueryParam);
         List<ServerKey> serverKeys = new ArrayList<>(page.getItems());
         List<ServerKeyDTO> serverKeyDTOList = serverKeyDataAdapter.sourceToTarget(serverKeys);
-        return PageResult.succeed(PageUtils.build(page, serverKeyDTOList));
+        return PageUtils.build(page, serverKeyDTOList);
     }
 }

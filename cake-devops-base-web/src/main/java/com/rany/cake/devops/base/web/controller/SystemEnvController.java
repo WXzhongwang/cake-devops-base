@@ -26,33 +26,34 @@ public class SystemEnvController {
 
     @PostMapping("/page")
     public PageResult<SystemEnvDTO> pageSystemEnv(@RequestBody(required = false) SystemEnvPageQuery hostPageQuery) {
-        return hostEnvService.pageSystemEnv(hostPageQuery);
+        return PageResult.succeed(hostEnvService.pageSystemEnv(hostPageQuery));
     }
 
     @GetMapping("/get")
     public PojoResult<SystemEnvDTO> getSystemEnv(@RequestParam("id") Long id) {
         SystemEnvBasicQuery hostBasicQuery = new SystemEnvBasicQuery();
         hostBasicQuery.setId(id);
-        return hostEnvService.getSystemEnv(hostBasicQuery);
+        return PojoResult.succeed(hostEnvService.getSystemEnv(hostBasicQuery));
     }
 
     @PostMapping("/save-map")
     public PojoResult<Void> saveMap(@RequestBody Map<String, String> envMap) {
-        return hostEnvService.saveEnv(envMap);
+        hostEnvService.saveEnv(envMap);
+        return PojoResult.succeed();
     }
 
     @PostMapping("/create")
     public PojoResult<String> createSystemEnv(@RequestBody CreateSystemEnvCommand createSystemEnvCommand) {
-        return hostEnvService.createSystemEnv(createSystemEnvCommand);
+        return PojoResult.succeed(hostEnvService.createSystemEnv(createSystemEnvCommand));
     }
 
     @PostMapping("/update")
     public PojoResult<Boolean> updateSystemEnv(@RequestBody ModifySystemEnvCommand modifySystemCommand) {
-        return hostEnvService.modifySystemEnv(modifySystemCommand);
+        return PojoResult.succeed(hostEnvService.modifySystemEnv(modifySystemCommand));
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> deleteSystemEnv(@RequestBody DeleteSystemEnvCommand deleteSystemEnvCommand) {
-        return hostEnvService.deleteSystemEnv(deleteSystemEnvCommand);
+        return PojoResult.succeed(hostEnvService.deleteSystemEnv(deleteSystemEnvCommand));
     }
 }

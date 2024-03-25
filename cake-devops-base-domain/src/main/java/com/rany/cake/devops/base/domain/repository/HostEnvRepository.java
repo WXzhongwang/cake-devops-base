@@ -10,6 +10,8 @@ import java.util.Map;
 public interface HostEnvRepository {
     HostEnv find(Long id);
 
+    HostEnv findByKey(String hostId, String key);
+
     void remove(HostEnv env);
 
     void save(HostEnv env);

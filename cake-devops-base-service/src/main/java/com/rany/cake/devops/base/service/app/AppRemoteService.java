@@ -3,8 +3,6 @@ package com.rany.cake.devops.base.service.app;
 import com.cake.framework.common.exception.BusinessException;
 import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
@@ -82,7 +80,7 @@ public class AppRemoteService implements AppService {
     private final DepartmentConfig departmentConfig;
 
     @Override
-    public PojoResult<String> createApp(CreateAppCommand createAppCommand) {
+    public String createApp(CreateAppCommand createAppCommand) {
         App app = new App(new AppId(String.valueOf(snowflakeIdWorker.nextId())),
                 new AppName(createAppCommand.getAppName()),
                 createAppCommand.getOwner(),
@@ -132,30 +130,29 @@ public class AppRemoteService implements AppService {
         }
         app.sava();
         appDomainService.save(app);
-        return PojoResult.succeed(app.getAppId().getAppId());
+        return app.getAppId().getAppId();
     }
 
     @Override
-    public PojoResult<AppDTO> getApp(AppBasicQuery appBasicQuery) {
+    public AppDTO getApp(AppBasicQuery appBasicQuery) {
         App app = appDomainService.getApp(new AppId(appBasicQuery.getAppId()));
         if (app == null) {
             throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
         }
-        AppDTO appDTO = appDataAdapter.sourceToTarget(app);
-        return PojoResult.succeed(appDTO);
+        return appDataAdapter.sourceToTarget(app);
     }
 
     @Override
-    public PageResult<AppDTO> pageApp(AppPageQuery appPageQuery) {
+    public Page<AppDTO> pageApp(AppPageQuery appPageQuery) {
         AppQueryParam appQueryParam = appDataAdapter.convertParam(appPageQuery);
         Page<App> page = appDomainService.pageApp(appQueryParam);
         List<App> apps = new ArrayList<>(page.getItems());
         List<AppDTO> appDTOList = appDataAdapter.sourceToTarget(apps);
-        return PageResult.succeed(PageUtils.build(page, appDTOList));
+        return PageUtils.build(page, appDTOList);
     }
 
     @Override
-    public PojoResult<String> createAppEnv(CreateAppEnvCommand createAppEnvCommand) {
+    public String createAppEnv(CreateAppEnvCommand createAppEnvCommand) {
         App app = appDomainService.getApp(new AppId(createAppEnvCommand.getAppId()));
         if (app == null) {
             throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
@@ -182,34 +179,33 @@ public class AppRemoteService implements AppService {
                 resourceStrategyDTO.getMaxCpu(),
                 resourceStrategyDTO.getMaxMemory()));
         appDomainService.createEnv(appEnv);
-        return PojoResult.succeed(appEnv.getId());
+        return appEnv.getId();
     }
 
     @Override
-    public PojoResult<AppEnvDTO> getAppEnv(AppEnvBasicQuery appEnvBasicQuery) {
+    public AppEnvDTO getAppEnv(AppEnvBasicQuery appEnvBasicQuery) {
         AppEnv appEnv = appDomainService.getAppEnv(appEnvBasicQuery.getEnvId());
-        AppEnvDTO appEnvDTO = appDataAdapter.envSourceToTarget(appEnv);
-        return PojoResult.succeed(appEnvDTO);
+        return appDataAdapter.envSourceToTarget(appEnv);
     }
 
     @Override
-    public ListResult<AppEnvDTO> listAppEnv(AppEnvQuery appEnvQuery) {
+    public List<AppEnvDTO> listAppEnv(AppEnvQuery appEnvQuery) {
         App app = appDomainService.getApp(new AppId(appEnvQuery.getAppId()));
         if (app == null) {
             throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
         }
         List<AppEnv> appEnvs = appDomainService.listAppEnv(new AppId(appEnvQuery.getAppId()));
-        return ListResult.succeed(appDataAdapter.envSourceToTarget(appEnvs));
+        return appDataAdapter.envSourceToTarget(appEnvs);
     }
 
     @Override
-    public ListResult<DepartmentDTO> listDepartments() {
+    public List<DepartmentDTO> listDepartments() {
         List<DepartmentDTO> departmentDTOS = new ArrayList<>();
         List<DepartmentConfig.Department> departments = departmentConfig.getDepartments();
         for (DepartmentConfig.Department department : departments) {
             departmentDTOS.add(new DepartmentDTO().setLabel(department.getLabel()).setValue(department.getValue())
                     .setAbbr(department.getAbbr()));
         }
-        return ListResult.succeed(departmentDTOS);
+        return departmentDTOS;
     }
 }

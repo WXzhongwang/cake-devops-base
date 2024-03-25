@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.host.*;
 import com.rany.cake.devops.base.api.dto.HostDTO;
 import com.rany.cake.devops.base.api.query.HostBasicQuery;
@@ -23,7 +22,7 @@ public interface HostService {
      * @param createHostCommand 创建
      * @return result
      */
-    PojoResult<String> createHost(CreateHostCommand createHostCommand);
+    String createHost(CreateHostCommand createHostCommand);
 
     /**
      * 复制机器
@@ -31,7 +30,7 @@ public interface HostService {
      * @param copyHostCommand 复制
      * @return 机器ID
      */
-    PojoResult<String> copyHost(CopyHostCommand copyHostCommand);
+    String copyHost(CopyHostCommand copyHostCommand);
 
     /**
      * ping主机
@@ -39,7 +38,7 @@ public interface HostService {
      * @param copyHostCommand ping主机
      * @return
      */
-    PojoResult<String> ping(PingHostCommand copyHostCommand);
+    String ping(PingHostCommand copyHostCommand);
 
     /**
      * 获取主机信息
@@ -47,7 +46,7 @@ public interface HostService {
      * @param hostBasicQuery 详情
      * @return 详情
      */
-    PojoResult<HostDTO> getHost(HostBasicQuery hostBasicQuery);
+    HostDTO getHost(HostBasicQuery hostBasicQuery);
 
     /**
      * 分页查询主机列表
@@ -55,7 +54,7 @@ public interface HostService {
      * @param hostPageQuery 分页查询
      * @return app集合
      */
-    PageResult<HostDTO> pageHost(HostPageQuery hostPageQuery);
+    Page<HostDTO> pageHost(HostPageQuery hostPageQuery);
 
 
     /**
@@ -64,7 +63,7 @@ public interface HostService {
      * @param deleteHostCommand 删除
      * @return 成功
      */
-    PojoResult<Boolean> deleteHost(DeleteHostCommand deleteHostCommand);
+    Boolean deleteHost(DeleteHostCommand deleteHostCommand);
 
     /**
      * 更新主机基本信息
@@ -72,5 +71,5 @@ public interface HostService {
      * @param modifyHostCommand 更新
      * @return 成功
      */
-    PojoResult<Boolean> modifyHost(ModifyHostCommand modifyHostCommand);
+    Boolean modifyHost(ModifyHostCommand modifyHostCommand);
 }

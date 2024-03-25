@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.host.env.*;
 import com.rany.cake.devops.base.api.dto.HostEnvDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
@@ -39,17 +37,17 @@ public class HostEnvRemoteService implements HostEnvService {
     private HostEnvDataAdapter hostEnvDataAdapter;
 
     @Override
-    public PojoResult<String> createHostEnv(CreateHostEnvCommand command) {
+    public String createHostEnv(CreateHostEnvCommand command) {
         HostEnv env = new HostEnv();
         env.setHostId(command.getHostId());
         env.setAttrKey(command.getAttrKey());
         env.setAttrValue(command.getAttrValue());
         hostEnvRepository.save(env);
-        return PojoResult.succeed(env.getId().toString());
+        return env.getId().toString();
     }
 
     @Override
-    public PojoResult<Boolean> modifyHostEnv(ModifyHostEnvCommand command) {
+    public Boolean modifyHostEnv(ModifyHostEnvCommand command) {
         HostEnv env = hostEnvRepository.find(command.getId());
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.MACHINE_ENV_NOT_FOUND);
@@ -58,40 +56,39 @@ public class HostEnvRemoteService implements HostEnvService {
         env.setAttrKey(command.getAttrKey());
         env.setAttrValue(command.getAttrValue());
         hostEnvRepository.update(env);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> deleteHostEnv(DeleteHostEnvCommand command) {
+    public Boolean deleteHostEnv(DeleteHostEnvCommand command) {
         HostEnv env = hostEnvRepository.find(command.getEnvId());
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.MACHINE_ENV_NOT_FOUND);
         }
         hostEnvRepository.remove(env);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<HostEnvDTO> getHostEnv(HostEnvBasicQuery query) {
+    public HostEnvDTO getHostEnv(HostEnvBasicQuery query) {
         HostEnv env = hostEnvRepository.find(query.getEnvId());
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.MACHINE_ENV_NOT_FOUND);
         }
-        return PojoResult.succeed(hostEnvDataAdapter.sourceToTarget(env));
+        return hostEnvDataAdapter.sourceToTarget(env);
     }
 
     @Override
-    public PageResult<HostEnvDTO> pageHostEnv(HostEnvPageQuery pageQuery) {
+    public Page<HostEnvDTO> pageHostEnv(HostEnvPageQuery pageQuery) {
         HostEnvQueryParam hostEnvQueryParam = hostEnvDataAdapter.convertParam(pageQuery);
         Page<HostEnv> page = hostEnvRepository.page(hostEnvQueryParam);
         Collection<HostEnv> items = page.getItems();
         List<HostEnvDTO> webHookConfigDTOS = hostEnvDataAdapter.sourceToTarget(new ArrayList<>(items));
-        Page<HostEnvDTO> build = PageUtils.build(page, webHookConfigDTOS);
-        return PageResult.succeed(build);
+        return PageUtils.build(page, webHookConfigDTOS);
     }
 
     @Override
-    public PojoResult<Boolean> asyncHostEnv(AsyncHostEnvCommand command) {
+    public Boolean asyncHostEnv(AsyncHostEnvCommand command) {
         // 查询列表
         Map<String, String> env = Maps.newLinkedMap();
         HostEnvQueryParam queryParam = new HostEnvQueryParam();
@@ -102,11 +99,11 @@ public class HostEnvRemoteService implements HostEnvService {
         for (String host : command.getTargetHostIdList()) {
             hostEnvRepository.saveEnv(host, env);
         }
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<String> view(HostEnvViewQuery query) {
+    public String view(HostEnvViewQuery query) {
         EnvViewType viewType = Valid.notNull(EnvViewType.of(query.getViewType()));
         // 查询列表
         Map<String, String> env = Maps.newLinkedMap();
@@ -114,16 +111,15 @@ public class HostEnvRemoteService implements HostEnvService {
         queryParam.setHostId(query.getHostId());
         List<HostEnv> list = hostEnvRepository.list(queryParam);
         list.forEach(e -> env.put(e.getAttrKey(), e.getAttrValue()));
-        String value = viewType.toValue(env);
-        return PojoResult.succeed(value);
+        return viewType.toValue(env);
     }
 
     @Override
-    public PojoResult<String> saveView(HostEnvViewSaveCommand command) {
+    public String saveView(HostEnvViewSaveCommand command) {
         String value = Valid.notBlank(command.getHostId());
         EnvViewType viewType = Valid.notNull(EnvViewType.of(command.getViewType()));
         MutableLinkedHashMap<String, String> result = viewType.toMap(value);
         hostEnvRepository.saveEnv(command.getHostId(), result);
-        return PojoResult.succeed(value);
+        return value;
     }
 }

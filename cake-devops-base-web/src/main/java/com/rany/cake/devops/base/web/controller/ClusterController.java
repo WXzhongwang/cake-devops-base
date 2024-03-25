@@ -25,16 +25,16 @@ public class ClusterController {
 
     @PostMapping("/create")
     public PojoResult<String> createApp(CreateClusterCommand createClusterCommand) {
-        return clusterService.createCluster(createClusterCommand);
+        return PojoResult.succeed(clusterService.createCluster(createClusterCommand));
     }
 
     @PostMapping("/connect")
     public PojoResult<Boolean> createAppEnv(TestClusterConnectCommand testClusterConnectCommand) {
-        return clusterService.testConnect(testClusterConnectCommand);
+        return PojoResult.succeed(clusterService.testConnect(testClusterConnectCommand));
     }
 
     @GetMapping("/listAll")
     public ListResult<ClusterDTO> listAll() {
-        return clusterService.listCluster();
+        return ListResult.succeed(clusterService.listCluster());
     }
 }

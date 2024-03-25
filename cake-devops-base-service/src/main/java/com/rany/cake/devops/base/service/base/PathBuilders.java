@@ -283,7 +283,7 @@ public class PathBuilders {
      * @param app       app
      * @return path
      */
-    public static String getInstallLogPath(Long machineId, String app) {
+    public static String getInstallLogPath(String machineId, String app) {
         return Const.INSTALL_DIR
                 + "/" + app
                 + "/" + machineId

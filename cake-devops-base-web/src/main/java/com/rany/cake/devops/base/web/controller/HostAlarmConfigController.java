@@ -32,31 +32,31 @@ public class HostAlarmConfigController {
 
     @GetMapping("/get-config")
     public PojoResult<HostAlarmConfigWrapperDTO> getAlarmConfig(@RequestParam("hostId") String hostId) {
-        return hostAlarmConfigService.getHostAlarmConfig(hostId);
+        return PojoResult.succeed(hostAlarmConfigService.getHostAlarmConfig(hostId));
     }
 
     @PostMapping("/set-alarm-config")
     public PojoResult<Boolean> setAlarmConfig(SetHostAlarmConfigCommand command) {
-        return hostAlarmConfigService.setHostAlarmConfig(command);
+        return PojoResult.succeed(hostAlarmConfigService.setHostAlarmConfig(command));
     }
 
     @PostMapping("/set-alarm-group")
     public PojoResult<Boolean> setAlarmHost(SetHostAlarmGroupCommand command) {
-        return hostAlarmConfigService.setHostAlarmGroup(command);
+        return PojoResult.succeed(hostAlarmConfigService.setHostAlarmGroup(command));
     }
 
     @GetMapping("/get-config-list")
     public ListResult<HostAlarmConfigDTO> getAlarmConfigList(@RequestParam("hostId") String hostId) {
-        return hostAlarmConfigService.selectAlarmConfigByHostId(hostId);
+        return ListResult.succeed(hostAlarmConfigService.selectAlarmConfigByHostId(hostId));
     }
 
     @GetMapping("/history")
     public PageResult<HostAlarmHistoryDTO> pageHistory(@RequestBody HostAlarmHistoryPageQuery query) {
-        return hostAlarmService.pageHistory(query);
+        return PageResult.succeed(hostAlarmService.pageHistory(query));
     }
 
     @GetMapping("/delete")
     public PojoResult<Boolean> deleteAlarmConfig(@RequestParam("hostId") String hostId) {
-        return hostAlarmConfigService.deleteAlarmConfigByHostId(hostId);
+        return PojoResult.succeed(hostAlarmConfigService.deleteAlarmConfigByHostId(hostId));
     }
 }

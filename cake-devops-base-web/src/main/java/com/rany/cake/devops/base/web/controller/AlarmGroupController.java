@@ -25,28 +25,28 @@ public class AlarmGroupController {
     @PostMapping("/create")
     // @EventLog(value = EventType.ADD_ALARM_GROUP)
     public PojoResult<String> create(@RequestBody CreateAlarmGroupCommand command) {
-        return webhookConfigService.createAlarmGroup(command);
+        return PojoResult.succeed(webhookConfigService.createAlarmGroup(command));
     }
 
     @GetMapping("/get")
     public PojoResult<AlarmGroupDTO> get(@RequestParam("id") Long alarmGroupId) {
         AlarmGroupBasicQuery alarmGroupBasicQuery = new AlarmGroupBasicQuery();
         alarmGroupBasicQuery.setAlarmGroupId(alarmGroupId);
-        return webhookConfigService.getAlarmGroup(alarmGroupBasicQuery);
+        return PojoResult.succeed(webhookConfigService.getAlarmGroup(alarmGroupBasicQuery));
     }
 
     @PostMapping("/update")
     public PojoResult<Boolean> update(@RequestBody ModifyAlarmGroupCommand command) {
-        return webhookConfigService.modifyAlarmGroup(command);
+        return PojoResult.succeed(webhookConfigService.modifyAlarmGroup(command));
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> delete(@RequestBody DeleteAlarmGroupCommand command) {
-        return webhookConfigService.deleteAlarmGroup(command);
+        return PojoResult.succeed(webhookConfigService.deleteAlarmGroup(command));
     }
 
     @PostMapping("/page")
     public PageResult<AlarmGroupDTO> page(@RequestBody AlarmGroupPageQuery pageQuery) {
-        return webhookConfigService.pageAlarmGroup(pageQuery);
+        return PageResult.succeed(webhookConfigService.pageAlarmGroup(pageQuery));
     }
 }

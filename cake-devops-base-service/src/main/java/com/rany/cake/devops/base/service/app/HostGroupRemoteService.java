@@ -1,7 +1,5 @@
 package com.rany.cake.devops.base.service.app;
 
-import com.cake.framework.common.response.ListResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.group.CreateGroupCommand;
 import com.rany.cake.devops.base.api.command.group.DeleteGroupCommand;
 import com.rany.cake.devops.base.api.command.group.ModifyGroupCommand;
@@ -42,44 +40,44 @@ public class HostGroupRemoteService implements HostGroupService {
 
 
     @Override
-    public PojoResult<String> createHostGroup(CreateGroupCommand createHostCommand) {
+    public String createHostGroup(CreateGroupCommand createHostCommand) {
         HostGroup host = new HostGroup(new HostGroupId(String.valueOf(snowflakeIdWorker.nextId())), createHostCommand.getName(), createHostCommand.getPid(),
                 createHostCommand.getSort());
         hostGroupDomainService.save(host);
-        return PojoResult.succeed(host.getBizID().getHostGroupId());
+        return host.getBizID().getHostGroupId();
     }
 
     @Override
-    public ListResult<HostGroupTreeDTO> getHostGroupTree(HostGroupTreeQuery hostGroupTreeQuery) {
+    public List<HostGroupTreeDTO> getHostGroupTree(HostGroupTreeQuery hostGroupTreeQuery) {
         List<HostGroup> hostGroups = hostGroupDomainService.listAllHostGroup();
         List<HostGroupDTO> hostGroupDTOS = hostGroupDataAdapter.sourceToTarget(hostGroups);
         List<HostGroupTreeDTO> treeDTOS = hostGroupDataAdapter.toTreeDTO(hostGroupDTOS);
         List<HostGroupTreeDTO> hostGroupTreeDTOS = HostGroupTreeConverter.convertListToTree(treeDTOS);
-        return ListResult.succeed(hostGroupTreeDTOS);
+        return hostGroupTreeDTOS;
     }
 
     @Override
-    public PojoResult<HostGroupDTO> getHostGroup(HostGroupBasicQuery hostGroupBasicQuery) {
+    public HostGroupDTO getHostGroup(HostGroupBasicQuery hostGroupBasicQuery) {
         HostGroup hostGroup = hostGroupDomainService.getHostGroup(new HostGroupId(hostGroupBasicQuery.getHostGroupId()));
-        return PojoResult.succeed(hostGroupDataAdapter.sourceToTarget(hostGroup));
+        return hostGroupDataAdapter.sourceToTarget(hostGroup);
     }
 
     @Override
-    public PojoResult<Boolean> deleteHostGroup(DeleteGroupCommand deleteGroupCommand) {
+    public Boolean deleteHostGroup(DeleteGroupCommand deleteGroupCommand) {
         HostGroup hostGroup = hostGroupDomainService.getHostGroup(new HostGroupId(deleteGroupCommand.getGroupId()));
         hostGroup.delete();
         hostGroupDomainService.update(hostGroup);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> modifyHostGroup(ModifyGroupCommand modifyGroupCommand) {
+    public Boolean modifyHostGroup(ModifyGroupCommand modifyGroupCommand) {
         HostGroup hostGroup = hostGroupDomainService.getHostGroup(new HostGroupId(modifyGroupCommand.getGroupId()));
         hostGroup.setName(modifyGroupCommand.getName());
         hostGroup.setSort(modifyGroupCommand.getSort());
         hostGroup.setParentId(modifyGroupCommand.getParentId());
         hostGroup.modify();
         hostGroupDomainService.update(hostGroup);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 }

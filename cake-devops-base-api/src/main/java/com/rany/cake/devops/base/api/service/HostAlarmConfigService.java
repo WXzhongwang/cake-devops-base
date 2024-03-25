@@ -1,11 +1,11 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.ListResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmConfigCommand;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmGroupCommand;
 import com.rany.cake.devops.base.api.dto.HostAlarmConfigDTO;
 import com.rany.cake.devops.base.api.dto.HostAlarmConfigWrapperDTO;
+
+import java.util.List;
 
 /**
  * 主机监控设置服务
@@ -23,7 +23,7 @@ public interface HostAlarmConfigService {
      * @param command 创建
      * @return result
      */
-    PojoResult<Boolean> setHostAlarmConfig(SetHostAlarmConfigCommand command);
+    Boolean setHostAlarmConfig(SetHostAlarmConfigCommand command);
 
     /**
      * 获取主机告警配置
@@ -31,7 +31,7 @@ public interface HostAlarmConfigService {
      * @param hostId
      * @return
      */
-    PojoResult<HostAlarmConfigWrapperDTO> getHostAlarmConfig(String hostId);
+    HostAlarmConfigWrapperDTO getHostAlarmConfig(String hostId);
 
     /**
      * 创建主机告警组配置
@@ -39,7 +39,7 @@ public interface HostAlarmConfigService {
      * @param command 创建
      * @return result
      */
-    PojoResult<Boolean> setHostAlarmGroup(SetHostAlarmGroupCommand command);
+    Boolean setHostAlarmGroup(SetHostAlarmGroupCommand command);
 
     /**
      * 根据主机查看告警配置列表
@@ -47,7 +47,7 @@ public interface HostAlarmConfigService {
      * @param hostId 主机
      * @return 查看主机告警配置列表
      */
-    ListResult<HostAlarmConfigDTO> selectAlarmConfigByHostId(String hostId);
+    List<HostAlarmConfigDTO> selectAlarmConfigByHostId(String hostId);
 
     /**
      * 删除主机查看告警配置列表
@@ -55,5 +55,5 @@ public interface HostAlarmConfigService {
      * @param hostId 主机
      * @return 删除主机告警配置列表
      */
-    PojoResult<Boolean> deleteAlarmConfigByHostId(String hostId);
+    Boolean deleteAlarmConfigByHostId(String hostId);
 }

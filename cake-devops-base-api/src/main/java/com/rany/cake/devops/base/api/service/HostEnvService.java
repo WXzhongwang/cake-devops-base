@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.host.env.*;
 import com.rany.cake.devops.base.api.dto.HostEnvDTO;
 import com.rany.cake.devops.base.api.query.HostEnvBasicQuery;
@@ -24,7 +23,7 @@ public interface HostEnvService {
      * @param command 创建
      * @return id
      */
-    PojoResult<String> createHostEnv(CreateHostEnvCommand command);
+    String createHostEnv(CreateHostEnvCommand command);
 
     /**
      * 编辑
@@ -32,7 +31,7 @@ public interface HostEnvService {
      * @param command 命令
      * @return 成功
      */
-    PojoResult<Boolean> modifyHostEnv(ModifyHostEnvCommand command);
+    Boolean modifyHostEnv(ModifyHostEnvCommand command);
 
     /**
      * 删除
@@ -40,7 +39,7 @@ public interface HostEnvService {
      * @param command 命令
      * @return 成功
      */
-    PojoResult<Boolean> deleteHostEnv(DeleteHostEnvCommand command);
+    Boolean deleteHostEnv(DeleteHostEnvCommand command);
 
     /**
      * 查看单个
@@ -48,7 +47,7 @@ public interface HostEnvService {
      * @param query 查询
      * @return 详情
      */
-    PojoResult<HostEnvDTO> getHostEnv(HostEnvBasicQuery query);
+    HostEnvDTO getHostEnv(HostEnvBasicQuery query);
 
     /**
      * 分页
@@ -56,7 +55,7 @@ public interface HostEnvService {
      * @param query 查询
      * @return 分页结果
      */
-    PageResult<HostEnvDTO> pageHostEnv(HostEnvPageQuery query);
+    Page<HostEnvDTO> pageHostEnv(HostEnvPageQuery query);
 
     /**
      * 同步主机变量
@@ -64,7 +63,7 @@ public interface HostEnvService {
      * @param command 命令
      * @return 成功
      */
-    PojoResult<Boolean> asyncHostEnv(AsyncHostEnvCommand command);
+    Boolean asyncHostEnv(AsyncHostEnvCommand command);
 
     /**
      * 以视图方式查看
@@ -72,7 +71,7 @@ public interface HostEnvService {
      * @param query 查询
      * @return 结果
      */
-    PojoResult<String> view(HostEnvViewQuery query);
+    String view(HostEnvViewQuery query);
 
     /**
      * 保存视图
@@ -80,5 +79,5 @@ public interface HostEnvService {
      * @param command 保存视图
      * @return 查看视图
      */
-    PojoResult<String> saveView(HostEnvViewSaveCommand command);
+    String saveView(HostEnvViewSaveCommand command);
 }

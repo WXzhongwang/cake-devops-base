@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.wehook.CreateWebhookCommand;
 import com.rany.cake.devops.base.api.command.wehook.DeleteWebhookCommand;
 import com.rany.cake.devops.base.api.command.wehook.ModifyWebHookCommand;
@@ -37,18 +35,18 @@ public class WebhookConfigRemoteService implements WebhookConfigService {
     private WebhookDataAdapter webhookDataAdapter;
 
     @Override
-    public PojoResult<String> createWebhook(CreateWebhookCommand command) {
+    public String createWebhook(CreateWebhookCommand command) {
         WebhookConfig env = new WebhookConfig();
         env.setWebhookName(command.getWebhookName());
         env.setWebhookType(WebHookType.DINGDING.getType());
         env.setWebhookUrl(command.getWebhookUrl());
         env.setWebhookConfig(command.getWebhookConfig());
         webhookConfigRepository.save(env);
-        return PojoResult.succeed(env.getId().toString());
+        return env.getId().toString();
     }
 
     @Override
-    public PojoResult<Boolean> modifyWebhook(ModifyWebHookCommand command) {
+    public Boolean modifyWebhook(ModifyWebHookCommand command) {
         WebhookConfig webhookConfig = webhookConfigRepository.find(command.getWebhookId());
         if (webhookConfig == null) {
             throw new DevOpsException(DevOpsErrorMessage.HOOK_NOT_FOUND);
@@ -58,35 +56,34 @@ public class WebhookConfigRemoteService implements WebhookConfigService {
         webhookConfig.setWebhookUrl(command.getWebhookUrl());
         webhookConfig.setWebhookConfig(command.getWebhookConfig());
         webhookConfigRepository.update(webhookConfig);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> deleteWebhook(DeleteWebhookCommand command) {
+    public Boolean deleteWebhook(DeleteWebhookCommand command) {
         WebhookConfig webhookConfig = webhookConfigRepository.find(command.getWebhookId());
         if (webhookConfig == null) {
             throw new DevOpsException(DevOpsErrorMessage.HOOK_NOT_FOUND);
         }
         webhookConfigRepository.remove(webhookConfig);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<WebHookConfigDTO> getWebhook(WebhookBasicQuery basicQuery) {
+    public WebHookConfigDTO getWebhook(WebhookBasicQuery basicQuery) {
         WebhookConfig webhookConfig = webhookConfigRepository.find(basicQuery.getWebhookId());
         if (webhookConfig == null) {
             throw new DevOpsException(DevOpsErrorMessage.HOOK_NOT_FOUND);
         }
-        return PojoResult.succeed(webhookDataAdapter.sourceToTarget(webhookConfig));
+        return webhookDataAdapter.sourceToTarget(webhookConfig);
     }
 
     @Override
-    public PageResult<WebHookConfigDTO> pageWebhook(WebhookPageQuery pageQuery) {
+    public Page<WebHookConfigDTO> pageWebhook(WebhookPageQuery pageQuery) {
         WebhookConfigQueryParam webhookConfigQueryParam = webhookDataAdapter.convertParam(pageQuery);
         Page<WebhookConfig> page = webhookConfigRepository.page(webhookConfigQueryParam);
         Collection<WebhookConfig> items = page.getItems();
         List<WebHookConfigDTO> webHookConfigDTOS = webhookDataAdapter.sourceToTarget(new ArrayList<>(items));
-        Page<WebHookConfigDTO> build = PageUtils.build(page, webHookConfigDTOS);
-        return PageResult.succeed(build);
+        return PageUtils.build(page, webHookConfigDTOS);
     }
 }

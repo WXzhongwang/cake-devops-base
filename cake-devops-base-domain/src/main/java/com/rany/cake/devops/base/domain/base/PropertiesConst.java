@@ -35,17 +35,17 @@ public class PropertiesConst {
      */
     public static String MACHINE_MONITOR_LATEST_VERSION;
 
-    @Value("${app.version}")
+    @Value("${app.version:'1.0.0'}")
     private void setVersion(String version) {
         PropertiesConst.ORION_OPS_VERSION = version;
     }
 
-    @Value("${login.token.header}")
+    @Value("${login.token.header:'O-Login-Token'}")
     private void setLoginTokenHeader(String loginTokenHeader) {
         PropertiesConst.LOGIN_TOKEN_HEADER = loginTokenHeader;
     }
 
-    @Value("${value.mix.secret.key}")
+    @Value("${value.mix.secret.key:'cake_ops'}")
     private void setValueMixSecretKey(String valueMixSecretKey) {
         PropertiesConst.VALUE_MIX_SECRET_KEY = valueMixSecretKey;
     }

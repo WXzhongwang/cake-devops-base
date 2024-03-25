@@ -1,7 +1,5 @@
 package com.rany.cake.devops.base.service.app;
 
-import com.cake.framework.common.response.ListResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.cluster.CreateClusterCommand;
 import com.rany.cake.devops.base.api.command.cluster.TestClusterConnectCommand;
 import com.rany.cake.devops.base.api.dto.ClusterDTO;
@@ -42,20 +40,20 @@ public class ClusterRemoteService implements ClusterService {
     private final ClusterDataAdapter clusterDataAdapter;
 
     @Override
-    public PojoResult<Boolean> testConnect(TestClusterConnectCommand testClusterConnectCommand) {
+    public Boolean testConnect(TestClusterConnectCommand testClusterConnectCommand) {
         ClusterTypeEnum clusterTypeEnum = EnumUtils.getEnum(ClusterTypeEnum.class, testClusterConnectCommand.getClusterType());
         if (clusterTypeEnum == null) {
             throw new DevOpsException(DevOpsErrorMessage.OPS_SUPPORTED_ERROR);
         }
         // TODO: 缺少实现
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<String> createCluster(CreateClusterCommand createClusterCommand) {
-        PojoResult<Boolean> connect = this.testConnect(new TestClusterConnectCommand(createClusterCommand.getConnectString(),
+    public String createCluster(CreateClusterCommand createClusterCommand) {
+        Boolean connect = this.testConnect(new TestClusterConnectCommand(createClusterCommand.getConnectString(),
                 createClusterCommand.getClusterType(), createClusterCommand.getToken()));
-        if (!connect.getSuccess() || !connect.getContent()) {
+        if (!connect) {
             throw new DevOpsException(DevOpsErrorMessage.OPS_CONNECTED_ERROR);
         }
         Cluster cluster = new Cluster(new ClusterId(String.valueOf(idGenerator.nextId())), new ClusterName(createClusterCommand.getName()),
@@ -64,12 +62,12 @@ public class ClusterRemoteService implements ClusterService {
         cluster.setToken(createClusterCommand.getToken());
         cluster.setTags(createClusterCommand.getTags());
         clusterDomainService.save(cluster);
-        return PojoResult.succeed(cluster.getClusterId().getClusterId());
+        return cluster.getClusterId().getClusterId();
     }
 
     @Override
-    public ListResult<ClusterDTO> listCluster() {
+    public List<ClusterDTO> listCluster() {
         List<Cluster> clusters = clusterDomainService.selectAll();
-        return ListResult.succeed(clusterDataAdapter.sourceToTarget(clusters));
+        return clusterDataAdapter.sourceToTarget(clusters);
     }
 }

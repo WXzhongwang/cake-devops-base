@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
 import com.rany.cake.devops.base.api.dto.AppAccountDTO;
@@ -20,11 +19,11 @@ import com.rany.cake.devops.base.api.query.MemberPageQuery;
 public interface AppMemberService {
 
 
-    PageResult<AppAccountDTO> pageQueryMember(MemberPageQuery memberPageQuery);
-    
-    PageResult<AppMemberDTO> pageAppMembers(AppMemberPageQuery appMemberPageQuery);
+    Page<AppAccountDTO> pageQueryMember(MemberPageQuery memberPageQuery);
 
-    PojoResult<Boolean> updateMember(UpdateAppMemberCommand updateAppMemberCommand);
+    Page<AppMemberDTO> pageAppMembers(AppMemberPageQuery appMemberPageQuery);
 
-    PojoResult<Boolean> deleteMember(DeleteAppMemberCommand deleteAppMemberCommand);
+    Boolean updateMember(UpdateAppMemberCommand updateAppMemberCommand);
+
+    Boolean deleteMember(DeleteAppMemberCommand deleteAppMemberCommand);
 }

@@ -24,36 +24,36 @@ public class ApprovalController {
 
     @PostMapping("/create")
     public PojoResult<String> createApproval(CreateApprovalCommand createApprovalCommand) {
-        return approvalService.createApproval(createApprovalCommand);
+        return PojoResult.succeed(approvalService.createApproval(createApprovalCommand));
     }
 
     @PostMapping("/get")
     public PojoResult<ApprovalDTO> getApproval(ApprovalBasicQuery approvalBasicQuery) {
-        return approvalService.getApproval(approvalBasicQuery);
+        return PojoResult.succeed(approvalService.getApproval(approvalBasicQuery));
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> deleteApproval(DeleteApprovalCommand deleteApprovalCommand) {
-        return approvalService.deleteApproval(deleteApprovalCommand);
+        return PojoResult.succeed(approvalService.deleteApproval(deleteApprovalCommand));
     }
 
     @PostMapping("/modify")
     public PojoResult<Boolean> modifyApproval(ModifyApprovalCommand modifyApprovalCommand) {
-        return approvalService.modifyApproval(modifyApprovalCommand);
+        return PojoResult.succeed(approvalService.modifyApproval(modifyApprovalCommand));
     }
 
     @PostMapping("/approve")
     public PojoResult<Boolean> approveApproval(ApproveApprovalCommand approveApprovalCommand) {
-        return approvalService.approveApproval(approveApprovalCommand);
+        return PojoResult.succeed(approvalService.approveApproval(approveApprovalCommand));
     }
 
     @PostMapping("/reject")
     public PojoResult<Boolean> rejectApproval(RejectApprovalCommand rejectApprovalCommand) {
-        return approvalService.rejectApproval(rejectApprovalCommand);
+        return PojoResult.succeed(approvalService.rejectApproval(rejectApprovalCommand));
     }
 
     @PostMapping("/repeal")
     public PojoResult<Boolean> repealApproval(RepealApprovalCommand repealApprovalCommand) {
-        return approvalService.repealApproval(repealApprovalCommand);
+        return PojoResult.succeed(approvalService.repealApproval(repealApprovalCommand));
     }
 }

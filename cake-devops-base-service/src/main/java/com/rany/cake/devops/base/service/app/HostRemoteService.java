@@ -2,8 +2,6 @@ package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.exception.BusinessException;
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.host.*;
 import com.rany.cake.devops.base.api.dto.HostDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
@@ -47,7 +45,7 @@ public class HostRemoteService implements HostService {
 
 
     @Override
-    public PojoResult<String> createHost(CreateHostCommand createHostCommand) {
+    public String createHost(CreateHostCommand createHostCommand) {
         Host host = new Host(new HostId(String.valueOf(snowflakeIdWorker.nextId())), createHostCommand.getName(),
                 createHostCommand.getHostName(), createHostCommand.getServerAddr(), createHostCommand.getPort());
         host.setUsername(createHostCommand.getUsername());
@@ -61,56 +59,56 @@ public class HostRemoteService implements HostService {
             groupHosts.add(groupHost);
         }
         hostDomainService.save(host, groupHosts);
-        return PojoResult.succeed(host.getHostId().getHostId());
+        return host.getHostId().getHostId();
     }
 
     @Override
-    public PojoResult<String> copyHost(CopyHostCommand copyHostCommand) {
+    public String copyHost(CopyHostCommand copyHostCommand) {
         HostId hostId = new HostId(copyHostCommand.getHostId());
         Host host = hostDomainService.getHost(hostId);
         List<GroupHost> groupHost = hostDomainService.getGroupHost(hostId);
         HostId newHostId = new HostId(String.valueOf(snowflakeIdWorker.nextId()));
         host.copy(newHostId, groupHost);
         hostDomainService.save(host, groupHost);
-        return PojoResult.succeed(host.getHostId().getHostId());
+        return host.getHostId().getHostId();
     }
 
     @Override
-    public PojoResult<String> ping(PingHostCommand pingHostCommand) {
+    public String ping(PingHostCommand pingHostCommand) {
         // 查询超时时间
         Host host = hostDomainService.getHost(new HostId(pingHostCommand.getHostId()));
         Integer connectTimeout = hostDomainService.getConnectionTimeout(new HostId(pingHostCommand.getHostId()));
         if (!IPs.ping(host.getServerAddr(), connectTimeout)) {
             throw new BusinessException(DevOpsErrorMessage.OPS_CONNECTED_ERROR);
         }
-        return PojoResult.succeed(Constants.PONG);
+        return Constants.PONG;
     }
 
     @Override
-    public PojoResult<HostDTO> getHost(HostBasicQuery hostBasicQuery) {
+    public HostDTO getHost(HostBasicQuery hostBasicQuery) {
         Host host = hostDomainService.getHost(new HostId(hostBasicQuery.getHostId()));
-        return PojoResult.succeed(hostDataAdapter.sourceToTarget(host));
+        return hostDataAdapter.sourceToTarget(host);
     }
 
     @Override
-    public PageResult<HostDTO> pageHost(HostPageQuery hostPageQuery) {
+    public Page<HostDTO> pageHost(HostPageQuery hostPageQuery) {
         HostPageQueryParam hostPageQueryParam = hostDataAdapter.convertParam(hostPageQuery);
         Page<Host> page = hostDomainService.pageHost(hostPageQueryParam);
         List<Host> hosts = new ArrayList<>(page.getItems());
         List<HostDTO> hostDTOList = hostDataAdapter.sourceToTarget(hosts);
-        return PageResult.succeed(PageUtils.build(page, hostDTOList));
+        return PageUtils.build(page, hostDTOList);
     }
 
     @Override
-    public PojoResult<Boolean> deleteHost(DeleteHostCommand deleteHostCommand) {
+    public Boolean deleteHost(DeleteHostCommand deleteHostCommand) {
         Host host = hostDomainService.getHost(new HostId(deleteHostCommand.getHostId()));
         host.delete();
         hostDomainService.update(host);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<Boolean> modifyHost(ModifyHostCommand modifyHostCommand) {
+    public Boolean modifyHost(ModifyHostCommand modifyHostCommand) {
         Host host = hostDomainService.getHost(new HostId(modifyHostCommand.getHostId()));
         host.setHostName(modifyHostCommand.getHostname());
         host.setName(modifyHostCommand.getName());
@@ -121,6 +119,6 @@ public class HostRemoteService implements HostService {
         host.setProxyId(modifyHostCommand.getProxyId());
         host.modify();
         hostDomainService.update(host);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 }

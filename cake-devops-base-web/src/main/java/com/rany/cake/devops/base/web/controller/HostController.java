@@ -26,33 +26,33 @@ public class HostController {
 
     @PostMapping("/pageHost")
     public PageResult<HostDTO> pageHost(@RequestBody(required = false) HostPageQuery hostPageQuery) {
-        return hostService.pageHost(hostPageQuery);
+        return PageResult.succeed(hostService.pageHost(hostPageQuery));
     }
 
     @GetMapping("/getHost")
     public PojoResult<HostDTO> getHost(@RequestParam("id") String hostId) {
         HostBasicQuery hostBasicQuery = new HostBasicQuery();
         hostBasicQuery.setHostId(hostId);
-        return hostService.getHost(hostBasicQuery);
+        return PojoResult.succeed(hostService.getHost(hostBasicQuery));
     }
 
     @PostMapping("/createHost")
     public PojoResult<String> createHost(@RequestBody CreateHostCommand createHostCommand) {
-        return hostService.createHost(createHostCommand);
+        return PojoResult.succeed(hostService.createHost(createHostCommand));
     }
 
     @PostMapping("/updateHost")
     public PojoResult<Boolean> updateHost(@RequestBody ModifyHostCommand modifyHostCommand) {
-        return hostService.modifyHost(modifyHostCommand);
+        return PojoResult.succeed(hostService.modifyHost(modifyHostCommand));
     }
 
     @PostMapping("/copy")
     public PojoResult<String> copy(@RequestBody CopyHostCommand copyHostCommand) {
-        return hostService.copyHost(copyHostCommand);
+        return PojoResult.succeed(hostService.copyHost(copyHostCommand));
     }
 
     @PostMapping("/ping")
     public PojoResult<String> ping(@RequestBody PingHostCommand pingHostCommand) {
-        return hostService.ping(pingHostCommand);
+        return PojoResult.succeed(hostService.ping(pingHostCommand));
     }
 }

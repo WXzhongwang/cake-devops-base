@@ -32,53 +32,53 @@ public class AppController {
 
     @PostMapping("/pageApp")
     public PageResult<AppDTO> pageApp(@RequestBody AppPageQuery appPageQuery) {
-        return appService.pageApp(appPageQuery);
+        return PageResult.succeed(appService.pageApp(appPageQuery));
     }
 
     @GetMapping("/getApp")
     public PojoResult<AppDTO> getApp(@RequestParam("id") String appId) {
         AppBasicQuery appBasicQuery = new AppBasicQuery();
         appBasicQuery.setAppId(appId);
-        return appService.getApp(appBasicQuery);
+        return PojoResult.succeed(appService.getApp(appBasicQuery));
     }
 
     @PostMapping("/createApp")
     public PojoResult<String> createApp(@RequestBody CreateAppCommand createAppCommand) {
-        return appService.createApp(createAppCommand);
+        return PojoResult.succeed(appService.createApp(createAppCommand));
     }
 
     @PostMapping("/createEnv")
     public PojoResult<String> createAppEnv(@RequestBody CreateAppEnvCommand createAppEnvCommand) {
-        return appService.createAppEnv(createAppEnvCommand);
+        return PojoResult.succeed(appService.createAppEnv(createAppEnvCommand));
     }
 
     @PostMapping("/getAppEnv")
     public PojoResult<AppEnvDTO> getAppEnv(@RequestBody AppEnvBasicQuery appEnvBasicQuery) {
-        return appService.getAppEnv(appEnvBasicQuery);
+        return PojoResult.succeed(appService.getAppEnv(appEnvBasicQuery));
     }
 
     @PostMapping("/listEnv")
     public ListResult<AppEnvDTO> listAppEnv(@RequestBody AppEnvQuery appEnvQuery) {
-        return appService.listAppEnv(appEnvQuery);
+        return ListResult.succeed(appService.listAppEnv(appEnvQuery));
     }
 
     @GetMapping("/getDepartments")
     public ListResult<DepartmentDTO> getDepartments() {
-        return appService.listDepartments();
+        return ListResult.succeed(appService.listDepartments());
     }
 
     @PostMapping("/pageAppMembers")
     public PageResult<AppMemberDTO> pageAppMembers(@RequestBody AppMemberPageQuery appMemberPageQuery) {
-        return appMemberService.pageAppMembers(appMemberPageQuery);
+        return PageResult.succeed(appMemberService.pageAppMembers(appMemberPageQuery));
     }
 
     @PostMapping("/updateMember")
     public PojoResult<Boolean> updateMember(@RequestBody UpdateAppMemberCommand updateAppMemberCommand) {
-        return appMemberService.updateMember(updateAppMemberCommand);
+        return PojoResult.succeed(appMemberService.updateMember(updateAppMemberCommand));
     }
 
     @PostMapping("/deleteMember")
     public PojoResult<Boolean> deleteMember(@RequestBody DeleteAppMemberCommand deleteAppMemberCommand) {
-        return appMemberService.deleteMember(deleteAppMemberCommand);
+        return PojoResult.succeed(appMemberService.deleteMember(deleteAppMemberCommand));
     }
 }

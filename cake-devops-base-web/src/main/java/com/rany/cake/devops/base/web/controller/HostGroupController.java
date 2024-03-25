@@ -25,23 +25,23 @@ public class HostGroupController {
 
     @PostMapping("/tree")
     public ListResult<HostGroupTreeDTO> listGroupTree(@RequestBody(required = false) HostGroupTreeQuery treeQuery) {
-        return hostGroupService.getHostGroupTree(treeQuery);
+        return ListResult.succeed(hostGroupService.getHostGroupTree(treeQuery));
     }
 
     @PostMapping("/createGroup")
     public PojoResult<String> createHostGroup(@RequestBody CreateGroupCommand command) {
-        return hostGroupService.createHostGroup(command);
+        return PojoResult.succeed(hostGroupService.createHostGroup(command));
     }
 
     @GetMapping("/getGroup")
     public PojoResult<HostGroupDTO> getGroup(@RequestParam("id") String hostGroupId) {
         HostGroupBasicQuery hostGroupBasicQuery = new HostGroupBasicQuery();
         hostGroupBasicQuery.setHostGroupId(hostGroupId);
-        return hostGroupService.getHostGroup(hostGroupBasicQuery);
+        return PojoResult.succeed(hostGroupService.getHostGroup(hostGroupBasicQuery));
     }
 
     @GetMapping("/updateGroup")
     public PojoResult<Boolean> updateGroup(@RequestBody ModifyGroupCommand command) {
-        return hostGroupService.modifyHostGroup(command);
+        return PojoResult.succeed(hostGroupService.modifyHostGroup(command));
     }
 }

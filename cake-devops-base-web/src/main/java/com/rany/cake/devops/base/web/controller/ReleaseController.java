@@ -29,12 +29,12 @@ public class ReleaseController {
      */
     @PostMapping("/create")
     public PojoResult<Boolean> createRelease(@RequestBody CreateReleaseCommand createReleaseCommand) {
-        return releaseService.createRelease(createReleaseCommand);
+        return PojoResult.succeed(releaseService.createRelease(createReleaseCommand));
     }
 
     @PostMapping("/page")
     public PageResult<ReleaseDTO> pageRelease(@RequestBody ReleasePageQuery releasePageQuery) {
-        return releaseService.pageRelease(releasePageQuery);
+        return PageResult.succeed(releaseService.pageRelease(releasePageQuery));
     }
 
     /**
@@ -45,7 +45,7 @@ public class ReleaseController {
      */
     @PostMapping("/deploy")
     public PojoResult<Boolean> deploy(@RequestBody DeployCommand deployCommand) {
-        return releaseService.deploy(deployCommand);
+        return PojoResult.succeed(releaseService.deploy(deployCommand));
     }
 
     /**
@@ -56,6 +56,6 @@ public class ReleaseController {
      */
     @PostMapping("/close")
     public PojoResult<Boolean> close(@RequestBody CloseReleaseCommand command) {
-        return releaseService.close(command);
+        return PojoResult.succeed(releaseService.close(command));
     }
 }

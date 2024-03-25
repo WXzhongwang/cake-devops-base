@@ -1,10 +1,10 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.ListResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.cluster.CreateClusterCommand;
 import com.rany.cake.devops.base.api.command.cluster.TestClusterConnectCommand;
 import com.rany.cake.devops.base.api.dto.ClusterDTO;
+
+import java.util.List;
 
 /**
  * 集群服务
@@ -23,7 +23,7 @@ public interface ClusterService {
      * @param testClusterConnectCommand 测试连接集群
      * @return 是否连接成功
      */
-    PojoResult<Boolean> testConnect(TestClusterConnectCommand testClusterConnectCommand);
+    Boolean testConnect(TestClusterConnectCommand testClusterConnectCommand);
 
     /**
      * 创建集群
@@ -31,13 +31,13 @@ public interface ClusterService {
      * @param createClusterCommand 创建集群
      * @return 创建是否成功
      */
-    PojoResult<String> createCluster(CreateClusterCommand createClusterCommand);
+    String createCluster(CreateClusterCommand createClusterCommand);
 
     /**
      * 查询所有集群
      *
      * @return 全部集群列表
      */
-    ListResult<ClusterDTO> listCluster();
+    List<ClusterDTO> listCluster();
 
 }

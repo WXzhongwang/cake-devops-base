@@ -25,28 +25,28 @@ public class ServerProxyController {
 
     @PostMapping("/create")
     public PojoResult<String> create(@RequestBody CreateServerProxyCommand command) {
-        return serverProxyService.createServerProxy(command);
+        return PojoResult.succeed(serverProxyService.createServerProxy(command));
     }
 
     @GetMapping("/get")
     public PojoResult<ServerProxyDTO> get(@RequestParam("id") Long proxyId) {
         ServerProxyBasicQuery serverProxyBasicQuery = new ServerProxyBasicQuery();
         serverProxyBasicQuery.setServerProxyId(proxyId);
-        return serverProxyService.getServerProxy(serverProxyBasicQuery);
+        return PojoResult.succeed(serverProxyService.getServerProxy(serverProxyBasicQuery));
     }
 
     @PostMapping("/update")
     public PojoResult<Boolean> update(@RequestBody ModifyServerProxyCommand command) {
-        return serverProxyService.modifyServerProxy(command);
+        return PojoResult.succeed(serverProxyService.modifyServerProxy(command));
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> delete(@RequestBody DeleteServerProxyCommand command) {
-        return serverProxyService.deleteServerProxy(command);
+        return PojoResult.succeed(serverProxyService.deleteServerProxy(command));
     }
 
     @PostMapping("/page")
     public PageResult<ServerProxyDTO> page(@RequestBody ServerProxyPageQuery serverProxyPageQuery) {
-        return serverProxyService.pageServerProxy(serverProxyPageQuery);
+        return PageResult.succeed(serverProxyService.pageServerProxy(serverProxyPageQuery));
     }
 }

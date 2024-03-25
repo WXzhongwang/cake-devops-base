@@ -36,6 +36,12 @@ public class HostEnvRepositoryImpl implements HostEnvRepository {
     }
 
     @Override
+    public HostEnv findByKey(String hostId, String key) {
+        HostEnvPO hostEnvPO = hostEnvDao.selectByName(key, hostId);
+        return hostEnvDataConvertor.targetToSource(hostEnvPO);
+    }
+
+    @Override
     public void remove(HostEnv env) {
         HostEnvPO hostEnvPO = hostEnvPOMapper.selectByPrimaryKey(env.getId());
         hostEnvPO.setIsDeleted(DeleteStatusEnum.YES.getValue());

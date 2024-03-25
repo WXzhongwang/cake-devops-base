@@ -1,7 +1,5 @@
 package com.rany.cake.devops.base.service.app;
 
-import com.cake.framework.common.response.ListResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmConfigCommand;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmGroupCommand;
 import com.rany.cake.devops.base.api.dto.HostAlarmConfigDTO;
@@ -35,7 +33,7 @@ public class HostAlarmConfigRemoteService implements HostAlarmConfigService {
     private final HostAlarmGroupRepository hostAlarmGroupRepository;
 
     @Override
-    public PojoResult<Boolean> setHostAlarmConfig(SetHostAlarmConfigCommand command) {
+    public Boolean setHostAlarmConfig(SetHostAlarmConfigCommand command) {
         hostAlarmConfigRepository.deleteAlarmConfig(command.getHostId(), command.getAlarmType());
         HostAlarmConfig hostAlarmConfig = new HostAlarmConfig();
         hostAlarmConfig.setHostId(command.getHostId());
@@ -45,11 +43,11 @@ public class HostAlarmConfigRemoteService implements HostAlarmConfigService {
         hostAlarmConfig.setNotifySilence(command.getNotifySilence());
         hostAlarmConfig.init();
         hostAlarmConfigRepository.save(hostAlarmConfig);
-        return PojoResult.succeed();
+        return Boolean.TRUE;
     }
 
     @Override
-    public PojoResult<HostAlarmConfigWrapperDTO> getHostAlarmConfig(String hostId) {
+    public HostAlarmConfigWrapperDTO getHostAlarmConfig(String hostId) {
         HostAlarmConfigWrapperDTO configWrapperDTO = new HostAlarmConfigWrapperDTO();
 
         List<HostAlarmConfig> hostAlarmConfigs = hostAlarmConfigRepository.find(new HostId(hostId));
@@ -59,11 +57,11 @@ public class HostAlarmConfigRemoteService implements HostAlarmConfigService {
         List<HostAlarmGroup> hostAlarmGroups = hostAlarmGroupRepository.find(new HostId(hostId));
         List<HostAlarmGroupDTO> hostAlarmGroupDTOS = hostAlarmGroupDataAdapter.sourceToTarget(hostAlarmGroups);
         configWrapperDTO.setAlarmGroupList(hostAlarmGroupDTOS);
-        return PojoResult.succeed(configWrapperDTO);
+        return configWrapperDTO;
     }
 
     @Override
-    public PojoResult<Boolean> setHostAlarmGroup(SetHostAlarmGroupCommand command) {
+    public Boolean setHostAlarmGroup(SetHostAlarmGroupCommand command) {
         ArrayList<HostAlarmGroup> alarmGroupList = new ArrayList<>();
         for (Long groupId : command.getGroupIdList()) {
             HostAlarmGroup alarmGroup = new HostAlarmGroup();
@@ -72,19 +70,19 @@ public class HostAlarmConfigRemoteService implements HostAlarmConfigService {
             alarmGroupList.add(alarmGroup);
         }
         hostAlarmGroupRepository.save(alarmGroupList);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     @Override
-    public ListResult<HostAlarmConfigDTO> selectAlarmConfigByHostId(String hostId) {
+    public List<HostAlarmConfigDTO> selectAlarmConfigByHostId(String hostId) {
         List<HostAlarmConfig> hostAlarmConfigs = hostAlarmConfigRepository.find(new HostId(hostId));
         List<HostAlarmConfigDTO> hostAlarmConfigDTOList = hostAlarmConfigDataAdapter.sourceToTarget(hostAlarmConfigs);
-        return ListResult.succeed(hostAlarmConfigDTOList);
+        return hostAlarmConfigDTOList;
     }
 
     @Override
-    public PojoResult<Boolean> deleteAlarmConfigByHostId(String hostId) {
+    public Boolean deleteAlarmConfigByHostId(String hostId) {
         hostAlarmConfigRepository.deleteAlarmConfig(hostId);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 }

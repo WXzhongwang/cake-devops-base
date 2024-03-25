@@ -11,8 +11,11 @@ import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.*;
 import com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
+import com.rany.cake.devops.base.util.CommandConst;
+import com.rany.cake.devops.base.util.Const;
 import com.rany.cake.devops.base.util.MachineConst;
 import com.rany.cake.devops.base.util.enums.MachineEnvAttr;
+import com.rany.cake.toolkit.lang.utils.Charsets;
 import com.rany.cake.toolkit.lang.utils.Strings;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -103,5 +106,54 @@ public class HostDomainService {
 
     public ServerKey getServerKey(Long serverKeyId) {
         return serverKeyRepository.find(serverKeyId);
+    }
+
+    /**
+     * 获取 sftp 编码格式
+     *
+     * @param hostId 机器id
+     * @return 编码格式
+     */
+    public String getSftpCharset(String hostId) {
+        HostEnv hostEnv = hostEnvRepository.findByKey(hostId, MachineEnvAttr.SFTP_CHARSET.getKey());
+        String charset = hostEnv.getAttrValue();
+        return Charsets.isSupported(charset) ? charset : Const.UTF_8;
+    }
+
+    /**
+     * 获取文件 tail 尾行偏移量
+     *
+     * @param hostId 机器id
+     * @return offset line
+     */
+    public Integer getTailOffset(String hostId) {
+        HostEnv hostEnv = hostEnvRepository.findByKey(hostId, MachineEnvAttr.SFTP_CHARSET.getKey());
+        int offset = Strings.isInteger(hostEnv.getAttrValue()) ? Integer.parseInt(hostEnv.getAttrValue()) :
+                Const.TAIL_OFFSET_LINE;
+        return Math.max(offset, 0);
+    }
+
+    /**
+     * 获取文件 tail 编码集
+     *
+     * @param hostId 机器id
+     * @return 编码集
+     */
+    public String getTailCharset(String hostId) {
+        HostEnv hostEnv = hostEnvRepository.findByKey(hostId, MachineEnvAttr.TAIL_CHARSET.getKey());
+        String charset = hostEnv.getAttrValue();
+        return Charsets.isSupported(charset) ? charset : Const.UTF_8;
+    }
+
+    /**
+     * 获取文件 tail 默认命令
+     *
+     * @param hostId 机器id
+     * @return 默认命令
+     */
+    public String getTailDefaultCommand(String hostId) {
+        HostEnv hostEnv = hostEnvRepository.findByKey(hostId, MachineEnvAttr.TAIL_DEFAULT_COMMAND.getKey());
+        String command = hostEnv.getAttrValue();
+        return Strings.isBlank(command) ? CommandConst.TAIL_FILE_DEFAULT : command;
     }
 }

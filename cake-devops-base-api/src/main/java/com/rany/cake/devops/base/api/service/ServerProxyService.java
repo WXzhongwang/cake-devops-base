@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.proxy.CreateServerProxyCommand;
 import com.rany.cake.devops.base.api.command.proxy.DeleteServerProxyCommand;
 import com.rany.cake.devops.base.api.command.proxy.ModifyServerProxyCommand;
@@ -25,7 +24,7 @@ public interface ServerProxyService {
      * @param command 创建
      * @return 主机账号ID
      */
-    PojoResult<String> createServerProxy(CreateServerProxyCommand command);
+    String createServerProxy(CreateServerProxyCommand command);
 
     /**
      * 更新
@@ -33,7 +32,7 @@ public interface ServerProxyService {
      * @param command 更新
      * @return success
      */
-    PojoResult<Boolean> modifyServerProxy(ModifyServerProxyCommand command);
+    Boolean modifyServerProxy(ModifyServerProxyCommand command);
 
     /**
      * 删除
@@ -41,7 +40,7 @@ public interface ServerProxyService {
      * @param command 删除
      * @return success
      */
-    PojoResult<Boolean> deleteServerProxy(DeleteServerProxyCommand command);
+    Boolean deleteServerProxy(DeleteServerProxyCommand command);
 
     /**
      * 获取详情
@@ -49,7 +48,7 @@ public interface ServerProxyService {
      * @param basicQuery 详情
      * @return 详情
      */
-    PojoResult<ServerProxyDTO> getServerProxy(ServerProxyBasicQuery basicQuery);
+    ServerProxyDTO getServerProxy(ServerProxyBasicQuery basicQuery);
 
 
     /**
@@ -58,5 +57,5 @@ public interface ServerProxyService {
      * @param pageQuery 查询
      * @return 列表
      */
-    PageResult<ServerProxyDTO> pageServerProxy(ServerProxyPageQuery pageQuery);
+    Page<ServerProxyDTO> pageServerProxy(ServerProxyPageQuery pageQuery);
 }

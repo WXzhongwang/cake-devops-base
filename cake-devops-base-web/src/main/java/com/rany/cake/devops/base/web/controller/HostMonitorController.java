@@ -2,10 +2,10 @@ package com.rany.cake.devops.base.web.controller;
 
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.monitor.InstallMonitorAgentCommand;
-import com.rany.cake.devops.base.api.command.monitor.SyncMonitorAgentCommand;
-import com.rany.cake.devops.base.api.command.monitor.TestConnectMonitorAgentCommand;
-import com.rany.cake.devops.base.api.command.monitor.UpdateMonitorAgentCommand;
+import com.rany.cake.devops.base.api.command.agent.InstallMonitorAgentCommand;
+import com.rany.cake.devops.base.api.command.agent.SyncMonitorAgentCommand;
+import com.rany.cake.devops.base.api.command.agent.TestConnectMonitorAgentCommand;
+import com.rany.cake.devops.base.api.command.agent.UpdateMonitorAgentCommand;
 import com.rany.cake.devops.base.api.dto.HostMonitorDTO;
 import com.rany.cake.devops.base.api.query.HostMonitorPageQuery;
 import com.rany.cake.devops.base.api.service.HostMonitorService;
@@ -23,19 +23,19 @@ public class HostMonitorController {
 
     @PostMapping("/page")
     public PageResult<HostMonitorDTO> page(@RequestBody HostMonitorPageQuery query) {
-        return hostMonitorService.pageHostMonitor(query);
+        return PageResult.succeed(hostMonitorService.pageHostMonitor(query));
     }
 
     @GetMapping("/get")
     @ApiOperation(value = "查询监控配置")
     public PojoResult<HostMonitorDTO> getMonitorConfig(@RequestParam String hostId) {
-        return hostMonitorService.findByHostId(hostId);
+        return PojoResult.succeed(hostMonitorService.findByHostId(hostId));
     }
 
     @GetMapping("/update")
     @ApiOperation(value = "查询监控配置")
     public PojoResult<Boolean> updateMonitorConfig(@RequestBody UpdateMonitorAgentCommand hostId) {
-        return hostMonitorService.updateMonitorConfig(hostId);
+        return PojoResult.succeed(hostMonitorService.updateMonitorConfig(hostId));
     }
 
     @GetMapping("/test-connect")
@@ -43,7 +43,7 @@ public class HostMonitorController {
     public PojoResult<String> testConnect(@RequestBody TestConnectMonitorAgentCommand command) {
         String url = Valid.notBlank(command.getUrl());
         String accessToken = Valid.notBlank(command.getAccessToken());
-        return hostMonitorService.getMonitorVersion(url, accessToken);
+        return PojoResult.succeed(hostMonitorService.getMonitorVersion(url, accessToken));
     }
 
     @GetMapping("/sync")
@@ -51,18 +51,18 @@ public class HostMonitorController {
     public PojoResult<String> syncMonitorAgent(@RequestBody SyncMonitorAgentCommand command) {
         String url = Valid.notBlank(command.getUrl());
         String accessToken = Valid.notBlank(command.getAccessToken());
-        return hostMonitorService.syncAgent(command);
+        return PojoResult.succeed(hostMonitorService.syncAgent(command));
     }
 
     @GetMapping("/install")
     @ApiOperation(value = "安装机器插件")
     public PojoResult<Boolean> installAgent(@RequestBody InstallMonitorAgentCommand command) {
-        return hostMonitorService.installAgent(command);
+        return PojoResult.succeed(hostMonitorService.installAgent(command));
     }
 
     @GetMapping("/check")
     @ApiOperation(value = "检查监控插件状态")
     public PojoResult<HostMonitorDTO> checkMonitorStatus(@RequestParam String hostId) {
-        return hostMonitorService.checkMonitorStatus(hostId);
+        return PojoResult.succeed(hostMonitorService.checkMonitorStatus(hostId));
     }
 }

@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Lists;
 import com.rany.cake.devops.base.BaseTests;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
@@ -56,8 +55,8 @@ public class AppServiceTest extends BaseTests {
         createAppCommand.setAppMembers(appMembers);
         // createAppCommand.setAppEnvs(Lists.newArrayList());
         createAppCommand.setHealthCheck("/ok");
-        PojoResult<String> app = appService.createApp(createAppCommand);
-        Assertions.assertTrue(app.getSuccess());
+        String app = appService.createApp(createAppCommand);
+        Assertions.assertFalse(app.isEmpty());
     }
 
     public void createAppEnv() {
@@ -65,6 +64,6 @@ public class AppServiceTest extends BaseTests {
         createAppEnvCommand.setAppId("781513981771788288");
         AppEnvDTO env = new AppEnvDTO();
         createAppEnvCommand.setEnv(env);
-        PojoResult<String> app = appService.createAppEnv(createAppEnvCommand);
+        appService.createAppEnv(createAppEnvCommand);
     }
 }

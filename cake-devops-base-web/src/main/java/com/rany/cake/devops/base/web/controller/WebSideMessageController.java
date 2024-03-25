@@ -35,7 +35,7 @@ public class WebSideMessageController {
     public PojoResult<Integer> getUnreadCount(HttpServletRequest request) {
         SsoUser currentUser = SsoUtil.getCurrentUser(request);
         Long userId = Long.valueOf(currentUser.getUserId());
-        return webSideMessageService.getUnreadCount(userId);
+        return PojoResult.succeed(webSideMessageService.getUnreadCount(userId));
     }
 
     /**
@@ -47,7 +47,7 @@ public class WebSideMessageController {
     public PojoResult<Integer> setAllRead(HttpServletRequest request) {
         SsoUser currentUser = SsoUtil.getCurrentUser(request);
         Long userId = Long.valueOf(currentUser.getUserId());
-        return webSideMessageService.setAllRead(userId);
+        return PojoResult.succeed(webSideMessageService.setAllRead(userId));
     }
 
     /**
@@ -58,7 +58,7 @@ public class WebSideMessageController {
      */
     @PostMapping("/read")
     public PojoResult<Integer> readMessage(@RequestBody ReadWebSideMessageCommand command) {
-        return webSideMessageService.readMessage(command);
+        return PojoResult.succeed(webSideMessageService.readMessage(command));
     }
 
     /**
@@ -70,7 +70,7 @@ public class WebSideMessageController {
     public PojoResult<Integer> deleteAllRead(HttpServletRequest request) {
         SsoUser currentUser = SsoUtil.getCurrentUser(request);
         Long userId = Long.valueOf(currentUser.getUserId());
-        return webSideMessageService.deleteAllRead(userId);
+        return PojoResult.succeed(webSideMessageService.deleteAllRead(userId));
     }
 
     /**
@@ -81,7 +81,7 @@ public class WebSideMessageController {
      */
     @PostMapping("/delete")
     public PojoResult<Integer> deleteMessage(@RequestBody DeleteReadWebSideMessageCommand command) {
-        return webSideMessageService.deleteMessage(command);
+        return PojoResult.succeed(webSideMessageService.deleteMessage(command));
     }
 
     /**
@@ -92,7 +92,7 @@ public class WebSideMessageController {
      */
     @PostMapping("/query")
     public PageResult<WebSideMessageDTO> queryWebSideMessage(@RequestBody WebSideMessagePageQuery query) {
-        return webSideMessageService.queryWebSideMessage(query);
+        return PageResult.succeed(webSideMessageService.queryWebSideMessage(query));
     }
 
     /**
@@ -103,6 +103,6 @@ public class WebSideMessageController {
      */
     @PostMapping("/save")
     public PojoResult<Boolean> saveWebSideMessage(@RequestBody CreateWebSideMessageCommand command) {
-        return webSideMessageService.saveWebSideMessage(command);
+        return PojoResult.succeed(webSideMessageService.saveWebSideMessage(command));
     }
 }

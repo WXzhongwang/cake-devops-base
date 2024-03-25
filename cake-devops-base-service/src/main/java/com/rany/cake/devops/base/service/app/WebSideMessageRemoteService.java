@@ -1,8 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.message.CreateWebSideMessageCommand;
 import com.rany.cake.devops.base.api.command.message.DeleteReadWebSideMessageCommand;
 import com.rany.cake.devops.base.api.command.message.ReadWebSideMessageCommand;
@@ -33,45 +31,45 @@ public class WebSideMessageRemoteService implements WebSideMessageService {
     private final WebSideMessageDataAdapter webSideMessageDataAdapter;
 
     @Override
-    public PojoResult<Integer> getUnreadCount(Long userId) {
+    public Integer getUnreadCount(Long userId) {
         Integer unreadCount = webSideMessageRepository.getUnreadCount(userId);
-        return PojoResult.succeed(unreadCount);
+        return unreadCount;
     }
 
     @Override
-    public PojoResult<Integer> setAllRead(Long userId) {
-        return PojoResult.succeed(webSideMessageRepository.setAllRead(userId));
+    public Integer setAllRead(Long userId) {
+        return webSideMessageRepository.setAllRead(userId);
     }
 
     @Override
-    public PojoResult<Integer> readMessage(ReadWebSideMessageCommand command) {
-        return PojoResult.succeed(webSideMessageRepository.readMessage(command.getMessageIdList()));
+    public Integer readMessage(ReadWebSideMessageCommand command) {
+        return webSideMessageRepository.readMessage(command.getMessageIdList());
     }
 
     @Override
-    public PojoResult<Integer> deleteAllRead(Long userId) {
-        return PojoResult.succeed(webSideMessageRepository.deleteAllRead(userId));
+    public Integer deleteAllRead(Long userId) {
+        return webSideMessageRepository.deleteAllRead(userId);
     }
 
     @Override
-    public PojoResult<Integer> deleteMessage(DeleteReadWebSideMessageCommand command) {
-        return PojoResult.succeed(webSideMessageRepository.deleteMessage(command.getMessageIdList()));
+    public Integer deleteMessage(DeleteReadWebSideMessageCommand command) {
+        return webSideMessageRepository.deleteMessage(command.getMessageIdList());
     }
 
     @Override
-    public PageResult<WebSideMessageDTO> queryWebSideMessage(WebSideMessagePageQuery query) {
+    public Page<WebSideMessageDTO> queryWebSideMessage(WebSideMessagePageQuery query) {
         WebSideMessagePageQueryParam webSideMessagePageQueryParam = webSideMessageDataAdapter.convertParam(query);
         Page<WebSideMessage> page = webSideMessageRepository.queryWebSideMessage(webSideMessagePageQueryParam);
         Collection<WebSideMessage> items = page.getItems();
         List<WebSideMessageDTO> webSideMessageDTOList =
                 webSideMessageDataAdapter.sourceToTarget(new ArrayList<>(items));
-        return PageResult.succeed(PageUtils.build(page, webSideMessageDTOList));
+        return PageUtils.build(page, webSideMessageDTOList);
     }
 
     @Override
-    public PojoResult<Boolean> saveWebSideMessage(CreateWebSideMessageCommand command) {
+    public Boolean saveWebSideMessage(CreateWebSideMessageCommand command) {
         WebSideMessage webSideMessage = new WebSideMessage();
         webSideMessageRepository.save(webSideMessage);
-        return PojoResult.succeed(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 }

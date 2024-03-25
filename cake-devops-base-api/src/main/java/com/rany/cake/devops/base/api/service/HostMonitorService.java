@@ -1,12 +1,13 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.monitor.InstallMonitorAgentCommand;
-import com.rany.cake.devops.base.api.command.monitor.SyncMonitorAgentCommand;
-import com.rany.cake.devops.base.api.command.monitor.UpdateMonitorAgentCommand;
+import com.cake.framework.common.response.Page;
+import com.rany.cake.devops.base.api.command.agent.InstallMonitorAgentCommand;
+import com.rany.cake.devops.base.api.command.agent.SyncMonitorAgentCommand;
+import com.rany.cake.devops.base.api.command.agent.UpdateMonitorAgentCommand;
 import com.rany.cake.devops.base.api.dto.HostMonitorDTO;
 import com.rany.cake.devops.base.api.query.HostMonitorPageQuery;
+
+;
 
 /**
  * 主机监控服务
@@ -25,7 +26,7 @@ public interface HostMonitorService {
      * @param hostMonitorPageQuery query
      * @return 分页监控列表
      */
-    PageResult<HostMonitorDTO> pageHostMonitor(HostMonitorPageQuery hostMonitorPageQuery);
+    Page<HostMonitorDTO> pageHostMonitor(HostMonitorPageQuery hostMonitorPageQuery);
 
     /**
      * 查询主机配置
@@ -33,7 +34,7 @@ public interface HostMonitorService {
      * @param hostId 主机ID
      * @return 主机配置
      */
-    PojoResult<HostMonitorDTO> findByHostId(String hostId);
+    HostMonitorDTO findByHostId(String hostId);
 
     /**
      * 安装
@@ -41,7 +42,7 @@ public interface HostMonitorService {
      * @param command command
      * @return 安装
      */
-    PojoResult<Boolean> installAgent(InstallMonitorAgentCommand command);
+    Boolean installAgent(InstallMonitorAgentCommand command);
 
     /**
      * 同步机器插件信息
@@ -49,7 +50,7 @@ public interface HostMonitorService {
      * @param command command
      * @return 同步
      */
-    PojoResult<String> syncAgent(SyncMonitorAgentCommand command);
+    String syncAgent(SyncMonitorAgentCommand command);
 
     /**
      * 更新监控配置
@@ -57,7 +58,7 @@ public interface HostMonitorService {
      * @param command command
      * @return 更新
      */
-    PojoResult<Boolean> updateMonitorConfig(UpdateMonitorAgentCommand command);
+    Boolean updateMonitorConfig(UpdateMonitorAgentCommand command);
 
     /**
      * 获取版本
@@ -66,7 +67,7 @@ public interface HostMonitorService {
      * @param accessToken accessToken
      * @return version
      */
-    PojoResult<String> getMonitorVersion(String url, String accessToken);
+    String getMonitorVersion(String url, String accessToken);
 
     /**
      * 检测监控插件状态
@@ -74,6 +75,6 @@ public interface HostMonitorService {
      * @param hostId 主机ID
      * @return 监控信息
      */
-    PojoResult<HostMonitorDTO> checkMonitorStatus(String hostId);
+    HostMonitorDTO checkMonitorStatus(String hostId);
 
 }

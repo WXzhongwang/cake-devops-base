@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
+import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.template.CreateScriptTemplateCommand;
 import com.rany.cake.devops.base.api.command.template.DeleteScriptTemplateCommand;
 import com.rany.cake.devops.base.api.command.template.ModifyScriptTemplateCommand;
@@ -25,7 +24,7 @@ public interface ScriptTemplateService {
      * @param command 创建
      * @return webhookId
      */
-    PojoResult<String> createScriptTemplate(CreateScriptTemplateCommand command);
+    String createScriptTemplate(CreateScriptTemplateCommand command);
 
     /**
      * 更新
@@ -33,7 +32,7 @@ public interface ScriptTemplateService {
      * @param command 更新
      * @return success
      */
-    PojoResult<Boolean> modifyScriptTemplate(ModifyScriptTemplateCommand command);
+    Boolean modifyScriptTemplate(ModifyScriptTemplateCommand command);
 
     /**
      * 删除
@@ -41,7 +40,7 @@ public interface ScriptTemplateService {
      * @param command 删除
      * @return success
      */
-    PojoResult<Boolean> deleteScriptTemplate(DeleteScriptTemplateCommand command);
+    Boolean deleteScriptTemplate(DeleteScriptTemplateCommand command);
 
     /**
      * 获取详情
@@ -49,7 +48,7 @@ public interface ScriptTemplateService {
      * @param basicQuery 详情
      * @return 详情
      */
-    PojoResult<ScriptTemplateDTO> getScriptTemplate(ScriptTemplateBasicQuery basicQuery);
+    ScriptTemplateDTO getScriptTemplate(ScriptTemplateBasicQuery basicQuery);
 
 
     /**
@@ -58,5 +57,5 @@ public interface ScriptTemplateService {
      * @param pageQuery 查询
      * @return 列表
      */
-    PageResult<ScriptTemplateDTO> pageScriptTemplate(ScriptTemplatePageQuery pageQuery);
+    Page<ScriptTemplateDTO> pageScriptTemplate(ScriptTemplatePageQuery pageQuery);
 }

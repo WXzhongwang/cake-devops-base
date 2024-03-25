@@ -20,6 +20,14 @@
         modifier
     </sql>
 
+    <select id="selectByName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host_env
+        where attr_key = #{name}
+        and host_id = #{hostId}
+    </select>
+
     <select id="queryHostEnv"
             parameterType="com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam"
             resultMap="BaseResultMap">

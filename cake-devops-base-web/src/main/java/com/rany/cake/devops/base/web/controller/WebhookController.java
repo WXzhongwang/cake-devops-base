@@ -25,28 +25,28 @@ public class WebhookController {
 
     @PostMapping("/create")
     public PojoResult<String> create(@RequestBody CreateWebhookCommand command) {
-        return webhookConfigService.createWebhook(command);
+        return PojoResult.succeed(webhookConfigService.createWebhook(command));
     }
 
     @GetMapping("/get")
     public PojoResult<WebHookConfigDTO> get(@RequestParam("id") Long webhookId) {
         WebhookBasicQuery webhookBasicQuery = new WebhookBasicQuery();
         webhookBasicQuery.setWebhookId(webhookId);
-        return webhookConfigService.getWebhook(webhookBasicQuery);
+        return PojoResult.succeed(webhookConfigService.getWebhook(webhookBasicQuery));
     }
 
     @PostMapping("/update")
     public PojoResult<Boolean> update(@RequestBody ModifyWebHookCommand command) {
-        return webhookConfigService.modifyWebhook(command);
+        return PojoResult.succeed(webhookConfigService.modifyWebhook(command));
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> delete(@RequestBody DeleteWebhookCommand command) {
-        return webhookConfigService.deleteWebhook(command);
+        return PojoResult.succeed(webhookConfigService.deleteWebhook(command));
     }
 
     @PostMapping("/page")
     public PageResult<WebHookConfigDTO> page(@RequestBody WebhookPageQuery webhookPageQuery) {
-        return webhookConfigService.pageWebhook(webhookPageQuery);
+        return PageResult.succeed(webhookConfigService.pageWebhook(webhookPageQuery));
     }
 }
