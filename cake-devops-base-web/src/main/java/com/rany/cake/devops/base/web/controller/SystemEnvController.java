@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * 主机环境变量
+ * 系统环境变量
  */
 @RestController
 @RequestMapping("/api/devops/system-env")

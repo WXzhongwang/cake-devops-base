@@ -31,6 +31,11 @@ public class SystemEnvRepositoryImpl implements SystemEnvRepository {
     }
 
     @Override
+    public SystemEnv findByName(String name) {
+        return null;
+    }
+
+    @Override
     public void remove(SystemEnv env) {
         SystemEnvPO systemEnvPO = systemEnvPOMapper.selectByPrimaryKey(env.getId());
         systemEnvPO.setIsDeleted(DeleteStatusEnum.YES.getValue());

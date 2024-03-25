@@ -32,8 +32,8 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 public class SystemEnvRemoteService implements SystemEnvService {
-    private SystemEnvRepository hostEnvRepository;
-    private SystemEnvDataAdapter hostEnvDataAdapter;
+    private SystemEnvRepository systemEnvRepository;
+    private SystemEnvDataAdapter systemEnvDataAdapter;
 
     @Override
     public PojoResult<String> createSystemEnv(CreateSystemEnvCommand command) {
@@ -41,7 +41,7 @@ public class SystemEnvRemoteService implements SystemEnvService {
         env.setAttrKey(command.getAttrKey());
         env.setAttrValue(command.getAttrValue());
         env.setDescription(command.getDescription());
-        hostEnvRepository.save(env);
+        systemEnvRepository.save(env);
         return PojoResult.succeed(env.getId().toString());
     }
 
@@ -55,48 +55,57 @@ public class SystemEnvRemoteService implements SystemEnvService {
             env.setDescription(entry.getKey());
             systemEnvLIst.add(env);
         }
-        hostEnvRepository.batchSave(systemEnvLIst);
+        systemEnvRepository.batchSave(systemEnvLIst);
         return PojoResult.succeed();
     }
 
     @Override
     public PojoResult<Boolean> modifySystemEnv(ModifySystemEnvCommand command) {
-        SystemEnv env = hostEnvRepository.find(command.getId());
+        SystemEnv env = systemEnvRepository.find(command.getId());
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.MACHINE_ENV_NOT_FOUND);
         }
         env.setAttrKey(command.getAttrKey());
         env.setAttrValue(command.getAttrValue());
         env.setDescription(command.getDescription());
-        hostEnvRepository.update(env);
+        systemEnvRepository.update(env);
         return PojoResult.succeed(Boolean.TRUE);
     }
 
     @Override
     public PojoResult<Boolean> deleteSystemEnv(DeleteSystemEnvCommand command) {
-        SystemEnv env = hostEnvRepository.find(command.getId());
+        SystemEnv env = systemEnvRepository.find(command.getId());
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.SYSTEM_ENV_NOT_FOUND);
         }
-        hostEnvRepository.remove(env);
+        systemEnvRepository.remove(env);
         return PojoResult.succeed(Boolean.TRUE);
     }
 
     @Override
     public PojoResult<SystemEnvDTO> getSystemEnv(SystemEnvBasicQuery query) {
-        SystemEnv env = hostEnvRepository.find(query.getId());
+        SystemEnv env = systemEnvRepository.find(query.getId());
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.SYSTEM_ENV_NOT_FOUND);
         }
-        return PojoResult.succeed(hostEnvDataAdapter.sourceToTarget(env));
+        return PojoResult.succeed(systemEnvDataAdapter.sourceToTarget(env));
+    }
+
+    @Override
+    public PojoResult<SystemEnvDTO> getSystemEnv(String envName) {
+        SystemEnv env = systemEnvRepository.findByName(envName);
+        if (env == null) {
+            throw new DevOpsException(DevOpsErrorMessage.SYSTEM_ENV_NOT_FOUND);
+        }
+        return PojoResult.succeed(systemEnvDataAdapter.sourceToTarget(env));
     }
 
     @Override
     public PageResult<SystemEnvDTO> pageSystemEnv(SystemEnvPageQuery query) {
-        SystemEnvPageQueryParam hostEnvQueryParam = hostEnvDataAdapter.convertParam(query);
-        Page<SystemEnv> page = hostEnvRepository.page(hostEnvQueryParam);
+        SystemEnvPageQueryParam hostEnvQueryParam = systemEnvDataAdapter.convertParam(query);
+        Page<SystemEnv> page = systemEnvRepository.page(hostEnvQueryParam);
         Collection<SystemEnv> items = page.getItems();
-        List<SystemEnvDTO> systemEnvDTOList = hostEnvDataAdapter.sourceToTarget(new ArrayList<>(items));
+        List<SystemEnvDTO> systemEnvDTOList = systemEnvDataAdapter.sourceToTarget(new ArrayList<>(items));
         Page<SystemEnvDTO> build = PageUtils.build(page, systemEnvDTOList);
         return PageResult.succeed(build);
     }

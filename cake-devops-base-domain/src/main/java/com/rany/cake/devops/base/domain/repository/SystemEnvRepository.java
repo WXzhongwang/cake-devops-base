@@ -10,6 +10,8 @@ public interface SystemEnvRepository {
 
     SystemEnv find(Long id);
 
+    SystemEnv findByName(String name);
+
     void remove(SystemEnv env);
 
     void save(SystemEnv env);

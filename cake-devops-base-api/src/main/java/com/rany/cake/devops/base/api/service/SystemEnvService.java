@@ -53,6 +53,8 @@ public interface SystemEnvService {
      */
     PojoResult<SystemEnvDTO> getSystemEnv(SystemEnvBasicQuery query);
 
+    PojoResult<SystemEnvDTO> getSystemEnv(String envName);
+
     /**
      * 分页
      *
