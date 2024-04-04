@@ -21,7 +21,7 @@
         is_deleted, gmt_create, gmt_modified, creator, modifier
     </sql>
 
-    <select id="selectByServerProxyId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByServerProxyId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from server_proxy

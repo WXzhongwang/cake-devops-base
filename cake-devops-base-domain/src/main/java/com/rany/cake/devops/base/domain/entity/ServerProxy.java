@@ -4,10 +4,12 @@ package com.rany.cake.devops.base.domain.entity;
 import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseEntity;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
