@@ -1,7 +1,6 @@
 import React from "react";
 import { Form, Input, Button, Select } from "antd";
 import { WebhookConfig } from "@/models/webhook"; // 根据您的实际路径进行调整
-import TextArea from "antd/lib/input/TextArea";
 
 const { Option } = Select;
 
@@ -63,7 +62,7 @@ const CreateWebhookForm: React.FC<CreateWebhookFormProps> = ({
         rules={[{ required: true, message: "请选择Webhook类型" }]}
       >
         <Select placeholder="请选择Webhook类型">
-          <Option value={10}>钉钉</Option>
+          <Option value="10">钉钉</Option>
         </Select>
       </Form.Item>
 

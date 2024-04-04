@@ -63,6 +63,7 @@ const WebHookList: React.FC<WebHookListProps> = ({
       type: "webhook/deleteWebHook",
       payload: { id: webhookId },
     });
+    getWebHooks();
   };
 
   const handlePaginationChange = (page: number, pageSize?: number) => {
