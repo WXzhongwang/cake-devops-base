@@ -50,6 +50,7 @@ public class ServerProxyRemoteService implements ServerProxyService {
         serverProxy.setProxyType(command.getProxyType());
         serverProxy.setProxyUsername(command.getProxyUsername());
         serverProxy.setProxyPassword(command.getProxyPassword());
+        serverProxy.init(command.getUser());
         serverProxyRepository.save(serverProxy);
         return serverProxy.getId().toString();
     }

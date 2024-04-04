@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * 代理配置
  */
 @RestController
-@RequestMapping("/api/devops/server-proxy")
+@RequestMapping("/api/devops/proxy")
 public class ServerProxyController {
 
     @Resource

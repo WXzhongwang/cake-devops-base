@@ -14,6 +14,8 @@ public interface SystemEnvDao {
 
     SystemEnvPO selectByName(@Param("name") String name);
 
+    List<SystemEnvPO> selectByNames(@Param("names") List<String> names);
+
 
     /**
      * 保存

@@ -29,10 +29,12 @@
             <groupId>com.rany.cake.devops</groupId>
             <artifactId>cake-devops-base-service</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.rany.cake.devops</groupId>
-            <artifactId>cake-devops-base-ssh</artifactId>
-        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.rany.cake.devops</groupId>-->
+        <!--            <artifactId>cake-devops-base-ssh</artifactId>-->
+        <!--        </dependency>-->
+
         <dependency>
             <groupId>com.rany.cake.devops</groupId>
             <artifactId>cake-devops-base-web</artifactId>

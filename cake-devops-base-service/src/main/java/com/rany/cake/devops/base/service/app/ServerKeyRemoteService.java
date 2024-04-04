@@ -50,7 +50,7 @@ public class ServerKeyRemoteService implements ServerKeyService {
         serverKey.setPassphrase(command.getPassphrase());
         serverKey.setPublicKey(command.getPublicKey());
         serverKey.setKeyPath(command.getKeyPath());
-        serverKey.init();
+        serverKey.init(command.getUser());
         serverKeyDomainService.save(serverKey);
         return serverKey.getId();
     }
@@ -64,7 +64,7 @@ public class ServerKeyRemoteService implements ServerKeyService {
         serverKey.setProtocol(command.getProtocol());
         serverKey.setCredential(command.getCredential());
         serverKey.setPublicKey(command.getPublicKey());
-        serverKey.modify();
+        serverKey.modify(command.getUser());
         serverKeyDomainService.update(serverKey);
         return Boolean.TRUE;
     }
@@ -72,7 +72,7 @@ public class ServerKeyRemoteService implements ServerKeyService {
     @Override
     public Boolean deleteServerKey(DeleteServerKeyCommand command) {
         ServerKey serverKey = serverKeyDomainService.getServerKey(command.getServerKeyId());
-        serverKey.delete();
+        serverKey.delete(command.getUser());
         serverKeyDomainService.update(serverKey);
         return Boolean.TRUE;
     }

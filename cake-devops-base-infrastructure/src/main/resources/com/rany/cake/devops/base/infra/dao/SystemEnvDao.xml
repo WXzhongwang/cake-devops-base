@@ -38,7 +38,18 @@
         where attr_key = #{name}
     </select>
 
-    <insert id="save" parameterType="com.rany.cake.devops.base.infra.po.SystemEnvPO">
+    <select id="selectByNames" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from system_env
+        where attr_key in
+        <foreach collection="names" close=")" open="(" separator="," item="name">
+            #{name}
+        </foreach>
+    </select>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.infra.po.SystemEnvPO"
+            useGeneratedKeys="true" keyProperty="id">
 
         insert into system_env (id, attr_key, attr_value,
                                 system_env, description, is_deleted,

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ServerKeyDTO extends DTO {
 
-    private String id;
+    private Long id;
 
     /**
      * 展示名称
@@ -28,7 +28,7 @@ public class ServerKeyDTO extends DTO {
     /**
      * 是否活跃可用
      */
-    private Boolean active;
+    private String active;
 
     /**
      * 密钥文件存放地址

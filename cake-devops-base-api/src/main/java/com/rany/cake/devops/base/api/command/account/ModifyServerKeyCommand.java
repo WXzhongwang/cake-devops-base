@@ -17,15 +17,28 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ModifyServerKeyCommand extends BaseCommand {
 
+    /**
+     * serverKeyId
+     */
     private Long serverKeyId;
 
+    /**
+     * displayName
+     */
     private String displayName;
 
+    /**
+     * 认证模式
+     */
     private String authMode;
     /**
      * 0普通账户/1管理员
      */
     private Integer accountType;
+
+    /**
+     * 协议
+     */
     private String protocol;
 
     /**
@@ -40,6 +53,13 @@ public class ModifyServerKeyCommand extends BaseCommand {
      * 密码短语
      */
     private String passphrase;
+    /**
+     * 文件路径
+     */
     private String keyPath;
 
+    /**
+     * base64
+     */
+    private String fileBase64;
 }

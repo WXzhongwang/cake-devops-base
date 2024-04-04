@@ -14,8 +14,6 @@ import com.rany.cake.devops.base.service.base.PathBuilders;
 import com.rany.cake.devops.base.service.base.ValueMix;
 import com.rany.cake.devops.base.service.handler.host.ServerKeyComponent;
 import com.rany.cake.devops.base.util.Const;
-import com.rany.cake.devops.base.web.request.CreateServerKeyRequest;
-import com.rany.cake.devops.base.web.request.UpdateServerKeyRequest;
 import com.rany.cake.toolkit.lang.codec.Base64s;
 import com.rany.cake.toolkit.lang.io.FileWriters;
 import com.rany.cake.toolkit.lang.io.Files1;
@@ -34,17 +32,16 @@ public class ServerKeyController {
     private ServerKeyComponent serverKeyComponent;
 
     @PostMapping("/create")
-    public PojoResult<Long> create(@RequestBody CreateServerKeyRequest request) {
+    public PojoResult<Long> create(@RequestBody CreateServerKeyCommand command) {
         String file = PathBuilders.getSecretKeyPath();
-        CreateServerKeyCommand command = request.getCommand();
         String path = serverKeyComponent.getKeyPath(file);
         String password = command.getPassphrase();
         Files1.touch(path);
-        byte[] keyFileData = Base64s.decode(Strings.bytes(request.getFileBase64()));
+        byte[] keyFileData = Base64s.decodeToBytes(command.getFileBase64());
         FileWriters.writeFast(path, keyFileData);
         command.setKeyPath(file);
         serverKeyComponent.checkLoadKey(path, password);
-        return PojoResult.succeed(serverKeyService.createServerKey(request.getCommand()));
+        return PojoResult.succeed(serverKeyService.createServerKey(command));
     }
 
     @GetMapping("/get")
@@ -55,10 +52,9 @@ public class ServerKeyController {
     }
 
     @PostMapping("/update")
-    public PojoResult<Boolean> update(@RequestBody UpdateServerKeyRequest request) {
-        ModifyServerKeyCommand command = request.getCommand();
+    public PojoResult<Boolean> update(@RequestBody ModifyServerKeyCommand command) {
         String password = command.getPassphrase();
-        String fileBase64 = request.getFileBase64();
+        String fileBase64 = command.getFileBase64();
         // 修改文件
         final boolean updateFile = !Strings.isBlank(fileBase64);
         if (updateFile) {

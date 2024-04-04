@@ -12,13 +12,13 @@
         <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
     </resultMap>
     <sql id="Base_Column_List">
-
         id
-        proxy_id,
         , proxy_host, proxy_port, proxy_username, proxy_password, proxy_type, description,
-        is_deleted, gmt_create, gmt_modified
+        is_deleted, gmt_create, gmt_modified, creator, modifier
     </sql>
 
     <select id="selectByServerProxyId" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -28,17 +28,20 @@
         where id = #{proxyId}
     </select>
 
-    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.ServerProxy">
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.ServerProxy" useGeneratedKeys="true"
+            keyProperty="id">
 
         insert into server_proxy (proxy_host, proxy_port,
                                   proxy_username, proxy_password, proxy_type,
                                   description, is_deleted, gmt_create,
-                                  gmt_modified)
+                                  gmt_modified, creator, modifier)
         values (#{proxyHost,jdbcType=VARCHAR}, #{proxyPort,jdbcType=INTEGER},
                 #{proxyUsername,jdbcType=VARCHAR}, #{proxyPassword,jdbcType=VARCHAR}, #{proxyType,jdbcType=INTEGER},
                 #{description,jdbcType=VARCHAR}, #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
-                #{gmtModified,jdbcType=TIMESTAMP})
+                #{gmtModified,jdbcType=TIMESTAMP},
+                #{creator}, #{modifier})
     </insert>
+
     <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.ServerProxy">
         update server_proxy
         set proxy_host     = #{proxyHost,jdbcType=VARCHAR},
@@ -49,7 +52,8 @@
             description    = #{description,jdbcType=VARCHAR},
             is_deleted     = #{isDeleted,jdbcType=VARCHAR},
             gmt_create     = #{gmtCreate,jdbcType=TIMESTAMP},
-            gmt_modified   = #{gmtModified,jdbcType=TIMESTAMP}
+            gmt_modified   = #{gmtModified,jdbcType=TIMESTAMP},
+            modifier       = #{modifier}
         where id = #{id}
     </update>
 

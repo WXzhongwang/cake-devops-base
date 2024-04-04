@@ -15,24 +15,25 @@
         <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
         <result column="creator" property="creator" jdbcType="VARCHAR"/>
         <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+        <result column="key_path" property="keyPath" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
 
         id
-        , display_name, account_type,
-    protocol, active, credential, public_key, passphrase, is_deleted, gmt_create, gmt_modified,
-    creator, modifier
+        , display_name, account_type, protocol, active, credential, public_key, passphrase,
+    is_deleted, gmt_create, gmt_modified, creator, modifier, key_path
     </sql>
 
-    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.ServerKey">
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.ServerKey"
+            useGeneratedKeys="true" keyProperty="id">
 
         insert into server_key (display_name,
                                 account_type, protocol, active,
                                 credential, public_key, passphrase,
                                 is_deleted, gmt_create, gmt_modified,
-                                creator, modifier)
-        values (#{username,jdbcType=VARCHAR},
-                #{displayName,jdbcType=VARCHAR},
+                                creator, modifier,
+                                key_path)
+        values (#{displayName,jdbcType=VARCHAR},
                 #{accountType,jdbcType=VARCHAR},
                 #{protocol,jdbcType=VARCHAR},
                 #{active,jdbcType=TINYINT},
@@ -40,7 +41,8 @@
                 #{publicKey,jdbcType=VARCHAR},
                 #{passphrase,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
-                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
+                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+                #{keyPath})
     </insert>
 
     <select id="selectByServerKeyId" resultMap="BaseResultMap">

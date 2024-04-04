@@ -34,7 +34,7 @@ public class CreateServerKeyCommand extends BaseCommand {
     /**
      * 是否活跃
      */
-    private Boolean active;
+    private String active;
 
     /**
      * 凭据内容
@@ -53,4 +53,6 @@ public class CreateServerKeyCommand extends BaseCommand {
      * 密钥文件存放路径
      */
     private String keyPath;
+
+    private String fileBase64;
 }

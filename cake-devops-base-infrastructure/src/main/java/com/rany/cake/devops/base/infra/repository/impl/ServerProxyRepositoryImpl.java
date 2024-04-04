@@ -57,5 +57,6 @@ public class ServerProxyRepositoryImpl implements ServerProxyRepository {
     @Override
     public void save(@NotNull ServerProxy serverProxy) {
         serverProxyDao.save(serverProxy);
+        serverProxy.setId(serverProxy.getId());
     }
 }
