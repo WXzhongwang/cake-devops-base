@@ -6,5 +6,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ServerProxyQueryParam extends BasePageParam {
-    private String username;
+    private String proxyHost;
+    private String proxyType;
+    private String proxyUsername;
 }

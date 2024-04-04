@@ -155,7 +155,11 @@ const HostPage: React.FC<HostListProps> = ({
                   <Input placeholder="请输入主机名称" />
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" htmlType="submit">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ marginRight: 8 }}
+                  >
                     查询
                   </Button>
                   <Button

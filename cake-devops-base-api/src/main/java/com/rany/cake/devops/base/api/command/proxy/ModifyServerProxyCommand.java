@@ -16,9 +16,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ModifyServerProxyCommand extends BaseCommand {
-
-    private Long serverProxyId;
-
+    private Long id;
     private String proxyHost;
     private Integer proxyPort;
     private String proxyUsername;

@@ -57,7 +57,7 @@ public class ServerProxyRemoteService implements ServerProxyService {
 
     @Override
     public Boolean modifyServerProxy(ModifyServerProxyCommand command) {
-        ServerProxy serverProxy = serverProxyRepository.find(command.getServerProxyId());
+        ServerProxy serverProxy = serverProxyRepository.find(command.getId());
         if (serverProxy == null) {
             throw new DevOpsException(DevOpsErrorMessage.PROXY_NOT_FOUND);
         }
@@ -66,6 +66,7 @@ public class ServerProxyRemoteService implements ServerProxyService {
         serverProxy.setProxyType(command.getProxyType());
         serverProxy.setProxyUsername(command.getProxyUsername());
         serverProxy.setProxyPassword(command.getProxyPassword());
+        serverProxy.setDescription(command.getDescription());
         serverProxyRepository.update(serverProxy);
         return Boolean.TRUE;
     }

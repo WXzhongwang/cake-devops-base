@@ -20,7 +20,7 @@ public class ModifyServerKeyCommand extends BaseCommand {
     /**
      * serverKeyId
      */
-    private Long serverKeyId;
+    private Long id;
 
     /**
      * displayName

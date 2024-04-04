@@ -66,8 +66,14 @@
         from server_proxy
         <where>
             is_deleted = '0'
-            <if test="username != null and username != ''">
-                and username = #{username}
+            <if test="proxyHost != null and proxyHost != ''">
+                and proxy_host = #{proxyHost}
+            </if>
+            <if test="proxyType != null and proxyType != ''">
+                and proxy_type = #{proxyType}
+            </if>
+            <if test="proxyUsername != null and proxyUsername != ''">
+                and proxy_username = #{proxyUsername}
             </if>
         </where>
     </select>

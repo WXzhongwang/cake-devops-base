@@ -19,7 +19,7 @@ public class ServerProxy extends BaseEntity<Long> {
     private String proxyUsername;
     private String proxyPassword;
     private Integer proxyType;
-    private Integer description;
+    private String description;
 
     public void init(String user) {
         this.creator = user;

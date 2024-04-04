@@ -1,8 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import {Button, Drawer, Form, Input, Radio, Select, Upload,} from "antd";
-import {HostModel, ServerKey} from "@/models/host";
+import {HostModel} from "@/models/host";
 import {InboxOutlined} from "@ant-design/icons";
-import {getBase64FromFile} from "@/utils/base64";
 
 const {Option} = Select;
 
@@ -10,7 +9,7 @@ interface ServerAccountDrawerProps {
     visible: boolean;
     servers: HostModel[];
     onClose: () => void;
-    onSave: (values: ServerKey, fileBase64: string) => void;
+    onSave: (values: any, fileBase64: any) => void;
 }
 
 const ServerAccountDrawer: React.FC<ServerAccountDrawerProps> = ({
@@ -20,21 +19,48 @@ const ServerAccountDrawer: React.FC<ServerAccountDrawerProps> = ({
                                                                      onSave,
                                                                  }) => {
     const [form] = Form.useForm();
+    const [fileBase64, setFileBase64] = useState("");
+    const getBase64FromFile = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                const base64String = reader.result as string;
+
+                // 去除DataURL中的额外信息
+                const pureBase64 = base64String.split(',')[1];
+
+                resolve(pureBase64);
+            };
+
+            reader.onerror = (error) => {
+                reject(error);
+            };
+
+            // 开始读取文件
+            reader.readAsDataURL(file);
+        });
+    };
 
     const handleSave = async () => {
         try {
             const values = await form.validateFields();
             console.log("Form values:", values);
             // 获取文件的 Base64 编码
-            const base64String = await getBase64FromFile(values.file);
-            onSave(values, base64String);
+            if (!values.file) {
+                console.error("请至少选择一个文件上传");
+                return;
+            }
+            console.log("File:", values.file);
+            // const base64String = await getBase64FromFile(values.file.originFileObj);
+            onSave(values, fileBase64);
             onClose();
         } catch (error) {
             console.error("Validation failed:", error);
         }
     };
 
-    const handleFileChange = (info: any) => {
+    const handleFileChange = async (info: any) => {
         const {file} = info;
 
         // 检查文件是否为空
@@ -44,24 +70,14 @@ const ServerAccountDrawer: React.FC<ServerAccountDrawerProps> = ({
         }
 
         if (!file) return;
+        try {
+            const base64String = await getBase64FromFile(file.originFileObj);
+            // @ts-ignore
+            setFileBase64(base64String);
+        } catch (error) {
+            console.error("Failed to convert file to Base64:", error);
+        }
 
-        // if (!isImageFileType(file.name)) {
-        //   message.error("仅支持 rsa 文件格式");
-        //   return;
-        // }
-
-        // const reader = new FileReader();
-        // reader.readAsDataURL(file);
-        // reader.onload = () => {
-        //     const base64String = reader.result?.toString();
-        //     if (base64String) {
-        //         // 将Base64字符串存储或使用在表单状态或组件状态中
-        //         console.log("Base64编码文件:", base64String);
-        //     }
-        // };
-        // reader.onerror = (error) => {
-        //     console.error("读取文件失败:", error);
-        // };
     };
 
     return (

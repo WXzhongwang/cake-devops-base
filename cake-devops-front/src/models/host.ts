@@ -4,11 +4,11 @@ import { Effect, Reducer, Subscription } from "umi";
 import * as api from "@/services/host";
 
 export interface ServerKey {
-  id: string;
+  id: number;
   displayName: string;
   accountType: number;
   protocol: string;
-  active: boolean;
+  active: string;
   credential: string;
   publicKey: string;
   passphrase: string;
@@ -20,7 +20,7 @@ export interface CreateServerKeyPayload {
   displayName: string;
   accountType: number;
   protocol: string;
-  active: boolean;
+  active: string;
   credential: string;
   publicKey: string;
   passphrase: string;
@@ -34,7 +34,7 @@ export interface QueryServerKeysPayload {
   pageNo: number;
   pageSize: number;
   displayname: string;
-  active: string;
+  active: number;
   accountType: number;
 }
 
@@ -43,7 +43,7 @@ export interface UpdateServerKeyPayload {
   displayName?: string;
   accountType?: number;
   protocol?: string;
-  active?: boolean;
+  active?: string;
   credential?: string;
   publicKey?: string;
   passphrase?: string;
@@ -231,14 +231,20 @@ const HostModel: HostModelType = {
       // 调用 API 创建主机账号
       yield call(api.createServerKey, payload);
       // 创建成功后重新获取主机账号数据
-      yield put({ type: "queryServerKeys" });
+      yield put({
+        type: "queryServerKeys",
+        payload: { pageNo: 1, pageSize: 10 },
+      });
     },
 
     *updateServerKey({ payload }, { call, put }) {
       // 调用 API 更新主机账号
       yield call(api.updateServerKey, payload);
       // 更新成功后重新获取主机账号数据
-      yield put({ type: "queryServerKeys" });
+      yield put({
+        type: "queryServerKeys",
+        payload: { pageNo: 1, pageSize: 10 },
+      });
     },
 
     *deleteServerKey({ payload }, { call, put }) {

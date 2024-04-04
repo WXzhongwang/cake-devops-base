@@ -74,7 +74,7 @@ public class ServerKeyController {
         }
 
         ServerKeyBasicQuery serverKeyBasicQuery = new ServerKeyBasicQuery();
-        serverKeyBasicQuery.setServerKeyId(command.getServerKeyId());
+        serverKeyBasicQuery.setServerKeyId(command.getId());
         ServerKeyDTO serverKeyDTO = serverKeyService.getServerKey(serverKeyBasicQuery);
         // 检查秘钥
         String checkPath = updateFile ? command.getKeyPath() : serverKeyDTO.getKeyPath();

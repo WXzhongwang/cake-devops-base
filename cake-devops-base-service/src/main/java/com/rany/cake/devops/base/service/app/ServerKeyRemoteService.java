@@ -57,7 +57,7 @@ public class ServerKeyRemoteService implements ServerKeyService {
 
     @Override
     public Boolean modifyServerKey(ModifyServerKeyCommand command) {
-        ServerKey serverKey = serverKeyDomainService.getServerKey(command.getServerKeyId());
+        ServerKey serverKey = serverKeyDomainService.getServerKey(command.getId());
         serverKey.setDisplayName(command.getDisplayName());
         serverKey.setAccountType(command.getAccountType());
         serverKey.setPassphrase(command.getPassphrase());
