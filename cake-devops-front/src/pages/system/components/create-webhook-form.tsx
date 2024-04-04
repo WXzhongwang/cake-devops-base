@@ -63,32 +63,16 @@ const CreateWebhookForm: React.FC<CreateWebhookFormProps> = ({
         rules={[{ required: true, message: "请选择Webhook类型" }]}
       >
         <Select placeholder="请选择Webhook类型">
-          <Option value={1}>Type 1</Option>
-          <Option value={2}>Type 2</Option>
-          {/* 根据实际的类型列表提供选项 */}
+          <Option value={10}>钉钉</Option>
         </Select>
       </Form.Item>
 
       <Form.Item
         name="webhookConfig"
-        label="Webhook配置"
-        rules={[{ required: true, message: "请输入Webhook配置" }]}
+        label="Webhook 签名"
+        rules={[{ required: true, message: "请输入Webhook 签名配置" }]}
       >
-        <Input placeholder="请输入Webhook配置" />
-      </Form.Item>
-
-      <Form.Item
-        name="description"
-        label="描述"
-        rules={[
-          {
-            required: false,
-            max: 30,
-            message: "请输入不超过30个字符的描述",
-          },
-        ]}
-      >
-        <TextArea placeholder="请输入描述" rows={4} />
+        <Input placeholder="请输入Webhook 签名配置" />
       </Form.Item>
 
       <Form.Item>

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class WebHookConfigDTO extends DTO {
 
-    private String webhookId;
+    private String id;
     private String webhookName;
     private String webhookUrl;
     private String webhookType;

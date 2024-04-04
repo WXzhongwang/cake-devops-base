@@ -39,14 +39,12 @@ public class WebhookConfigRepositoryImpl implements WebhookConfigRepository {
 
     @Override
     public void save(WebhookConfig env) {
-        WebhookConfigPO webhookConfigPO = webhookConfigDataConvertor.sourceToTarget(env);
-        webhookConfigPOMapper.insertSelective(webhookConfigPO);
+        webhookConfigDAO.save(env);
     }
 
     @Override
     public void update(WebhookConfig env) {
-        WebhookConfigPO webhookConfigPO = webhookConfigDataConvertor.sourceToTarget(env);
-        webhookConfigPOMapper.updateByPrimaryKey(webhookConfigPO);
+        webhookConfigDAO.update(env);
     }
 
     @Override

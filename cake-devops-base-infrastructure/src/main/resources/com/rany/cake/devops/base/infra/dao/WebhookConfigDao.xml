@@ -27,11 +27,34 @@
         <where>
             is_deleted = '0'
             <if test="name != null and name != ''">
-                and webhook_name = #{username}
+                and webhook_name = #{name}
             </if>
             <if test="url != null and url != ''">
-                and webhook_url = #{webhook_url}
+                and webhook_url = #{url}
             </if>
         </where>
     </select>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.WebhookConfig"
+            useGeneratedKeys="true" keyProperty="id">
+
+        insert into webhook_config (webhook_name, webhook_url,
+                                    webhook_type, webhook_config, is_deleted,
+                                    gmt_create, gmt_modified)
+        values (#{webhookName,jdbcType=VARCHAR}, #{webhookUrl,jdbcType=VARCHAR},
+                #{webhookType,jdbcType=INTEGER}, #{webhookConfig,jdbcType=VARCHAR}, #{isDeleted,jdbcType=VARCHAR},
+                #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.WebhookConfig">
+        update webhook_config
+        set webhook_name   = #{webhookName,jdbcType=VARCHAR},
+            webhook_url    = #{webhookUrl,jdbcType=VARCHAR},
+            webhook_type   = #{webhookType,jdbcType=INTEGER},
+            webhook_config = #{webhookConfig,jdbcType=VARCHAR},
+            is_deleted     = #{isDeleted,jdbcType=VARCHAR},
+            gmt_create     = #{gmtCreate,jdbcType=TIMESTAMP},
+            gmt_modified   = #{gmtModified,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>
