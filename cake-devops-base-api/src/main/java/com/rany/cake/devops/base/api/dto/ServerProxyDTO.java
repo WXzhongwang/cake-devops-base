@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ServerProxyDTO extends DTO {
 
-    private String serverProxyId;
+    private Long id;
     private String proxyHost;
     private String proxyPort;
     private String proxyUsername;

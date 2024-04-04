@@ -87,8 +87,7 @@ public class ServerProxyRemoteService implements ServerProxyService {
         if (serverProxy == null) {
             throw new DevOpsException(DevOpsErrorMessage.PROXY_NOT_FOUND);
         }
-        ServerProxyDTO serverProxyDTO = serverProxyDataAdapter.sourceToTarget(serverProxy);
-        return serverProxyDTO;
+        return serverProxyDataAdapter.sourceToTarget(serverProxy);
     }
 
     @Override
