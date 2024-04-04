@@ -41,7 +41,7 @@ public class HostAlarmConfigRemoteService implements HostAlarmConfigService {
         hostAlarmConfig.setAlarmThreshold(command.getAlarmThreshold());
         hostAlarmConfig.setTriggerThreshold(command.getTriggerThreshold());
         hostAlarmConfig.setNotifySilence(command.getNotifySilence());
-        hostAlarmConfig.init();
+        hostAlarmConfig.init(command.getUser());
         hostAlarmConfigRepository.save(hostAlarmConfig);
         return Boolean.TRUE;
     }
@@ -68,6 +68,7 @@ public class HostAlarmConfigRemoteService implements HostAlarmConfigService {
             alarmGroup.setAlarmGroupId(groupId);
             alarmGroup.setHostId(command.getHostId());
             alarmGroupList.add(alarmGroup);
+            alarmGroup.init(command.getUser());
         }
         hostAlarmGroupRepository.save(alarmGroupList);
         return Boolean.TRUE;

@@ -17,6 +17,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class DeleteWebhookCommand extends BaseCommand {
 
-    private Long webhookId;
+    private Long id;
 
 }

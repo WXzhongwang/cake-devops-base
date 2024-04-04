@@ -20,4 +20,5 @@ public class WebSideMessage extends BaseEntity<Long> {
     private String toUserName;
     private String relId;
     private String sendMessage;
+
 }

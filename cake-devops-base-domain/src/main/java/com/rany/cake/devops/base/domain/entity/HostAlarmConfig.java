@@ -21,9 +21,24 @@ public class HostAlarmConfig extends BaseEntity<Long> {
     private Integer triggerThreshold;
     private Integer notifySilence;
 
-    public void init() {
+
+    public void init(String user) {
+        this.creator = user;
         this.gmtCreate = DateUtil.date();
         this.gmtModified = DateUtil.date();
         this.isDeleted = DeleteStatusEnum.NO.getValue();
+    }
+
+    public Boolean delete(String user) {
+        this.modifier = user;
+        this.gmtModified = DateUtil.date();
+        this.isDeleted = DeleteStatusEnum.YES.getValue();
+        return Boolean.TRUE;
+    }
+
+    public Boolean modify(String user) {
+        this.modifier = user;
+        this.gmtModified = DateUtil.date();
+        return Boolean.TRUE;
     }
 }

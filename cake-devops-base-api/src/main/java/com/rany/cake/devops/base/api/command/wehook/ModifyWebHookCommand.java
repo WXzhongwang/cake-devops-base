@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ModifyWebHookCommand extends BaseCommand {
 
-    private Long webhookId;
+    private Long id;
 
     private String webhookName;
     private String webhookUrl;

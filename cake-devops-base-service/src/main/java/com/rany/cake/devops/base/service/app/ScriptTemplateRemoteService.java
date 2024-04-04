@@ -39,6 +39,7 @@ public class ScriptTemplateRemoteService implements ScriptTemplateService {
         scriptTemplate.setTemplateName(command.getTemplateName());
         scriptTemplate.setTemplateValue(command.getTemplateValue());
         scriptTemplate.setDescription(command.getDescription());
+        scriptTemplate.init(command.getUser());
         scriptTemplateRepository.save(scriptTemplate);
         return scriptTemplate.getId().toString();
     }
@@ -52,6 +53,7 @@ public class ScriptTemplateRemoteService implements ScriptTemplateService {
         scriptTemplate.setTemplateName(command.getTemplateName());
         scriptTemplate.setTemplateValue(command.getTemplateValue());
         scriptTemplate.setDescription(command.getDescription());
+        scriptTemplate.modify(command.getUser());
         scriptTemplateRepository.update(scriptTemplate);
         return Boolean.TRUE;
     }
@@ -62,6 +64,7 @@ public class ScriptTemplateRemoteService implements ScriptTemplateService {
         if (scriptTemplate == null) {
             throw new DevOpsException(DevOpsErrorMessage.SCRIPT_TEMPLATE_NOT_FOUND);
         }
+        scriptTemplate.delete(command.getUser());
         scriptTemplateRepository.remove(scriptTemplate);
         return Boolean.TRUE;
     }

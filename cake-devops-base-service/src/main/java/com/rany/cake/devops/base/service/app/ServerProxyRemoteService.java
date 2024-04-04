@@ -67,6 +67,7 @@ public class ServerProxyRemoteService implements ServerProxyService {
         serverProxy.setProxyUsername(command.getProxyUsername());
         serverProxy.setProxyPassword(command.getProxyPassword());
         serverProxy.setDescription(command.getDescription());
+        serverProxy.modify(command.getUser());
         serverProxyRepository.update(serverProxy);
         return Boolean.TRUE;
     }
@@ -78,6 +79,7 @@ public class ServerProxyRemoteService implements ServerProxyService {
             throw new DevOpsException(DevOpsErrorMessage.PROXY_NOT_FOUND);
         }
         serverProxy.setIsDeleted(DeleteStatusEnum.YES.getValue());
+        serverProxy.delete(command.getUser());
         serverProxyRepository.update(serverProxy);
         return Boolean.TRUE;
     }

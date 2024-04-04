@@ -39,6 +39,7 @@ public class SystemEnvRemoteService implements SystemEnvService {
         env.setAttrKey(command.getAttrKey());
         env.setAttrValue(command.getAttrValue());
         env.setDescription(command.getDescription());
+        env.init(command.getUser());
         systemEnvRepository.save(env);
         return env.getId().toString();
     }

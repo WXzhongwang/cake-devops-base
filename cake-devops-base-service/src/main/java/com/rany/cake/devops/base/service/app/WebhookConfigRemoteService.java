@@ -41,13 +41,14 @@ public class WebhookConfigRemoteService implements WebhookConfigService {
         env.setWebhookType(WebHookType.DINGDING.getType());
         env.setWebhookUrl(command.getWebhookUrl());
         env.setWebhookConfig(command.getWebhookConfig());
+        env.init(command.getUser());
         webhookConfigRepository.save(env);
         return env.getId().toString();
     }
 
     @Override
     public Boolean modifyWebhook(ModifyWebHookCommand command) {
-        WebhookConfig webhookConfig = webhookConfigRepository.find(command.getWebhookId());
+        WebhookConfig webhookConfig = webhookConfigRepository.find(command.getId());
         if (webhookConfig == null) {
             throw new DevOpsException(DevOpsErrorMessage.HOOK_NOT_FOUND);
         }
@@ -55,16 +56,18 @@ public class WebhookConfigRemoteService implements WebhookConfigService {
         webhookConfig.setWebhookType(WebHookType.DINGDING.getType());
         webhookConfig.setWebhookUrl(command.getWebhookUrl());
         webhookConfig.setWebhookConfig(command.getWebhookConfig());
+        webhookConfig.modify(command.getUser());
         webhookConfigRepository.update(webhookConfig);
         return Boolean.TRUE;
     }
 
     @Override
     public Boolean deleteWebhook(DeleteWebhookCommand command) {
-        WebhookConfig webhookConfig = webhookConfigRepository.find(command.getWebhookId());
+        WebhookConfig webhookConfig = webhookConfigRepository.find(command.getId());
         if (webhookConfig == null) {
             throw new DevOpsException(DevOpsErrorMessage.HOOK_NOT_FOUND);
         }
+        webhookConfig.delete(command.getUser());
         webhookConfigRepository.remove(webhookConfig);
         return Boolean.TRUE;
     }

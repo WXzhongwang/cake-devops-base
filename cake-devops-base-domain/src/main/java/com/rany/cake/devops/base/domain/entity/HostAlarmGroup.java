@@ -16,7 +16,8 @@ public class HostAlarmGroup extends BaseEntity<Long> {
     private String hostId;
     private Long alarmGroupId;
 
-    public HostAlarmGroup() {
+    public void init(String user) {
+        this.creator = user;
         this.gmtCreate = DateUtil.date();
         this.gmtModified = DateUtil.date();
         this.isDeleted = DeleteStatusEnum.NO.getValue();
