@@ -26,7 +26,7 @@
 
         id
         ,host_id
-        , name, host_name,
+        , name, host_name, auth_type,
         server_addr, port, username, pwd, status, is_deleted, gmt_create, gmt_modified,
         `desc`, verified, creator, modifier
     </sql>
@@ -105,7 +105,7 @@
                 gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
             </if>
             <if test="desc != null">
-                desc = #{desc,jdbcType=VARCHAR},
+                `desc` = #{desc,jdbcType=VARCHAR},
             </if>
             <if test="verified != null">
                 verified = #{verified,jdbcType=TINYINT},

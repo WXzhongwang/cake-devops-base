@@ -8,7 +8,10 @@ import com.rany.cake.devops.base.domain.entity.HostExtend;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -21,7 +24,6 @@ import java.util.List;
  * @email 18668485565163.com
  */
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -101,6 +103,8 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
         for (GroupHost groupHost : groupHosts) {
             groupHost.setHostId(this.hostId.getHostId());
         }
+        this.name = String.format("%s的副本", this.name);
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
         return Boolean.TRUE;
     }
 

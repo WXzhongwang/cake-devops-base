@@ -2,10 +2,7 @@ package com.rany.cake.devops.base.web.controller;
 
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.host.CopyHostCommand;
-import com.rany.cake.devops.base.api.command.host.CreateHostCommand;
-import com.rany.cake.devops.base.api.command.host.ModifyHostCommand;
-import com.rany.cake.devops.base.api.command.host.PingHostCommand;
+import com.rany.cake.devops.base.api.command.host.*;
 import com.rany.cake.devops.base.api.dto.HostDTO;
 import com.rany.cake.devops.base.api.query.HostBasicQuery;
 import com.rany.cake.devops.base.api.query.HostPageQuery;
@@ -54,5 +51,10 @@ public class HostController {
     @PostMapping("/ping")
     public PojoResult<String> ping(@RequestBody PingHostCommand pingHostCommand) {
         return PojoResult.succeed(hostService.ping(pingHostCommand));
+    }
+
+    @PostMapping("/delete")
+    public PojoResult<Boolean> delete(@RequestBody DeleteHostCommand deleteHostCommand) {
+        return PojoResult.succeed(hostService.deleteHost(deleteHostCommand));
     }
 }
