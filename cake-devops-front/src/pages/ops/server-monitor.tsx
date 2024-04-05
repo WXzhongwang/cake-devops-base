@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Typography,
   Table,
   Row,
   Col,
@@ -12,14 +13,17 @@ import {
   Drawer,
   message,
   Modal,
+  Tooltip, // 引入 Tooltip 组件
+  Popover, // 引入 Popover 组件
 } from "antd";
 import { PageContainer } from "@ant-design/pro-components";
 import { connect, Dispatch } from "umi";
 import { HostMonitorDTO, HostInfoModel } from "@/models/host-monitor";
 import CreateHostForm from "./components/create-host-form";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { CopyOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 const { confirm } = Modal;
+const { Paragraph } = Typography;
 
 interface HostListProps {
   dispatch: Dispatch;
@@ -127,11 +131,6 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
     setPagination({ pageNo: 1, pageSize: 10 }); // 重置分页
   };
 
-  // 处理新增主机弹窗的显示和隐藏
-  const handleCreateHostDrawer = () => {
-    setDrawerVisible(!drawerVisible);
-  };
-
   const handleUpdate = async (values: HostMonitorDTO) => {
     try {
       const hostId = editingHost?.hostId;
@@ -153,7 +152,14 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
       dataIndex: "name",
       key: "name",
       render: (text: any, record: HostMonitorDTO) => {
-        return <>{record.host.name}</>;
+        return (
+          <Paragraph
+            copyable={{ tooltips: ["点击复制", "复制成功"] }}
+            style={{ display: "inline" }}
+          >
+            {record.host.name}
+          </Paragraph>
+        );
       },
     },
     {
@@ -161,7 +167,19 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
       dataIndex: "hostName",
       key: "hostName",
       render: (text: any, record: HostMonitorDTO) => {
-        return <>{record.host.hostName}</>;
+        return (
+          <>
+            {record.host.hostName}
+            <br />
+            IP:
+            <Paragraph
+              copyable={{ tooltips: ["点击复制", "复制成功"] }}
+              style={{ display: "inline" }}
+            >
+              {record.host.serverAddr}
+            </Paragraph>
+          </>
+        );
       },
     },
     {
@@ -205,14 +223,6 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
       title: "agent版本",
       dataIndex: "agentVersion",
       key: "agentVersion",
-    },
-    {
-      title: "服务地址",
-      dataIndex: "serverAddr",
-      key: "serverAddr",
-      render: (text: any, record: HostMonitorDTO) => {
-        return <>{record.host.serverAddr}</>;
-      },
     },
     {
       title: "状态",
@@ -283,10 +293,6 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
               </Button>
             </Form.Item>
           </Form>
-
-          <Button type="primary" onClick={handleCreateHostDrawer}>
-            新增主机
-          </Button>
 
           {/* 编辑插件的抽屉 */}
           <Drawer
