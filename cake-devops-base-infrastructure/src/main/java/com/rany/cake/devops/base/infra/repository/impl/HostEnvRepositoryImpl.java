@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.cake.framework.common.response.Page;
 import com.github.pagehelper.PageInfo;
+import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.entity.HostEnv;
 import com.rany.cake.devops.base.domain.repository.HostEnvRepository;
 import com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam;
@@ -11,8 +12,13 @@ import com.rany.cake.devops.base.infra.convertor.HostEnvDataConvertor;
 import com.rany.cake.devops.base.infra.dao.HostEnvDao;
 import com.rany.cake.devops.base.infra.mapper.HostEnvPOMapper;
 import com.rany.cake.devops.base.infra.po.HostEnvPO;
+import com.rany.cake.devops.base.util.CommandConst;
+import com.rany.cake.devops.base.util.Const;
+import com.rany.cake.devops.base.util.MachineConst;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.util.enums.MachineEnvAttr;
 import com.rany.cake.toolkit.lang.utils.Lists;
+import com.rany.cake.toolkit.lang.utils.Strings;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,8 +56,7 @@ public class HostEnvRepositoryImpl implements HostEnvRepository {
 
     @Override
     public void save(HostEnv env) {
-        HostEnvPO hostEnvPO = hostEnvDataConvertor.sourceToTarget(env);
-        hostEnvPOMapper.insertSelective(hostEnvPO);
+        hostEnvDao.save(env);
     }
 
     @Override
@@ -96,6 +101,41 @@ public class HostEnvRepositoryImpl implements HostEnvRepository {
                 continue;
             }
             hostEnvPOMapper.updateByPrimaryKey(envPO);
+        }
+    }
+
+
+    public void initEnv(Host host) {
+        String hostId = host.getHostId().getHostId();
+        List<String> keys = MachineEnvAttr.getKeys();
+        for (String key : keys) {
+            HostEnv env = new HostEnv();
+            MachineEnvAttr attr = MachineEnvAttr.of(key);
+            env.setHostId(hostId);
+            env.setDescription(attr.getDescription());
+            env.setAttrKey(attr.getKey());
+            env.init(host.getCreator());
+            switch (attr) {
+                case TAIL_OFFSET:
+                    env.setAttrValue(Const.TAIL_OFFSET_LINE + Strings.EMPTY);
+                    break;
+                case TAIL_CHARSET:
+                case SFTP_CHARSET:
+                    env.setAttrValue(Const.UTF_8);
+                    break;
+                case TAIL_DEFAULT_COMMAND:
+                    env.setAttrValue(CommandConst.TAIL_FILE_DEFAULT);
+                    break;
+                case CONNECT_TIMEOUT:
+                    env.setAttrValue(MachineConst.CONNECT_TIMEOUT + Strings.EMPTY);
+                    break;
+                case CONNECT_RETRY_TIMES:
+                    env.setAttrValue(MachineConst.CONNECT_RETRY_TIMES + Strings.EMPTY);
+                    break;
+                default:
+                    break;
+            }
+            hostEnvDao.save(env);
         }
     }
 }

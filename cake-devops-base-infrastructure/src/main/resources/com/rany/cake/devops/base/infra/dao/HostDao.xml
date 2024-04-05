@@ -20,6 +20,8 @@
         <result column="verified" jdbcType="CHAR" property="verified"/>
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="key_id" jdbcType="BIGINT" property="keyId"/>
+        <result column="proxy_id" jdbcType="BIGINT" property="proxyId"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -28,7 +30,7 @@
         ,host_id
         , name, host_name, auth_type,
         server_addr, port, username, pwd, status, is_deleted, gmt_create, gmt_modified,
-        `desc`, verified, creator, modifier
+        `desc`, verified, creator, modifier, key_id, proxy_id
     </sql>
 
 
@@ -49,7 +51,7 @@
                           port, auth_type, username, pwd, status,
                           is_deleted, gmt_create, gmt_modified,
                           `desc`, verified, creator,
-                          modifier)
+                          modifier, key_id, proxy_id)
         values (#{hostId.hostId},
                 #{name,jdbcType=VARCHAR},
                 #{hostName,jdbcType=VARCHAR},
@@ -65,7 +67,9 @@
                 #{desc,jdbcType=VARCHAR},
                 #{verified,jdbcType=TINYINT},
                 #{creator,jdbcType=VARCHAR},
-                #{modifier,jdbcType=VARCHAR})
+                #{modifier,jdbcType=VARCHAR},
+                #{keyId},
+                #{proxyId})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.Host">
@@ -115,6 +119,12 @@
             </if>
             <if test="modifier != null">
                 modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="keyId != null">
+                key_id = #{keyId},
+            </if>
+            <if test="proxyId != null">
+                proxy_id = #{proxyId},
             </if>
         </set>
         where host_id = #{hostId.hostId}

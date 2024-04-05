@@ -46,6 +46,18 @@ export default {
             icon: <ApiFilled />,
             component: "ops/server-proxy",
           },
+          {
+            path: "/ops/server-env",
+            name: "主机环境变量",
+            icon: <ApiFilled />,
+            component: "ops/server-env",
+          },
+          {
+            path: "/ops/server-monitor",
+            name: "主机监控",
+            icon: <ApiFilled />,
+            component: "ops/server-monitor",
+          },
         ],
       },
       {
@@ -64,6 +76,12 @@ export default {
             name: "告警组",
             icon: <TabletFilled />,
             component: "system/alarm-group",
+          },
+          {
+            path: "/system/script-template",
+            name: "脚本管理",
+            icon: <TabletFilled />,
+            component: "system/script-template",
           },
         ],
       },

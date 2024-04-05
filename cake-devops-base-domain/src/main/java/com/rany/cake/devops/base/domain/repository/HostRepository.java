@@ -30,4 +30,6 @@ public interface HostRepository extends Repository<Host, HostId> {
     Page<Host> pageHost(HostPageQueryParam hostPageQueryParam);
 
     void saveGroupHosts(List<GroupHost> groupHosts);
+
+    void save(Host host, List<GroupHost> groupHosts);
 }

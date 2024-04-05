@@ -19,7 +19,6 @@ public class ModifyHostEnvCommand extends BaseCommand {
      * 环境变量ID
      */
     private Long id;
-    private String hostId;
     private String attrKey;
     private String attrValue;
     private String description;

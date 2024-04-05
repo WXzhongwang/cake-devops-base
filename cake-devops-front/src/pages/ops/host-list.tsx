@@ -280,7 +280,7 @@ const HostPage: React.FC<HostListProps> = ({
       key: "authType",
       render: (text: any, record: HostModel) => {
         // 根据 status 的值返回相应的 Tag
-        const statusText = record.status === "0" ? "基础模式" : "秘钥模式";
+        const statusText = record.authType === 1 ? "基础模式" : "秘钥模式";
         return <Tag color="success">{statusText}</Tag>;
       },
     },

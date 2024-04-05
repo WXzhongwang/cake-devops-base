@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.domain.repository;
 
 import com.cake.framework.common.response.Page;
+import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.entity.HostEnv;
 import com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam;
 
@@ -23,4 +24,6 @@ public interface HostEnvRepository {
     List<HostEnv> list(HostEnvQueryParam queryParam);
 
     void saveEnv(String hostId, Map<String, String> attributes);
+
+    void initEnv(Host host);
 }

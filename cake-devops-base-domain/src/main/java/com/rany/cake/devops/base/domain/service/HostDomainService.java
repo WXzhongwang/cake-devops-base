@@ -58,8 +58,8 @@ public class HostDomainService {
      * @param host
      */
     public void save(Host host, List<GroupHost> groupHosts) {
-        hostRepository.save(host);
-        hostRepository.saveGroupHosts(groupHosts);
+        hostRepository.save(host, groupHosts);
+        hostEnvRepository.initEnv(host);
     }
 
     public void update(Host host) {

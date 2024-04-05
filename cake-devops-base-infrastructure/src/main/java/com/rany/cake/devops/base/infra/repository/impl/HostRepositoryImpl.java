@@ -13,12 +13,14 @@ import com.rany.cake.devops.base.infra.aop.PagingQuery;
 import com.rany.cake.devops.base.infra.convertor.HostDataConvertor;
 import com.rany.cake.devops.base.infra.dao.GroupHostDao;
 import com.rany.cake.devops.base.infra.dao.HostDao;
+import com.rany.cake.devops.base.infra.dao.HostEnvDao;
 import com.rany.cake.devops.base.infra.mapper.HostPOMapper;
 import com.rany.cake.devops.base.infra.po.GroupHostPO;
 import com.rany.cake.devops.base.infra.po.HostPO;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -39,6 +41,7 @@ public class HostRepositoryImpl implements HostRepository {
     private final HostPOMapper hostPOMapper;
     private final HostDao hostDao;
     private final GroupHostDao groupHostDao;
+    private final HostEnvDao hostEnvDao;
     private final HostDataConvertor hostDataConvertor;
 
     @Override
@@ -65,6 +68,15 @@ public class HostRepositoryImpl implements HostRepository {
             groupHostDao.save(groupHost);
         }
     }
+
+    @Transactional
+    public void save(Host host, List<GroupHost> groupHosts) {
+        hostDao.save(host);
+        for (GroupHost groupHost : groupHosts) {
+            groupHostDao.save(groupHost);
+        }
+    }
+
 
     @Override
     public int update(Host host) {

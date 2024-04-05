@@ -33,6 +33,16 @@ export default defineConfig({
           component: "ops/server-proxy",
           name: "主机代理管理",
         },
+        {
+          path: "/ops/server-env",
+          component: "ops/server-env",
+          name: "主机环境变量",
+        },
+        {
+          path: "/ops/server-monitor",
+          component: "ops/server-monitor",
+          name: "主机监控",
+        },
       ],
     },
     {
@@ -47,6 +57,11 @@ export default defineConfig({
           path: "/system/alarm-group",
           component: "system/alarm-group",
           name: "告警组",
+        },
+        {
+          path: "/system/script-template",
+          component: "system/script-template",
+          name: "脚本管理",
         },
       ],
     },

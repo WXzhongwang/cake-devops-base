@@ -12,13 +12,26 @@
         <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
         <result column="creator" property="creator" jdbcType="VARCHAR"/>
         <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
     </resultMap>
     <sql id="Base_Column_List">
 
         id
         , host_id, attr_key, attr_value, is_deleted, gmt_create, gmt_modified, creator,
-        modifier
+        modifier, description
     </sql>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.HostEnv"
+            useGeneratedKeys="true" keyProperty="id">
+
+        insert into host_env (host_id, attr_key,
+                              attr_value, is_deleted, gmt_create,
+                              gmt_modified, creator, modifier, description)
+        values (#{hostId,jdbcType=VARCHAR}, #{attrKey,jdbcType=VARCHAR},
+                #{attrValue,jdbcType=VARCHAR}, #{isDeleted,jdbcType=CHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
+                #{gmtModified,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+                #{description})
+    </insert>
 
     <select id="selectByName" resultMap="BaseResultMap">
         select
@@ -38,6 +51,9 @@
             is_deleted = '0'
             <if test="name != null and name != ''">
                 and attr_key = #{name}
+            </if>
+            <if test="hostId != null and hostId != ''">
+                and host_id = #{hostId}
             </if>
         </where>
     </select>

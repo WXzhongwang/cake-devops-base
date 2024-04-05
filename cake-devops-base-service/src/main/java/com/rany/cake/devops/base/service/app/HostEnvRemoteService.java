@@ -42,6 +42,8 @@ public class HostEnvRemoteService implements HostEnvService {
         env.setHostId(command.getHostId());
         env.setAttrKey(command.getAttrKey());
         env.setAttrValue(command.getAttrValue());
+        env.setDescription(command.getDescription());
+        env.init(command.getUser());
         hostEnvRepository.save(env);
         return env.getId().toString();
     }
@@ -52,9 +54,10 @@ public class HostEnvRemoteService implements HostEnvService {
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.MACHINE_ENV_NOT_FOUND);
         }
-        env.setHostId(command.getHostId());
         env.setAttrKey(command.getAttrKey());
         env.setAttrValue(command.getAttrValue());
+        env.setDescription(command.getDescription());
+        env.modify(command.getUser());
         hostEnvRepository.update(env);
         return Boolean.TRUE;
     }
@@ -65,6 +68,7 @@ public class HostEnvRemoteService implements HostEnvService {
         if (env == null) {
             throw new DevOpsException(DevOpsErrorMessage.MACHINE_ENV_NOT_FOUND);
         }
+        env.delete(command.getUser());
         hostEnvRepository.remove(env);
         return Boolean.TRUE;
     }

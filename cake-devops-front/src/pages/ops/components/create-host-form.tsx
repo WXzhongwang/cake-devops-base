@@ -28,12 +28,12 @@ const CreateHostForm: React.FC<CreateHostFormProps> = ({
   onUpdate,
 }) => {
   const [form] = Form.useForm();
-  const [authMode, setAuthMode] = useState<number>(1);
+  const [authType, setAuthMode] = useState<number>(1);
 
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue(initialValues);
-      setAuthMode(initialValues.authMode);
+      setAuthMode(initialValues.authType);
     }
   }, [initialValues, form]);
 
@@ -119,18 +119,19 @@ const CreateHostForm: React.FC<CreateHostFormProps> = ({
       </Form.Item>
       <Form.Item
         label="认证模式"
-        name="authMode"
+        name="authType"
         rules={[{ required: true, message: "请选择认证模式" }]}
       >
         <Select
           placeholder="请选择认证模式"
           onChange={(value) => setAuthMode(value)}
+          defaultValue={1}
         >
-          <Option value={1}>基础账号密码认证</Option>
+          <Option value={1}>账号密码认证</Option>
           <Option value={2}>私钥认证</Option>
         </Select>
       </Form.Item>
-      {authMode === 1 && (
+      {authType === 1 && (
         <>
           <Form.Item
             name="pwd"
@@ -141,7 +142,7 @@ const CreateHostForm: React.FC<CreateHostFormProps> = ({
           </Form.Item>
         </>
       )}
-      {authMode === 2 && (
+      {authType === 2 && (
         <>
           <Form.Item
             name="keyId"
