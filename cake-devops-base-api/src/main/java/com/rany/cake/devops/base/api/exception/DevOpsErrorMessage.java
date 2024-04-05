@@ -3,7 +3,6 @@ package com.rany.cake.devops.base.api.exception;
 import com.cake.framework.common.exception.ErrorCodeEnum;
 import com.cake.framework.common.exception.ResponseCode;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * TODO
@@ -31,7 +30,8 @@ public enum DevOpsErrorMessage implements ResponseCode {
 
     SCRIPT_TEMPLATE_NOT_FOUND("41000", "模版未找到"),
     ALARM_GROUP_NOT_FOUND("42000", "告警组未找到"),
-    AGENT_STATUS_RUNNING("46000", "Agent运行中"),
+    AGENT_STATUS_RUNNING("46000", "Agent启动中"),
+    AGENT_FILE_NON_EXIST("46000", "插件包不存在 请确认文件路径: {}"),
     SYSTEM_ENV_NOT_FOUND("4800", "系统环境未找到"),
     TIMEOUT_EXCEPTION_MESSAGE("5100", "连接超时"),
 
@@ -41,10 +41,6 @@ public enum DevOpsErrorMessage implements ResponseCode {
     @Getter
     private final String message;
 
-    public String getCode() {
-        return StringUtils.join("-", new Object[]{ErrorCodeEnum.BIZ.getCode(), this.code});
-    }
-
     private DevOpsErrorMessage(String code, String message) {
         this.code = code;
         this.message = message;
@@ -52,7 +48,7 @@ public enum DevOpsErrorMessage implements ResponseCode {
 
     @Override
     public String getErrorCode() {
-        return this.getCode();
+        return ErrorCodeEnum.BIZ.getCode() + "-" + code;
     }
 
     @Override

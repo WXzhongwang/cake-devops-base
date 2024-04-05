@@ -27,14 +27,12 @@ import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
 import com.rany.cake.devops.base.service.adapter.HostMonitorDataAdapter;
 import com.rany.cake.devops.base.service.handler.agent.MonitorAgents;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
-import com.rany.cake.devops.base.util.MessageConst;
 import com.rany.cake.devops.base.util.SchedulerPools;
 import com.rany.cake.devops.base.util.enums.MonitorStatus;
 import com.rany.cake.devops.base.util.system.SystemEnvAttr;
 import com.rany.cake.toolkit.lang.Threads;
 import com.rany.cake.toolkit.lang.io.Files1;
 import com.rany.cake.toolkit.lang.utils.Strings;
-import com.rany.cake.toolkit.lang.utils.Valid;
 import com.rany.uic.api.facade.account.AccountFacade;
 import com.rany.uic.api.query.account.AccountBasicQuery;
 import com.rany.uic.common.dto.account.AccountDTO;
@@ -76,18 +74,18 @@ public class HostMonitorRemoteService implements HostMonitorService {
     @Override
     public Page<HostMonitorDTO> pageHostMonitor(HostMonitorPageQuery hostMonitorPageQuery) {
         HostMonitorPageQueryParam hostMonitorPageQueryParam = hostMonitorDataAdapter.convertParam(hostMonitorPageQuery);
-        Page<HostMonitor> page = hostMonitorRepository.page(hostMonitorPageQueryParam);
-        List<HostMonitor> items = new ArrayList<>(page.getItems());
-        List<HostMonitorDTO> hostMonitorDTOList = hostMonitorDataAdapter.sourceToTarget(items);
-        List<String> hostIds = items.stream().map(HostMonitor::getHostId).collect(Collectors.toList());
-        List<Host> hosts = hostRepository.findByIds(hostIds);
-        List<HostDTO> hostDTOS = hostDataAdapter.sourceToTarget(hosts);
-        Map<String, HostDTO> hostDTOMap = Maps.uniqueIndex(hostDTOS, HostDTO::getHostId);
+        Page<Host> hostPage = hostRepository.queryMonitorHost(hostMonitorPageQueryParam);
+        List<Host> items = new ArrayList<>(hostPage.getItems());
+        List<HostDTO> hostDTOList = hostDataAdapter.sourceToTarget(items);
+        List<String> hostIds = hostDTOList.stream().map(HostDTO::getHostId).collect(Collectors.toList());
+        List<HostMonitor> hostMonitorList = hostMonitorRepository.findByHostId(hostIds);
+        List<HostMonitorDTO> hostMonitorDTOList = hostMonitorDataAdapter.sourceToTarget(hostMonitorList);
+        Map<String, HostDTO> hostDTOMap = Maps.uniqueIndex(hostDTOList, HostDTO::getHostId);
         for (HostMonitorDTO hostMonitorDTO : hostMonitorDTOList) {
             HostDTO hostDTO = hostDTOMap.get(hostMonitorDTO.getHostId());
             hostMonitorDTO.setHost(hostDTO);
         }
-        return PageUtils.build(page, hostMonitorDTOList);
+        return PageUtils.build(hostPage, hostMonitorDTOList);
     }
 
     @Override
@@ -104,7 +102,7 @@ public class HostMonitorRemoteService implements HostMonitorService {
     public Boolean installAgent(InstallMonitorAgentCommand command) {
         HostMonitor monitor = hostMonitorRepository.findByHostId(command.getHostId());
         Host host = hostDomainService.getHost(new HostId(command.getHostId()));
-        if (!Strings.eq(monitor.getMonitorStatus(), MonitorStatus.STARTING.getStatus())) {
+        if (Strings.eq(monitor.getMonitorStatus(), MonitorStatus.STARTING.getStatus())) {
             throw new BusinessException(DevOpsErrorMessage.AGENT_STATUS_RUNNING);
         }
         boolean reinstall = command.getUpgrade();
@@ -123,7 +121,10 @@ public class HostMonitorRemoteService implements HostMonitorService {
         if (reinstall) {
             // 重新安装
             String path = SystemEnvAttr.MACHINE_MONITOR_AGENT_PATH.getValue();
-            Valid.isTrue(Files1.isFile(path), Strings.format(MessageConst.AGENT_FILE_NON_EXIST, path));
+            if (!Files1.isFile(path)) {
+                throw new BusinessException(DevOpsErrorMessage.AGENT_FILE_NON_EXIST.getErrorCode(),
+                        Strings.format(DevOpsErrorMessage.AGENT_FILE_NON_EXIST.getMessage(), path));
+            }
             // 状态改为启动中
             monitor.setMonitorStatus(MonitorStatus.STARTING.getStatus());
             // 创建安装任务

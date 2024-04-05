@@ -138,6 +138,23 @@
         where host_id = #{hostId}
     </select>
 
+    <select id="queryMonitorHost" resultMap="BaseResultMap"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.HostMonitorPageQueryParam">
+        select
+        h.*
+        from host h
+        left join host_monitor m on m.host_id = h.host_id
+        <where>
+            h.is_deleted = '0'
+            <if test="hostName != null and hostName != ''">
+                and h.host_name like ('%', #{hostName},'%')
+            </if>
+            <if test="serverAddr != null and serverAddr != ''">
+                and h.server_addr like ('%', #{serverAddr},'%')
+            </if>
+        </where>
+    </select>
+
 
     <select id="queryHost" resultMap="BaseResultMap">
         select

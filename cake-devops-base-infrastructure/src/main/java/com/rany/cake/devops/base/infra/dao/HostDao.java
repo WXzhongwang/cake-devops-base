@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.domain.repository.param.HostMonitorPageQueryParam;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.infra.po.HostPO;
 import org.apache.ibatis.annotations.Param;
@@ -43,4 +44,6 @@ public interface HostDao {
 
 
     List<HostPO> queryHost(HostPageQueryParam hostPageQueryParam);
+
+    List<HostPO> queryMonitorHost(HostMonitorPageQueryParam hostPageQueryParam);
 }

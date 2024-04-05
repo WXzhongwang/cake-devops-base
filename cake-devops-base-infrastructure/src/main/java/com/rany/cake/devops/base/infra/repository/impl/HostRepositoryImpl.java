@@ -7,6 +7,7 @@ import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
+import com.rany.cake.devops.base.domain.repository.param.HostMonitorPageQueryParam;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.infra.aop.PagingQuery;
@@ -87,6 +88,15 @@ public class HostRepositoryImpl implements HostRepository {
     public List<Host> findByIds(List<String> hostIds) {
         List<HostPO> hostPOS = hostDao.selectByPrimaryKeyList(hostIds);
         return hostDataConvertor.targetToSource(hostPOS);
+    }
+
+    @Override
+    @PagingQuery
+    public Page<Host> queryMonitorHost(HostMonitorPageQueryParam param) {
+        List<HostPO> hostPOS = hostDao.queryMonitorHost(param);
+        PageInfo<HostPO> pageInfo = new PageInfo<>(hostPOS);
+        List<Host> hosts = hostDataConvertor.targetToSource(hostPOS);
+        return PageUtils.build(pageInfo, hosts);
     }
 
     @Override

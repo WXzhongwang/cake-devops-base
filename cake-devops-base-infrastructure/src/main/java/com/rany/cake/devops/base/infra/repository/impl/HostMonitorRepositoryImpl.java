@@ -20,6 +20,7 @@ import com.rany.cake.toolkit.lang.utils.Strings;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,6 +59,16 @@ public class HostMonitorRepositoryImpl implements HostMonitorRepository {
             hostMonitorDao.save(monitor);
         }
         return hostMonitorDataConvertor.targetToSource(hostMonitorPO);
+    }
+
+    @Override
+    public List<HostMonitor> findByHostId(List<String> hostIds) {
+        List<HostMonitor> configs = new ArrayList<>();
+        for (String hostId : hostIds) {
+            HostMonitor monitor = this.findByHostId(hostId);
+            configs.add(monitor);
+        }
+        return configs;
     }
 
     @Override
