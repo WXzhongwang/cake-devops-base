@@ -24,10 +24,10 @@ const errorHandler = (error: CustomError<any>) => {
     // The request was made and the server responded with a status code
     console.error("Response error:", response.status, data);
     // debugger;
-    message.error(data.message);
+    message.error(data.msg);
   } else {
     // The request was made but no response was received
-    console.error("Request error:", data.message);
+    console.error("Request error:", data.msg);
   }
 
   // You can throw an error or return a custom response here

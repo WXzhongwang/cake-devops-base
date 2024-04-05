@@ -196,15 +196,15 @@ const ProxyList: React.FC<ProxyListProps> = ({ dispatch, proxies, total }) => {
       <Drawer
         title={editingProxy ? "编辑代理" : "新增代理"}
         width={400}
-        visible={drawerVisible}
+        open={drawerVisible}
         onClose={handleCloseDrawer}
         destroyOnClose={true}
       >
         <CreateProxyForm
-          onUpdate={handleUpdateProxy}
           initialValues={editingProxy}
           onSave={handleSaveProxy}
           onCancel={handleCloseDrawer}
+          onUpdate={handleUpdateProxy}
         />
       </Drawer>
     </PageContainer>

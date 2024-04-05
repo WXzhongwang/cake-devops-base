@@ -2,6 +2,7 @@
 
 import { Effect, Reducer, Subscription } from "umi";
 import * as api from "@/services/host";
+import { message } from "antd";
 
 export interface ServerKey {
   id: number;
@@ -14,6 +15,10 @@ export interface ServerKey {
   passphrase: string;
   gmtCreate: Date;
   gmtModified: Date;
+}
+
+export interface BaseAction {
+  callback?: () => void;
 }
 
 export interface CreateServerKeyPayload {
@@ -76,8 +81,23 @@ export interface CreateHostPayload {
   hostName: string;
   serverAddr: string;
   port: number;
+  authType: number;
   username: string;
-  pkey: string;
+  pwd: string;
+  proxyId: string;
+  keyId: string;
+}
+
+export interface CopyHostPayload {
+  hostId: string;
+}
+
+export interface DeleteHostPayload {
+  hostId: string;
+}
+
+export interface PingHostPayload {
+  hostId: string;
 }
 
 export interface UpdateHostPayload {
@@ -86,8 +106,11 @@ export interface UpdateHostPayload {
   hostName?: string;
   serverAddr?: string;
   port?: number;
+  authType: number;
   username?: string;
-  pkey?: string;
+  pwd?: string;
+  proxyId: string;
+  keyId: string;
 }
 
 export interface HostGroupModel {
@@ -123,6 +146,24 @@ interface QueryHostAction {
   type: "host/fetchHosts";
   payload: QueryHostPayload;
 }
+interface CreateHostAction extends BaseAction {
+  type: "host/createHost";
+  payload: CreateHostPayload;
+}
+
+interface PingHostAction extends BaseAction {
+  type: "host/pingHost";
+  payload: PingHostPayload;
+}
+
+interface CopyHostAction extends BaseAction {
+  type: "host/copyHost";
+  payload: CopyHostPayload;
+}
+interface DeleteHostAction extends BaseAction {
+  type: "host/deleteHost";
+  payload: DeleteHostPayload;
+}
 
 interface CreateServerKeyAction {
   type: "host/createServerAccount";
@@ -151,6 +192,8 @@ export interface HostModelType {
     fetchHosts: Effect;
     createHost: Effect;
     updateHost: Effect;
+    pingHost: Effect;
+    copyHost: Effect;
     fetchHostGroups: Effect;
     createHostGroup: Effect;
     updateHostGroup: Effect;
@@ -188,11 +231,61 @@ const HostModel: HostModelType = {
       });
     },
 
-    *createHost({ payload }, { call, put }) {
+    *createHost({ payload, callback }: CreateHostAction, { call, put }) {
       // 调用 API 创建主机
-      yield call(api.createHost, payload);
+      const response = yield call(api.createHost, payload);
+      const { success, msg } = response;
       // 创建成功后重新获取主机数据
-      yield put({ type: "fetchHosts" });
+      if (success) {
+        yield put({ type: "fetchHosts" });
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *pingHost({ payload, callback }: PingHostAction, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.pingHost, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *copyHost({ payload, callback }: CopyHostAction, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.copyHost, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        yield put({ type: "fetchHosts" });
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *deleteHost({ payload, callback }: DeleteHostAction, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.deleteHost, payload);
+      const { success, msg } = response;
+      if (success) {
+        // 更新成功后重新获取主机数据
+        yield put({ type: "fetchHosts" });
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *updateHost({ payload }, { call, put }) {

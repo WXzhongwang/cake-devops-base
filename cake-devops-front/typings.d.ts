@@ -12,7 +12,7 @@ declare namespace API {
   type ResponseBody<T> = {
     content: T;
     code: string;
-    message: string;
+    msg: string;
     success: boolean;
   };
 

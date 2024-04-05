@@ -10,15 +10,18 @@ import {
   Space,
   Tag,
   Drawer,
+  message,
+  Modal,
 } from "antd";
 import { PageContainer } from "@ant-design/pro-components";
 import { connect, Dispatch } from "umi";
 import HostGroupTree from "./components/host-group-tree";
-import CreateHostDrawer from "./components/create-host-drawer";
-import { HostModel, HostGroupModel } from "@/models/host";
+import { HostModel, HostGroupModel, ServerKey } from "@/models/host";
 import { ProxyModel } from "@/models/proxy";
-import { updateHost } from "@/services/host";
 import CreateHostForm from "./components/create-host-form";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+
+const { confirm } = Modal;
 
 interface HostListProps {
   dispatch: Dispatch;
@@ -26,6 +29,7 @@ interface HostListProps {
   hostGroups: HostGroupModel[];
   total: number;
   machineProxies: ProxyModel[];
+  serverKeys: ServerKey[];
 }
 
 const HostPage: React.FC<HostListProps> = ({
@@ -34,8 +38,8 @@ const HostPage: React.FC<HostListProps> = ({
   hostGroups,
   total,
   machineProxies,
+  serverKeys,
 }) => {
-  const [createHostVisible, setCreateHostVisible] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false); // 控制抽屉显示状态
@@ -60,15 +64,54 @@ const HostPage: React.FC<HostListProps> = ({
   };
 
   const handleDelete = (hostId: string) => {
+    confirm({
+      title: "确认删除",
+      icon: <ExclamationCircleOutlined />,
+      content: "确定要删除该主机吗？",
+      okText: "确认",
+      okType: "danger",
+      cancelText: "取消",
+      onOk() {
+        dispatch({
+          type: "host/deleteHost",
+          payload: {
+            hostId,
+          },
+          callback: () => {
+            message.success("删除成功");
+          },
+        });
+      },
+      onCancel() {},
+    });
+  };
+
+  const handlePing = (hostId: string) => {
     dispatch({
-      type: "host/delete",
+      type: "host/pingHost",
       payload: {
         hostId,
+      },
+      callback: () => {
+        message.success("Ping 操作成功");
+      },
+    });
+  };
+
+  const handleCopy = (hostId: string) => {
+    dispatch({
+      type: "host/copyHost",
+      payload: {
+        hostId,
+      },
+      callback: () => {
+        message.success("删除成功");
       },
     });
   };
 
   const handleCloseDrawer = () => {
+    setEditingHost(undefined);
     setDrawerVisible(false); // 关闭抽屉
     form.resetFields(); // 重置表单字段
   };
@@ -112,8 +155,16 @@ const HostPage: React.FC<HostListProps> = ({
     });
   };
 
+  const fetchServerKeys = () => {
+    dispatch({
+      type: "host/queryServerKeys",
+      payload: {},
+    });
+  };
+
   useEffect(() => {
     fetchMachineProxies(); // 调用获取主机代理列表的接口
+    fetchServerKeys();
   }, []);
 
   const handleGroupSelect = (groupId: string) => {
@@ -179,7 +230,7 @@ const HostPage: React.FC<HostListProps> = ({
       type: "host/createHost",
       payload: values,
     });
-    getHosts(); // 创建成功后重新获取主机列表数据
+    // getHosts(); // 创建成功后重新获取主机列表数据
     setDrawerVisible(false); // 关闭抽屉
     form.resetFields(); // 重置表单字段
   };
@@ -188,7 +239,11 @@ const HostPage: React.FC<HostListProps> = ({
     try {
       // 从编辑的主机信息中获取主机的 ID
       const hostId = editingHost?.hostId;
-      await updateHost({ ...values, hostId });
+      //      await updateHost({ ...values, hostId });
+      dispatch({
+        type: "/host/updateHost",
+        payload: { ...values, hostId: hostId },
+      });
       getHosts();
       setDrawerVisible(false);
       form.resetFields();
@@ -220,9 +275,14 @@ const HostPage: React.FC<HostListProps> = ({
       key: "port",
     },
     {
-      title: "用户名",
-      dataIndex: "username",
-      key: "username",
+      title: "认证模式",
+      dataIndex: "authType",
+      key: "authType",
+      render: (text: any, record: HostModel) => {
+        // 根据 status 的值返回相应的 Tag
+        const statusText = record.status === "0" ? "基础模式" : "秘钥模式";
+        return <Tag color="success">{statusText}</Tag>;
+      },
     },
     {
       title: "状态",
@@ -243,6 +303,14 @@ const HostPage: React.FC<HostListProps> = ({
       key: "action",
       render: (text: any, record: HostModel) => (
         <Space size="middle">
+          {/* 调用 handlePing 处理函数 */}
+          <a type="link" onClick={() => handlePing(record.hostId)}>
+            Ping
+          </a>
+          {/* 调用 handleCopy 处理函数 */}
+          <a type="link" onClick={() => handleCopy(record.hostId)}>
+            复制
+          </a>
           <a onClick={() => handleEdit(record)}>编辑</a>
           <a onClick={() => handleDelete(record.hostId)}>删除</a>
         </Space>
@@ -313,6 +381,7 @@ const HostPage: React.FC<HostListProps> = ({
                   initialValues={editingHost}
                   hostGroups={hostGroups}
                   machineProxies={machineProxies}
+                  serverKeys={serverKeys}
                   onSubmit={handleSaveHost}
                   onUpdate={handleUpdateHost}
                   onCancel={handleCloseDrawer}
@@ -343,4 +412,5 @@ export default connect(({ host, proxy }) => ({
   hostGroups: host.hostGroups,
   total: host.total,
   machineProxies: proxy.proxies,
+  serverKeys: host.serverKeys,
 }))(HostPage);

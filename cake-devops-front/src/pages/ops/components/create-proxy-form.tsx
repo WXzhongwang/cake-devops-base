@@ -1,18 +1,20 @@
+// components/CreateProxyForm.tsx
+
 import React from "react";
 import { Form, Input, Button, Select } from "antd";
-import { WebhookConfig } from "@/models/webhook"; // 根据您的实际路径进行调整
+import { ProxyModel } from "@/models/proxy";
 import TextArea from "antd/lib/input/TextArea";
 
 const { Option } = Select;
 
-interface CreateWebhookFormProps {
-  initialValues?: WebhookConfig; // 编辑时的初始值
-  onSave: (values: WebhookConfig) => void;
+interface CreateProxyFormProps {
+  initialValues?: ProxyModel; // 编辑时的初始值
+  onSave: (values: ProxyModel) => void;
   onCancel: () => void;
-  onUpdate: (values: WebhookConfig) => void; // 新增 onUpdate 方法用于更新
+  onUpdate: (values: ProxyModel) => void; // 新增 onUpdate 方法用于更新
 }
 
-const CreateWebhookForm: React.FC<CreateWebhookFormProps> = ({
+const CreateProxyForm: React.FC<CreateProxyFormProps> = ({
   initialValues,
   onSave,
   onCancel,
@@ -42,39 +44,46 @@ const CreateWebhookForm: React.FC<CreateWebhookFormProps> = ({
   return (
     <Form form={form} layout="vertical" onFinish={handleSubmit}>
       <Form.Item
-        name="webhookName"
-        label="Webhook名称"
-        rules={[{ required: true, message: "请输入Webhook名称" }]}
+        name="proxyHost"
+        label="代理主机"
+        rules={[{ required: true, message: "请输入代理主机" }]}
       >
-        <Input placeholder="请输入Webhook名称" />
+        <Input placeholder="请输入代理主机" />
       </Form.Item>
 
       <Form.Item
-        name="webhookUrl"
-        label="Webhook URL"
-        rules={[{ required: true, message: "请输入Webhook URL" }]}
+        name="proxyPort"
+        label="代理端口"
+        rules={[{ required: true, message: "请输入代理端口" }]}
       >
-        <Input placeholder="请输入Webhook URL" />
+        <Input placeholder="请输入代理端口" type="number" />
       </Form.Item>
 
       <Form.Item
-        name="webhookType"
-        label="Webhook类型"
-        rules={[{ required: true, message: "请选择Webhook类型" }]}
+        name="proxyType"
+        label="代理类型"
+        rules={[{ required: true, message: "请选择代理类型" }]}
       >
-        <Select placeholder="请选择Webhook类型">
-          <Option value={1}>Type 1</Option>
-          <Option value={2}>Type 2</Option>
-          {/* 根据实际的类型列表提供选项 */}
+        <Select placeholder="请选择代理类型">
+          <Option value={1}>HTTP</Option>
+          <Option value={2}>HTTPS</Option>
         </Select>
       </Form.Item>
 
       <Form.Item
-        name="webhookConfig"
-        label="Webhook配置"
-        rules={[{ required: true, message: "请输入Webhook配置" }]}
+        name="proxyUsername"
+        label="代理用户名"
+        rules={[{ required: true, message: "请输入代理用户名" }]}
       >
-        <Input placeholder="请输入Webhook配置" />
+        <Input placeholder="请输入代理用户名" />
+      </Form.Item>
+
+      <Form.Item
+        name="proxyPassword"
+        label="代理密码"
+        rules={[{ required: true, message: "请输入代理密码" }]}
+      >
+        <Input.Password placeholder="请输入代理密码" />
       </Form.Item>
 
       <Form.Item
@@ -104,4 +113,4 @@ const CreateWebhookForm: React.FC<CreateWebhookFormProps> = ({
   );
 };
 
-export default CreateWebhookForm;
+export default CreateProxyForm;

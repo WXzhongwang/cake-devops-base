@@ -10,6 +10,9 @@ import {
   UpdateServerKeyPayload,
   DeleteServerKeyPayload,
   QueryServerKeysPayload,
+  CopyHostPayload,
+  PingHostPayload,
+  DeleteHostPayload,
 } from "@/models/host";
 
 export async function fetchHosts(data: QueryHostPayload) {
@@ -23,6 +26,30 @@ export async function fetchHosts(data: QueryHostPayload) {
 export async function createHost(data: CreateHostPayload) {
   console.log("payload", data);
   return request("/api/devops/host/createHost", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function copyHost(data: CopyHostPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host/copy", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function deleteHost(data: DeleteHostPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host/delete", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function pingHost(data: PingHostPayload) {
+  console.log("payload", data);
+  return request("/api/devops/host/ping", {
     method: "POST",
     data,
   });

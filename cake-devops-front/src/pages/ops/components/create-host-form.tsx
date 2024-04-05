@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Drawer, Form, Input, Select, Button, TreeSelect } from "antd";
-import { HostGroupModel } from "@/models/host";
+import { HostGroupModel, ServerKey } from "@/models/host";
 import { ProxyModel } from "@/models/proxy";
+import serverKey from "../server-key";
 
 const { Option } = Select;
 
@@ -9,6 +10,7 @@ interface CreateHostFormProps {
   initialValues?: any;
   hostGroups: HostGroupModel[];
   machineProxies: ProxyModel[];
+  serverKeys: ServerKey[];
   onSubmit: (values: any) => void;
   onCancel: () => void;
   onUpdate: (values: any) => void;
@@ -20,6 +22,7 @@ const CreateHostForm: React.FC<CreateHostFormProps> = ({
   initialValues,
   hostGroups,
   machineProxies,
+  serverKeys,
   onSubmit,
   onCancel,
   onUpdate,
@@ -108,6 +111,13 @@ const CreateHostForm: React.FC<CreateHostFormProps> = ({
         </Select>
       </Form.Item>
       <Form.Item
+        name="username"
+        label="用户名"
+        rules={[{ required: true, message: "请输入用户名" }]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
         label="认证模式"
         name="authMode"
         rules={[{ required: true, message: "请选择认证模式" }]}
@@ -123,16 +133,9 @@ const CreateHostForm: React.FC<CreateHostFormProps> = ({
       {authMode === 1 && (
         <>
           <Form.Item
-            name="username"
-            label="用户名"
-            rules={[{ required: true, message: "请输入用户名" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
             name="pwd"
             label="密码"
-            rules={[{ required: true, message: "请输入用户密码" }]}
+            // rules={[{ required: true, message: "请输入用户密码" }]}
           >
             <Input.Password />
           </Form.Item>
@@ -143,9 +146,15 @@ const CreateHostForm: React.FC<CreateHostFormProps> = ({
           <Form.Item
             name="keyId"
             label="私钥"
-            rules={[{ required: true, message: "请选择私钥" }]}
+            // rules={[{ required: true, message: "请选择私钥" }]}
           >
-            <Input />
+            <Select placeholder="请选择私钥">
+              {serverKeys.map((serverKey) => (
+                <Option key={serverKey.id} value={serverKey.id}>
+                  {serverKey.displayName + "【" + serverKey.protocol + "】"}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
         </>
       )}
@@ -159,9 +168,10 @@ const CreateHostForm: React.FC<CreateHostFormProps> = ({
               );
               const processedValues = { ...values, hostGroupIds };
               if (initialValues) {
-                onSubmit(processedValues);
-              } else {
                 onUpdate(processedValues);
+              } else {
+                console.log("submit", processedValues);
+                onSubmit(processedValues);
               }
               form.resetFields();
             });
