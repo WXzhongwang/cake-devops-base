@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Drawer, Form, Input, Select, Button, TreeSelect, Card } from "antd";
 import { HostGroupModel } from "@/models/host";
+import { ProxyModel } from "@/models/proxy";
 
 const { Option } = Select;
 
@@ -9,7 +10,7 @@ interface AddHostDrawerProps {
   onClose: () => void;
   onSubmit: (values: any) => void;
   hostGroups: HostGroupModel[];
-  machineProxies: string[];
+  machineProxies: ProxyModel[];
 }
 
 const { TreeNode } = TreeSelect;
@@ -98,8 +99,8 @@ const CreateHostDrawer: React.FC<AddHostDrawerProps> = ({
         <Form.Item label="机器代理" name="proxyId">
           <Select placeholder="请选择机器代理">
             {machineProxies.map((proxy) => (
-              <Option key={proxy} value={proxy}>
-                {proxy}
+              <Option key={proxy.id} value={proxy.id}>
+                {proxy.proxyHost + "【" + proxy.proxyUsername + "】"}
               </Option>
             ))}
           </Select>

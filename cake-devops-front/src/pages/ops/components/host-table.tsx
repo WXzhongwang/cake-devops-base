@@ -67,20 +67,12 @@ const HostTable: React.FC<HostTableProps> = ({
       key: "action",
       render: (text: any, record: HostModel) => (
         <Space size="middle">
-          <Button onClick={() => handleViewClick(record.hostId)}>查看</Button>
+          <a onClick={() => handleEdit(record)}>编辑</a>
+          <a onClick={() => handleDelete(record.id)}>删除</a>
         </Space>
       ),
     },
   ];
-
-  // 处理点击查看操作
-  const handleViewClick = (hostId: string) => {
-    // 构造主机详情页面的路由路径
-    const hostDetailPath = `/host/detail/${hostId}`;
-
-    // 跳转到主机详情页面
-    history.push(hostDetailPath);
-  };
 
   return (
     <Table

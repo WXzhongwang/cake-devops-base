@@ -59,7 +59,6 @@ export interface HostModel {
   username: string;
   pwd: string;
   status: string;
-
   proxyId: string;
   keyId: string;
 }

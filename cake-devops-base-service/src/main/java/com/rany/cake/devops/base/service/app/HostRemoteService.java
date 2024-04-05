@@ -52,12 +52,15 @@ public class HostRemoteService implements HostService {
         host.setPwd(createHostCommand.getPwd());
         host.setKeyId(createHostCommand.getKeyId());
         host.setProxyId(createHostCommand.getProxyId());
+        host.setAuthType(createHostCommand.getAuthType());
 
         List<GroupHost> groupHosts = new ArrayList<>();
         for (String hostGroupId : createHostCommand.getHostGroupIds()) {
             GroupHost groupHost = new GroupHost(hostGroupId, host.getHostId().getHostId());
+            groupHost.init(createHostCommand.getUser());
             groupHosts.add(groupHost);
         }
+        host.init(createHostCommand.getUser());
         hostDomainService.save(host, groupHosts);
         return host.getHostId().getHostId();
     }
@@ -102,7 +105,7 @@ public class HostRemoteService implements HostService {
     @Override
     public Boolean deleteHost(DeleteHostCommand deleteHostCommand) {
         Host host = hostDomainService.getHost(new HostId(deleteHostCommand.getHostId()));
-        host.delete();
+        host.delete(deleteHostCommand.getUser());
         hostDomainService.update(host);
         return Boolean.TRUE;
     }
@@ -117,7 +120,7 @@ public class HostRemoteService implements HostService {
         host.setPwd(modifyHostCommand.getPkey());
         host.setKeyId(modifyHostCommand.getKeyId());
         host.setProxyId(modifyHostCommand.getProxyId());
-        host.modify();
+        host.modify(modifyHostCommand.getUser());
         hostDomainService.update(host);
         return Boolean.TRUE;
     }

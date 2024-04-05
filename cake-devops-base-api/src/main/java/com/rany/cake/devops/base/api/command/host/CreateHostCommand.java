@@ -34,6 +34,11 @@ public class CreateHostCommand extends BaseCommand {
     private String serverAddr;
 
     /**
+     * 认证模式
+     */
+    private Integer authType;
+
+    /**
      * port
      */
     private Integer port;

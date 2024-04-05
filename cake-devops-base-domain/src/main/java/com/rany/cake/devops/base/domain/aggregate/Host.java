@@ -69,19 +69,27 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
         this.hostName = hostName;
         this.port = port;
         this.serverAddr = serverAddr;
+
+    }
+
+    public void init(String user) {
+        this.creator = user;
         this.gmtCreate = DateUtil.date();
         this.gmtModified = this.gmtCreate;
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.status = CommonStatusEnum.ENABLE.getValue();
     }
 
-    public Boolean delete() {
+
+    public Boolean delete(String user) {
+        this.modifier = user;
         this.gmtModified = DateUtil.date();
         this.isDeleted = DeleteStatusEnum.YES.getValue();
         return Boolean.TRUE;
     }
 
-    public Boolean modify() {
+    public Boolean modify(String user) {
+        this.modifier = user;
         this.gmtModified = DateUtil.date();
         return Boolean.TRUE;
     }
