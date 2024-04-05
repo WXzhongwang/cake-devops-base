@@ -4,6 +4,10 @@ import { Effect, Reducer } from "umi";
 import { message } from "antd";
 import * as api from "@/services/host-env";
 
+export interface BaseAction {
+  callback?: () => void;
+}
+
 export interface HostEnvironmentVariable {
   id: string;
   attrKey: string;
@@ -38,22 +42,22 @@ export interface DeleteVariablePayload {
   id: number;
 }
 
-interface FetchVariablesAction {
+interface FetchVariablesAction extends BaseAction {
   type: "hostEnv/fetchVariables";
   payload: FetchVariablePayload;
 }
 
-interface CreateVariablesAction {
+interface CreateVariablesAction extends BaseAction {
   type: "hostEnv/create";
   payload: CreateVariablePayload;
 }
 
-interface UpdateVariablesAction {
+interface UpdateVariablesAction extends BaseAction {
   type: "hostEnv/update";
   payload: UpdateVariablePayload;
 }
 
-interface DeleteVariablesAction {
+interface DeleteVariablesAction extends BaseAction {
   type: "hostEnv/delete";
   payload: DeleteVariablePayload;
 }
@@ -86,7 +90,7 @@ const HostEnvModel: HostEnvModelType = {
   },
 
   effects: {
-    *fetchVariables({ payload }: FetchVariablePayload, { call, put }) {
+    *fetchVariables({ payload }: FetchVariablesAction, { call, put }) {
       const response = yield call(api.fetchVariables, payload);
       // 触发保存主机数据的 reducer
       yield put({
@@ -95,22 +99,49 @@ const HostEnvModel: HostEnvModelType = {
       });
     },
 
-    *addVariable({ payload }: CreateVariablePayload, { call, put }) {
-      yield call(api.addVariable, payload);
-      message.success("添加成功");
-      yield put({ type: "fetchVariables" });
+    *addVariable({ payload, callback }: CreateVariablesAction, { call, put }) {
+      const response = yield call(api.addVariable, payload);
+      const { success, msg } = response;
+      if (success) {
+        message.success("添加成功");
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *updateVariable({ payload }: UpdateVariablePayload, { call, put }) {
-      yield call(api.updateVariable, payload);
-      message.success("修改成功");
-      yield put({ type: "fetchVariables" });
+    *updateVariable(
+      { payload, callback }: UpdateVariablesAction,
+      { call, put }
+    ) {
+      const response = yield call(api.updateVariable, payload);
+      const { success, msg } = response;
+      if (success) {
+        message.success("修改成功");
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *deleteVariable({ payload }: DeleteVariablePayload, { call, put }) {
-      yield call(api.deleteVariable, payload);
-      message.success("删除成功");
-      yield put({ type: "fetchVariables" });
+    *deleteVariable(
+      { payload, callback }: DeleteVariablesAction,
+      { call, put }
+    ) {
+      const response = yield call(api.deleteVariable, payload);
+      const { success, msg } = response;
+      if (success) {
+        message.success("删除成功");
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
   },
 

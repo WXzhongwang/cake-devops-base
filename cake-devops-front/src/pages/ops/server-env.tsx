@@ -32,6 +32,10 @@ const HostEnvironmentVariablesPage: React.FC<
 > = ({ dispatch, hosts, hostsTotal, hostEnvs, hostEnvsTotal }) => {
   const [selectedMachine, setSelectedMachine] = useState<string>("");
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
+  const [leftPagination, setLeftPagination] = useState({
+    pageNo: 1,
+    pageSize: 10,
+  });
   const [filters, setFilters] = useState({
     name: "",
   });
@@ -44,26 +48,29 @@ const HostEnvironmentVariablesPage: React.FC<
   useEffect(() => {
     // 页面加载时发起主机数据的获取请求
     dispatch({ type: "host/fetchHosts", payload: { pageNo: 1, pageSize: 10 } });
-  }, [dispatch]);
+  }, [dispatch, leftPagination]);
+
+  const fetchVariables = (hostId: string) => {
+    dispatch({
+      type: "hostEnv/fetchVariables",
+      payload: { ...pagination, ...filters, hostId: hostId },
+    });
+  };
+
+  useEffect(() => {
+    fetchVariables(selectedMachine);
+  }, [filters, pagination]);
 
   useEffect(() => {
     if (hosts.length > 0) {
       setSelectedMachine(hosts[0].hostId);
-      loadEnvironmentVariables(hosts[0].hostId);
+      fetchVariables(hosts[0].hostId);
     }
   }, [hosts]);
 
-  const loadEnvironmentVariables = (hostId: string) => {
-    // 根据主机ID发起请求加载右侧环境变量数据
-    dispatch({
-      type: "hostEnv/fetchVariables",
-      payload: { hostId },
-    });
-  };
-
   const handleHostItemClick = (hostId: string) => {
     setSelectedMachine(hostId); // 设置选中的主机ID
-    loadEnvironmentVariables(hostId); // 调用加载环境变量数据的函数
+    fetchVariables(hostId); // 调用加载环境变量数据的函数
   };
 
   const handlePaginationChange = (page: number, pageSize?: number) => {
@@ -89,6 +96,9 @@ const HostEnvironmentVariablesPage: React.FC<
     dispatch({
       type: "hostEnv/deleteVariable",
       payload: { envId: envId },
+      callback: () => {
+        fetchVariables(selectedMachine);
+      },
     });
   };
 
@@ -100,6 +110,10 @@ const HostEnvironmentVariablesPage: React.FC<
     dispatch({
       type: "hostEnv/addVariable",
       payload: data,
+      callback: () => {
+        // 新增成功后，更新选中的主机 ID，重新加载环境变量数据
+        fetchVariables(selectedMachine);
+      },
     });
     setDrawerVisible(false); // 关闭抽屉
   };
@@ -112,6 +126,9 @@ const HostEnvironmentVariablesPage: React.FC<
     dispatch({
       type: "hostEnv/updateVariable",
       payload: data,
+      callback: () => {
+        fetchVariables(selectedMachine);
+      },
     });
     setDrawerVisible(false); // 关闭抽屉
   };

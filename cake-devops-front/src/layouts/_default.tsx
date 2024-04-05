@@ -83,6 +83,12 @@ export default {
             icon: <TabletFilled />,
             component: "system/script-template",
           },
+          {
+            path: "/system/system-log",
+            name: "系统日志",
+            icon: <TabletFilled />,
+            component: "system/system-log",
+          },
         ],
       },
       // {

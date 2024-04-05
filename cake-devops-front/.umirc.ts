@@ -63,6 +63,11 @@ export default defineConfig({
           component: "system/script-template",
           name: "脚本管理",
         },
+        {
+          path: "/system/system-log",
+          component: "system/system-log",
+          name: "系统日志",
+        },
       ],
     },
   ],
