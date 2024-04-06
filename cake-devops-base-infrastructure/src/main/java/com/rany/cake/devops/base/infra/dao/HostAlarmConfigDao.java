@@ -14,6 +14,8 @@ public interface HostAlarmConfigDao {
 
     int delete(@Param("hostId") String hostId, @Param("alarmType") Integer alarmType);
 
+    HostAlarmConfigPO selectHostAlarmConfig(@Param("hostId") String hostId, @Param("alarmType") Integer alarmType);
+
     int save(HostAlarmConfig config);
 
     int update(HostAlarmConfig config);

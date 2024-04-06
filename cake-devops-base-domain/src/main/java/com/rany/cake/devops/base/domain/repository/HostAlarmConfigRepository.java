@@ -13,6 +13,8 @@ public interface HostAlarmConfigRepository {
 
     void deleteAlarmConfig(String hostId, Integer alarmType);
 
+    HostAlarmConfig findAlarmConfig(String hostId, Integer alarmType);
+
     void deleteAlarmConfig(String hostId);
 
     void save(HostAlarmConfig alarmConfig);

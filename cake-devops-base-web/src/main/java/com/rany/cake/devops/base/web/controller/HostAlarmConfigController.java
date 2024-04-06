@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.web.controller;
 import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
+import com.rany.cake.devops.base.api.command.host.alarm.ConfigureAlarmCommand;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmConfigCommand;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmGroupCommand;
 import com.rany.cake.devops.base.api.dto.HostAlarmConfigDTO;
@@ -33,6 +34,11 @@ public class HostAlarmConfigController {
     @GetMapping("/get-config")
     public PojoResult<HostAlarmConfigWrapperDTO> getAlarmConfig(@RequestParam("hostId") String hostId) {
         return PojoResult.succeed(hostAlarmConfigService.getHostAlarmConfig(hostId));
+    }
+
+    @PostMapping("/configure")
+    public PojoResult<Boolean> configure(ConfigureAlarmCommand command) {
+        return PojoResult.succeed(hostAlarmConfigService.setHostAlarmConfig(command));
     }
 
     @PostMapping("/set-alarm-config")

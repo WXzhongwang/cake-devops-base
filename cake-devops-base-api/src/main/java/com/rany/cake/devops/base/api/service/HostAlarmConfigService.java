@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.api.service;
 
+import com.rany.cake.devops.base.api.command.host.alarm.ConfigureAlarmCommand;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmConfigCommand;
 import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmGroupCommand;
 import com.rany.cake.devops.base.api.dto.HostAlarmConfigDTO;
@@ -24,6 +25,14 @@ public interface HostAlarmConfigService {
      * @return result
      */
     Boolean setHostAlarmConfig(SetHostAlarmConfigCommand command);
+
+    /**
+     * 设置监控报警完整
+     *
+     * @param command 完整配置
+     * @return 是否成功
+     */
+    Boolean setHostAlarmConfig(ConfigureAlarmCommand command);
 
     /**
      * 获取主机告警配置

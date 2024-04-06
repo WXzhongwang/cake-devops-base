@@ -22,4 +22,17 @@ public class HostAlarmGroup extends BaseEntity<Long> {
         this.gmtModified = DateUtil.date();
         this.isDeleted = DeleteStatusEnum.NO.getValue();
     }
+
+    public Boolean delete(String user) {
+        this.modifier = user;
+        this.gmtModified = DateUtil.date();
+        this.isDeleted = DeleteStatusEnum.YES.getValue();
+        return Boolean.TRUE;
+    }
+
+    public Boolean modify(String user) {
+        this.modifier = user;
+        this.gmtModified = DateUtil.date();
+        return Boolean.TRUE;
+    }
 }

@@ -33,6 +33,12 @@ public class HostAlarmConfigRepositoryImpl implements HostAlarmConfigRepository 
     }
 
     @Override
+    public HostAlarmConfig findAlarmConfig(String hostId, Integer alarmType) {
+        HostAlarmConfigPO hostAlarmConfigPO = hostAlarmConfigDao.selectHostAlarmConfig(hostId, alarmType);
+        return hostAlarmConfigDataConvertor.targetToSource(hostAlarmConfigPO);
+    }
+
+    @Override
     public void deleteAlarmConfig(String hostId) {
         hostAlarmConfigDao.deleteByHostId(hostId);
     }
