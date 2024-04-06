@@ -66,11 +66,7 @@ const CreateWebhookForm: React.FC<CreateWebhookFormProps> = ({
         </Select>
       </Form.Item>
 
-      <Form.Item
-        name="webhookConfig"
-        label="Webhook 签名"
-        rules={[{ required: true, message: "请输入Webhook 签名配置" }]}
-      >
+      <Form.Item name="webhookConfig" label="Webhook 签名">
         <Input placeholder="请输入Webhook 签名配置" />
       </Form.Item>
 

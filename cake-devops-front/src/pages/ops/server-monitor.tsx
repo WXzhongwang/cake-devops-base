@@ -22,6 +22,7 @@ import { HostMonitorDTO, HostInfoModel } from "@/models/host-monitor";
 import CreateHostForm from "./components/create-host-form";
 import { CopyOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import HostMonitorConfigForm from "./components/host-monitor-config-form";
+import AlarmConfigurationForm from "./components/alarm-configure-form";
 
 const { confirm } = Modal;
 const { Paragraph } = Typography;
@@ -35,6 +36,10 @@ interface HostListProps {
 const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [alarmDrawerVisible, setAlarmDrawerVisible] = useState(false);
+  const [editingHostForAlarm, setEditingHostForAlarm] = useState<
+    HostMonitorDTO | undefined
+  >(undefined);
   const [filters, setFilters] = useState({
     name: "",
     hostName: "",
@@ -42,6 +47,21 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
   const [editingHost, setEditingHost] = useState<HostMonitorDTO | undefined>(
     undefined
   ); // 当前正在编辑的主机信息
+
+  const handleOpenAlarmDrawer = (host: HostMonitorDTO) => {
+    setEditingHostForAlarm(host);
+    setAlarmDrawerVisible(true);
+  };
+
+  const handleCloseAlarmDrawer = () => {
+    setAlarmDrawerVisible(false);
+  };
+
+  const handleAlarmFormSubmit = (values: any) => {
+    console.log("Alarm form submitted with values:", values);
+    // 处理表单提交逻辑
+    handleCloseAlarmDrawer();
+  };
 
   const getHosts = () => {
     dispatch({
@@ -253,6 +273,7 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
           <a onClick={() => handleInstall(record.hostId)}>安装</a>
           <a onClick={() => handleEdit(record)}>插件配置</a>
           <a onClick={() => handleSync(record)}>同步</a>
+          <a onClick={() => handleOpenAlarmDrawer(record)}>报警配置</a>
           {/* <a onClick={() => handleCheckStatus(record)}>检查状态</a> */}
         </Space>
       ),
@@ -313,6 +334,19 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
               initialValues={editingHost}
               onSubmit={handleUpdate}
               onCancel={handleCloseDrawer}
+            />
+          </Drawer>
+
+          <Drawer
+            title="报警配置"
+            width={600}
+            open={alarmDrawerVisible}
+            onClose={handleCloseAlarmDrawer}
+            destroyOnClose={true}
+          >
+            <AlarmConfigurationForm
+              onSubmit={handleAlarmFormSubmit}
+              onCancel={handleCloseAlarmDrawer}
             />
           </Drawer>
 
