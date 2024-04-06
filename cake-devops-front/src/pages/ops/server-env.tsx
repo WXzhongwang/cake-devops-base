@@ -21,21 +21,15 @@ const { Option } = Select;
 
 interface HostEnvironmentVariableListProps {
   dispatch: Dispatch;
-  hosts: HostModel[];
-  hostsTotal: number;
   hostEnvs: HostEnvironmentVariable[];
   hostEnvsTotal: number;
 }
 
 const HostEnvironmentVariablesPage: React.FC<
   HostEnvironmentVariableListProps
-> = ({ dispatch, hosts, hostsTotal, hostEnvs, hostEnvsTotal }) => {
+> = ({ dispatch, hostEnvs, hostEnvsTotal }) => {
   const [selectedMachine, setSelectedMachine] = useState<string>("");
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
-  const [leftPagination, setLeftPagination] = useState({
-    pageNo: 1,
-    pageSize: 10,
-  });
   const [filters, setFilters] = useState({
     name: "",
   });
@@ -44,11 +38,6 @@ const HostEnvironmentVariablesPage: React.FC<
   const [selectedEnv, setSelectedEnv] = useState<
     HostEnvironmentVariable | undefined
   >(undefined);
-
-  useEffect(() => {
-    // 页面加载时发起主机数据的获取请求
-    dispatch({ type: "host/fetchHosts", payload: { pageNo: 1, pageSize: 10 } });
-  }, [dispatch, leftPagination]);
 
   const fetchVariables = (hostId: string) => {
     dispatch({
@@ -61,12 +50,17 @@ const HostEnvironmentVariablesPage: React.FC<
     fetchVariables(selectedMachine);
   }, [filters, pagination]);
 
-  useEffect(() => {
-    if (hosts.length > 0) {
-      setSelectedMachine(hosts[0].hostId);
-      fetchVariables(hosts[0].hostId);
-    }
-  }, [hosts]);
+  // useEffect(() => {
+  //   if (hosts.length > 0) {
+  //     setSelectedMachine(hosts[0].hostId);
+  //     fetchVariables(hosts[0].hostId);
+  //   }
+  // }, [hosts]);
+
+  // const handleMachineSelected = (hostId: string) => {
+  //   setSelectedMachine(hostId);
+  //   // fetchVariables(hostId);
+  // };
 
   const handleHostItemClick = (hostId: string) => {
     setSelectedMachine(hostId); // 设置选中的主机ID
@@ -180,7 +174,7 @@ const HostEnvironmentVariablesPage: React.FC<
     <Row gutter={16}>
       <Col span={6}>
         {/* 左侧主机列表 */}
-        <LeftHostList hosts={hosts} onItemClick={handleHostItemClick} />
+        <LeftHostList onItemClick={handleHostItemClick} />
       </Col>
       <Col span={18}>
         <Space size="middle" direction="vertical" style={{ width: "100%" }}>
