@@ -8,24 +8,46 @@
         <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
     </resultMap>
     <sql id="Base_Column_List">
         id
-        , group_name, group_description, is_deleted, gmt_create, gmt_modified
+        , group_name, group_description, is_deleted, gmt_create, gmt_modified, creator, modifier
+    </sql>
+    <sql id="Base_User_Column_List">
+        id
+        , group_id, account_id, username, is_deleted, gmt_create, gmt_modified, creator, modifier
+    </sql>
+    <sql id="Base_Notify_Column_List">
+        id
+        , group_id, notify_id, notify_type, is_deleted, gmt_create, gmt_modified, creator, modifier
     </sql>
 
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AlarmGroup"
+            useGeneratedKeys="true" keyProperty="id">
+
+        insert into alarm_group (group_name, group_description,
+                                 is_deleted, gmt_create, gmt_modified, creator, modifier)
+        values (#{groupName,jdbcType=VARCHAR}, #{groupDescription,jdbcType=VARCHAR},
+                #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+                #{creator},
+                #{modifier})
+    </insert>
+
     <insert id="batchSaveUser" parameterType="java.util.List">
-        INSERT INTO alarm_group_users (group_id, account_id, username, is_deleted, gmt_create, gmt_modified)
+        INSERT INTO alarm_group_user (group_id, account_id, username, is_deleted, gmt_create, gmt_modified, creator,
+        modifier)
         VALUES
         <foreach collection="users" item="record" separator=",">
             (#{record.groupId}, #{record.accountId}, #{record.username}, #{record.isDeleted},
-            #{record.gmtCreate}, #{record.gmtModified})
+            #{record.gmtCreate}, #{record.gmtModified},
+            #{record.creator}, #{record.modifier})
         </foreach>
-
     </insert>
 
     <update id="deleteUsers">
-        update alarm_group_users
+        update alarm_group_user
         set is_deleted = '1'
         where group_id = #{groupId}
     </update>
@@ -37,11 +59,12 @@
     </update>
 
     <insert id="batchSaveNotify" parameterType="java.util.List">
-        INSERT INTO alarm_group_notify (group_id, notify_id, notify_type, is_deleted, gmt_create, gmt_modified)
+        INSERT INTO alarm_group_notify (group_id, notify_id, notify_type, is_deleted, gmt_create, gmt_modified, creator,
+        modifier)
         VALUES
         <foreach collection="notifies" item="record" separator=",">
             (#{record.groupId}, #{record.notifyId}, #{record.notifyType}, #{record.isDeleted},
-            #{record.gmtCreate}, #{record.gmtModified})
+            #{record.gmtCreate}, #{record.gmtModified}, #{record.creator}, #{record.modifier})
         </foreach>
     </insert>
 
@@ -55,11 +78,10 @@
         <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
     </resultMap>
-    <sql id="Base_User_Column_List">
-        id
-        , group_id, account_id, username, is_deleted, gmt_create, gmt_modified
-    </sql>
+
 
     <resultMap id="BaseNotifyResultMap" type="com.rany.cake.devops.base.infra.po.AlarmGroupNotifyPO">
         <id column="id" jdbcType="BIGINT" property="id"/>
@@ -69,11 +91,10 @@
         <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
     </resultMap>
-    <sql id="Base_Notify_Column_List">
-        id
-        , group_id, notify_id, notify_type, is_deleted, gmt_create, gmt_modified
-    </sql>
+
 
     <!-- 查询告警组 -->
     <select id="queryAlarmGroup"
@@ -89,6 +110,7 @@
             </if>
         </where>
     </select>
+
     <select id="selectNotifies" resultType="com.rany.cake.devops.base.infra.po.AlarmGroupNotifyPO"
             resultMap="BaseNotifyResultMap">
         select
@@ -97,12 +119,12 @@
         where group_id = #{groupId}
         and is_deleted = '0'
     </select>
-    
+
     <select id="selectUsers" resultType="com.rany.cake.devops.base.infra.po.AlarmGroupUserPO"
             resultMap="BaseUserResultMap">
         select
-        <include refid="Base_Notify_Column_List"/>
-        from alarm_group_users
+        <include refid="Base_User_Column_List"/>
+        from alarm_group_user
         where group_id = #{groupId}
         and is_deleted = '0'
     </select>

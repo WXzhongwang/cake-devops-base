@@ -139,7 +139,7 @@ devops:
     exchangeName: devops-log-exchange
     bindingKey: devops-log-key
   app:
-    tenantId: 768821467507994624
+    tenantId: 768460649511661568
   package:
     balancer: random
   cr:

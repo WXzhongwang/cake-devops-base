@@ -219,7 +219,7 @@ public class MonitorAgentInstallTask implements Runnable {
         message.setMessageClassify(Converts.toByte(type.getClassify().getClassify()));
         message.setMessageType(MessageType.MACHINE_ALARM.getType());
         message.setReadStatus(Converts.toByte(ReadStatus.UNREAD.getStatus()));
-        message.setToUserId(appAccountDTO.getId());
+        message.setToUserId(Long.parseLong(appAccountDTO.getId()));
         message.setToUserName(appAccountDTO.getAccountName());
         message.setSendMessage(Strings.format(MessageType.MACHINE_ALARM.getTemplate(), params));
         message.setRelId(host.getHostId().getHostId());

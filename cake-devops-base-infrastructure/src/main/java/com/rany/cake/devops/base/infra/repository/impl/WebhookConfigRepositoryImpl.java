@@ -31,6 +31,12 @@ public class WebhookConfigRepositoryImpl implements WebhookConfigRepository {
     }
 
     @Override
+    public List<WebhookConfig> findByIds(List<Long> ids) {
+        List<WebhookConfigPO> webhookConfigPOList = webhookConfigDAO.selectByIds(ids);
+        return webhookConfigDataConvertor.targetToSource(webhookConfigPOList);
+    }
+
+    @Override
     public void remove(WebhookConfig env) {
         WebhookConfigPO webhookConfigPO = webhookConfigPOMapper.selectByPrimaryKey(env.getId());
         webhookConfigPO.setIsDeleted(DeleteStatusEnum.YES.getValue());

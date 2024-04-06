@@ -11,6 +11,8 @@ import com.rany.cake.devops.base.api.query.AlarmGroupPageQuery;
 import com.rany.cake.devops.base.api.service.AlarmGroupService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+
 /**
  * 告警组
  *
@@ -20,33 +22,34 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/devops/alarm-group")
 public class AlarmGroupController {
 
-    private AlarmGroupService webhookConfigService;
+    @Resource
+    private AlarmGroupService alarmGroupService;
 
     @PostMapping("/create")
-    // @EventLog(value = EventType.ADD_ALARM_GROUP)
     public PojoResult<String> create(@RequestBody CreateAlarmGroupCommand command) {
-        return PojoResult.succeed(webhookConfigService.createAlarmGroup(command));
+        return PojoResult.succeed(alarmGroupService.createAlarmGroup(command));
     }
 
     @GetMapping("/get")
     public PojoResult<AlarmGroupDTO> get(@RequestParam("id") Long alarmGroupId) {
         AlarmGroupBasicQuery alarmGroupBasicQuery = new AlarmGroupBasicQuery();
         alarmGroupBasicQuery.setAlarmGroupId(alarmGroupId);
-        return PojoResult.succeed(webhookConfigService.getAlarmGroup(alarmGroupBasicQuery));
+        AlarmGroupDTO alarmGroup = alarmGroupService.getAlarmGroup(alarmGroupBasicQuery);
+        return PojoResult.succeed(alarmGroup);
     }
 
     @PostMapping("/update")
     public PojoResult<Boolean> update(@RequestBody ModifyAlarmGroupCommand command) {
-        return PojoResult.succeed(webhookConfigService.modifyAlarmGroup(command));
+        return PojoResult.succeed(alarmGroupService.modifyAlarmGroup(command));
     }
 
     @PostMapping("/delete")
     public PojoResult<Boolean> delete(@RequestBody DeleteAlarmGroupCommand command) {
-        return PojoResult.succeed(webhookConfigService.deleteAlarmGroup(command));
+        return PojoResult.succeed(alarmGroupService.deleteAlarmGroup(command));
     }
 
     @PostMapping("/page")
     public PageResult<AlarmGroupDTO> page(@RequestBody AlarmGroupPageQuery pageQuery) {
-        return PageResult.succeed(webhookConfigService.pageAlarmGroup(pageQuery));
+        return PageResult.succeed(alarmGroupService.pageAlarmGroup(pageQuery));
     }
 }

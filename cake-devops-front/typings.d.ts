@@ -1,6 +1,10 @@
 import { S } from "mockjs";
 import "umi/typings";
 
+export interface BaseAction {
+  callback?: () => void;
+}
+
 declare namespace API {
   /**
    * 响应体
@@ -18,27 +22,6 @@ declare namespace API {
 
   /** 用户信息数据 */
   type UserInfo = {
-    // name?: string;
-    // avatar?: string;
-    // accountId?: string;
-    // tenantId?: string;
-    // isvId?: string;
-    // email?: string;
-    // signature?: string;
-    // title?: string;
-    // group?: string;
-    // tags?: { key?: string; label?: string }[];
-    // notifyCount?: number;
-    // unreadCount?: number;
-    // country?: string;
-    // access?: string;
-    // geographic?: {
-    //   province?: { label?: string; key?: string };
-    //   city?: { label?: string; key?: string };
-    // };
-    // address?: string;
-    // phone?: string;
-
     userId: string;
     userName: string;
     realName: string;

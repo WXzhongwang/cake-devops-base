@@ -53,7 +53,7 @@ public class MachineAlarmContext {
     /**
      * 用户映射
      */
-    private Map<Long, AppAccountDTO> userMapping;
+    private Map<String, AppAccountDTO> userMapping;
 
 
     private WebhookConfig webhookConfig;

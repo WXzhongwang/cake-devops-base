@@ -35,6 +35,20 @@
         </where>
     </select>
 
+    <select id="selectByIds"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from webhook_config
+        <where>
+            is_deleted = '0'
+            and id in
+            <foreach collection="ids" separator="," open="(" close=")" item="id">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.WebhookConfig"
             useGeneratedKeys="true" keyProperty="id">
 

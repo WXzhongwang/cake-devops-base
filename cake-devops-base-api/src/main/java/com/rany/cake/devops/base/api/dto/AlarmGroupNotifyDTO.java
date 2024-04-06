@@ -11,6 +11,8 @@ public class AlarmGroupNotifyDTO extends DTO {
     private Long id;
 
     private Long notifyId;
-    
+
     private Integer notifyType;
+    
+    private String webHookName;
 }

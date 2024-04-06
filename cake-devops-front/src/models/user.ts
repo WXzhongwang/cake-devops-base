@@ -1,18 +1,36 @@
 import * as userService from "@/services/user";
 import { API } from "typings";
-import { Effect, Reducer, ConnectProps } from "umi";
-import { history } from "umi";
+import { Effect, Reducer } from "umi";
 
 type UserModelState = {
   isLogin: boolean;
   userData: API.UserInfo;
+  members: AppAccountDTO[];
+  appMembers: AppAccountDTO[];
 };
 
 interface QueryCurrentUserAction {
   type: "user/getUserInfo";
 }
 
+interface QueryUsersAction {
+  type: "user/queryUsers";
+  payload: QueryAccountPayload;
+}
+
+interface QueryAppMembersAction {
+  type: "user/queryAppMembers";
+  payload: QueryAppAccountPayload;
+}
+
+export interface QueryAccountPayload {
+  name: string;
+  pageNo: number;
+  pageSize: number;
+}
+
 export interface QueryAppAccountPayload {
+  appId: string;
   name: string;
   pageNo: number;
   pageSize: number;
@@ -45,11 +63,15 @@ type UserModelType = {
   namespace: "user";
   state: UserModelState;
   effects: {
-    getUserInfo: Effect;
     logout: Effect;
+    getUserInfo: Effect;
+    queryMembers: Effect;
+    queryAppMembers: Effect;
   };
   reducers: {
     setUserInfo: Reducer<UserModelState>;
+    setAppMembers: Reducer<UserModelState>;
+    setMembers: Reducer<UserModelState>;
   };
 };
 
@@ -62,6 +84,8 @@ const UserModel: UserModelType = {
       userName: "",
       realName: "",
     },
+    members: [],
+    appMembers: [],
   },
   effects: {
     *logout(_, { call, put }) {
@@ -87,12 +111,38 @@ const UserModel: UserModelType = {
         },
       });
     },
+    *queryMembers({ payload }: QueryUsersAction, { call, put }) {
+      const res = yield call(userService.queryMembers, payload);
+      yield put({
+        type: "setMembers",
+        payload: res.content?.items,
+      });
+    },
+    *queryAppMembers({ payload }: QueryAppMembersAction, { call, put }) {
+      const res = yield call(userService.queryAppMembers, payload);
+      yield put({
+        type: "serAppMembers",
+        payload: res.content?.items,
+      });
+    },
   },
   reducers: {
     setUserInfo(state, action) {
       return {
         ...state,
         ...action.payload,
+      };
+    },
+    setMembers(state, action) {
+      return {
+        ...state,
+        members: action.payload,
+      };
+    },
+    setAppMembers(state, action) {
+      return {
+        ...state,
+        appMembers: action.payload,
       };
     },
   },

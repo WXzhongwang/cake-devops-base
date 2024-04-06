@@ -45,7 +45,7 @@ public class AlarmWebSideMessagePusher implements IAlarmPusher {
             message.setMessageClassify(Converts.toByte(MessageType.MACHINE_ALARM.getClassify().getClassify()));
             message.setMessageType(MessageType.MACHINE_ALARM.getType());
             message.setReadStatus(Converts.toByte(ReadStatus.UNREAD.getStatus()));
-            message.setToUserId(k);
+            message.setToUserId(Long.parseLong(k));
             message.setToUserName(v.getAccountName());
             message.setSendMessage(Strings.format(MessageType.MACHINE_ALARM.getTemplate(), params));
             message.setRelId(context.getMachineId());

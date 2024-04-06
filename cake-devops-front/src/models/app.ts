@@ -1,6 +1,7 @@
 // src/models/app.ts
 import * as appService from "@/services/app";
 import { Effect, Reducer } from "umi";
+import { AppAccountDTO } from "./user";
 
 // 定义创建应用的参数类型
 export interface CreateAppPayload {
@@ -83,29 +84,6 @@ export interface AppEnv {
   status: string | null;
   deployStatus: string;
   progress: string;
-}
-
-export interface AppAccountDTO {
-  id: number;
-  accountName: string;
-  phone: string;
-  email: string;
-  tenantId: number;
-  isAdmin: boolean;
-  accountType: string;
-  status: string;
-  isDeleted: string;
-  lastLoginIp: string;
-  lastLoginTime: Date;
-  feature: string;
-  gmtCreate: Date;
-  gmtModified: Date;
-  headImage: string;
-  dingding: string;
-  qq: string;
-  wechat: string;
-  birthday: Date;
-  tags: string;
 }
 
 export interface AppMemberDTO {

@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.infra.dao;
 
+import com.rany.cake.devops.base.domain.entity.AlarmGroup;
 import com.rany.cake.devops.base.domain.repository.param.AlarmGroupQueryParam;
 import com.rany.cake.devops.base.infra.po.AlarmGroupNotifyPO;
 import com.rany.cake.devops.base.infra.po.AlarmGroupPO;
@@ -17,6 +18,8 @@ public interface AlarmGroupDao {
      * @return 模版查询结果
      */
     List<AlarmGroupPO> queryAlarmGroup(AlarmGroupQueryParam alarmGroupQueryParam);
+
+    int save(AlarmGroup alarmGroup);
 
     int batchSaveUser(@Param("users") List<AlarmGroupUserPO> users);
 

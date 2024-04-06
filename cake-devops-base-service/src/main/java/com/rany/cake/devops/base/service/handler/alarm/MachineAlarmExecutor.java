@@ -86,7 +86,7 @@ public class MachineAlarmExecutor {
         ListResult<AccountDTO> accountsList = accountFacade.findAccounts(accountQuery);
         List<AccountDTO> accountDTOList = accountsList.getContent();
         List<AppAccountDTO> appAccountDTOList = appMemberAdapter.toDTO(accountDTOList);
-        Map<Long, AppAccountDTO> userMapping = Maps.uniqueIndex(appAccountDTOList, AppAccountDTO::getId);
+        Map<String, AppAccountDTO> userMapping = Maps.uniqueIndex(appAccountDTOList, AppAccountDTO::getId);
 
         context.setUserMapping(userMapping);
         // 通知站内信

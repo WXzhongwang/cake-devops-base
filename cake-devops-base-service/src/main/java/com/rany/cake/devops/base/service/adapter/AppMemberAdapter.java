@@ -7,8 +7,10 @@ import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
 import com.rany.uic.common.dto.account.AccountDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -30,7 +32,17 @@ public interface AppMemberAdapter extends BaseConvertor<AppMember, AppMemberDTO>
     @Mapping(source = "memberId", target = "memberId.memberId")
     AppMember targetToSource(AppMemberDTO appMemberDTO);
 
+    @Mapping(source = "id", target = "id", qualifiedByName = "longToString")
     AppAccountDTO toDTO(AccountDTO accountDTO);
+
+    @Named("longToString")
+    default String longToString(Long value) {
+        return value != null ? String.valueOf(value) : null;
+    }
+
+    default Long stringToLong(String value) {
+        return StringUtils.isNotEmpty(value) ? Long.parseLong(value) : null;
+    }
 
     List<AppAccountDTO> toDTO(List<AccountDTO> accountDTO);
 

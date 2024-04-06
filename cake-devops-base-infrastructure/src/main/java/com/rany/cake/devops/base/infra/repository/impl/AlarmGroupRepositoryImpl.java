@@ -8,6 +8,7 @@ import com.rany.cake.devops.base.domain.entity.AlarmGroupUser;
 import com.rany.cake.devops.base.domain.repository.AlarmGroupRepository;
 import com.rany.cake.devops.base.domain.repository.param.AlarmGroupQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
+import com.rany.cake.devops.base.infra.aop.PagingQuery;
 import com.rany.cake.devops.base.infra.convertor.AlarmGroupDataConvertor;
 import com.rany.cake.devops.base.infra.dao.AlarmGroupDao;
 import com.rany.cake.devops.base.infra.mapper.AlarmGroupNotifyPOMapper;
@@ -77,19 +78,20 @@ public class AlarmGroupRepositoryImpl implements AlarmGroupRepository {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(AlarmGroup group) {
-        AlarmGroupPO alarmGroupPO = alarmGroupDataConvertor.sourceToTarget(group);
-        alarmGroupPOMapper.insertSelective(alarmGroupPO);
+        alarmGroupDao.save(group);
 
         group.getUsers().forEach(p -> {
-            p.setGroupId(alarmGroupPO.getId());
-            p.setGmtCreate(alarmGroupPO.getGmtCreate());
+            p.setGroupId(group.getId());
+            p.setGmtCreate(group.getGmtCreate());
+            p.setCreator(group.getCreator());
         });
         List<AlarmGroupUserPO> alarmGroupUserPOS = alarmGroupDataConvertor.convertUser(group.getUsers());
         alarmGroupDao.batchSaveUser(alarmGroupUserPOS);
 
         group.getNotifies().forEach(p -> {
-            p.setGroupId(alarmGroupPO.getId());
-            p.setGmtCreate(alarmGroupPO.getGmtCreate());
+            p.setGroupId(group.getId());
+            p.setGmtCreate(group.getGmtCreate());
+            p.setCreator(group.getCreator());
         });
         List<AlarmGroupNotifyPO> alarmGroupNotifyPOS = alarmGroupDataConvertor.convertNotify(group.getNotifies());
         alarmGroupDao.batchSaveNotify(alarmGroupNotifyPOS);
@@ -107,6 +109,7 @@ public class AlarmGroupRepositoryImpl implements AlarmGroupRepository {
         group.getUsers().forEach(p -> {
             p.setGroupId(alarmGroupPO.getId());
             p.setGmtCreate(alarmGroupPO.getGmtCreate());
+            p.setCreator(alarmGroupPO.getCreator());
         });
         List<AlarmGroupUserPO> alarmGroupUserPOS = alarmGroupDataConvertor.convertUser(group.getUsers());
         alarmGroupDao.batchSaveUser(alarmGroupUserPOS);
@@ -114,16 +117,29 @@ public class AlarmGroupRepositoryImpl implements AlarmGroupRepository {
         group.getNotifies().forEach(p -> {
             p.setGroupId(alarmGroupPO.getId());
             p.setGmtCreate(alarmGroupPO.getGmtCreate());
+            p.setCreator(alarmGroupPO.getCreator());
         });
         List<AlarmGroupNotifyPO> alarmGroupNotifyPOS = alarmGroupDataConvertor.convertNotify(group.getNotifies());
         alarmGroupDao.batchSaveNotify(alarmGroupNotifyPOS);
     }
 
     @Override
+    @PagingQuery
     public Page<AlarmGroup> page(AlarmGroupQueryParam queryParam) {
         List<AlarmGroupPO> alarmGroupPOS = alarmGroupDao.queryAlarmGroup(queryParam);
         PageInfo<AlarmGroupPO> pageInfo = new PageInfo<>(alarmGroupPOS);
         List<AlarmGroup> configs = alarmGroupDataConvertor.targetToSource(alarmGroupPOS);
+        for (AlarmGroup config : configs) {
+            // 查询用户
+            List<AlarmGroupUserPO> alarmGroupUserPOS = alarmGroupDao.selectUsers(config.getId());
+            List<AlarmGroupUser> alarmGroupUsers = alarmGroupDataConvertor.reConvertUser(alarmGroupUserPOS);
+            config.setUsers(alarmGroupUsers);
+
+            // 查询通知
+            List<AlarmGroupNotifyPO> alarmGroupNotifyPOS = alarmGroupDao.selectNotifies(config.getId());
+            List<AlarmGroupNotify> alarmGroupNotifies = alarmGroupDataConvertor.reConvertNotify(alarmGroupNotifyPOS);
+            config.setNotifies(alarmGroupNotifies);
+        }
         return PageUtils.build(pageInfo, configs);
     }
 }

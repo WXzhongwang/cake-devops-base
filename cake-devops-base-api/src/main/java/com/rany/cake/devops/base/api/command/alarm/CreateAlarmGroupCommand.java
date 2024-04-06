@@ -23,7 +23,7 @@ public class CreateAlarmGroupCommand extends BaseCommand {
 
     private String groupDescription;
 
-    private List<Long> accountIds;
+    private List<String> accountIds;
 
     /**
      * 通知方式ID

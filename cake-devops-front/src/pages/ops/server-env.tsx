@@ -50,18 +50,6 @@ const HostEnvironmentVariablesPage: React.FC<
     fetchVariables(selectedMachine);
   }, [filters, pagination]);
 
-  // useEffect(() => {
-  //   if (hosts.length > 0) {
-  //     setSelectedMachine(hosts[0].hostId);
-  //     fetchVariables(hosts[0].hostId);
-  //   }
-  // }, [hosts]);
-
-  // const handleMachineSelected = (hostId: string) => {
-  //   setSelectedMachine(hostId);
-  //   // fetchVariables(hostId);
-  // };
-
   const handleHostItemClick = (hostId: string) => {
     setSelectedMachine(hostId); // 设置选中的主机ID
     fetchVariables(hostId); // 调用加载环境变量数据的函数

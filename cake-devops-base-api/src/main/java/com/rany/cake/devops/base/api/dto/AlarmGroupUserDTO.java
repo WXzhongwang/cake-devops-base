@@ -10,13 +10,13 @@ public class AlarmGroupUserDTO extends DTO {
 
 
     private Long id;
-    
+
 
     private Long groupId;
     /**
      * 用户ID
      */
-    private Long accountId;
+    private String accountId;
 
     /**
      * 用户名称

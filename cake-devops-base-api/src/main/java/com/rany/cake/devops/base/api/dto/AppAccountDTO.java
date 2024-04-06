@@ -10,7 +10,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class AppAccountDTO extends DTO {
 
-    private Long id;
+    private String id;
     private String accountName;
     private String phone;
     private String email;

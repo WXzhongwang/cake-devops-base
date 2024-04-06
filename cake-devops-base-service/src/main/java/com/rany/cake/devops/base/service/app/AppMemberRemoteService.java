@@ -24,7 +24,6 @@ import com.rany.uic.api.query.account.AccountQuery;
 import com.rany.uic.common.dto.account.AccountDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
@@ -41,7 +40,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AppMemberRemoteService implements AppMemberService {
 
-    private final AppConfig tenantConfig;
+    private final AppConfig appConfig;
     private final AccountFacade accountFacade;
     private final AppMemberAdapter appMemberAdapter;
     private final AppMemberDomainService appMemberDomainService;
@@ -50,7 +49,7 @@ public class AppMemberRemoteService implements AppMemberService {
     public Page<AppAccountDTO> pageQueryMember(MemberPageQuery memberPageQuery) {
         AccountPageQuery accountQuery = new AccountPageQuery();
         accountQuery.setAccountName(memberPageQuery.getName());
-        accountQuery.setTenantId(tenantConfig.getTenantId());
+        accountQuery.setTenantId(appConfig.getTenantId());
         accountQuery.setPageNo(memberPageQuery.getPageNo());
         accountQuery.setPageSize(memberPageQuery.getPageSize());
         PageResult<AccountDTO> accounts = accountFacade.pageAccounts(accountQuery);
@@ -69,16 +68,16 @@ public class AppMemberRemoteService implements AppMemberService {
 
 
         AccountQuery accountQuery = new AccountQuery();
-        accountQuery.setTenantId(tenantConfig.getTenantId());
+        accountQuery.setTenantId(appConfig.getTenantId());
         accountQuery.setAccountIds(members.stream().map(p -> Long.valueOf(p.getAccountId())).collect(Collectors.toList()));
         ListResult<AccountDTO> accountsList = accountFacade.findAccounts(accountQuery);
         List<AccountDTO> accountDTOList = accountsList.getContent();
         List<AppAccountDTO> appAccountDTOList = appMemberAdapter.toDTO(accountDTOList);
-        Map<Long, AppAccountDTO> accountDTOMap = Maps.uniqueIndex(appAccountDTOList, AppAccountDTO::getId);
+        Map<String, AppAccountDTO> accountDTOMap = Maps.uniqueIndex(appAccountDTOList, AppAccountDTO::getId);
         for (AppMemberDTO appMemberDTO : appMemberDTOList) {
-            if (accountDTOMap.get(NumberUtils.toLong(appMemberDTO.getAccountId())) != null) {
-                if (accountDTOMap.get(NumberUtils.toLong(appMemberDTO.getAccountId())) != null) {
-                    AppAccountDTO accountDTO = accountDTOMap.get(NumberUtils.toLong(appMemberDTO.getAccountId()));
+            if (accountDTOMap.get(appMemberDTO.getAccountId()) != null) {
+                if (accountDTOMap.get(appMemberDTO.getAccountId()) != null) {
+                    AppAccountDTO accountDTO = accountDTOMap.get(appMemberDTO.getAccountId());
                     appMemberDTO.setAccountDTO(accountDTO);
                 }
             }
