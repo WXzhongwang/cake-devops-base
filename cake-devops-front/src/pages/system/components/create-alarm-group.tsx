@@ -66,7 +66,15 @@ const CreateAlarmGroupForm: React.FC<CreateAlarmGroupFormProps> = ({
         <Input placeholder="请输入告警组描述" />
       </Form.Item>
 
-      <Form.Item name="notifyIdList" label="Webhooks">
+      <Form.Item
+        name="notifyIdList"
+        label="Webhooks"
+        initialValue={
+          initialValues
+            ? initialValues.notifies.map((notify) => notify.notifyId)
+            : []
+        }
+      >
         <Select mode="multiple" placeholder="请选择 Webhooks" allowClear>
           {webhooks?.map((webhook) => (
             <Option key={webhook.id} value={webhook.id}>
@@ -76,7 +84,13 @@ const CreateAlarmGroupForm: React.FC<CreateAlarmGroupFormProps> = ({
         </Select>
       </Form.Item>
 
-      <Form.Item name="accountIds" label="人员列表">
+      <Form.Item
+        name="accountIds"
+        label="人员列表"
+        initialValue={
+          initialValues ? initialValues.users.map((user) => user.accountId) : []
+        }
+      >
         <Select mode="multiple" placeholder="请选择人员" allowClear>
           {members?.map((user) => (
             <Option key={user.id} value={user.id}>
