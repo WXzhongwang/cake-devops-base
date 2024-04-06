@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import { Button, Card, Form, Input, Space, Table, Drawer } from "antd";
 import { connect, Dispatch } from "umi";
-import { createAlarmGroup, updateAlarmGroup } from "@/services/alarm-group";
 import dayjs from "dayjs";
 import CreateAlarmGroupForm from "./components/create-alarm-group";
 import { AlarmGroupDTO } from "@/models/alarm-group";

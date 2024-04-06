@@ -155,7 +155,8 @@ public class HostMonitorRemoteService implements HostMonitorService {
     @Override
     public Boolean updateMonitorConfig(UpdateMonitorAgentCommand command) {
         HostMonitor monitor = hostMonitorRepository.findByHostId(command.getHostId());
-
+        monitor.setAccessToken(command.getAccessToken());
+        monitor.setMonitorUrl(command.getUrl());
         // 同步状态
         if (monitor.getMonitorStatus().equals(MonitorStatus.NOT_START.getStatus()) ||
                 monitor.getMonitorStatus().equals(MonitorStatus.RUNNING.getStatus())) {

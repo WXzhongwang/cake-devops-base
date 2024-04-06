@@ -15,7 +15,8 @@
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id,
+        id
+        ,
         host_group_id
         , name, parent_id, sort, is_deleted, gmt_create, gmt_modified, creator, modifier
     </sql>
@@ -78,8 +79,18 @@
 
     <select id="selectByHostGroupId" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from host_group
         where host_group_id = #{hostGroupId}
+    </select>
+
+    <select id="selectByHostGroupIds" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host_group
+        where host_group_id in
+        <foreach collection="hostGroupIds" open="(" close=")" separator="," item="hostGroupId">
+            #{hostGroupId}
+        </foreach>
     </select>
 </mapper>

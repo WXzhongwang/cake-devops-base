@@ -27,6 +27,17 @@
         </foreach>
     </select>
 
+    <select id="selectByHostIds" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from group_host
+        where is_deleted = '0' and
+        host_id in
+        <foreach collection="hostIds" index="index" item="hostId" open="(" separator="," close=")">
+            #{hostId}
+        </foreach>
+    </select>
+
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.GroupHost">
         insert into group_host (group_id, host_id,
                                 is_deleted, gmt_create, gmt_modified,

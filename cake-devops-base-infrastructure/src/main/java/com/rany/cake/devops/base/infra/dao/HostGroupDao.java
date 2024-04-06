@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
-import com.rany.cake.devops.base.infra.po.ClusterPO;
 import com.rany.cake.devops.base.infra.po.HostGroupPO;
 import org.apache.ibatis.annotations.Param;
 
@@ -41,8 +40,11 @@ public interface HostGroupDao {
      * @return
      */
     HostGroupPO getPackagingGroup();
+
     List<HostGroupPO> listAll();
 
     HostGroupPO selectByHostGroupId(@Param("hostGroupId") String hostGroupId);
+
+    List<HostGroupPO> selectByHostGroupIds(@Param("hostGroupIds") List<String> groupIds);
 
 }

@@ -5,6 +5,7 @@ import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.entity.HostExtend;
+import com.rany.cake.devops.base.domain.entity.HostMonitor;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
@@ -96,7 +97,7 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
         return Boolean.TRUE;
     }
 
-    public Boolean copy(HostId hostId, List<GroupHost> groupHosts) {
+    public Boolean copy(HostId hostId, List<GroupHost> groupHosts, HostMonitor hostMonitor) {
         this.gmtCreate = DateUtil.date();
         this.gmtModified = DateUtil.date();
         this.hostId = hostId;
@@ -105,6 +106,7 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
         }
         this.name = String.format("%s的副本", this.name);
         this.isDeleted = DeleteStatusEnum.NO.getValue();
+        hostMonitor.setHostId(this.hostId.getHostId());
         return Boolean.TRUE;
     }
 

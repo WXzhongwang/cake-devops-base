@@ -4,27 +4,38 @@ import com.cake.framework.common.exception.BusinessException;
 import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.host.*;
 import com.rany.cake.devops.base.api.dto.HostDTO;
+import com.rany.cake.devops.base.api.dto.HostGroupDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.query.HostBasicQuery;
 import com.rany.cake.devops.base.api.query.HostPageQuery;
 import com.rany.cake.devops.base.api.service.HostService;
 import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.domain.aggregate.HostGroup;
+import com.rany.cake.devops.base.domain.base.MonitorConst;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.entity.GroupHost;
+import com.rany.cake.devops.base.domain.entity.HostMonitor;
 import com.rany.cake.devops.base.domain.pk.HostId;
+import com.rany.cake.devops.base.domain.repository.HostMonitorRepository;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
+import com.rany.cake.devops.base.service.adapter.HostGroupDataAdapter;
 import com.rany.cake.devops.base.service.base.Constants;
+import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.util.enums.MonitorStatus;
 import com.rany.cake.toolkit.lang.net.IPs;
+import com.rany.cake.toolkit.lang.utils.Strings;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 主机服务
@@ -42,6 +53,8 @@ public class HostRemoteService implements HostService {
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final HostDomainService hostDomainService;
     private final HostDataAdapter hostDataAdapter;
+    private final HostGroupDataAdapter hostGroupDataAdapter;
+    private final HostMonitorRepository hostMonitorRepository;
 
 
     @Override
@@ -61,7 +74,16 @@ public class HostRemoteService implements HostService {
             groupHosts.add(groupHost);
         }
         host.init(createHostCommand.getUser());
-        hostDomainService.save(host, groupHosts);
+
+        HostMonitor monitor = new HostMonitor();
+        monitor.setHostId(host.getHostId().getHostId());
+        monitor.setMonitorStatus(MonitorStatus.NOT_START.getStatus());
+        monitor.setMonitorUrl(Strings.format(MonitorConst.DEFAULT_URL_FORMAT, host.getServerAddr()));
+        monitor.setAccessToken(MonitorConst.DEFAULT_ACCESS_TOKEN);
+        monitor.setIsDeleted(DeleteStatusEnum.NO.getValue());
+        monitor.setAccessToken(MonitorConst.DEFAULT_ACCESS_TOKEN);
+        monitor.init(createHostCommand.getUser());
+        hostDomainService.save(host, groupHosts, monitor);
         return host.getHostId().getHostId();
     }
 
@@ -70,9 +92,10 @@ public class HostRemoteService implements HostService {
         HostId hostId = new HostId(copyHostCommand.getHostId());
         Host host = hostDomainService.getHost(hostId);
         List<GroupHost> groupHost = hostDomainService.getGroupHost(hostId);
+        HostMonitor monitor = hostMonitorRepository.findByHostId(copyHostCommand.getHostId());
         HostId newHostId = new HostId(String.valueOf(snowflakeIdWorker.nextId()));
-        host.copy(newHostId, groupHost);
-        hostDomainService.save(host, groupHost);
+        host.copy(newHostId, groupHost, monitor);
+        hostDomainService.save(host, groupHost, monitor);
         return host.getHostId().getHostId();
     }
 
@@ -99,6 +122,15 @@ public class HostRemoteService implements HostService {
         Page<Host> page = hostDomainService.pageHost(hostPageQueryParam);
         List<Host> hosts = new ArrayList<>(page.getItems());
         List<HostDTO> hostDTOList = hostDataAdapter.sourceToTarget(hosts);
+        for (HostDTO host : hostDTOList) {
+            List<GroupHost> groupHost = hostDomainService.getGroupHost(new HostId(host.getHostId()));
+            if (CollectionUtils.isNotEmpty(groupHost)) {
+                List<String> hostGroupIds = groupHost.stream().map(GroupHost::getGroupId).collect(Collectors.toList());
+                List<HostGroup> hostGroups = hostDomainService.getHostGroupByGroupIds(hostGroupIds);
+                List<HostGroupDTO> hostGroupDTOS = hostGroupDataAdapter.sourceToTarget(hostGroups);
+                host.setGroups(hostGroupDTOS);
+            }
+        }
         return PageUtils.build(page, hostDTOList);
     }
 

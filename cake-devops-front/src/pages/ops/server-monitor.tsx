@@ -21,6 +21,7 @@ import { connect, Dispatch } from "umi";
 import { HostMonitorDTO, HostInfoModel } from "@/models/host-monitor";
 import CreateHostForm from "./components/create-host-form";
 import { CopyOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import HostMonitorConfigForm from "./components/host-monitor-config-form";
 
 const { confirm } = Modal;
 const { Paragraph } = Typography;
@@ -74,11 +75,11 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
     dispatch({
       type: "hostMonitor/checkStatus",
       payload: {
-        accessToken: host.accessToken,
-        url: host.monitorUrl,
+        hostId: host.hostId,
       },
       callback: () => {
         message.success("连接成功");
+        getHosts();
       },
     });
   };
@@ -92,6 +93,7 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
       },
       callback: () => {
         message.success("安装成功");
+        getHosts();
       },
     });
   };
@@ -106,6 +108,7 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
       },
       callback: () => {
         message.success("操作成功");
+        getHosts();
       },
     });
   };
@@ -131,19 +134,23 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
     setPagination({ pageNo: 1, pageSize: 10 }); // 重置分页
   };
 
-  const handleUpdate = async (values: HostMonitorDTO) => {
-    try {
-      const hostId = editingHost?.hostId;
-      dispatch({
-        type: "/hostMonitor/update",
-        payload: { ...values, hostId: hostId },
-      });
-      getHosts();
-      setDrawerVisible(false);
-      form.resetFields();
-    } catch (error) {
-      console.error("更新主机失败:", error);
-    }
+  const handleUpdate = (values: HostMonitorDTO) => {
+    const hostId = editingHost?.hostId;
+    console.log("aaa", editingHost);
+    dispatch({
+      type: "hostMonitor/update",
+      payload: {
+        hostId: hostId,
+        accessToken: values.accessToken,
+        url: values.monitorUrl,
+      },
+      callback: () => {
+        message.success("操作成功");
+        getHosts();
+      },
+    });
+    setDrawerVisible(false);
+    form.resetFields();
   };
 
   const columns = [
@@ -246,7 +253,7 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
           <a onClick={() => handleInstall(record.hostId)}>安装</a>
           <a onClick={() => handleEdit(record)}>插件配置</a>
           <a onClick={() => handleSync(record)}>同步</a>
-          <a onClick={() => handleCheckStatus(record)}>检查状态</a>
+          {/* <a onClick={() => handleCheckStatus(record)}>检查状态</a> */}
         </Space>
       ),
     },
@@ -302,15 +309,11 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
             onClose={handleCloseDrawer}
             destroyOnClose={true}
           >
-            {/* <CreateHostForm
+            <HostMonitorConfigForm
               initialValues={editingHost}
-              hostGroups={hostGroups}
-              machineProxies={machineProxies}
-              serverKeys={serverKeys}
-              onSubmit={handleSaveHost}
-              onUpdate={handleUpdateHost}
+              onSubmit={handleUpdate}
               onCancel={handleCloseDrawer}
-            /> */}
+            />
           </Drawer>
 
           <Table

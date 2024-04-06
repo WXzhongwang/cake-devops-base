@@ -40,18 +40,18 @@ export interface QueryHostMonitorPayload {
 
 export interface UpdateHostMonitorPayload {
   hostId: string;
-  monitorUrl: string;
+  url: string;
   accessToken: string;
 }
 
 export interface TestConnectionPayload {
-  monitorUrl: string;
+  url: string;
   accessToken: string;
 }
 
 export interface SyncMonitorAgentPayload {
   hostId: string;
-  monitorUrl: string;
+  url: string;
   accessToken: string;
 }
 
@@ -103,11 +103,12 @@ export interface HostMonitorModelType {
   namespace: "hostMonitor";
   state: HostMonitorModelState;
   effects: {
-    fetchHosts: Effect;
-    createHost: Effect;
-    updateHost: Effect;
-    pingHost: Effect;
-    copyHost: Effect;
+    fetch: Effect;
+    update: Effect;
+    testConnect: Effect;
+    install: Effect;
+    sync: Effect;
+    checkStatus: Effect;
   };
   reducers: {
     saveHostMonitors: Reducer<HostMonitorModelState>;
@@ -133,7 +134,7 @@ const HostMonitorModel: HostMonitorModelType = {
       });
     },
 
-    *updateConfig({ payload, callback }: UpdateConfigAction, { call, put }) {
+    *update({ payload, callback }: UpdateConfigAction, { call, put }) {
       // 调用 API 创建主机
       const response = yield call(api.update, payload);
       const { success, msg } = response;
@@ -154,7 +155,6 @@ const HostMonitorModel: HostMonitorModelType = {
       // 调用回调函数
       if (success) {
         // 更新成功后重新获取主机数据
-        yield put({ type: "fetchHosts" });
         if (callback && typeof callback === "function") {
           callback();
         }
@@ -171,7 +171,6 @@ const HostMonitorModel: HostMonitorModelType = {
       // 调用回调函数
       if (success) {
         // 更新成功后重新获取主机数据
-        yield put({ type: "fetchHosts" });
         if (callback && typeof callback === "function") {
           callback();
         }
@@ -188,7 +187,21 @@ const HostMonitorModel: HostMonitorModelType = {
       // 调用回调函数
       if (success) {
         // 更新成功后重新获取主机数据
-        yield put({ type: "fetchHosts" });
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *checkStatus({ payload, callback }: CheckStatusAction, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.checkStatus, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
         if (callback && typeof callback === "function") {
           callback();
         }

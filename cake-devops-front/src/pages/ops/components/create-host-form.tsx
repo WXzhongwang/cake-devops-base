@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Drawer, Form, Input, Select, Button, TreeSelect } from "antd";
 import { HostGroupModel, ServerKey } from "@/models/host";
 import { ProxyModel } from "@/models/proxy";
-import serverKey from "../server-key";
 
 const { Option } = Select;
 
@@ -32,7 +31,14 @@ const CreateHostForm: React.FC<CreateHostFormProps> = ({
 
   useEffect(() => {
     if (initialValues) {
-      form.setFieldsValue(initialValues);
+      form.setFieldsValue({
+        ...initialValues,
+        hostGroupIds: initialValues.groups?.map(
+          (hostGroup: HostGroupModel) => ({
+            value: hostGroup.hostGroupId,
+          })
+        ),
+      });
       setAuthMode(initialValues.authType);
     }
   }, [initialValues, form]);

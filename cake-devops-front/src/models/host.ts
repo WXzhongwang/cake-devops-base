@@ -64,8 +64,8 @@ export interface HostModel {
   username: string;
   pwd: string;
   status: string;
-  proxyId: string;
-  keyId: string;
+  proxyId: number;
+  keyId: number;
 }
 
 export interface QueryHostPayload {
@@ -148,6 +148,11 @@ interface QueryHostAction {
 }
 interface CreateHostAction extends BaseAction {
   type: "host/createHost";
+  payload: CreateHostPayload;
+}
+
+interface UpdateHostAction extends BaseAction {
+  type: "host/updateHost";
   payload: CreateHostPayload;
 }
 
@@ -278,8 +283,6 @@ const HostModel: HostModelType = {
       const response = yield call(api.deleteHost, payload);
       const { success, msg } = response;
       if (success) {
-        // 更新成功后重新获取主机数据
-        yield put({ type: "fetchHosts" });
         if (callback && typeof callback === "function") {
           callback();
         }
@@ -288,11 +291,17 @@ const HostModel: HostModelType = {
       }
     },
 
-    *updateHost({ payload }, { call, put }) {
+    *updateHost({ payload, callback }: UpdateHostAction, { call, put }) {
       // 调用 API 更新主机
-      yield call(api.updateHost, payload);
-      // 更新成功后重新获取主机数据
-      yield put({ type: "fetchHosts" });
+      const response = yield call(api.updateHost, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *fetchHostGroups(_, { call, put }) {

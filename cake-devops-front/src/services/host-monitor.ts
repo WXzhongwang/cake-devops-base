@@ -51,5 +51,5 @@ export async function sync(data: SyncMonitorAgentPayload) {
 
 export async function checkStatus(data: CheckStatusPayload) {
   console.log("payload", data);
-  return request(`/api/devops/host-monitor/check/` + data.hostId);
+  return request(`/api/devops/host-monitor/check?hostId=` + data.hostId);
 }

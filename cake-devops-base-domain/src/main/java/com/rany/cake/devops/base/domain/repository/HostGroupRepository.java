@@ -4,6 +4,7 @@ import com.cake.framework.ddd.repository.Repository;
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
 import com.rany.cake.devops.base.domain.pk.HostGroupId;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -15,9 +16,13 @@ import java.util.List;
  * @email 18668485565163.com
  */
 public interface HostGroupRepository extends Repository<HostGroup, HostGroupId> {
+
+    List<HostGroup> findByGroupIds(@NotNull List<String> groupIds);
+
     int update(HostGroup hostGroup);
 
     HostGroup getPackagingGroup();
+
     List<HostGroup> listAll();
 }
 

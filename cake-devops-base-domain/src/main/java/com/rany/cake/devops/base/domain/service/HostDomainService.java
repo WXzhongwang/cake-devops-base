@@ -3,10 +3,7 @@ package com.rany.cake.devops.base.domain.service;
 import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
-import com.rany.cake.devops.base.domain.entity.GroupHost;
-import com.rany.cake.devops.base.domain.entity.HostEnv;
-import com.rany.cake.devops.base.domain.entity.ServerKey;
-import com.rany.cake.devops.base.domain.entity.ServerProxy;
+import com.rany.cake.devops.base.domain.entity.*;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.*;
 import com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam;
@@ -41,6 +38,7 @@ public class HostDomainService {
     private final ServerKeyRepository serverKeyRepository;
     private final HostEnvRepository hostEnvRepository;
     private final HostGroupRepository hostGroupRepository;
+    private final HostMonitorRepository hostMonitorRepository;
 
     public List<Host> getPackageMachineList() {
         HostGroup packagingGroup = hostGroupRepository.getPackagingGroup();
@@ -57,9 +55,10 @@ public class HostDomainService {
      *
      * @param host
      */
-    public void save(Host host, List<GroupHost> groupHosts) {
+    public void save(Host host, List<GroupHost> groupHosts, HostMonitor monitor) {
         hostRepository.save(host, groupHosts);
         hostEnvRepository.initEnv(host);
+        hostMonitorRepository.save(monitor);
     }
 
     public void update(Host host) {
@@ -73,6 +72,11 @@ public class HostDomainService {
     public List<GroupHost> getGroupHost(HostId hostId) {
         return hostRepository.getGroupHostByHostId(hostId);
     }
+
+    public List<HostGroup> getHostGroupByGroupIds(List<String> groupIds) {
+        return hostGroupRepository.findByGroupIds(groupIds);
+    }
+
 
     public Page<Host> pageHost(HostPageQueryParam hostPageQueryParam) {
         return hostRepository.pageHost(hostPageQueryParam);

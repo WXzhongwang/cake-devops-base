@@ -109,7 +109,7 @@ public class HostRepositoryImpl implements HostRepository {
 
     @Override
     public List<GroupHost> getGroupHostByHostId(HostId hostId) {
-        List<GroupHostPO> groupHostPOS = groupHostDao.selectByGroupIds(Lists.newArrayList(hostId.getHostId()));
+        List<GroupHostPO> groupHostPOS = groupHostDao.selectByHostIds(Lists.newArrayList(hostId.getHostId()));
         return hostDataConvertor.reconvert(groupHostPOS);
     }
 

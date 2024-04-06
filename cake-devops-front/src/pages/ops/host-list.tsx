@@ -79,6 +79,7 @@ const HostPage: React.FC<HostListProps> = ({
           },
           callback: () => {
             message.success("删除成功");
+            getHosts();
           },
         });
       },
@@ -105,7 +106,8 @@ const HostPage: React.FC<HostListProps> = ({
         hostId,
       },
       callback: () => {
-        message.success("删除成功");
+        message.success("复制成功");
+        getHosts();
       },
     });
   };
@@ -222,34 +224,35 @@ const HostPage: React.FC<HostListProps> = ({
   };
 
   // 处理新增主机的提交
-  const handleSaveHost = async (values: any) => {
+  const handleSaveHost = async (values: HostModel) => {
     // 在这里可以执行创建应用的逻辑
     console.log("创建主机:", values);
     // 在这里可以调用相应的接口或 dispatch 创建应用的 action
     dispatch({
       type: "host/createHost",
       payload: values,
+      callback: () => {
+        message.info("添加成功");
+        getHosts();
+      },
     });
-    // getHosts(); // 创建成功后重新获取主机列表数据
     setDrawerVisible(false); // 关闭抽屉
     form.resetFields(); // 重置表单字段
   };
 
   const handleUpdateHost = async (values: HostModel) => {
-    try {
-      // 从编辑的主机信息中获取主机的 ID
-      const hostId = editingHost?.hostId;
-      //      await updateHost({ ...values, hostId });
-      dispatch({
-        type: "/host/updateHost",
-        payload: { ...values, hostId: hostId },
-      });
-      getHosts();
-      setDrawerVisible(false);
-      form.resetFields();
-    } catch (error) {
-      console.error("更新主机失败:", error);
-    }
+    const hostId = editingHost?.hostId;
+    console.log("hostId", hostId);
+    dispatch({
+      type: "host/updateHost",
+      payload: { ...values, hostId: hostId },
+      callback: () => {
+        message.success("更新成功");
+        getHosts();
+      },
+    });
+    setDrawerVisible(false);
+    form.resetFields();
   };
 
   const columns = [
@@ -383,8 +386,8 @@ const HostPage: React.FC<HostListProps> = ({
                   machineProxies={machineProxies}
                   serverKeys={serverKeys}
                   onSubmit={handleSaveHost}
-                  onUpdate={handleUpdateHost}
                   onCancel={handleCloseDrawer}
+                  onUpdate={handleUpdateHost}
                 />
               </Drawer>
 

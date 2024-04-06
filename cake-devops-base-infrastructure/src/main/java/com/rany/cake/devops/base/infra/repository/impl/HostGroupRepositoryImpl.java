@@ -36,6 +36,13 @@ public class HostGroupRepositoryImpl implements HostGroupRepository {
         return hostGroupDataConvertor.targetToSource(hostPO);
     }
 
+
+    @Override
+    public List<HostGroup> findByGroupIds(@NotNull List<String> groupIds) {
+        List<HostGroupPO> hostPO = hostGroupDao.selectByHostGroupIds(groupIds);
+        return hostGroupDataConvertor.targetToSource(hostPO);
+    }
+
     @Override
     public void remove(@NotNull HostGroup hostGroup) {
         HostGroupPO hostPO = hostGroupDataConvertor.sourceToTarget(hostGroup);
