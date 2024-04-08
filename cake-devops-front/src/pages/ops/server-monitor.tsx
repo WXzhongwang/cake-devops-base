@@ -23,6 +23,7 @@ import CreateHostForm from "./components/create-host-form";
 import { CopyOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import HostMonitorConfigForm from "./components/host-monitor-config-form";
 import AlarmConfigurationForm from "./components/alarm-configure-form";
+import { AlarmGroupDTO } from "@/models/alarm-group";
 
 const { confirm } = Modal;
 const { Paragraph } = Typography;
@@ -31,9 +32,15 @@ interface HostListProps {
   dispatch: Dispatch;
   hosts: HostMonitorDTO[];
   total: number;
+  alarmGroups: AlarmGroupDTO[];
 }
 
-const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
+const HostPage: React.FC<HostListProps> = ({
+  dispatch,
+  hosts,
+  total,
+  alarmGroups,
+}) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [alarmDrawerVisible, setAlarmDrawerVisible] = useState(false);
@@ -60,6 +67,33 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
   const handleAlarmFormSubmit = (values: any) => {
     console.log("Alarm form submitted with values:", values);
     // 处理表单提交逻辑
+    const data = {
+      cpu: {
+        hostId: editingHostForAlarm?.hostId,
+        alarmType: 10,
+        alarmThreshold: values.cpuThreshold,
+        triggerThreshold: values.cpuNotificationThreshold,
+        notifySilence: values.cpuSilenceTime,
+      },
+      memory: {
+        hostId: editingHostForAlarm?.hostId,
+        alarmType: 20,
+        alarmThreshold: values.memoryThreshold,
+        triggerThreshold: values.memoryNotificationThreshold,
+        notifySilence: values.memorySilenceTime,
+      },
+      hostId: editingHostForAlarm?.hostId,
+      groupIds: values.alertGroupIds,
+    };
+
+    dispatch({
+      type: "hostAlarmConfig/configure",
+      payload: data,
+      callback: () => {
+        message.success("更新成功");
+      },
+    });
+
     handleCloseAlarmDrawer();
   };
 
@@ -69,6 +103,17 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
       payload: { ...pagination, ...filters },
     });
   };
+
+  const getAlarmGroups = () => {
+    dispatch({
+      type: "alarmGroup/fetchAlarmGroups",
+      payload: { pageNo: 1, pageSize: 50 },
+    });
+  };
+
+  useEffect(() => {
+    getAlarmGroups();
+  }, []);
 
   useEffect(() => {
     getHosts();
@@ -345,6 +390,7 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
             destroyOnClose={true}
           >
             <AlarmConfigurationForm
+              alarmGroups={alarmGroups}
               onSubmit={handleAlarmFormSubmit}
               onCancel={handleCloseAlarmDrawer}
             />
@@ -367,7 +413,8 @@ const HostPage: React.FC<HostListProps> = ({ dispatch, hosts, total }) => {
   );
 };
 
-export default connect(({ hostMonitor }) => ({
+export default connect(({ hostMonitor, alarmGroup }) => ({
   hosts: hostMonitor.hosts,
   total: hostMonitor.total,
+  alarmGroups: alarmGroup.alarmGroups,
 }))(HostPage);

@@ -37,17 +37,17 @@ public class HostAlarmConfigController {
     }
 
     @PostMapping("/configure")
-    public PojoResult<Boolean> configure(ConfigureAlarmCommand command) {
+    public PojoResult<Boolean> configure(@RequestBody ConfigureAlarmCommand command) {
         return PojoResult.succeed(hostAlarmConfigService.setHostAlarmConfig(command));
     }
 
     @PostMapping("/set-alarm-config")
-    public PojoResult<Boolean> setAlarmConfig(SetHostAlarmConfigCommand command) {
+    public PojoResult<Boolean> setAlarmConfig(@RequestBody SetHostAlarmConfigCommand command) {
         return PojoResult.succeed(hostAlarmConfigService.setHostAlarmConfig(command));
     }
 
     @PostMapping("/set-alarm-group")
-    public PojoResult<Boolean> setAlarmHost(SetHostAlarmGroupCommand command) {
+    public PojoResult<Boolean> setAlarmHost(@RequestBody SetHostAlarmGroupCommand command) {
         return PojoResult.succeed(hostAlarmConfigService.setHostAlarmGroup(command));
     }
 

@@ -1,17 +1,24 @@
 // AlarmConfigurationForm.tsx
 
 import React from "react";
-import { Form, Button, Tabs, Input, Tooltip, Space } from "antd";
+import { Form, Button, Tabs, Input, Tooltip, Space, Select } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import { AlarmGroupDTO } from "@/models/alarm-group";
 
 const { TabPane } = Tabs;
+const { Option } = Select;
 
 interface Props {
   onSubmit: (values: any) => void;
   onCancel: () => void;
+  alarmGroups: AlarmGroupDTO[];
 }
 
-const AlarmConfigurationForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+const AlarmConfigurationForm: React.FC<Props> = ({
+  onSubmit,
+  onCancel,
+  alarmGroups,
+}) => {
   const handleFormSubmit = (values: any) => {
     onSubmit(values);
   };
@@ -112,9 +119,15 @@ const AlarmConfigurationForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
             <Input addonAfter="分钟" />
           </Form.Item>
         </TabPane>
-        <TabPane tab="报警联系组配置" key="alertGroup">
-          <Form.Item name="alertGroup" label="报警联系组">
-            <Input />
+        <TabPane tab="报警联系组配置" key="alertGroupIds">
+          <Form.Item name="alertGroupIds" label="报警联系组">
+            <Select mode="multiple" placeholder="请选择报警联系组">
+              {alarmGroups?.map((alarmGroup) => (
+                <Option key={alarmGroup.id} value={alarmGroup.id}>
+                  {alarmGroup.groupName}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
         </TabPane>
       </Tabs>

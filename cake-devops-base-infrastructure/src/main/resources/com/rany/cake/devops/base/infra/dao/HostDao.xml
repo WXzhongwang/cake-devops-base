@@ -16,7 +16,7 @@
         <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted"/>
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
-        <result column="desc" jdbcType="VARCHAR" property="desc"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
         <result column="verified" jdbcType="CHAR" property="verified"/>
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
         <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
@@ -30,7 +30,7 @@
         ,host_id
         , name, host_name, auth_type,
         server_addr, port, username, pwd, status, is_deleted, gmt_create, gmt_modified,
-        `desc`, verified, creator, modifier, key_id, proxy_id
+        `description`, verified, creator, modifier, key_id, proxy_id
     </sql>
 
 
@@ -50,7 +50,7 @@
         insert into host (host_id, name, host_name, server_addr,
                           port, auth_type, username, pwd, status,
                           is_deleted, gmt_create, gmt_modified,
-                          `desc`, verified, creator,
+                          `description`, verified, creator,
                           modifier, key_id, proxy_id)
         values (#{hostId.hostId},
                 #{name,jdbcType=VARCHAR},
@@ -64,7 +64,7 @@
                 #{isDeleted,jdbcType=VARCHAR},
                 #{gmtCreate,jdbcType=TIMESTAMP},
                 #{gmtModified,jdbcType=TIMESTAMP},
-                #{desc,jdbcType=VARCHAR},
+                #{description},
                 #{verified,jdbcType=TINYINT},
                 #{creator,jdbcType=VARCHAR},
                 #{modifier,jdbcType=VARCHAR},
@@ -108,8 +108,8 @@
             <if test="gmtModified != null">
                 gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
             </if>
-            <if test="desc != null">
-                `desc` = #{desc,jdbcType=VARCHAR},
+            <if test="description != null">
+                `description` = #{description},
             </if>
             <if test="verified != null">
                 verified = #{verified,jdbcType=TINYINT},
