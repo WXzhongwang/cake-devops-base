@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * tail 文件类型
  *
- * @author Jiahang Li
+ * @author zhongshengwang
  * @version 1.0.0
  * @since 2021/6/10 18:48
  */

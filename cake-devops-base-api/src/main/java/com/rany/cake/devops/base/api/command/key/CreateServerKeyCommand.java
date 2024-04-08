@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.api.command.account;
+package com.rany.cake.devops.base.api.command.key;
 
 import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import lombok.Data;
@@ -6,40 +6,35 @@ import lombok.EqualsAndHashCode;
 
 
 /**
- * 编辑服务账号
+ * 密钥
  *
  * @author zhongshengwang
- * @description 服务账号
+ * @description 密钥
  * @date 2022/12/30 22:00
  * @email 18668485565163.com
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ModifyServerKeyCommand extends BaseCommand {
+public class CreateServerKeyCommand extends BaseCommand {
 
     /**
-     * serverKeyId
-     */
-    private Long id;
-
-    /**
-     * displayName
+     * 显示名称
      */
     private String displayName;
 
     /**
-     * 认证模式
-     */
-    private String authMode;
-    /**
      * 0普通账户/1管理员
      */
     private Integer accountType;
-
     /**
-     * 协议
+     * 默认ssh
      */
     private String protocol;
+
+    /**
+     * 是否活跃
+     */
+    private String active;
 
     /**
      * 凭据内容
@@ -53,13 +48,11 @@ public class ModifyServerKeyCommand extends BaseCommand {
      * 密码短语
      */
     private String passphrase;
+
     /**
-     * 文件路径
+     * 密钥文件存放路径
      */
     private String keyPath;
 
-    /**
-     * base64
-     */
     private String fileBase64;
 }

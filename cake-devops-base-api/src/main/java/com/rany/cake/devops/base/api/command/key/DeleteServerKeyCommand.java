@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.api.command.account;
+package com.rany.cake.devops.base.api.command.key;
 
 import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import lombok.Data;

@@ -8,7 +8,7 @@ import lombok.Getter;
 /**
  * 宿主机tail 追踪模式
  *
- * @author Jiahang Li
+ * @author zhongshengwang
  * @version 1.0.0
  * @since 2021/6/10 19:10
  */

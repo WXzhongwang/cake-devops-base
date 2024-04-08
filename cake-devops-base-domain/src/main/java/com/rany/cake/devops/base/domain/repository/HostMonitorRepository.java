@@ -21,4 +21,6 @@ public interface HostMonitorRepository {
     void update(HostMonitor hostMonitor);
 
     Page<HostMonitor> page(HostMonitorPageQueryParam queryParam);
+
+    int clearStartingStatus();
 }

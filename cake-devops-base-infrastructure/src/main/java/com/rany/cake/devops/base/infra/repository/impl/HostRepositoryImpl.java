@@ -85,6 +85,12 @@ public class HostRepositoryImpl implements HostRepository {
     }
 
     @Override
+    public Host selectByPrimaryKey(Long id) {
+        HostPO hostPO = hostPOMapper.selectByPrimaryKey(id);
+        return hostDataConvertor.targetToSource(hostPO);
+    }
+
+    @Override
     public List<Host> findByIds(List<String> hostIds) {
         List<HostPO> hostPOS = hostDao.selectByPrimaryKeyList(hostIds);
         return hostDataConvertor.targetToSource(hostPOS);

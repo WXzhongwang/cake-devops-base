@@ -22,6 +22,8 @@ public interface HostRepository extends Repository<Host, HostId> {
 
     int update(Host host);
 
+    Host selectByPrimaryKey(Long id);
+
     List<Host> findByIds(List<String> hostIds);
 
     Page<Host> queryMonitorHost(HostMonitorPageQueryParam param);

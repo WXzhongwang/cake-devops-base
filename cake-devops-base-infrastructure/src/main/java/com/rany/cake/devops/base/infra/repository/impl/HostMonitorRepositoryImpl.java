@@ -80,4 +80,9 @@ public class HostMonitorRepositoryImpl implements HostMonitorRepository {
         List<HostMonitor> configs = hostMonitorDataConvertor.targetToSource(hostMonitorPOS);
         return PageUtils.build(pageInfo, configs);
     }
+
+    @Override
+    public int clearStartingStatus() {
+        return hostMonitorDao.clearStartingStatus();
+    }
 }

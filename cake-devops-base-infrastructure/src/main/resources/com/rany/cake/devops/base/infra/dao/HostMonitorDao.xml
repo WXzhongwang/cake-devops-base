@@ -66,6 +66,14 @@
                 #{isDeleted,jdbcType=CHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
     </insert>
+
+    <!--启动中改为未启动-->
+    <update id="clearStartingStatus">
+        update host_monitor
+        set monitor_status = 1
+        where monitor_status = 2
+    </update>
+
     <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.HostMonitor">
         update host_monitor
         <set>

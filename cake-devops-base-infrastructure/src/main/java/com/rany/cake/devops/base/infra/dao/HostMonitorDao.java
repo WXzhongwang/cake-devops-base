@@ -45,4 +45,6 @@ public interface HostMonitorDao {
      * @return 列表
      */
     List<HostMonitorPO> queryByParam(HostMonitorPageQueryParam param);
+
+    int clearStartingStatus();
 }

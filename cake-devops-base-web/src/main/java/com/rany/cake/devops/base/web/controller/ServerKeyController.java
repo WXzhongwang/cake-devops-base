@@ -3,9 +3,9 @@ package com.rany.cake.devops.base.web.controller;
 
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.account.CreateServerKeyCommand;
-import com.rany.cake.devops.base.api.command.account.DeleteServerKeyCommand;
-import com.rany.cake.devops.base.api.command.account.ModifyServerKeyCommand;
+import com.rany.cake.devops.base.api.command.key.CreateServerKeyCommand;
+import com.rany.cake.devops.base.api.command.key.DeleteServerKeyCommand;
+import com.rany.cake.devops.base.api.command.key.ModifyServerKeyCommand;
 import com.rany.cake.devops.base.api.dto.ServerKeyDTO;
 import com.rany.cake.devops.base.api.query.ServerKeyBasicQuery;
 import com.rany.cake.devops.base.api.query.ServerKeyPageQuery;

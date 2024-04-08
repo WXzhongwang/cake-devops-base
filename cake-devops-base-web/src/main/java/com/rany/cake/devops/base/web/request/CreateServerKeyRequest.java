@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.web.request;
 
-import com.rany.cake.devops.base.api.command.account.CreateServerKeyCommand;
+import com.rany.cake.devops.base.api.command.key.CreateServerKeyCommand;
 import lombok.Data;
 
 @Data
