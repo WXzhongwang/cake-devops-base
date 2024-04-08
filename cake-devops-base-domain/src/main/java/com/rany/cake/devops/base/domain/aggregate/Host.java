@@ -44,7 +44,7 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
      */
     private String username;
     private String pwd;
-    private String desc;
+    private String description;
     private String verified;
     private String status;
     /**

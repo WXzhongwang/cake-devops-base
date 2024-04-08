@@ -61,7 +61,7 @@ public class HostMachineInitializeRunner implements CommandLineRunner {
             // 插入机器
             local = new Host(new HostId(String.valueOf(snowflakeIdWorker.nextId())), "宿主机",
                     SystemUtils.HOST_NAME, IPs.IP, 22);
-            local.setDesc("宿主机");
+            local.setDescription("宿主机");
             local.setUsername(SystemUtils.USER_NAME);
             local.setPwd(ValueMix.encrypt(DEFAULT_PASSWORD));
             local.setAuthType(MachineAuthType.PASSWORD.getType());
