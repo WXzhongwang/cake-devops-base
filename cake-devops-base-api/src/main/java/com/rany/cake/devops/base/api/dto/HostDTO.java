@@ -17,7 +17,7 @@ public class HostDTO extends DTO {
     private Integer authType;
     private String username;
     private String pwd;
-    private String desc;
+    private String description;
     private String verified;
     private String status;
     private Long proxyId;
