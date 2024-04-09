@@ -4,17 +4,23 @@ import React from "react";
 import { Form, Button, Tabs, Input, Tooltip, Space, Select } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { AlarmGroupDTO } from "@/models/alarm-group";
+import {
+  AlarmConfigDTO,
+  HostAlarmConfigWrapperDTO,
+} from "@/models/host-alarm-config";
 
 const { TabPane } = Tabs;
 const { Option } = Select;
 
 interface Props {
+  initialValues: HostAlarmConfigWrapperDTO; // 修改Props，接收initialValues
   onSubmit: (values: any) => void;
   onCancel: () => void;
   alarmGroups: AlarmGroupDTO[];
 }
 
 const AlarmConfigurationForm: React.FC<Props> = ({
+  initialValues,
   onSubmit,
   onCancel,
   alarmGroups,
@@ -23,12 +29,28 @@ const AlarmConfigurationForm: React.FC<Props> = ({
     onSubmit(values);
   };
 
+  console.log("initialValue", initialValues);
+
   return (
     <Form
       onFinish={handleFormSubmit}
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       labelAlign="left"
+      initialValues={{
+        cpuThreshold: initialValues?.alarmConfigList[0]?.alarmThreshold * 100, // CPU报警阈值百分比
+        cpuNotificationThreshold:
+          initialValues?.alarmConfigList[0]?.triggerThreshold, // CPU通知阈值
+        cpuSilenceTime: initialValues?.alarmConfigList[0]?.notifySilence, // CPU沉默时间
+        memoryThreshold:
+          initialValues?.alarmConfigList[1]?.alarmThreshold * 100, // 内存报警阈值百分比
+        memoryNotificationThreshold:
+          initialValues?.alarmConfigList[1]?.triggerThreshold, // 内存通知阈值
+        memorySilenceTime: initialValues?.alarmConfigList[1]?.notifySilence, // 内存沉默时间
+        alertGroupIds: initialValues?.alarmGroupList?.map(
+          (group) => group.alarmGroupId
+        ), // 报警联系组
+      }}
     >
       <Tabs defaultActiveKey="cpu">
         <TabPane tab="CPU报警配置" key="cpu">

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Typography,
   Table,
-  Row,
-  Col,
   Button,
   Card,
   Form,
@@ -24,6 +22,10 @@ import { CopyOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import HostMonitorConfigForm from "./components/host-monitor-config-form";
 import AlarmConfigurationForm from "./components/alarm-configure-form";
 import { AlarmGroupDTO } from "@/models/alarm-group";
+import {
+  AlarmConfigDTO,
+  HostAlarmConfigWrapperDTO,
+} from "@/models/host-alarm-config";
 
 const { confirm } = Modal;
 const { Paragraph } = Typography;
@@ -33,6 +35,7 @@ interface HostListProps {
   hosts: HostMonitorDTO[];
   total: number;
   alarmGroups: AlarmGroupDTO[];
+  currentAlarmConfig: HostAlarmConfigWrapperDTO;
 }
 
 const HostPage: React.FC<HostListProps> = ({
@@ -40,6 +43,7 @@ const HostPage: React.FC<HostListProps> = ({
   hosts,
   total,
   alarmGroups,
+  currentAlarmConfig,
 }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -53,15 +57,24 @@ const HostPage: React.FC<HostListProps> = ({
   });
   const [editingHost, setEditingHost] = useState<HostMonitorDTO | undefined>(
     undefined
-  ); // 当前正在编辑的主机信息
+  );
 
   const handleOpenAlarmDrawer = (host: HostMonitorDTO) => {
-    setEditingHostForAlarm(host);
-    setAlarmDrawerVisible(true);
+    dispatch({
+      type: "hostAlarmConfig/getConfig",
+      payload: {
+        hostId: host.hostId,
+      },
+      callback: () => {
+        setAlarmDrawerVisible(true); // 打开抽屉
+        setEditingHostForAlarm(host);
+      },
+    });
   };
 
   const handleCloseAlarmDrawer = () => {
     setAlarmDrawerVisible(false);
+    setEditingHostForAlarm(undefined);
   };
 
   const handleAlarmFormSubmit = (values: any) => {
@@ -71,26 +84,26 @@ const HostPage: React.FC<HostListProps> = ({
       cpu: {
         hostId: editingHostForAlarm?.hostId,
         alarmType: 10,
-        alarmThreshold: values.cpuThreshold,
+        alarmThreshold: values.cpuThreshold * 0.01,
         triggerThreshold: values.cpuNotificationThreshold,
         notifySilence: values.cpuSilenceTime,
       },
       memory: {
         hostId: editingHostForAlarm?.hostId,
         alarmType: 20,
-        alarmThreshold: values.memoryThreshold,
+        alarmThreshold: values.memoryThreshold * 0.01,
         triggerThreshold: values.memoryNotificationThreshold,
         notifySilence: values.memorySilenceTime,
       },
       hostId: editingHostForAlarm?.hostId,
-      groupIds: values.alertGroupIds,
+      groupIdList: values.alertGroupIds,
     };
 
     dispatch({
       type: "hostAlarmConfig/configure",
       payload: data,
       callback: () => {
-        message.success("更新成功");
+        message.success("配置成功");
       },
     });
 
@@ -123,6 +136,7 @@ const HostPage: React.FC<HostListProps> = ({
     setEditingHost(host); // 设置编辑状态为当前点击的主机信息
     setDrawerVisible(true); // 打开抽屉
   };
+
   const handleConnect = (host: HostMonitorDTO) => {
     dispatch({
       type: "hostMonitor/testConnect",
@@ -390,6 +404,7 @@ const HostPage: React.FC<HostListProps> = ({
             destroyOnClose={true}
           >
             <AlarmConfigurationForm
+              initialValues={currentAlarmConfig}
               alarmGroups={alarmGroups}
               onSubmit={handleAlarmFormSubmit}
               onCancel={handleCloseAlarmDrawer}
@@ -413,8 +428,9 @@ const HostPage: React.FC<HostListProps> = ({
   );
 };
 
-export default connect(({ hostMonitor, alarmGroup }) => ({
+export default connect(({ hostMonitor, alarmGroup, hostAlarmConfig }) => ({
   hosts: hostMonitor.hosts,
   total: hostMonitor.total,
   alarmGroups: alarmGroup.alarmGroups,
+  currentAlarmConfig: hostAlarmConfig.hostAlarmConfig,
 }))(HostPage);

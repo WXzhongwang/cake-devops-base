@@ -184,7 +184,11 @@ const AppList: React.FC<AppListProps> = ({
               </Select>
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit">
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ marginRight: 8 }}
+              >
                 查询
               </Button>
               <Button

@@ -22,6 +22,7 @@
         <include refid="Base_Column_List"/>
         from host_alarm_group
         where host_id = #{hostId}
+        and is_deleted = '0'
     </select>
 
     <delete id="deleteByHostId" parameterType="java.lang.String">

@@ -10,6 +10,13 @@ export interface HostAlarmConfigWrapperDTO {
   alarmGroupList: HostAlarmGroupDTO[];
 }
 
+export interface AlarmConfigDTO {
+  hostId: string;
+  cpu: HostAlarmConfigDTO;
+  memory: HostAlarmConfigDTO;
+  groupIdList: number[];
+}
+
 export interface HostAlarmConfigDTO {
   hostId: string;
   alarmType: number;
@@ -68,10 +75,18 @@ const AlarmGroupModel: HostAlarmConfigModelType = {
   effects: {
     *getConfig({ payload, callback }: GetHostAlarmConfigAction, { call, put }) {
       const response = yield call(api.getAlarmConfig, payload);
-      yield put({
-        type: "saveAlarmConfig",
-        payload: response.content,
-      });
+      const { success, msg } = response;
+      if (success) {
+        yield put({
+          type: "saveAlarmConfig",
+          payload: response.content,
+        });
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *configure(
@@ -81,7 +96,6 @@ const AlarmGroupModel: HostAlarmConfigModelType = {
       const response = yield call(api.configureAlarmConfig, payload);
       const { success, msg } = response;
       if (success) {
-        message.success("配置成功");
         if (callback && typeof callback === "function") {
           callback();
         }
