@@ -42,7 +42,6 @@ import com.rany.cake.devops.base.util.enums.DevelopMode;
 import com.rany.uic.api.facade.account.AccountFacade;
 import com.rany.uic.api.query.account.AccountQuery;
 import com.rany.uic.common.dto.account.AccountDTO;
-import com.rany.uic.common.enums.CommonStatusEnum;
 import com.rany.uic.common.exception.BusinessErrorMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -114,8 +113,8 @@ public class AppRemoteService implements AppService {
             AppMember member = appMemberDomainService.findByAccountId(String.valueOf(entry.getKey()));
             if (member == null) {
                 member = new AppMember(new MemberId(String.valueOf(snowflakeIdWorker.nextId())), app.getAppId(), String.valueOf(entry.getKey()));
+                member.init(createAppCommand.getUser());
             }
-            member.setStatus(CommonStatusEnum.ENABLE.getValue());
             // 如果是owner
             if (createAppCommand.getOwner().equals(String.valueOf(entry.getKey()))) {
                 member.authorize(AppRoleEnum.OWNER.name());

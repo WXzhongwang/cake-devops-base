@@ -56,6 +56,14 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
         this.roles = StringUtils.EMPTY;
     }
 
+    public void init(String user) {
+        this.creator = user;
+        this.gmtCreate = DateUtil.date();
+        this.gmtModified = this.gmtCreate;
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
+        this.status = CommonStatusEnum.ENABLE.getValue();
+    }
+
 
     /**
      * 授权
@@ -78,16 +86,18 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
     }
 
 
-    public void update(List<String> roles, String status) {
+    public void update(List<String> roles, String status, String user) {
         this.roles = String.join(",", roles);
         this.gmtModified = DateUtil.date();
         this.status = status;
+        this.modifier = user;
     }
 
-    public void delete() {
+    public void delete(String user) {
         this.gmtModified = DateUtil.date();
         this.status = CommonStatusEnum.DISABLED.getValue();
         this.isDeleted = DeleteStatusEnum.YES.getValue();
+        this.modifier = user;
     }
 
     @Override

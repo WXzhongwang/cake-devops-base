@@ -82,11 +82,6 @@ const AppList: React.FC<AppListProps> = ({
       dataIndex: "defaultBranch",
       key: "defaultBranch",
     },
-    // {
-    //   title: "部门缩写",
-    //   dataIndex: "departmentAbbreviation",
-    //   key: "departmentAbbreviation",
-    // },
     {
       title: "部门",
       dataIndex: "department",

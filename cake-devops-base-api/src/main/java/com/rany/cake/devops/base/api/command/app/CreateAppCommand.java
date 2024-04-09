@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.api.command.app;
 
-import com.rany.cake.devops.base.api.common.base.DTO;
+import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CreateAppCommand extends DTO {
+public class CreateAppCommand extends BaseCommand {
     private String appName;
     private String description;
     private String repo;

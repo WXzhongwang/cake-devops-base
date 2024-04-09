@@ -8,8 +8,9 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class UpdateAppMemberCommand extends BaseCommand {
-    private String memberId;
+public class AddAppMemberCommand extends BaseCommand {
+    private String appId;
+    private String accountId;
     private List<String> roles;
     private String status;
 }

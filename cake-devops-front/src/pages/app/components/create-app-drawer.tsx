@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Drawer, Form, Input, Select, Button } from "antd";
+import { Drawer, Form, Input, Select, Button, message } from "antd";
 import { connect, Dispatch } from "umi";
 import { API } from "typings";
 import { Department } from "@/models/app";
@@ -42,6 +42,9 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
     dispatch({
       type: "app/createApp",
       payload: values,
+      callback: () => {
+        message.success("应用创建成功");
+      },
     });
 
     // 关闭抽屉

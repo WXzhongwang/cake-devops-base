@@ -2,6 +2,8 @@
 import * as appService from "@/services/app";
 import { Effect, Reducer } from "umi";
 import { AppAccountDTO } from "./user";
+import { BaseAction } from "typings";
+import { message } from "antd";
 
 // 定义创建应用的参数类型
 export interface CreateAppPayload {
@@ -43,6 +45,12 @@ export interface UpdateAppMemberPayload {
 
 export interface DeleteAppMemberPayload {
   memberId: string;
+}
+
+export interface AddAppMemberPayload {
+  accountId: string;
+  appId: string;
+  roles: string[];
 }
 
 // 应用信息
@@ -115,46 +123,51 @@ export interface AppState {
   appEnv: AppEnv | null;
 }
 
-interface CreateAppAction {
+interface CreateAppAction extends BaseAction {
   type: "app/createApp";
   payload: CreateAppPayload;
 }
 
-interface CreateAppEnvAction {
+interface CreateAppEnvAction extends BaseAction {
   type: "app/createAppEnv";
   payload: CreateAppEnvPayload;
 }
 
-interface GetAppEnvAction {
+interface GetAppEnvAction extends BaseAction {
   type: "app/getAppEnv";
   payload: { envId: string };
 }
 
-interface QueryAppAction {
+interface QueryAppAction extends BaseAction {
   type: "app/getAppList";
   payload: QueryAppPayload;
 }
 
-interface QueryDepartmentAction {
+interface QueryDepartmentAction extends BaseAction {
   type: "app/getDepartments";
 }
 
-interface PageAppMembersAction {
+interface PageAppMembersAction extends BaseAction {
   type: "app/pageAppMembers";
   payload: QueryAppMemberPayload;
 }
 
-interface UpdateMemberAction {
+interface UpdateMemberAction extends BaseAction {
   type: "app/updateMember";
   payload: UpdateAppMemberPayload;
 }
 
-interface DeleteMemberAction {
+interface DeleteMemberAction extends BaseAction {
   type: "app/deleteMember";
   payload: DeleteAppMemberPayload;
 }
 
-interface GetAppDetailAction {
+interface AddMemberAction extends BaseAction {
+  type: "app/addMember";
+  payload: AddAppMemberPayload;
+}
+
+interface GetAppDetailAction extends BaseAction {
   type: "app/getAppDetail";
   payload: { id: number };
 }
@@ -169,6 +182,7 @@ export interface AppModelType {
     pageAppMembers: Effect;
     updateMember: Effect;
     deleteMember: Effect;
+    addMember: Effect;
     getAppEnv: Effect;
   };
   reducers: {
@@ -210,25 +224,66 @@ const AppModel: AppModelType = {
         });
       }
     },
-    *createApp({ payload }: CreateAppAction, { call, put }) {
-      yield call(appService.createApp, payload);
-      yield put({ type: "getAppList" });
+    *createApp({ payload, callback }: CreateAppAction, { call, put }) {
+      const response = yield call(appService.createApp, payload);
+      // yield put({ type: "getAppList" });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *updateMember({ payload }: UpdateMemberAction, { call, put }) {
-      yield call(appService.updateMember, payload);
-      //yield put({ type: "pageAppMembers" });
+    *updateMember({ payload, callback }: UpdateMemberAction, { call, put }) {
+      const response = yield call(appService.updateMember, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *deleteMember({ payload }: DeleteMemberAction, { call, put }) {
-      yield call(appService.deleteMember, payload);
-      //yield put({ type: "pageAppMembers" });
+    *addMember({ payload, callback }: AddMemberAction, { call, put }) {
+      const response = yield call(appService.addMember, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *createAppEnv({ payload }: CreateAppEnvAction, { call, put }) {
-      console.log(payload);
-      yield call(appService.createAppEnv, payload);
-      yield put({ type: "getAppDetail" });
+    *deleteMember({ payload, callback }: DeleteMemberAction, { call, put }) {
+      const response = yield call(appService.deleteMember, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *createAppEnv({ payload, callback }: CreateAppEnvAction, { call, put }) {
+      const response = yield call(appService.createAppEnv, payload);
+      // yield put({ type: "getAppDetail" });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *getAppDetail({ payload }: GetAppDetailAction, { call, put }) {

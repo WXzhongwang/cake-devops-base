@@ -13,6 +13,7 @@ import {
   Space,
   Row,
   Col,
+  message,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { connect, Dispatch, useParams, history } from "umi";
@@ -85,12 +86,12 @@ const AppDetail: React.FC<AppDetailProps> = ({
     });
   };
 
-  // 显示抽屉的方法
+  // 显示环境抽屉的方法
   const switchDrawer = () => {
     setDrawerVisible(!drawerVisible);
   };
 
-  // 关闭抽屉的方法
+  // 关闭成员抽屉的方法
   const switchMemberDrawer = () => {
     setTeamMembersDrawerVisible(!teamMembersDrawerVisible);
   };
@@ -117,6 +118,9 @@ const AppDetail: React.FC<AppDetailProps> = ({
             maxMemory: values.maxCpu,
           },
         },
+      },
+      callback: () => {
+        message.success("应用环境成功");
       },
     });
 

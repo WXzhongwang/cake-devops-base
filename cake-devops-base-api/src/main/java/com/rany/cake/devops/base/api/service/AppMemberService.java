@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.Page;
+import com.rany.cake.devops.base.api.command.member.AddAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
 import com.rany.cake.devops.base.api.dto.AppAccountDTO;
@@ -24,6 +25,8 @@ public interface AppMemberService {
     Page<AppMemberDTO> pageAppMembers(AppMemberPageQuery appMemberPageQuery);
 
     Boolean updateMember(UpdateAppMemberCommand updateAppMemberCommand);
+
+    Boolean addMember(AddAppMemberCommand addAppMemberCommand);
 
     Boolean deleteMember(DeleteAppMemberCommand deleteAppMemberCommand);
 }

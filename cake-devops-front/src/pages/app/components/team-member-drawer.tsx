@@ -1,7 +1,7 @@
 // TeamMembersDrawer.tsx
 
-import React, { useState } from "react";
-import { Dispatch, connect } from "umi";
+import React, { useEffect, useState } from "react";
+import { Dispatch, connect, useParams } from "umi";
 import {
   Drawer,
   Table,
@@ -13,9 +13,11 @@ import {
   Form,
   Select,
   message,
+  Input,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AppMemberDTO } from "@/models/app";
+import { AppAccountDTO } from "@/models/user";
 
 const { Option } = Select;
 
@@ -28,6 +30,7 @@ interface TeamMembersDrawerProps {
     total: number;
     list: AppMemberDTO[];
   };
+  userList: AppAccountDTO[];
 }
 
 const mapRoleToChinese = (role: string) => {
@@ -56,8 +59,22 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
   onClose,
   open,
   appMembers,
+  userList,
 }) => {
   const [editRoleModalVisible, setEditRoleModalVisible] = useState(false);
+  const [addMemberModalVisible, setAddMemberModalVisible] = useState(false); // 新增人员模态窗状态
+  const { id } = useParams();
+
+  const [editRoleForm] = Form.useForm();
+  const [addMemberForm] = Form.useForm();
+
+  useEffect(() => {
+    // 在组件挂载时获取用户列表
+    dispatch({
+      type: "user/queryMembers",
+      payload: {},
+    });
+  }, []);
 
   console.log("appMembers", appMembers);
   const columns = [
@@ -103,16 +120,19 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
     },
   ];
 
+  // 新增人员模态窗显示控制方法
+  const showAddMemberModal = () => {
+    setAddMemberModalVisible(true);
+  };
+
   const [selectedMember, setSelectedMember] = useState<AppMemberDTO | null>(
     null
   );
 
-  const [form] = Form.useForm();
-
   const showEditRoleModal = (record: AppMemberDTO) => {
     setSelectedMember(record);
     setEditRoleModalVisible(true);
-    form.setFieldsValue({
+    editRoleForm.setFieldsValue({
       roles: record.roles,
     });
   };
@@ -127,28 +147,43 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
     dispatch({
       type: "app/deleteMember",
       payload: { memberId: record?.memberId },
+      callback: () => {
+        message.success("人员删除成功");
+      },
     });
     onClose();
-    message.success("删除项目成员成功");
   };
 
   const handleUpdateRole = (values: any) => {
-    try {
-      form.validateFields().then((values) => {
-        dispatch({
-          type: "app/updateMember",
-          payload: { ...values, memberId: selectedMember?.memberId },
-        });
-        // 处理更新角色的逻辑，调用接口
-        console.log(`更新角色为：${values.roles}`);
-        setEditRoleModalVisible(false);
-        form.resetFields();
-        onClose();
-        message.success("更新成功");
+    editRoleForm.validateFields().then((values) => {
+      dispatch({
+        type: "app/updateMember",
+        payload: { ...values, memberId: selectedMember?.memberId },
+        callback: () => {
+          message.success("更新成功");
+        },
       });
-    } catch (errorInfo) {
-      console.log("更新失败:", errorInfo);
-    }
+      setEditRoleModalVisible(false);
+      editRoleForm.resetFields();
+      onClose();
+    });
+  };
+
+  // 新增人员方法
+  const handleAddMember = (values: any) => {
+    addMemberForm.validateFields().then((values) => {
+      dispatch({
+        type: "app/addMember",
+        payload: { ...values, appId: id },
+        callback: () => {
+          message.success("添加成功");
+        },
+      });
+
+      setAddMemberModalVisible(false);
+      addMemberForm.resetFields();
+      onClose();
+    });
   };
 
   return (
@@ -158,6 +193,11 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
       onClose={onClose}
       open={open}
       bodyStyle={{ paddingBottom: 80 }}
+      extra={
+        <Button type="primary" onClick={showAddMemberModal}>
+          添加成员
+        </Button>
+      }
     >
       <Table
         dataSource={appMembers.list}
@@ -172,7 +212,55 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
         onCancel={() => setEditRoleModalVisible(false)}
         onOk={handleUpdateRole}
       >
-        <Form form={form} layout="vertical">
+        <Form form={editRoleForm} layout="vertical">
+          <Form.Item
+            label="人员角色"
+            name="roles"
+            rules={[
+              {
+                required: true,
+                message: "请选择人员角色",
+              },
+            ]}
+          >
+            <Select style={{ width: "100%" }} mode="multiple">
+              <Option value="OWNER">拥有者</Option>
+              <Option value="DEVELOPER">开发</Option>
+              <Option value="TESTER">测试</Option>
+              <Option value="OPERATOR">运维</Option>
+              <Option value="ARCHITECT">架构师</Option>
+              <Option value="REPORTER">告警接收</Option>
+              <Option value="CHECKER">部署审批</Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="添加人员"
+        open={addMemberModalVisible}
+        onCancel={() => setAddMemberModalVisible(false)}
+        onOk={addMemberForm.submit}
+      >
+        <Form form={addMemberForm} layout="vertical" onFinish={handleAddMember}>
+          <Form.Item
+            label="项目成员"
+            name="accountId"
+            rules={[
+              {
+                required: true,
+                message: "请选择人员",
+              },
+            ]}
+          >
+            <Select style={{ width: "100%" }}>
+              {userList.map((user: AppAccountDTO) => (
+                <Option key={user.id} value={user.id}>
+                  {user.accountName}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
           <Form.Item
             label="人员角色"
             name="roles"
@@ -199,6 +287,8 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
   );
 };
 
-export default connect(({}: { user: {} }) => {
-  return {};
+export default connect(({ user }) => {
+  return {
+    userList: user.members,
+  };
 })(TeamMembersDrawer);

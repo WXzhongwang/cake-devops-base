@@ -14,7 +14,7 @@ interface QueryCurrentUserAction {
 }
 
 interface QueryUsersAction {
-  type: "user/queryUsers";
+  type: "user/queryMembers";
   payload: QueryAccountPayload;
 }
 

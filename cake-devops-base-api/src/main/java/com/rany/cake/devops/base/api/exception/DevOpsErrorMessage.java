@@ -35,6 +35,9 @@ public enum DevOpsErrorMessage implements ResponseCode {
     SYSTEM_ENV_NOT_FOUND("4800", "系统环境未找到"),
     TIMEOUT_EXCEPTION_MESSAGE("5100", "连接超时"),
 
+
+    MEMBER_DUPLICATED("4501", "项目成员已存在"),
+
     ;
 
     private final String code;
