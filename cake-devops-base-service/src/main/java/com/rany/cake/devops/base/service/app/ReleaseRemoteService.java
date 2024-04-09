@@ -125,7 +125,8 @@ public class ReleaseRemoteService implements ReleaseService {
 
         if (Objects.nonNull(release.getApprovalId())) {
             Approval approval = approvalRepository.find(release.getApprovalId());
-            if (approval != null && !StringUtils.equals(approval.getApprovalStatus(), ApprovalStatus.APPROVED.name())) {
+            if (approval != null && !StringUtils.equals(approval.getApprovalStatus(), ApprovalStatus.APPROVED.name())
+                    && !StringUtils.equals(approval.getApprovalStatus(), ApprovalStatus.AUTO_APPROVED.name())) {
                 throw new DevOpsException(DevOpsErrorMessage.APPROVAL_NOT_APPROVED);
             }
         }

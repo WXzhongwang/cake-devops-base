@@ -1,5 +1,7 @@
 // src/models/app.ts
 import * as releaseService from "@/services/release";
+import { message } from "antd";
+import { BaseAction } from "typings";
 import { Effect, Reducer } from "umi";
 
 export interface CreateReleasePayload {
@@ -51,22 +53,22 @@ export interface ClosePayload {
   releaseId: string;
 }
 
-export interface CreateReleaseAction {
+export interface CreateReleaseAction extends BaseAction {
   type: "release/createRelease";
   payload: CreateReleasePayload;
 }
 
-export interface CloseReleaseAction {
+export interface CloseReleaseAction extends BaseAction {
   type: "release/close";
   payload: ClosePayload;
 }
 
-export interface DeployAction {
+export interface DeployAction extends BaseAction {
   type: "release/deploy";
   payload: DeployPayload;
 }
 
-export interface PageReleaseAction {
+export interface PageReleaseAction extends BaseAction {
   type: "release/pageRelease";
   payload: PageReleasePayload;
 }
@@ -103,22 +105,31 @@ const ReleaseModel: ReleaseModelType = {
   effects: {
     *pageRelease({ payload }: PageReleaseAction, { call, put }) {
       const response = yield call(releaseService.page, payload);
-      console.log("response", response);
-
-      if (response?.content) {
-        yield put({
-          type: "setReleaseList",
-          payload: {
-            list: response.content.items,
-            total: response.content.total,
-          },
-        });
+      const { success, msg } = response;
+      if (success) {
+        if (response?.content) {
+          yield put({
+            type: "setReleaseList",
+            payload: {
+              list: response.content.items,
+              total: response.content.total,
+            },
+          });
+        }
+      } else {
+        message.error(msg);
       }
     },
-    *createRelease({ payload }: CreateReleaseAction, { call, put }) {
-      // debugger;
-      yield call(releaseService.create, payload);
-      yield put({ type: "setReleaseList" });
+    *createRelease({ payload, callback }: CreateReleaseAction, { call, put }) {
+      const response = yield call(releaseService.create, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
     *deploy({ payload }: DeployAction, { call, put }) {
       yield call(releaseService.deploy, payload);

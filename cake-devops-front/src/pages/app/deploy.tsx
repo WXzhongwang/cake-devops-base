@@ -299,6 +299,9 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     dispatch({
       type: "release/deploy",
       payload: { releaseId: selectedRow.releaseId },
+      callback: () => {
+        message.success("开始发布");
+      },
     });
     // 清空选择
     setSelectedRow(null);
@@ -325,10 +328,11 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     dispatch({
       type: "release/createRelease",
       payload: { ...values, appId: id, envId: selectedEnvironment },
+      callback: () => {
+        message.success("添加成功");
+        pageRelease();
+      },
     });
-
-    console.log("dispatch", dispatch);
-
     setDrawerVisible(false);
   };
 
