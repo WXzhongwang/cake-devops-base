@@ -11,6 +11,8 @@ import com.rany.cake.devops.base.api.query.ScriptTemplatePageQuery;
 import com.rany.cake.devops.base.api.service.ScriptTemplateService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+
 /**
  * script 配置
  */
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/devops/script-template")
 public class ScriptTemplateController {
 
+    @Resource
     private ScriptTemplateService scriptTemplateService;
 
 

@@ -23,7 +23,7 @@
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from webhook_config
+        from script_template
         <where>
             is_deleted = '0'
             <if test="name != null and name != ''">

@@ -17,8 +17,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ModifyScriptTemplateCommand extends BaseCommand {
 
-    private Long templateId;
-    
+    private Long id;
+
     private String templateName;
     private String templateValue;
     private String description;

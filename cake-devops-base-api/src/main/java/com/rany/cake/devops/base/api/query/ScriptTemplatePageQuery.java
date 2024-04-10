@@ -1,11 +1,11 @@
 package com.rany.cake.devops.base.api.query;
 
-import com.rany.cake.devops.base.api.common.base.BaseQuery;
+import com.rany.cake.devops.base.api.common.base.BasePageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ScriptTemplatePageQuery extends BaseQuery {
+public class ScriptTemplatePageQuery extends BasePageQuery {
     private String name;
 }

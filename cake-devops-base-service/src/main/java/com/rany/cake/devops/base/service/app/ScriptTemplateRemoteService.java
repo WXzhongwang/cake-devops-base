@@ -46,7 +46,7 @@ public class ScriptTemplateRemoteService implements ScriptTemplateService {
 
     @Override
     public Boolean modifyScriptTemplate(ModifyScriptTemplateCommand command) {
-        ScriptTemplate scriptTemplate = scriptTemplateRepository.find(command.getTemplateId());
+        ScriptTemplate scriptTemplate = scriptTemplateRepository.find(command.getId());
         if (scriptTemplate == null) {
             throw new DevOpsException(DevOpsErrorMessage.SCRIPT_TEMPLATE_NOT_FOUND);
         }

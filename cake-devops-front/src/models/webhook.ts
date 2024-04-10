@@ -2,6 +2,8 @@
 
 import { Effect, Reducer } from "umi";
 import * as api from "@/services/webhook";
+import { BaseAction } from "typings";
+import { message } from "antd";
 
 export interface WebhookConfig {
   id: number;
@@ -41,17 +43,17 @@ interface QueryWebHooksAction {
   payload: QueryWebHooksPayload;
 }
 
-interface CreateWebHookAction {
+interface CreateWebHookAction extends BaseAction {
   type: "webhook/createWebHook";
   payload: CreateWebHookPayload;
 }
 
-interface UpdateWebHookAction {
+interface UpdateWebHookAction extends BaseAction {
   type: "webhook/updateWebHook";
   payload: UpdateWebHookPayload;
 }
 
-interface DeleteWebHookAction {
+interface DeleteWebHookAction extends BaseAction {
   type: "webhook/deleteWebHook";
   payload: DeleteWebHookPayload;
 }
@@ -79,7 +81,7 @@ const WebHookModel: WebHookModelType = {
   },
 
   effects: {
-    *queryWebHooks({ payload }, { call, put }) {
+    *queryWebHooks({ payload }: QueryWebHooksAction, { call, put }) {
       const response = yield call(api.fetchWebhooks, payload);
       yield put({
         type: "saveWebHooks",
@@ -87,19 +89,41 @@ const WebHookModel: WebHookModelType = {
       });
     },
 
-    *createWebHook({ payload }, { call, put }) {
-      yield call(api.createWebhook, payload);
-      yield put({ type: "fetchWebHooks" });
+    *createWebHook({ payload, callback }: CreateWebHookAction, { call, put }) {
+      const response = yield call(api.createWebhook, payload);
+      //       yield put({ type: "fetchWebHooks" });
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
     },
 
-    *updateWebHook({ payload }, { call, put }) {
-      yield call(api.updateWebhook, payload);
-      yield put({ type: "fetchWebHooks" });
+    *updateWebHook({ payload, callback }: UpdateWebHookAction, { call, put }) {
+      const response = yield call(api.updateWebhook, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
     },
 
-    *deleteWebHook({ payload }, { call, put }) {
-      yield call(api.deleteWebhook, payload);
-      yield put({ type: "fetchWebHooks" });
+    *deleteWebHook({ payload, callback }: DeleteWebHookAction, { call, put }) {
+      const response = yield call(api.deleteWebhook, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
     },
   },
 

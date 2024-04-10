@@ -12,6 +12,7 @@ import com.rany.cake.devops.base.infra.dao.ScriptTemplateDao;
 import com.rany.cake.devops.base.infra.mapper.ScriptTemplatePOMapper;
 import com.rany.cake.devops.base.infra.po.ScriptTemplatePO;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
  *
  * @author zhongshenwang
  */
+@AllArgsConstructor
 @Service
 public class ScriptTemplateRepositoryImpl implements ScriptTemplateRepository {
     private ScriptTemplatePOMapper scriptTemplatePOMapper;
