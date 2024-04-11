@@ -13,7 +13,7 @@ public interface SftpService {
      * @param machineId 机器id
      * @return FileOpenVO
      */
-    FileOpenDTO open(Long machineId);
+    FileOpenDTO open(OpenSftpCommand openSftpCommand);
 
     /**
      * 文件列表
