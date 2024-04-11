@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.HostAlarmHistoryDTO;
-import com.rany.cake.devops.base.api.query.HostAlarmHistoryPageQuery;
+import com.rany.cake.devops.base.api.query.alarm.HostAlarmHistoryPageQuery;
 import com.rany.cake.devops.base.domain.entity.HostAlarmHistory;
 import com.rany.cake.devops.base.domain.repository.param.HostAlarmHistoryPageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

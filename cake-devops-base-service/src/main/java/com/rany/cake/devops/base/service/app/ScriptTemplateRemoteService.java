@@ -7,8 +7,8 @@ import com.rany.cake.devops.base.api.command.template.ModifyScriptTemplateComman
 import com.rany.cake.devops.base.api.dto.ScriptTemplateDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
-import com.rany.cake.devops.base.api.query.ScriptTemplateBasicQuery;
-import com.rany.cake.devops.base.api.query.ScriptTemplatePageQuery;
+import com.rany.cake.devops.base.api.query.template.ScriptTemplateBasicQuery;
+import com.rany.cake.devops.base.api.query.template.ScriptTemplatePageQuery;
 import com.rany.cake.devops.base.api.service.ScriptTemplateService;
 import com.rany.cake.devops.base.domain.entity.ScriptTemplate;
 import com.rany.cake.devops.base.domain.repository.ScriptTemplateRepository;

@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.ServerProxyDTO;
-import com.rany.cake.devops.base.api.query.ServerProxyPageQuery;
+import com.rany.cake.devops.base.api.query.proxy.ServerProxyPageQuery;
 import com.rany.cake.devops.base.domain.entity.ServerProxy;
 import com.rany.cake.devops.base.domain.repository.param.ServerProxyQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

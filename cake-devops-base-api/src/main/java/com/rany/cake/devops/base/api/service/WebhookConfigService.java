@@ -5,8 +5,8 @@ import com.rany.cake.devops.base.api.command.wehook.CreateWebhookCommand;
 import com.rany.cake.devops.base.api.command.wehook.DeleteWebhookCommand;
 import com.rany.cake.devops.base.api.command.wehook.ModifyWebHookCommand;
 import com.rany.cake.devops.base.api.dto.WebHookConfigDTO;
-import com.rany.cake.devops.base.api.query.WebhookBasicQuery;
-import com.rany.cake.devops.base.api.query.WebhookPageQuery;
+import com.rany.cake.devops.base.api.query.webhook.WebhookBasicQuery;
+import com.rany.cake.devops.base.api.query.webhook.WebhookPageQuery;
 
 /**
  * webhook配置

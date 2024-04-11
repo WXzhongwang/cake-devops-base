@@ -3,8 +3,8 @@ package com.rany.cake.devops.base.api.service;
 import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.host.*;
 import com.rany.cake.devops.base.api.dto.HostDTO;
-import com.rany.cake.devops.base.api.query.HostBasicQuery;
-import com.rany.cake.devops.base.api.query.HostPageQuery;
+import com.rany.cake.devops.base.api.query.host.HostBasicQuery;
+import com.rany.cake.devops.base.api.query.host.HostPageQuery;
 
 /**
  * 主机服务

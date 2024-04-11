@@ -5,8 +5,8 @@ import com.rany.cake.devops.base.api.command.key.CreateServerKeyCommand;
 import com.rany.cake.devops.base.api.command.key.DeleteServerKeyCommand;
 import com.rany.cake.devops.base.api.command.key.ModifyServerKeyCommand;
 import com.rany.cake.devops.base.api.dto.ServerKeyDTO;
-import com.rany.cake.devops.base.api.query.ServerKeyBasicQuery;
-import com.rany.cake.devops.base.api.query.ServerKeyPageQuery;
+import com.rany.cake.devops.base.api.query.key.ServerKeyBasicQuery;
+import com.rany.cake.devops.base.api.query.key.ServerKeyPageQuery;
 
 /**
  * 主机秘钥服务

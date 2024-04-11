@@ -2,7 +2,7 @@ package com.rany.cake.devops.base.api.service;
 
 import com.rany.cake.devops.base.api.command.approval.*;
 import com.rany.cake.devops.base.api.dto.ApprovalDTO;
-import com.rany.cake.devops.base.api.query.ApprovalBasicQuery;
+import com.rany.cake.devops.base.api.query.approval.ApprovalBasicQuery;
 
 /**
  * 审批服务

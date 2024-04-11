@@ -31,4 +31,45 @@
             </if>
         </where>
     </select>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.ScriptTemplate"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into script_template (template_name, template_value,
+                                     description, is_deleted, gmt_create,
+                                     gmt_modified, creator, modifier)
+        values (#{templateName,jdbcType=VARCHAR}, #{templateValue,jdbcType=VARCHAR},
+                #{description,jdbcType=VARCHAR}, #{isDeleted,jdbcType=CHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
+                #{gmtModified,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.ScriptTemplate">
+        update script_template
+        <set>
+            <if test="templateName != null">
+                template_name = #{templateName,jdbcType=VARCHAR},
+            </if>
+            <if test="templateValue != null">
+                template_value = #{templateValue,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=CHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

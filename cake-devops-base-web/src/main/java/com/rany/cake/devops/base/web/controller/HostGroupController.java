@@ -6,8 +6,8 @@ import com.rany.cake.devops.base.api.command.group.CreateGroupCommand;
 import com.rany.cake.devops.base.api.command.group.ModifyGroupCommand;
 import com.rany.cake.devops.base.api.dto.HostGroupDTO;
 import com.rany.cake.devops.base.api.dto.HostGroupTreeDTO;
-import com.rany.cake.devops.base.api.query.HostGroupBasicQuery;
-import com.rany.cake.devops.base.api.query.HostGroupTreeQuery;
+import com.rany.cake.devops.base.api.query.group.HostGroupBasicQuery;
+import com.rany.cake.devops.base.api.query.group.HostGroupTreeQuery;
 import com.rany.cake.devops.base.api.service.HostGroupService;
 import org.springframework.web.bind.annotation.*;
 

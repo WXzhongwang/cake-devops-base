@@ -5,8 +5,8 @@ import com.rany.cake.devops.base.api.command.alarm.CreateAlarmGroupCommand;
 import com.rany.cake.devops.base.api.command.alarm.DeleteAlarmGroupCommand;
 import com.rany.cake.devops.base.api.command.alarm.ModifyAlarmGroupCommand;
 import com.rany.cake.devops.base.api.dto.AlarmGroupDTO;
-import com.rany.cake.devops.base.api.query.AlarmGroupBasicQuery;
-import com.rany.cake.devops.base.api.query.AlarmGroupPageQuery;
+import com.rany.cake.devops.base.api.query.alarm.AlarmGroupBasicQuery;
+import com.rany.cake.devops.base.api.query.alarm.AlarmGroupPageQuery;
 
 /**
  * 告警组

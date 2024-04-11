@@ -2,7 +2,7 @@ package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.dto.HostAlarmHistoryDTO;
-import com.rany.cake.devops.base.api.query.HostAlarmHistoryPageQuery;
+import com.rany.cake.devops.base.api.query.alarm.HostAlarmHistoryPageQuery;
 
 /**
  * 告警服务

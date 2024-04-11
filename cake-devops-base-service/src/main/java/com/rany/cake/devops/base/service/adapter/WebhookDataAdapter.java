@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.WebHookConfigDTO;
-import com.rany.cake.devops.base.api.query.WebhookPageQuery;
+import com.rany.cake.devops.base.api.query.webhook.WebhookPageQuery;
 import com.rany.cake.devops.base.domain.entity.WebhookConfig;
 import com.rany.cake.devops.base.domain.repository.param.WebhookConfigQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

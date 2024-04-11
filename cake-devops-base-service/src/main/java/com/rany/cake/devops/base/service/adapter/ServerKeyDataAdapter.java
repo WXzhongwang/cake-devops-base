@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.ServerKeyDTO;
-import com.rany.cake.devops.base.api.query.ServerKeyPageQuery;
+import com.rany.cake.devops.base.api.query.key.ServerKeyPageQuery;
 import com.rany.cake.devops.base.domain.entity.ServerKey;
 import com.rany.cake.devops.base.domain.repository.param.ServerKeyQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

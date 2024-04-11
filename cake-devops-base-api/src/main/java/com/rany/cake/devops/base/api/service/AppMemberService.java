@@ -6,8 +6,8 @@ import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
 import com.rany.cake.devops.base.api.dto.AppAccountDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
-import com.rany.cake.devops.base.api.query.AppMemberPageQuery;
-import com.rany.cake.devops.base.api.query.MemberPageQuery;
+import com.rany.cake.devops.base.api.query.app.AppMemberPageQuery;
+import com.rany.cake.devops.base.api.query.member.MemberPageQuery;
 
 /**
  * 应用成员服务

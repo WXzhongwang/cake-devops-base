@@ -10,7 +10,7 @@ import com.rany.cake.devops.base.api.dto.ApprovalDTO;
 import com.rany.cake.devops.base.api.dto.ReleaseDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
-import com.rany.cake.devops.base.api.query.ReleasePageQuery;
+import com.rany.cake.devops.base.api.query.release.ReleasePageQuery;
 import com.rany.cake.devops.base.api.service.ReleaseService;
 import com.rany.cake.devops.base.domain.aggregate.*;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;

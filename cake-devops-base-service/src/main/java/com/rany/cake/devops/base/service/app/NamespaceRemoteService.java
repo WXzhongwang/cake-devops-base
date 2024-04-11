@@ -4,7 +4,7 @@ import com.rany.cake.devops.base.api.command.namespace.CreateNamespaceCommand;
 import com.rany.cake.devops.base.api.dto.NamespaceDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
-import com.rany.cake.devops.base.api.query.NamespaceQuery;
+import com.rany.cake.devops.base.api.query.namespace.NamespaceQuery;
 import com.rany.cake.devops.base.api.service.NamespaceService;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;

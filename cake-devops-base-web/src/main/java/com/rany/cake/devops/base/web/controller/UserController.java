@@ -3,7 +3,7 @@ package com.rany.cake.devops.base.web.controller;
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.dto.AppAccountDTO;
-import com.rany.cake.devops.base.api.query.MemberPageQuery;
+import com.rany.cake.devops.base.api.query.member.MemberPageQuery;
 import com.rany.cake.devops.base.api.service.AppMemberService;
 import com.rany.cake.dingtalk.sdk.beans.SsoUser;
 import com.rany.cake.dingtalk.sdk.configuration.SsoConstants;

@@ -2,7 +2,7 @@ package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.AppAccountDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
-import com.rany.cake.devops.base.api.query.AppMemberPageQuery;
+import com.rany.cake.devops.base.api.query.app.AppMemberPageQuery;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

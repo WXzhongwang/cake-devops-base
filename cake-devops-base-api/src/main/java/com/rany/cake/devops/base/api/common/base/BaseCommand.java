@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 基础Command操作需集成该类型
+ * 基础Command操作需继承该类型
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 基础Command操作需继承该类型
  * @date 2022/12/31 16:29
  * @email 18668485565163.com
  */

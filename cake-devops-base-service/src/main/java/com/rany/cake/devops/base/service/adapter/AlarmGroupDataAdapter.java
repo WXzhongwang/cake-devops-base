@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.AlarmGroupDTO;
-import com.rany.cake.devops.base.api.query.AlarmGroupPageQuery;
+import com.rany.cake.devops.base.api.query.alarm.AlarmGroupPageQuery;
 import com.rany.cake.devops.base.domain.entity.AlarmGroup;
 import com.rany.cake.devops.base.domain.repository.param.AlarmGroupQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

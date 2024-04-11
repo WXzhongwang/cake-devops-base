@@ -44,14 +44,12 @@ public class ScriptTemplateRepositoryImpl implements ScriptTemplateRepository {
 
     @Override
     public void save(ScriptTemplate scriptTemplate) {
-        ScriptTemplatePO scriptTemplatePO = scriptTemplateConvertor.sourceToTarget(scriptTemplate);
-        scriptTemplatePOMapper.insertSelective(scriptTemplatePO);
+        scriptTemplateDao.save(scriptTemplate);
     }
 
     @Override
     public void update(ScriptTemplate scriptTemplate) {
-        ScriptTemplatePO scriptTemplatePO = scriptTemplateConvertor.sourceToTarget(scriptTemplate);
-        scriptTemplatePOMapper.updateByPrimaryKey(scriptTemplatePO);
+        scriptTemplateDao.update(scriptTemplate);
     }
 
     @Override

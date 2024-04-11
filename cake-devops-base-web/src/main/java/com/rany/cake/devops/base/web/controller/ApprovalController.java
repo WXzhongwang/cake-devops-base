@@ -3,7 +3,7 @@ package com.rany.cake.devops.base.web.controller;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.approval.*;
 import com.rany.cake.devops.base.api.dto.ApprovalDTO;
-import com.rany.cake.devops.base.api.query.ApprovalBasicQuery;
+import com.rany.cake.devops.base.api.query.approval.ApprovalBasicQuery;
 import com.rany.cake.devops.base.api.service.ApprovalService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

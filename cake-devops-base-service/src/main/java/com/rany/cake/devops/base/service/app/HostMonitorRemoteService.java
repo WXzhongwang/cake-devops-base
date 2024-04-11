@@ -11,7 +11,7 @@ import com.rany.cake.devops.base.api.dto.AppAccountDTO;
 import com.rany.cake.devops.base.api.dto.HostDTO;
 import com.rany.cake.devops.base.api.dto.HostMonitorDTO;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
-import com.rany.cake.devops.base.api.query.HostMonitorPageQuery;
+import com.rany.cake.devops.base.api.query.agent.HostMonitorPageQuery;
 import com.rany.cake.devops.base.api.service.HostMonitorService;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.entity.HostMonitor;

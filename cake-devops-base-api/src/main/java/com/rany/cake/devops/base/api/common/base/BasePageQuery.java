@@ -1,14 +1,17 @@
 package com.rany.cake.devops.base.api.common.base;
 
+import lombok.Getter;
+
 /**
- * TODO
+ * BasePageQuery
  *
  * @author zhongshengwang
- * @description TODO
+ * @description BasePageQuery
  * @date 2022/12/31 16:43
  * @email 18668485565163.com
  */
 
+@Getter
 public class BasePageQuery extends BaseQuery {
 
     private Integer pageNo = 0;
@@ -17,24 +20,12 @@ public class BasePageQuery extends BaseQuery {
 
     private Boolean needTotal = true;
 
-    public Integer getPageNo() {
-        return pageNo;
-    }
-
     public void setPageNo(Integer pageNo) {
         this.pageNo = pageNo;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
-    }
-
-    public Boolean getNeedTotal() {
-        return needTotal;
     }
 
     public void setNeedTotal(Boolean needTotal) {

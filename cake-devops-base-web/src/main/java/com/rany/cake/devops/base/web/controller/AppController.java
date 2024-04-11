@@ -12,7 +12,7 @@ import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.AppMemberDTO;
 import com.rany.cake.devops.base.api.dto.DepartmentDTO;
-import com.rany.cake.devops.base.api.query.*;
+import com.rany.cake.devops.base.api.query.app.*;
 import com.rany.cake.devops.base.api.service.AppMemberService;
 import com.rany.cake.devops.base.api.service.AppService;
 import org.springframework.web.bind.annotation.*;

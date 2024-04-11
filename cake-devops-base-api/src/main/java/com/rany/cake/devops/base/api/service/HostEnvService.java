@@ -3,9 +3,9 @@ package com.rany.cake.devops.base.api.service;
 import com.cake.framework.common.response.Page;
 import com.rany.cake.devops.base.api.command.host.env.*;
 import com.rany.cake.devops.base.api.dto.HostEnvDTO;
-import com.rany.cake.devops.base.api.query.HostEnvBasicQuery;
-import com.rany.cake.devops.base.api.query.HostEnvPageQuery;
-import com.rany.cake.devops.base.api.query.HostEnvViewQuery;
+import com.rany.cake.devops.base.api.query.host.env.HostEnvBasicQuery;
+import com.rany.cake.devops.base.api.query.host.env.HostEnvPageQuery;
+import com.rany.cake.devops.base.api.query.host.env.HostEnvViewQuery;
 
 /**
  * 环境变量服务

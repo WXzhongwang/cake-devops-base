@@ -6,8 +6,8 @@ import com.rany.cake.devops.base.api.command.template.CreateScriptTemplateComman
 import com.rany.cake.devops.base.api.command.template.DeleteScriptTemplateCommand;
 import com.rany.cake.devops.base.api.command.template.ModifyScriptTemplateCommand;
 import com.rany.cake.devops.base.api.dto.ScriptTemplateDTO;
-import com.rany.cake.devops.base.api.query.ScriptTemplateBasicQuery;
-import com.rany.cake.devops.base.api.query.ScriptTemplatePageQuery;
+import com.rany.cake.devops.base.api.query.template.ScriptTemplateBasicQuery;
+import com.rany.cake.devops.base.api.query.template.ScriptTemplatePageQuery;
 import com.rany.cake.devops.base.api.service.ScriptTemplateService;
 import org.springframework.web.bind.annotation.*;
 

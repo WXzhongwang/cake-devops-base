@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.WebSideMessageDTO;
-import com.rany.cake.devops.base.api.query.WebSideMessagePageQuery;
+import com.rany.cake.devops.base.api.query.message.WebSideMessagePageQuery;
 import com.rany.cake.devops.base.domain.entity.WebSideMessage;
 import com.rany.cake.devops.base.domain.repository.param.WebSideMessagePageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

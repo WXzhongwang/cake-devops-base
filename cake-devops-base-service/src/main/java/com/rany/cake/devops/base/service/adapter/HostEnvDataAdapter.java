@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.HostEnvDTO;
-import com.rany.cake.devops.base.api.query.HostEnvPageQuery;
+import com.rany.cake.devops.base.api.query.host.env.HostEnvPageQuery;
 import com.rany.cake.devops.base.domain.entity.HostEnv;
 import com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

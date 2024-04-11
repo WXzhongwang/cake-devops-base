@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.ReleaseDTO;
-import com.rany.cake.devops.base.api.query.ReleasePageQuery;
+import com.rany.cake.devops.base.api.query.release.ReleasePageQuery;
 import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.repository.param.ReleasePageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

@@ -5,7 +5,7 @@ import com.rany.cake.devops.base.api.command.agent.InstallMonitorAgentCommand;
 import com.rany.cake.devops.base.api.command.agent.SyncMonitorAgentCommand;
 import com.rany.cake.devops.base.api.command.agent.UpdateMonitorAgentCommand;
 import com.rany.cake.devops.base.api.dto.HostMonitorDTO;
-import com.rany.cake.devops.base.api.query.HostMonitorPageQuery;
+import com.rany.cake.devops.base.api.query.agent.HostMonitorPageQuery;
 
 ;
 

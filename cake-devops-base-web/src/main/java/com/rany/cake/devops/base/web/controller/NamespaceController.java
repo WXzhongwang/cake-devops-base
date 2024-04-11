@@ -4,7 +4,7 @@ import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.namespace.CreateNamespaceCommand;
 import com.rany.cake.devops.base.api.dto.NamespaceDTO;
-import com.rany.cake.devops.base.api.query.NamespaceQuery;
+import com.rany.cake.devops.base.api.query.namespace.NamespaceQuery;
 import com.rany.cake.devops.base.api.service.NamespaceService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

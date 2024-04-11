@@ -6,8 +6,8 @@ import com.rany.cake.devops.base.api.command.system.CreateSystemEnvCommand;
 import com.rany.cake.devops.base.api.command.system.DeleteSystemEnvCommand;
 import com.rany.cake.devops.base.api.command.system.ModifySystemEnvCommand;
 import com.rany.cake.devops.base.api.dto.SystemEnvDTO;
-import com.rany.cake.devops.base.api.query.SystemEnvBasicQuery;
-import com.rany.cake.devops.base.api.query.SystemEnvPageQuery;
+import com.rany.cake.devops.base.api.query.system.SystemEnvBasicQuery;
+import com.rany.cake.devops.base.api.query.system.SystemEnvPageQuery;
 import com.rany.cake.devops.base.api.service.SystemEnvService;
 import org.springframework.web.bind.annotation.*;
 

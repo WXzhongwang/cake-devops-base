@@ -6,7 +6,7 @@ import com.rany.cake.devops.base.api.command.release.CloseReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.CreateReleaseCommand;
 import com.rany.cake.devops.base.api.command.release.DeployCommand;
 import com.rany.cake.devops.base.api.dto.ReleaseDTO;
-import com.rany.cake.devops.base.api.query.ReleasePageQuery;
+import com.rany.cake.devops.base.api.query.release.ReleasePageQuery;
 import com.rany.cake.devops.base.api.service.ReleaseService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

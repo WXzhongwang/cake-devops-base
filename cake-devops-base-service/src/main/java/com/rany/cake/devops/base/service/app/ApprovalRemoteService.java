@@ -2,7 +2,7 @@ package com.rany.cake.devops.base.service.app;
 
 import com.rany.cake.devops.base.api.command.approval.*;
 import com.rany.cake.devops.base.api.dto.ApprovalDTO;
-import com.rany.cake.devops.base.api.query.ApprovalBasicQuery;
+import com.rany.cake.devops.base.api.query.approval.ApprovalBasicQuery;
 import com.rany.cake.devops.base.api.service.ApprovalService;
 import com.rany.cake.devops.base.domain.aggregate.Approval;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;

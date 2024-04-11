@@ -5,8 +5,8 @@ import com.rany.cake.devops.base.api.command.proxy.CreateServerProxyCommand;
 import com.rany.cake.devops.base.api.command.proxy.DeleteServerProxyCommand;
 import com.rany.cake.devops.base.api.command.proxy.ModifyServerProxyCommand;
 import com.rany.cake.devops.base.api.dto.ServerProxyDTO;
-import com.rany.cake.devops.base.api.query.ServerProxyBasicQuery;
-import com.rany.cake.devops.base.api.query.ServerProxyPageQuery;
+import com.rany.cake.devops.base.api.query.proxy.ServerProxyBasicQuery;
+import com.rany.cake.devops.base.api.query.proxy.ServerProxyPageQuery;
 
 /**
  * 主机代理服务

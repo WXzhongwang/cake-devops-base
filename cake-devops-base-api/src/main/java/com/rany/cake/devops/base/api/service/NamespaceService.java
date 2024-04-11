@@ -2,7 +2,7 @@ package com.rany.cake.devops.base.api.service;
 
 import com.rany.cake.devops.base.api.command.namespace.CreateNamespaceCommand;
 import com.rany.cake.devops.base.api.dto.NamespaceDTO;
-import com.rany.cake.devops.base.api.query.NamespaceQuery;
+import com.rany.cake.devops.base.api.query.namespace.NamespaceQuery;
 
 import java.util.List;
 

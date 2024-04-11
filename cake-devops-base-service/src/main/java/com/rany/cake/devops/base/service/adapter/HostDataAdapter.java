@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.HostDTO;
-import com.rany.cake.devops.base.api.query.HostPageQuery;
+import com.rany.cake.devops.base.api.query.host.HostPageQuery;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;

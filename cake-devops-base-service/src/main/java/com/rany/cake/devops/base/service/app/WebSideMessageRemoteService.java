@@ -5,7 +5,7 @@ import com.rany.cake.devops.base.api.command.message.CreateWebSideMessageCommand
 import com.rany.cake.devops.base.api.command.message.DeleteReadWebSideMessageCommand;
 import com.rany.cake.devops.base.api.command.message.ReadWebSideMessageCommand;
 import com.rany.cake.devops.base.api.dto.WebSideMessageDTO;
-import com.rany.cake.devops.base.api.query.WebSideMessagePageQuery;
+import com.rany.cake.devops.base.api.query.message.WebSideMessagePageQuery;
 import com.rany.cake.devops.base.api.service.WebSideMessageService;
 import com.rany.cake.devops.base.domain.entity.WebSideMessage;
 import com.rany.cake.devops.base.domain.repository.WebSideMessageRepository;

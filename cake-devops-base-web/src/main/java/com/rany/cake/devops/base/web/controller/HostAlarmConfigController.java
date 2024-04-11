@@ -9,7 +9,7 @@ import com.rany.cake.devops.base.api.command.host.alarm.SetHostAlarmGroupCommand
 import com.rany.cake.devops.base.api.dto.HostAlarmConfigDTO;
 import com.rany.cake.devops.base.api.dto.HostAlarmConfigWrapperDTO;
 import com.rany.cake.devops.base.api.dto.HostAlarmHistoryDTO;
-import com.rany.cake.devops.base.api.query.HostAlarmHistoryPageQuery;
+import com.rany.cake.devops.base.api.query.alarm.HostAlarmHistoryPageQuery;
 import com.rany.cake.devops.base.api.service.HostAlarmConfigService;
 import com.rany.cake.devops.base.api.service.HostAlarmService;
 import org.springframework.web.bind.annotation.*;
