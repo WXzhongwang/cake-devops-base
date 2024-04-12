@@ -52,6 +52,7 @@
         <module>cake-devops-base-ssh</module>
         <module>start</module>
         <module>cake-devops-base-util</module>
+        <module>cake-devops-base-plugins</module>
     </modules>
 
     <dependencyManagement>
