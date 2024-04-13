@@ -1,9 +1,9 @@
 package com.rany.cake.devops.plugin.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.rany.cake.devops.plugin.common.http.CakeOpsExposeHttpApi;
+import com.rany.cake.devops.plugin.common.http.CakeOpsExposeHttpApiRequester;
 import com.rany.cake.devops.plugin.common.http.HttpApiRequest;
-import com.rany.cake.devops.plugin.common.http.OrionOpsExposeHttpApi;
-import com.rany.cake.devops.plugin.common.http.OrionOpsExposeHttpApiRequester;
 import com.rany.cake.devops.plugin.common.http.vo.MachineAlarmConfig;
 import com.rany.cake.devops.plugin.constant.MachineAlarmType;
 import com.rany.cake.devops.plugin.constant.PropertiesConst;
@@ -60,7 +60,7 @@ public class AlarmChecker {
         if (config == null) {
             return;
         }
-        Long machineId = PropertiesConst.MACHINE_ID;
+        String machineId = PropertiesConst.HOST_ID;
         String key = machineId + "_" + type.getType();
         // 未达到阈值 重置
         if (value.compareTo(config.getAlarmThreshold()) < 0) {
@@ -87,13 +87,13 @@ public class AlarmChecker {
         }
         // 执行通知
         MachineAlarmRequest alarmRequest = new MachineAlarmRequest();
-        alarmRequest.setMachineId(PropertiesConst.MACHINE_ID);
+        alarmRequest.setHostId(PropertiesConst.HOST_ID);
         alarmRequest.setType(type.getType());
         alarmRequest.setAlarmValue(value);
         alarmRequest.setAlarmTime(new Date(now));
         log.info("触发报警通知 req: {}", JSON.toJSONString(alarmRequest));
         try {
-            HttpApiRequest request = OrionOpsExposeHttpApiRequester.create(OrionOpsExposeHttpApi.TRIGGER_MACHINE_ALARM);
+            HttpApiRequest request = CakeOpsExposeHttpApiRequester.create(CakeOpsExposeHttpApi.TRIGGER_MACHINE_ALARM);
             String resp = request.jsonBody(alarmRequest).await().getBodyString();
             lastAlarmTimeMap.put(key, now);
             log.info("触发报警通知-完成 resp: {}", resp);

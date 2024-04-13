@@ -166,7 +166,7 @@ easy:
       sso-server: http://127.0.0.1:8765/
       login-url: http://127.0.0.1:8765/sso/loginPage
       logout-url: /sso/logout
-      ignore-urls: /sso/loginPage,/sso/login,/oauth/login
+      ignore-urls: /sso/loginPage,/sso/login,/oauth/login,/cake/expose-api/**
       ignore-resources: .js, .css, .jpg, .png, .ico, .html
       ajax-failure-response:
         content-type: application/json
@@ -175,10 +175,16 @@ easy:
     redis:
       address: redis://127.0.0.1:6379
 
+expose:
+  api:
+    access:
+      header: accessToken
+      secret: agent_access
+
 machine:
   monitor:
     latest:
-      version: 1.0.0
+      version: 0.0.1-SNAPSHOT
     default:
       url: "http://{}:9220"
       access:

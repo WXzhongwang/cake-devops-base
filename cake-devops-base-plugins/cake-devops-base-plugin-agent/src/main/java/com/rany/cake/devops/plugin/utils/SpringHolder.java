@@ -1,4 +1,4 @@
-package com.rany.cake.devops.plugin;
+package com.rany.cake.devops.plugin.utils;
 
 import com.rany.cake.toolkit.lang.Console;
 import com.rany.cake.toolkit.lang.utils.Valid;
@@ -12,7 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 /**
  * spring 工具类
  * <p>
- * 需要配置 <bean id="springHolder" class="com.orion.spring.SpringHolder$ApplicationContextAwareStore"/>
+ * 需要配置 <bean id="springHolder" class="com.rany.cake.devops.plugin.utils.SpringHolder"/>
  *
  * @author zhongshengwang
  * @version 1.0.0

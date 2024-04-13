@@ -43,7 +43,7 @@ public class MonitorConst {
     /**
      * agent 文件名称前缀
      */
-    public static final String AGENT_FILE_NAME_PREFIX = "machine-monitor-agent";
+    public static final String AGENT_FILE_NAME_PREFIX = "cake-devops-base-plugin-agent";
 
     /**
      * 启动脚本资源路径

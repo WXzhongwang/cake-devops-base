@@ -31,12 +31,11 @@ public enum DevOpsErrorMessage implements ResponseCode {
     SCRIPT_TEMPLATE_NOT_FOUND("41000", "模版未找到"),
     ALARM_GROUP_NOT_FOUND("42000", "告警组未找到"),
     AGENT_STATUS_RUNNING("46000", "Agent启动中"),
-    AGENT_FILE_NON_EXIST("46000", "插件包不存在 请确认文件路径: {}"),
-    SYSTEM_ENV_NOT_FOUND("4800", "系统环境未找到"),
-    TIMEOUT_EXCEPTION_MESSAGE("5100", "连接超时"),
-
-
-    MEMBER_DUPLICATED("4501", "项目成员已存在"),
+    AGENT_FILE_NON_EXIST("46001", "插件包不存在 请确认文件路径: {}"),
+    SYSTEM_ENV_NOT_FOUND("47000", "系统环境未找到"),
+    TIMEOUT_EXCEPTION_MESSAGE("48000", "连接超时"),
+    HOST_NOT_FOUND("49000", "主机未找到"),
+    MEMBER_DUPLICATED("50000", "项目成员已存在"),
 
     ;
 

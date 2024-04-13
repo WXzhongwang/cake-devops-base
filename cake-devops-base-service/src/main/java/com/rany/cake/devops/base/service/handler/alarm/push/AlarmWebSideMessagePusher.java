@@ -35,8 +35,8 @@ public class AlarmWebSideMessagePusher implements IAlarmPusher {
     public void push(MachineAlarmContext context) {
         // 发送站内信
         Map<String, Object> params = Maps.newMap();
-        params.put(EventKeys.NAME, context.getMachineName());
-        params.put(EventKeys.HOST, context.getMachineHost());
+        params.put(EventKeys.NAME, context.getHostName());
+        params.put(EventKeys.HOST, context.getServerAddr());
         params.put(EventKeys.TYPE, MachineAlarmType.of(context.getAlarmType()).getLabel());
         params.put(EventKeys.VALUE, Numbers.setScale(context.getAlarmValue(), 2));
         params.put(EventKeys.TIME, Dates.format(context.getAlarmTime()));
@@ -48,7 +48,7 @@ public class AlarmWebSideMessagePusher implements IAlarmPusher {
             message.setToUserId(Long.parseLong(k));
             message.setToUserName(v.getAccountName());
             message.setSendMessage(Strings.format(MessageType.MACHINE_ALARM.getTemplate(), params));
-            message.setRelId(context.getMachineId());
+            message.setRelId(context.getHostId());
             message.setIsDeleted(DeleteStatusEnum.NO.getValue());
             webSideMessageRepository.save(message);
         });

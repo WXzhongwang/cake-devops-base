@@ -19,7 +19,7 @@ import java.util.List;
 public class MachineSyncRequest {
 
     @ApiModelProperty(value = "机器id")
-    private Long machineId;
+    private String hostId;
 
     @ApiModelProperty(value = "机器报警配置")
     private List<MachineAlarmConfig> alarmConfig;

@@ -15,21 +15,21 @@ public enum ResultCode implements CodeInfo {
     /**
      * 非法访问
      */
-    INVALID_ACCESS_TOKEN(1010, MessageConst.INVALID_ACCESS_TOKEN),
+    INVALID_ACCESS_TOKEN("1010", MessageConst.INVALID_ACCESS_TOKEN),
 
     ;
 
-    private final int code;
+    private final String code;
 
     private final String message;
 
-    ResultCode(int code, String message) {
+    ResultCode(String code, String message) {
         this.code = code;
         this.message = message;
     }
 
     @Override
-    public int code() {
+    public String code() {
         return code;
     }
 

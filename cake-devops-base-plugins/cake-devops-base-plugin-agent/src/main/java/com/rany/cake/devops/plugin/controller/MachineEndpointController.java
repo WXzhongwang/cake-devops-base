@@ -49,15 +49,15 @@ public class MachineEndpointController {
 
     @GetMapping("/get-machine-id")
     @ApiOperation(value = "获取机器id")
-    public Long getMachineId() {
-        return PropertiesConst.MACHINE_ID;
+    public String getMachineId() {
+        return PropertiesConst.HOST_ID;
     }
 
     @GetMapping("/set-machine-id")
     @ApiOperation(value = "设置机器id")
-    public Long setMachineId(@RequestParam("machineId") Long machineId) {
-        Long before = PropertiesConst.MACHINE_ID;
-        PropertiesConst.MACHINE_ID = machineId;
+    public String setMachineId(@RequestParam("hostId") String hostId) {
+        String before = PropertiesConst.HOST_ID;
+        PropertiesConst.HOST_ID = hostId;
         return before;
     }
 
@@ -65,7 +65,7 @@ public class MachineEndpointController {
     @ApiOperation(value = "同步机器信息")
     public String syncMachineInfo(@RequestBody MachineSyncRequest request) {
         // 设置机器id
-        PropertiesConst.MACHINE_ID = request.getMachineId();
+        PropertiesConst.HOST_ID = request.getHostId();
         // 设置报警配置
         List<MachineAlarmConfig> config = request.getAlarmConfig();
         if (!Lists.isEmpty(config)) {

@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.Page;
+import com.rany.cake.devops.base.api.command.host.alarm.HostAlarmCommand;
 import com.rany.cake.devops.base.api.dto.HostAlarmHistoryDTO;
 import com.rany.cake.devops.base.api.query.alarm.HostAlarmHistoryPageQuery;
 
@@ -22,4 +23,10 @@ public interface HostAlarmService {
      */
     Page<HostAlarmHistoryDTO> pageHistory(HostAlarmHistoryPageQuery hostAlarmHistoryPageQuery);
 
+    /**
+     * 触发机器报警
+     *
+     * @param command command
+     */
+    void triggerHostAlarm(HostAlarmCommand command);
 }

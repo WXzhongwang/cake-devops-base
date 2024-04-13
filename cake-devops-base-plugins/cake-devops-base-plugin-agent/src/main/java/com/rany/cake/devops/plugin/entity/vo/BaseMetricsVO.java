@@ -1,9 +1,9 @@
 package com.rany.cake.devops.plugin.entity.vo;
 
 
-import com.rany.cake.devops.plugin.SpringHolder;
 import com.rany.cake.devops.plugin.constant.PropertiesConst;
 import com.rany.cake.devops.plugin.metrics.collect.MetricsCollectTask;
+import com.rany.cake.devops.plugin.utils.SpringHolder;
 import com.rany.cake.toolkit.lang.utils.SystemUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,7 +23,7 @@ import java.util.List;
 public class BaseMetricsVO {
 
     @ApiModelProperty(value = "机器id")
-    private Long machineId;
+    private String machineId;
 
     @ApiModelProperty(value = "版本")
     private String version;
@@ -47,7 +47,7 @@ public class BaseMetricsVO {
     private List<SystemProcessVO> processes;
 
     public BaseMetricsVO() {
-        this.machineId = PropertiesConst.MACHINE_ID;
+        this.machineId = PropertiesConst.HOST_ID;
         this.version = PropertiesConst.AGENT_VERSION;
         this.status = SpringHolder.getBean(MetricsCollectTask.class).isRun();
         this.isWindows = SystemUtils.BE_WINDOWS;

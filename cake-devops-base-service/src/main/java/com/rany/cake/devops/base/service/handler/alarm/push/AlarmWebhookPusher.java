@@ -42,8 +42,8 @@ public class AlarmWebhookPusher implements IAlarmPusher {
         if (WebHookType.DINGDING.getType().equals(webhook.getWebhookType())) {
             // 钉钉机器人
             Map<String, Object> params = Maps.newMap();
-            params.put(EventKeys.NAME, context.getMachineName());
-            params.put(EventKeys.HOST, context.getMachineHost());
+            params.put(EventKeys.NAME, context.getHostName());
+            params.put(EventKeys.HOST, context.getServerAddr());
             params.put(EventKeys.VALUE, Numbers.setScale(context.getAlarmValue(), 2));
             params.put(EventKeys.TYPE, MachineAlarmType.of(context.getAlarmType()).getLabel());
             params.put(EventKeys.TIME, Dates.format(context.getAlarmTime()));

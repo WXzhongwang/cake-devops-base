@@ -1,4 +1,4 @@
-package com.rany.cake.devops.plugin;
+package com.rany.cake.devops.plugin.utils;
 
 import com.rany.cake.toolkit.lang.collect.MutableHashMap;
 import com.rany.cake.toolkit.lang.constant.Const;

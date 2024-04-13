@@ -13,7 +13,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum OrionOpsExposeHttpApi implements HttpApiDefined {
+public enum CakeOpsExposeHttpApi implements HttpApiDefined {
 
     /**
      * 获取机器报警配置

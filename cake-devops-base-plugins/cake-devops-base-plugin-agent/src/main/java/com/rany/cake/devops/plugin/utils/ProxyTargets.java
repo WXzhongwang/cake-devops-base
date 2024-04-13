@@ -1,4 +1,4 @@
-package com.rany.cake.devops.plugin;
+package com.rany.cake.devops.plugin.utils;
 
 import org.springframework.aop.SpringProxy;
 import org.springframework.aop.framework.AdvisedSupport;

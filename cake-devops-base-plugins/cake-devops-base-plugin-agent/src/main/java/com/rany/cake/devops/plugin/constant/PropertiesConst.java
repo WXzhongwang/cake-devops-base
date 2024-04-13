@@ -16,7 +16,7 @@ public class PropertiesConst {
     /**
      * 机器id
      */
-    public static Long MACHINE_ID;
+    public static String HOST_ID;
 
     /**
      * 版本
@@ -24,8 +24,8 @@ public class PropertiesConst {
     public static String AGENT_VERSION;
 
     @Value("${machineId:}")
-    private void setMachineId(Long machineId) {
-        PropertiesConst.MACHINE_ID = machineId;
+    private void setHostId(String hostId) {
+        PropertiesConst.HOST_ID = hostId;
     }
 
     @Value("${agent.version}")

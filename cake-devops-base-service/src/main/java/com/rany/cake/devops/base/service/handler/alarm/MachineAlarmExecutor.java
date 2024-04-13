@@ -57,7 +57,7 @@ public class MachineAlarmExecutor {
     public void execute(MachineAlarmContext context) {
         log.info("机器触发报警推送 context: {}", JSON.toJSONString(context));
         // 查询报警组
-        List<HostAlarmGroup> hostAlarmGroups = hostAlarmGroupRepository.find(new HostId(context.getMachineId()));
+        List<HostAlarmGroup> hostAlarmGroups = hostAlarmGroupRepository.find(new HostId(context.getHostId()));
         List<Long> alarmGroupIdList = hostAlarmGroups
                 .stream()
                 .map(HostAlarmGroup::getAlarmGroupId)

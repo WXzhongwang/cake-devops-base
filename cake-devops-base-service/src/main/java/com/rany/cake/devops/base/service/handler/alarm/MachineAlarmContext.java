@@ -21,17 +21,17 @@ public class MachineAlarmContext {
     /**
      * 报警机器id
      */
-    private String machineId;
+    private String hostId;
 
     /**
      * 报警机器名称
      */
-    private String machineName;
+    private String hostName;
 
     /**
      * 报警主机
      */
-    private String machineHost;
+    private String serverAddr;
 
     /**
      * 报警类型

@@ -1,7 +1,7 @@
 package com.rany.cake.devops.plugin.metrics.collect;
 
-import com.rany.cake.devops.plugin.SpringHolder;
 import com.rany.cake.devops.plugin.entity.bo.BaseRangeBO;
+import com.rany.cake.devops.plugin.utils.SpringHolder;
 import lombok.AllArgsConstructor;
 
 /**

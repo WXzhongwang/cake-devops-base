@@ -1,7 +1,7 @@
 package com.rany.cake.devops.plugin.interceptor;
 
-import com.rany.cake.devops.plugin.Servlets;
 import com.rany.cake.devops.plugin.common.constant.ResultCode;
+import com.rany.cake.devops.plugin.utils.Servlets;
 import com.rany.cake.toolkit.lang.constant.StandardContentType;
 import com.rany.cake.toolkit.lang.wrapper.HttpWrapper;
 import org.springframework.beans.factory.annotation.Value;

@@ -29,7 +29,7 @@ public class MonitorAgents {
                     .api(MachineMonitorHttpApi.ENDPOINT_VERSION)
                     .build()
                     .request(String.class)
-                    .getData();
+                    .getContent();
         } catch (Exception e) {
             return null;
         }
@@ -61,7 +61,7 @@ public class MonitorAgents {
                     .getRequest()
                     .jsonBody(syncRequest)
                     .getHttpWrapper(String.class)
-                    .getData();
+                    .getContent();
         } catch (Exception e) {
             return null;
         }

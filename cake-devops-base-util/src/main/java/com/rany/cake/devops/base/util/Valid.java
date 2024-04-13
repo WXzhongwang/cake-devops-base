@@ -107,9 +107,9 @@ public class Valid extends com.rany.cake.toolkit.lang.utils.Valid {
      */
     public static <T> T api(HttpWrapper<T> wrapper) {
         if (wrapper.isOk()) {
-            return wrapper.getData();
+            return wrapper.getContent();
         } else {
-            throw Exceptions.httpRequest(null, String.valueOf(wrapper.getData()));
+            throw Exceptions.httpRequest(null, String.valueOf(wrapper.getCode()));
         }
     }
 

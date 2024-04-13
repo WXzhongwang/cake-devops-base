@@ -18,10 +18,10 @@ import java.util.Date;
 public class MachineAlarmRequest {
 
     @ApiModelProperty(value = "机器id")
-    private Long machineId;
+    private String hostId;
 
     /**
-     * @see com.orion.ops.machine.monitor.constant.MachineAlarmType
+     * @see MachineAlarmType
      */
     @ApiModelProperty(value = "报警类型 10: cpu使用率 20: 内存使用率")
     private Integer type;
