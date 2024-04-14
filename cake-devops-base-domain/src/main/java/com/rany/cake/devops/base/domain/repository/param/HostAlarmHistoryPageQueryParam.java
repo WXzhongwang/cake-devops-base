@@ -9,7 +9,9 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class HostAlarmHistoryPageQueryParam extends BasePageParam {
     private String hostId;
-    private String alarmType;
+    private Integer alarmType;
     private Date startDate;
     private Date endDate;
+    private Double minValue;
+    private Double maxValue;
 }

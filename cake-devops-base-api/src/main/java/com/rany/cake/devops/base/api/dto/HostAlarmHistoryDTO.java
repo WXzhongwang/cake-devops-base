@@ -11,6 +11,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 public class HostAlarmHistoryDTO extends DTO {
+    private Long id;
     private String hostId;
     private Integer alarmType;
     private Double alarmValue;

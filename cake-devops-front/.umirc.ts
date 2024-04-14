@@ -10,6 +10,7 @@ export default defineConfig({
     { path: "/app/info/:id", component: "app/app-detail" },
     { path: "/app/deploy/:id", component: "app/deploy" },
     { path: "/host/detail/:id", component: "ops/host-detail" },
+    { path: "/host/alarm/history/:id", component: "ops/host-alarm-history" },
     {
       path: "/ops",
       routes: [

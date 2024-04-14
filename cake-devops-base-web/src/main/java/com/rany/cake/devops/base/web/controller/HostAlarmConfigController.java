@@ -56,7 +56,7 @@ public class HostAlarmConfigController {
         return ListResult.succeed(hostAlarmConfigService.selectAlarmConfigByHostId(hostId));
     }
 
-    @GetMapping("/history")
+    @PostMapping("/history")
     public PageResult<HostAlarmHistoryDTO> pageHistory(@RequestBody HostAlarmHistoryPageQuery query) {
         return PageResult.succeed(hostAlarmService.pageHistory(query));
     }

@@ -15,12 +15,30 @@
         id
         , host_id, alarm_type, alarm_value, alarm_time, is_deleted, gmt_create, gmt_modified
     </sql>
-    <select id="queryHostAlarmHistory" resultMap="BaseResultMap">
+
+    <select id="queryHostAlarmHistory" resultMap="BaseResultMap"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.HostAlarmHistoryPageQueryParam">
 
         select
         <include refid="Base_Column_List"/>
         from host_alarm_history
-        where id = #{id,jdbcType=BIGINT}
+        where host_id = #{hostId}
+        <if test="alarmType != null">
+            and alarm_type = #{alarmType}
+        </if>
+        <if test="startDate != null">
+            and alarm_time >= #{startDate}
+        </if>
+        <if test="endDate != null">
+            and alarm_time &lt;= #{endDate}
+        </if>
+        <if test="minValue != null">
+            and alarm_value >= #{minValue}
+        </if>
+        <if test="maxValue != null">
+            and alarm_value &lt;= #{maxValue}
+        </if>
+        order by gmt_create desc
     </select>
 
     <delete id="deleteByHostId" parameterType="java.lang.Long">

@@ -15,7 +15,7 @@ import {
   Popover, // 引入 Popover 组件
 } from "antd";
 import { PageContainer } from "@ant-design/pro-components";
-import { connect, Dispatch } from "umi";
+import { connect, Dispatch, history } from "umi";
 import { HostMonitorDTO, HostInfoModel } from "@/models/host-monitor";
 import CreateHostForm from "./components/create-host-form";
 import { CopyOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
@@ -232,6 +232,11 @@ const HostPage: React.FC<HostListProps> = ({
     form.resetFields();
   };
 
+  const handleView = (record: HostMonitorDTO) => {
+    // 示例：跳转到详情页，使用 history.push
+    history.push(`/host/alarm/history/${record.hostId}`);
+  };
+
   const columns = [
     {
       title: "实例名称",
@@ -333,7 +338,7 @@ const HostPage: React.FC<HostListProps> = ({
           <a onClick={() => handleEdit(record)}>插件配置</a>
           <a onClick={() => handleSync(record)}>同步</a>
           <a onClick={() => handleOpenAlarmDrawer(record)}>报警配置</a>
-          {/* <a onClick={() => handleCheckStatus(record)}>检查状态</a> */}
+          <a onClick={() => handleView(record)}>报警历史</a>
         </Space>
       ),
     },
