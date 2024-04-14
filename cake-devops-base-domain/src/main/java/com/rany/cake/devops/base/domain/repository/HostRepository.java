@@ -36,5 +36,7 @@ public interface HostRepository extends Repository<Host, HostId> {
 
     void saveGroupHosts(List<GroupHost> groupHosts);
 
+    void updateGroupHosts(List<GroupHost> groupHosts);
+
     void save(Host host, List<GroupHost> groupHosts);
 }

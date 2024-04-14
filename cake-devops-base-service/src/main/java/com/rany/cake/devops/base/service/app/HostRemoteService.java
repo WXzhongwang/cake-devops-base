@@ -17,6 +17,7 @@ import com.rany.cake.devops.base.domain.entity.GroupHost;
 import com.rany.cake.devops.base.domain.entity.HostMonitor;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.HostMonitorRepository;
+import com.rany.cake.devops.base.domain.repository.HostRepository;
 import com.rany.cake.devops.base.domain.repository.param.HostPageQueryParam;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
@@ -55,6 +56,7 @@ public class HostRemoteService implements HostService {
     private final HostDataAdapter hostDataAdapter;
     private final HostGroupDataAdapter hostGroupDataAdapter;
     private final HostMonitorRepository hostMonitorRepository;
+    private final HostRepository hostRepository;
 
 
     @Override
@@ -138,7 +140,21 @@ public class HostRemoteService implements HostService {
     public Boolean deleteHost(DeleteHostCommand deleteHostCommand) {
         Host host = hostDomainService.getHost(new HostId(deleteHostCommand.getHostId()));
         host.delete(deleteHostCommand.getUser());
+
+        // 删除主机监控
+        HostMonitor hostMonitor = hostMonitorRepository.findByHostId(deleteHostCommand.getHostId());
+        hostMonitor.delete(deleteHostCommand.getUser());
+
+        // 删除机组关联关系
+        List<GroupHost> groupHost = hostDomainService.getGroupHost(host.getHostId());
+        groupHost.forEach(p -> {
+            p.delete(deleteHostCommand.getUser());
+        });
+
+
         hostDomainService.update(host);
+        hostRepository.updateGroupHosts(groupHost);
+        hostMonitorRepository.update(hostMonitor);
         return Boolean.TRUE;
     }
 

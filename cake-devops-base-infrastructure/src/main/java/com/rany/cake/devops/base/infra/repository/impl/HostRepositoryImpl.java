@@ -70,6 +70,12 @@ public class HostRepositoryImpl implements HostRepository {
         }
     }
 
+    public void updateGroupHosts(List<GroupHost> groupHosts) {
+        for (GroupHost groupHost : groupHosts) {
+            groupHostDao.update(groupHost);
+        }
+    }
+
     @Transactional
     public void save(Host host, List<GroupHost> groupHosts) {
         hostDao.save(host);
