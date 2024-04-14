@@ -68,6 +68,19 @@ const ScriptList: React.FC<ScriptListProps> = ({
       title: "脚本内容",
       dataIndex: "templateValue",
       key: "templateValue",
+      ellipsis: true, // 文字溢出显示省略号
+      width: 300, // 设置列宽度
+      render: (text: string) => (
+        <span
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {text}
+        </span>
+      ),
     },
     {
       title: "脚本描述",
@@ -130,6 +143,7 @@ const ScriptList: React.FC<ScriptListProps> = ({
         payload: { ...values, id: editingScript.id },
         callback: () => {
           message.success("脚本编辑成功");
+          queryScripts();
         },
       });
     } else {
@@ -139,14 +153,12 @@ const ScriptList: React.FC<ScriptListProps> = ({
         payload: values,
         callback: () => {
           message.success("脚本添加成功");
+          queryScripts();
         },
       });
     }
     setDrawerVisible(false);
-    queryScripts();
   };
-
-  console.log("asad", scripts);
 
   return (
     <PageContainer title="脚本列表">
@@ -156,15 +168,13 @@ const ScriptList: React.FC<ScriptListProps> = ({
             form={form}
             layout="inline"
             onFinish={(values) => {
-              console.log(values);
-              // 处理表单提交
+              setFilters({
+                name: values.name,
+              });
             }}
           >
             <Form.Item name="name" label="脚本名称">
               <Input placeholder="请输入脚本名称" />
-            </Form.Item>
-            <Form.Item name="description" label="脚本描述">
-              <Input placeholder="请输入脚本描述" />
             </Form.Item>
             <Form.Item>
               <Button
@@ -198,7 +208,7 @@ const ScriptList: React.FC<ScriptListProps> = ({
 
           <Drawer
             title={editingScript ? "编辑脚本" : "新增脚本"}
-            width={400}
+            width={600}
             open={drawerVisible}
             onClose={handleCloseDrawer}
             destroyOnClose={true}

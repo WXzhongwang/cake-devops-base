@@ -20,7 +20,7 @@ public class MachineAlarmConfig {
      * @see com.rany.cake.devops.base.util.enums.MachineAlarmType
      */
     @ApiModelProperty(value = "报警类型 10: cpu使用率 20: 内存使用率")
-    private Integer type;
+    private Integer alarmType;
 
     @ApiModelProperty(value = "报警阈值")
     private Double alarmThreshold;

@@ -53,7 +53,7 @@ const CreateScriptForm: React.FC<CreateScriptFormProps> = ({
         label="脚本内容"
         rules={[{ required: true, message: "请输入脚本内容" }]}
       >
-        <TextArea rows={4} placeholder="请输入脚本内容" />
+        <TextArea rows={20} placeholder="请输入脚本内容" />
       </Form.Item>
       <Form.Item
         name="description"

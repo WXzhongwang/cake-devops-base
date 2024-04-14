@@ -54,7 +54,7 @@ public class InitAlarmConfigRunner implements CommandLineRunner {
             if (Lists.isEmpty(data)) {
                 return;
             }
-            data.forEach(s -> alarmChecker.getAlarmContext().put(MachineAlarmType.of(s.getType()), s));
+            data.forEach(s -> alarmChecker.getAlarmContext().put(MachineAlarmType.of(s.getAlarmType()), s));
         } catch (Exception e) {
             log.error("初始化报警配置-失败", e);
         }

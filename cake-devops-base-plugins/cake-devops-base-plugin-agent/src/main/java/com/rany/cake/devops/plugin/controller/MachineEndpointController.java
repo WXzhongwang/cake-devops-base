@@ -37,47 +37,47 @@ public class MachineEndpointController {
 
     @GetMapping("/ping")
     @ApiOperation(value = "检测心跳")
-    public Integer ping() {
-        return Const.ENABLE;
+    public HttpWrapper<Integer> ping() {
+        return HttpWrapper.ok(Const.ENABLE);
     }
 
     @GetMapping("/version")
     @ApiOperation(value = "获取版本")
-    public String getVersion() {
-        return PropertiesConst.AGENT_VERSION;
+    public HttpWrapper<String> getVersion() {
+        return HttpWrapper.ok(PropertiesConst.AGENT_VERSION);
     }
 
     @GetMapping("/get-machine-id")
     @ApiOperation(value = "获取机器id")
-    public String getMachineId() {
-        return PropertiesConst.HOST_ID;
+    public HttpWrapper<String> getMachineId() {
+        return HttpWrapper.ok(PropertiesConst.HOST_ID);
     }
 
     @GetMapping("/set-machine-id")
     @ApiOperation(value = "设置机器id")
-    public String setMachineId(@RequestParam("hostId") String hostId) {
+    public HttpWrapper<String> setMachineId(@RequestParam("hostId") String hostId) {
         String before = PropertiesConst.HOST_ID;
         PropertiesConst.HOST_ID = hostId;
-        return before;
+        return HttpWrapper.ok(before);
     }
 
     @PostMapping("/sync")
     @ApiOperation(value = "同步机器信息")
-    public String syncMachineInfo(@RequestBody MachineSyncRequest request) {
+    public HttpWrapper<String> syncMachineInfo(@RequestBody MachineSyncRequest request) {
         // 设置机器id
         PropertiesConst.HOST_ID = request.getHostId();
         // 设置报警配置
         List<MachineAlarmConfig> config = request.getAlarmConfig();
         if (!Lists.isEmpty(config)) {
-            config.forEach(s -> alarmChecker.getAlarmContext().put(MachineAlarmType.of(s.getType()), s));
+            config.forEach(s -> alarmChecker.getAlarmContext().put(MachineAlarmType.of(s.getAlarmType()), s));
         }
-        return PropertiesConst.AGENT_VERSION;
+        return HttpWrapper.ok(PropertiesConst.AGENT_VERSION);
     }
 
     @GetMapping("/status")
     @ApiOperation(value = "获取监控启动状态")
-    public Boolean getRunStatus() {
-        return metricsCollectTask.isRun();
+    public HttpWrapper<Boolean> getRunStatus() {
+        return HttpWrapper.ok(metricsCollectTask.isRun());
     }
 
     @GetMapping("/start")
