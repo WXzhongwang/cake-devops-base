@@ -31,8 +31,8 @@ dubbo:
     basePackages: com.rany.cake.devops
 
 spring:
-  #  resources:
-  #    static-locations: classpath:/static/
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
   profiles:
     active: dev
   redis:

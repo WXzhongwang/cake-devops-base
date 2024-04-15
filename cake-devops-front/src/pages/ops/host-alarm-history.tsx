@@ -15,6 +15,7 @@ import { connect, Dispatch, useParams } from "umi";
 import { AlarmInfo } from "@/models/host-alarm-config";
 import { PageContainer } from "@ant-design/pro-components";
 import dayjs from "dayjs";
+import moment, { Moment } from "moment";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -34,8 +35,8 @@ const AlarmPage: React.FC<AlarmListProps> = ({
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
     alarmType: "",
-    startTime: undefined,
-    endTime: undefined,
+    startDate: undefined,
+    endDate: undefined,
     minValue: undefined,
     maxValue: undefined,
     hostId: id,
@@ -92,10 +93,25 @@ const AlarmPage: React.FC<AlarmListProps> = ({
   };
 
   const handleFilterChange = (changedValues: any) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      ...changedValues,
-    }));
+    const { timeRange, ...otherValues } = changedValues;
+    if (timeRange && timeRange.length === 2) {
+      const [startDate, endDate] = timeRange;
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        startDate: startDate
+          ? startDate.format("YYYY-MM-DD HH:mm:ss")
+          : undefined,
+        endDate: endDate ? endDate.format("YYYY-MM-DD HH:mm:ss") : undefined,
+        ...otherValues,
+      }));
+    } else {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        startDate: undefined,
+        endDate: undefined,
+        ...otherValues,
+      }));
+    }
   };
 
   const [form] = Form.useForm();
@@ -118,7 +134,14 @@ const AlarmPage: React.FC<AlarmListProps> = ({
               </Select>
             </Form.Item>
             <Form.Item name="timeRange" label="报警时间范围">
-              <RangePicker showTime placeholder={["开始时间", "结束时间"]} />
+              <RangePicker
+                showTime
+                placeholder={["开始时间", "结束时间"]}
+                defaultValue={[
+                  moment(dayjs().subtract(15, "day").toDate()),
+                  moment(new Date()), // 当前时间
+                ]}
+              />
             </Form.Item>
             <Form.Item name="alarmValue" label="报警值范围">
               <Input.Group compact>
