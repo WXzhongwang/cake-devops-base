@@ -20,16 +20,16 @@ public class SftpSessionTokenDTO extends DTO {
     /**
      * 用户id
      */
-    private Long userId;
+    private String userId;
 
     /**
      * 机器id
      */
-    private Long machineId;
+    private String hostId;
 
     /**
      * 机器id (批量上传用)
      */
-    private List<Long> machineIdList;
+    private List<String> hostIdList;
 
 }

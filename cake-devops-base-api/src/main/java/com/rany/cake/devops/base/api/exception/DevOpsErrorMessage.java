@@ -36,6 +36,8 @@ public enum DevOpsErrorMessage implements ResponseCode {
     TIMEOUT_EXCEPTION_MESSAGE("48000", "连接超时"),
     HOST_NOT_FOUND("49000", "主机未找到"),
     MEMBER_DUPLICATED("50000", "项目成员已存在"),
+    SFTP_TOKEN_EMPTY("50000", "token为空"),
+    SFTP_TOKEN_EXPIRE("50000", "token过期"),
 
     ;
 

@@ -10,7 +10,7 @@ public interface SftpService {
     /**
      * 打开sftp连接
      *
-     * @param machineId 机器id
+     * @param openSftpCommand command
      * @return FileOpenVO
      */
     FileOpenDTO open(OpenSftpCommand openSftpCommand);
@@ -82,7 +82,7 @@ public interface SftpService {
      *
      * @param request request
      */
-    void chown(FileChmodCommand request);
+    void chown(FileChownCommand request);
 
     /**
      * chgrp
@@ -118,10 +118,10 @@ public interface SftpService {
     /**
      * 上传文件
      *
-     * @param machineId    machineId
+     * @param hostId       hostId
      * @param requestFiles requestFiles
      */
-    void upload(Long machineId, List<FileUploadCommand> requestFiles);
+    void upload(String hostId, List<FileUploadCommand> requestFiles);
 
     /**
      * 下载文件
@@ -196,10 +196,10 @@ public interface SftpService {
     /**
      * 传输列表
      *
-     * @param machineId 机器id
+     * @param hostId hostId
      * @return rows
      */
-    List<FileTransferLogDTO> transferList(Long machineId);
+    List<FileTransferLogDTO> transferList(String hostId);
 
     /**
      * 传输删除 (单个)
@@ -211,10 +211,10 @@ public interface SftpService {
     /**
      * 传输清空 (全部)
      *
-     * @param machineId machineId
+     * @param hostId hostId
      * @return effect
      */
-    Integer transferClear(Long machineId);
+    Integer transferClear(String hostId);
 
     /**
      * 传输打包 全部已完成未删除的文件
@@ -232,13 +232,6 @@ public interface SftpService {
      */
     FileTransferLogDTO getDownloadFilePath(Long id);
 
-    /**
-     * 获取机器id
-     *
-     * @param sessionToken sessionToken
-     * @return 机器id
-     */
-    Long getMachineId(String sessionToken);
 
     /**
      * 获取 token 信息

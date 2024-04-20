@@ -23,7 +23,7 @@ public class FileUploadCommand extends BaseCommand {
     /**
      * 机器id
      */
-    private Long machineId;
+    private String hostId;
 
     /**
      * 文件token

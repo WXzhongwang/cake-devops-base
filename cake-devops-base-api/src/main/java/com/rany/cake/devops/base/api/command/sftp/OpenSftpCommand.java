@@ -7,4 +7,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class OpenSftpCommand extends BaseCommand {
+
+    private String hostId;
 }
