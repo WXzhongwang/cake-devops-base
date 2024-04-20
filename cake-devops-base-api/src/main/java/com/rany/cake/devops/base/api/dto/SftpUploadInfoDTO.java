@@ -25,7 +25,7 @@ public class SftpUploadInfoDTO extends DTO {
     /**
      * 机器id
      */
-    private Long machineId;
+    private String hostId;
 
     /**
      * 机器id
@@ -35,6 +35,6 @@ public class SftpUploadInfoDTO extends DTO {
     /**
      * 用户id
      */
-    private Long userId;
+    private String userId;
 
 }

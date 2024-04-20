@@ -1,13 +1,18 @@
 package com.rany.cake.devops.base.service.app;
 
+import com.alibaba.fastjson.JSON;
+import com.cake.framework.common.exception.BusinessException;
 import com.rany.cake.devops.base.api.command.sftp.*;
 import com.rany.cake.devops.base.api.dto.*;
+import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.service.SftpService;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.handler.sftp.SftpBasicExecutorHolder;
 import com.rany.cake.devops.base.service.handler.sftp.SftpInternalService;
+import com.rany.cake.devops.base.util.KeyConst;
 import com.rany.cake.toolkit.lang.convert.Converts;
+import com.rany.cake.toolkit.lang.id.UUIds;
 import com.rany.cake.toolkit.lang.io.Files1;
 import com.rany.cake.toolkit.lang.utils.Strings;
 import com.rany.cake.toolkit.net.base.file.sftp.SftpFile;
@@ -16,8 +21,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
+import org.springframework.data.redis.core.RedisTemplate;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +38,9 @@ public class SftpRemoteService implements SftpService {
     private final HostDomainService hostDomainService;
     private final HostRepository hostRepository;
     private final SftpInternalService sftpInternalService;
-    private SftpBasicExecutorHolder sftpBasicExecutorHolder;
+    private final SftpBasicExecutorHolder sftpBasicExecutorHolder;
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
 
     @Override
     public FileOpenDTO open(OpenSftpCommand openSftpCommand) {
@@ -182,13 +193,40 @@ public class SftpRemoteService implements SftpService {
     }
 
     @Override
-    public String getUploadAccessToken(FileUploadCommand request) {
-        return null;
+    public String getUploadAccessToken(FileUploadCommand command) {
+        SftpSessionTokenDTO tokenInfo = this.getTokenInfo(command.getSessionToken());
+        if (!Objects.equals(command.getUser(), tokenInfo.getUserId())) {
+            throw new BusinessException(DevOpsErrorMessage.SFTP_TOKEN_EXPIRE);
+        }
+        // Valid.isTrue(tokenInfo.getUserId().equals(command.getUser()), MessageConst.SESSION_EXPIRE);
+        // 设置缓存信息
+        SftpUploadInfoDTO uploadInfo = Converts.to(command, SftpUploadInfoDTO.class);
+        uploadInfo.setUserId(command.getUser());
+        uploadInfo.setHostId(tokenInfo.getHostId());
+        // 设置缓存
+        String accessToken = UUIds.random32();
+        String key = Strings.format(KeyConst.SFTP_UPLOAD_ACCESS_TOKEN, accessToken);
+        redisTemplate.opsForValue().set(key, JSON.toJSONString(uploadInfo),
+                KeyConst.SFTP_UPLOAD_ACCESS_EXPIRE, TimeUnit.SECONDS);
+        return accessToken;
     }
 
     @Override
-    public SftpUploadInfoDTO checkUploadAccessToken(String accessToken) {
-        return null;
+    public SftpUploadInfoDTO checkUploadAccessToken(String user, String accessToken) {
+        // 获取缓存
+        String key = Strings.format(KeyConst.SFTP_UPLOAD_ACCESS_TOKEN, accessToken);
+        String value = redisTemplate.opsForValue().get(key);
+        if (value == null || value.isEmpty()) {
+            throw new BusinessException(DevOpsErrorMessage.SFTP_TOKEN_EXPIRE);
+        }
+        // 解析缓存
+        SftpUploadInfoDTO uploadInfo = JSON.parseObject(value, SftpUploadInfoDTO.class);
+        if (!Objects.equals(user, uploadInfo.getUserId())) {
+            throw new BusinessException(DevOpsErrorMessage.SFTP_TOKEN_EXPIRE);
+        }
+        // 删除缓存
+        redisTemplate.delete(key);
+        return uploadInfo;
     }
 
     @Override

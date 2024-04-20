@@ -113,7 +113,7 @@ public interface SftpService {
      * @param accessToken accessToken
      * @return machineId
      */
-    SftpUploadInfoDTO checkUploadAccessToken(String accessToken);
+    SftpUploadInfoDTO checkUploadAccessToken(String userId, String accessToken);
 
     /**
      * 上传文件

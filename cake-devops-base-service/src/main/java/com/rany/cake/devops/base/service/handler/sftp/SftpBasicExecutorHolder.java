@@ -3,7 +3,6 @@ package com.rany.cake.devops.base.service.handler.sftp;
 import com.rany.cake.devops.base.api.dto.SftpSessionTokenDTO;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.pk.HostId;
-import com.rany.cake.devops.base.domain.repository.HostEnvRepository;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
@@ -35,9 +34,6 @@ public class SftpBasicExecutorHolder {
     private HostDomainService hostDomainService;
     @Resource
     private HostRepository hostRepository;
-
-    @Resource
-    private HostEnvRepository hostEnvRepository;
     @Resource
     private HostConnectionService hostConnectionService;
     @Resource

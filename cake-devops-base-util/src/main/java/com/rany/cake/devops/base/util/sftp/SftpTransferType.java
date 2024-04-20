@@ -3,6 +3,8 @@ package com.rany.cake.devops.base.util.sftp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Objects;
+
 /**
  * sftp 操作
  *
@@ -40,12 +42,12 @@ public enum SftpTransferType {
 
     private final String label;
 
-    public static SftpTransferType of(Integer type) {
+    public static SftpTransferType of(Byte type) {
         if (type == null) {
             return null;
         }
         for (SftpTransferType value : values()) {
-            if (value.type.equals(type)) {
+            if (Objects.equals(value.type, type.intValue())) {
                 return value;
             }
         }
