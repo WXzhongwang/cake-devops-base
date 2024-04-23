@@ -198,7 +198,6 @@ public class SftpRemoteService implements SftpService {
         if (!Objects.equals(command.getUser(), tokenInfo.getUserId())) {
             throw new BusinessException(DevOpsErrorMessage.SFTP_TOKEN_EXPIRE);
         }
-        // Valid.isTrue(tokenInfo.getUserId().equals(command.getUser()), MessageConst.SESSION_EXPIRE);
         // 设置缓存信息
         SftpUploadInfoDTO uploadInfo = Converts.to(command, SftpUploadInfoDTO.class);
         uploadInfo.setUserId(command.getUser());
