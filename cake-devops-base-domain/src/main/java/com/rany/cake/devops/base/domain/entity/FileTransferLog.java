@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class FileTransferLog extends BaseEntity<Long> {
-    private Long accountId;
+    private String accountId;
     private String username;
     private String fileToken;
     private Byte transferType;

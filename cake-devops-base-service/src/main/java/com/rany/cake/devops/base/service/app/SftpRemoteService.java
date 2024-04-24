@@ -6,16 +6,34 @@ import com.rany.cake.devops.base.api.command.sftp.*;
 import com.rany.cake.devops.base.api.dto.*;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.service.SftpService;
+import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.domain.entity.FileTransferLog;
+import com.rany.cake.devops.base.domain.pk.HostId;
+import com.rany.cake.devops.base.domain.repository.FileTransferLogRepository;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
-import com.rany.cake.devops.base.service.handler.sftp.SftpBasicExecutorHolder;
-import com.rany.cake.devops.base.service.handler.sftp.SftpInternalService;
+import com.rany.cake.devops.base.service.base.PathBuilders;
+import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
+import com.rany.cake.devops.base.service.handler.sftp.*;
+import com.rany.cake.devops.base.service.utils.Utils;
 import com.rany.cake.devops.base.util.KeyConst;
+import com.rany.cake.devops.base.util.MessageConst;
+import com.rany.cake.devops.base.util.Valid;
+import com.rany.cake.devops.base.util.sftp.SftpTransferStatus;
+import com.rany.cake.devops.base.util.sftp.SftpTransferType;
+import com.rany.cake.devops.base.util.system.SystemEnvAttr;
 import com.rany.cake.toolkit.lang.convert.Converts;
+import com.rany.cake.toolkit.lang.id.ObjectIds;
 import com.rany.cake.toolkit.lang.id.UUIds;
 import com.rany.cake.toolkit.lang.io.Files1;
+import com.rany.cake.toolkit.lang.progress.IgnoreOutputStream;
+import com.rany.cake.toolkit.lang.utils.Exceptions;
+import com.rany.cake.toolkit.lang.utils.Lists;
 import com.rany.cake.toolkit.lang.utils.Strings;
 import com.rany.cake.toolkit.net.base.file.sftp.SftpFile;
+import com.rany.cake.toolkit.net.remote.CommandExecutors;
+import com.rany.cake.toolkit.net.remote.channel.CommandExecutor;
+import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import com.rany.cake.toolkit.net.remote.channel.SftpExecutor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +45,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +58,9 @@ public class SftpRemoteService implements SftpService {
     private final HostRepository hostRepository;
     private final SftpInternalService sftpInternalService;
     private final SftpBasicExecutorHolder sftpBasicExecutorHolder;
+    private final FileTransferLogRepository fileTransferLogRepository;
+    private final TransferProcessorManager transferProcessorManager;
+    private final HostConnectionService hostConnectionService;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
 
@@ -229,43 +251,189 @@ public class SftpRemoteService implements SftpService {
     }
 
     @Override
-    public void upload(String hostId, List<FileUploadCommand> requestFiles) {
+    public void upload(BatchFileUploadCommand command) {
+        String user = command.getUser();
+        List<FileUploadCommand> requestFiles = command.getFiles();
+        String hostId = command.getHostId();
+        // 初始化上传信息
+        List<FileTransferLog> uploadFiles = Lists.newList();
+        for (FileUploadCommand requestFile : requestFiles) {
+            FileTransferLog upload = new FileTransferLog();
+            upload.setAccountId(user);
+            // upload.setUserName(user.getUsername());
+            upload.setFileToken(requestFile.getFileToken());
+            upload.setTransferType(SftpTransferType.UPLOAD.getType().byteValue());
+            upload.setHostId(hostId);
+            upload.setRemoteFile(requestFile.getRemotePath());
+            upload.setLocalFile(requestFile.getLocalPath());
+            upload.setCurrentSize(0L);
+            upload.setFileSize(requestFile.getSize());
+            upload.setNowProgress(0D);
+            upload.setTransferStatus(SftpTransferStatus.WAIT.getStatus().byteValue());
+            upload.init(user);
 
+            uploadFiles.add(upload);
+            fileTransferLogRepository.save(upload);
+            // 通知添加
+            transferProcessorManager.notifySessionAddEvent(user, hostId, upload);
+        }
+        // 提交上传任务
+        for (FileTransferLog uploadFile : uploadFiles) {
+            IFileTransferProcessor.of(FileTransferHint.transfer(uploadFile)).exec();
+        }
     }
 
     @Override
     public void download(FileDownloadCommand request) {
-
+        SftpSessionTokenDTO sftpSessionTokenDTO = sftpInternalService.getTokenInfo(request.getSessionToken());
+        SftpExecutor executor = sftpBasicExecutorHolder.getBasicExecutor(request.getSessionToken());
+        String user = request.getUser();
+        // 定义文件转换器
+        Function<SftpFile, FileTransferLog> convert = file -> {
+            // 本地保存路径
+            String fileToken = ObjectIds.nextId();
+            // 设置传输信息
+            FileTransferLog download = new FileTransferLog();
+            download.setAccountId(user);
+            // download.setUserName(user.getUsername());
+            download.setFileToken(fileToken);
+            download.setTransferType(SftpTransferType.DOWNLOAD.getType().byteValue());
+            download.setHostId(sftpSessionTokenDTO.getHostId());
+            download.setRemoteFile(file.getPath());
+            download.setLocalFile(PathBuilders.getSftpDownloadFilePath(fileToken));
+            download.setCurrentSize(0L);
+            download.setFileSize(file.getSize());
+            download.setNowProgress(0D);
+            download.setTransferStatus(SftpTransferStatus.WAIT.getStatus().byteValue());
+            return download;
+        };
+        // 初始化下载信息
+        List<FileTransferLog> downloadFiles = Lists.newList();
+        List<String> paths = request.getPaths();
+        for (String path : paths) {
+            SftpFile file = executor.getFile(path);
+            Valid.notNull(file, Strings.format(MessageConst.FILE_NOT_FOUND, path));
+            // 如果是文件夹则递归所有文件
+            if (file.isDirectory()) {
+                List<SftpFile> childFiles = executor.listFiles(path, true, false);
+                childFiles.forEach(f -> downloadFiles.add(convert.apply(f)));
+            } else {
+                downloadFiles.add(convert.apply(file));
+            }
+        }
+        for (FileTransferLog downloadFile : downloadFiles) {
+            fileTransferLogRepository.save(downloadFile);
+            // 通知添加
+            transferProcessorManager.notifySessionAddEvent(user, sftpSessionTokenDTO.getUserId(), downloadFile);
+        }
+        // 提交下载任务
+        for (FileTransferLog downloadFile : downloadFiles) {
+            IFileTransferProcessor.of(FileTransferHint.transfer(downloadFile)).exec();
+        }
     }
 
     @Override
     public void packageDownload(FileDownloadCommand request) {
-
+        String user = request.getUser();
+        List<String> paths = request.getPaths();
+        // 查询机器信息
+        SftpSessionTokenDTO sftpSessionTokenDTO = sftpInternalService.getTokenInfo(request.getSessionToken());
+        Host host = hostRepository.find(new HostId(sftpSessionTokenDTO.getHostId()));
+        // 执行压缩命令
+        String fileToken = ObjectIds.nextId();
+        String zipPath = PathBuilders.getSftpPackageTempPath(host.getUsername(), fileToken, paths);
+        String command = Utils.getSftpPackageCommand(zipPath, paths);
+        try (SessionStore session = hostConnectionService.openSessionStore(host);
+             CommandExecutor executor = session.getCommandExecutor(Strings.replaceCRLF(command))) {
+            // 执行命令
+            CommandExecutors.syncExecCommand(executor, new IgnoreOutputStream());
+        } catch (Exception e) {
+            throw Exceptions.app(MessageConst.EXECUTE_SFTP_ZIP_COMMAND_ERROR, e);
+        }
+        // 获取压缩文件信息
+        SftpExecutor executor = sftpBasicExecutorHolder.getBasicExecutor(request.getSessionToken());
+        SftpFile zipFile = executor.getFile(zipPath);
+        Valid.notNull(zipFile, MessageConst.SFTP_ZIP_FILE_ABSENT);
+        // 设置传输明细
+        FileTransferLog download = new FileTransferLog();
+        download.setAccountId(user);
+        download.setFileToken(fileToken);
+        download.setTransferType(SftpTransferType.DOWNLOAD.getType().byteValue());
+        download.setHostId(sftpSessionTokenDTO.getHostId());
+        download.setRemoteFile(zipPath);
+        download.setLocalFile(PathBuilders.getSftpDownloadFilePath(fileToken));
+        download.setCurrentSize(0L);
+        download.setFileSize(zipFile.getSize());
+        download.setNowProgress(0D);
+        download.setTransferStatus(SftpTransferStatus.WAIT.getStatus().byteValue());
+        download.init(user);
+        fileTransferLogRepository.save(download);
+        // 通知添加
+        transferProcessorManager.notifySessionAddEvent(user, sftpSessionTokenDTO.getHostId(), download);
+        // 提交任务
+        IFileTransferProcessor.of(FileTransferHint.transfer(download)).exec();
     }
 
     @Override
     public void transferPause(String fileToken) {
-
+        // 获取请求文件
+        FileTransferLog transferLog = fileTransferLogRepository.getTransferLogByToken(fileToken);
+        Valid.notNull(transferLog, MessageConst.UNSELECTED_TRANSFER_LOG);
+        // 判断状态是否为进行中
+        Integer status = Integer.valueOf(transferLog.getTransferStatus());
+        Valid.isTrue(SftpTransferStatus.WAIT.getStatus().equals(status)
+                || SftpTransferStatus.RUNNABLE.getStatus().equals(status), MessageConst.ILLEGAL_STATUS);
+        // 获取执行器
+        IFileTransferProcessor processor = transferProcessorManager.getProcessor(fileToken);
+        if (processor != null) {
+            // 执行器不为空则终止
+            processor.stop();
+        } else {
+            Integer changeStatus;
+            if (Objects.equals(SftpTransferType.PACKAGE.getType().byteValue(), transferLog.getTransferType())) {
+                changeStatus = SftpTransferStatus.CANCEL.getStatus();
+            } else {
+                changeStatus = SftpTransferStatus.PAUSE.getStatus();
+            }
+            // 修改状态
+            transferLog.setTransferStatus(changeStatus.byteValue());
+            fileTransferLogRepository.update(transferLog);
+            // 通知状态
+            transferProcessorManager.notifySessionStatusEvent(transferLog.getAccountId(),
+                    transferLog.getHostId(), transferLog.getFileToken(), changeStatus);
+        }
     }
 
     @Override
     public void transferResume(String fileToken) {
-
+        // 获取请求文件
+        FileTransferLog transferLog = fileTransferLogRepository.getTransferLogByToken(fileToken);
+        Valid.notNull(transferLog, MessageConst.UNSELECTED_TRANSFER_LOG);
+        String hostId = transferLog.getHostId();
+        // 判断状态是否为暂停
+        Valid.eq(SftpTransferStatus.PAUSE.getStatus(), transferLog.getTransferStatus(), MessageConst.ILLEGAL_STATUS);
+        this.transferResumeRetry(transferLog, hostId);
     }
 
     @Override
     public void transferRetry(String fileToken) {
-
+        // 获取请求文件
+        FileTransferLog transferLog = fileTransferLogRepository.getTransferLogByToken(fileToken);
+        Valid.notNull(transferLog, MessageConst.UNSELECTED_TRANSFER_LOG);
+        String hostId = transferLog.getHostId();
+        // 判断状态是否为失败
+        Valid.eq(SftpTransferStatus.ERROR.getStatus(), transferLog.getTransferStatus(), MessageConst.ILLEGAL_STATUS);
+        this.transferResumeRetry(transferLog, hostId);
     }
 
     @Override
     public void transferReUpload(String fileToken) {
-
+        this.transferReTransfer(fileToken, true);
     }
 
     @Override
     public void transferReDownload(String fileToken) {
-
+        this.transferReTransfer(fileToken, false);
     }
 
     @Override
@@ -311,5 +479,59 @@ public class SftpRemoteService implements SftpService {
     @Override
     public SftpSessionTokenDTO getTokenInfo(String sessionToken) {
         return null;
+    }
+
+
+    private void transferResumeRetry(FileTransferLog transferLog, String machineId) {
+        // 修改状态为等待
+        transferLog.setTransferStatus(SftpTransferStatus.WAIT.getStatus().byteValue());
+        fileTransferLogRepository.update(transferLog);
+        // 通知状态
+        transferProcessorManager.notifySessionStatusEvent(transferLog.getAccountId(),
+                machineId,
+                transferLog.getFileToken(), SftpTransferStatus.WAIT.getStatus());
+        // 提交下载
+        IFileTransferProcessor.of(FileTransferHint.transfer(transferLog)).exec();
+    }
+
+    /**
+     * 重新传输
+     */
+    private void transferReTransfer(String fileToken, boolean isUpload) {
+        // 获取请求文件
+        FileTransferLog transferLog = fileTransferLogRepository.getTransferLogByToken(fileToken);
+        Valid.notNull(transferLog, MessageConst.UNSELECTED_TRANSFER_LOG);
+        String machineId = transferLog.getHostId();
+        // 暂停
+        IFileTransferProcessor processor = transferProcessorManager.getProcessor(transferLog.getFileToken());
+        if (processor != null) {
+            processor.stop();
+        }
+        if (isUpload) {
+            // 删除远程文件
+            SftpExecutor executor = sftpBasicExecutorHolder.getBasicExecutor(machineId);
+            SftpFile file = executor.getFile(transferLog.getRemoteFile());
+            if (file != null) {
+                executor.removeFile(transferLog.getRemoteFile());
+            }
+        } else {
+            // 删除本地文件
+            String localPath = Files1.getPath(SystemEnvAttr.SWAP_PATH.getValue(), transferLog.getLocalFile());
+            Files1.delete(localPath);
+        }
+        // 修改进度
+        transferLog.setId(transferLog.getId());
+        transferLog.setTransferStatus(SftpTransferStatus.WAIT.getStatus().byteValue());
+        transferLog.setNowProgress(0D);
+        transferLog.setCurrentSize(0L);
+        fileTransferLogRepository.update(transferLog);
+        // 通知进度
+        FileTransferNotifyProgressDTO progress = new FileTransferNotifyProgressDTO(Strings.EMPTY,
+                Files1.getSize(transferLog.getFileSize()), "0");
+        transferProcessorManager.notifySessionProgressEvent(transferLog.getAccountId(), machineId, transferLog.getFileToken(), progress);
+        // 通知状态
+        transferProcessorManager.notifySessionStatusEvent(transferLog.getAccountId(), machineId, transferLog.getFileToken(), SftpTransferStatus.WAIT.getStatus());
+        // 提交下载
+        IFileTransferProcessor.of(FileTransferHint.transfer(transferLog)).exec();
     }
 }

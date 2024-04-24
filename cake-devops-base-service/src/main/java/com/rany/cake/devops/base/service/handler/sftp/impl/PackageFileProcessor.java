@@ -80,7 +80,7 @@ public class PackageFileProcessor implements IFileTransferProcessor {
      */
     private String compressPath;
 
-    private final Long accountId;
+    private final String accountId;
 
     private final String hostId;
 

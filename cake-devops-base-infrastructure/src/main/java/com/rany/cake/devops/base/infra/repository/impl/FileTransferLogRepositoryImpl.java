@@ -34,4 +34,10 @@ public class FileTransferLogRepositoryImpl implements FileTransferLogRepository 
     public int update(FileTransferLog log) {
         return fileTransferLogDao.update(log);
     }
+
+    @Override
+    public FileTransferLog getTransferLogByToken(String fileToken) {
+        FileTransferLogPO fileTransferLogPO = fileTransferLogDao.selectByToken(fileToken);
+        return fileTransferLogDataConvertor.targetToSource(fileTransferLogPO);
+    }
 }

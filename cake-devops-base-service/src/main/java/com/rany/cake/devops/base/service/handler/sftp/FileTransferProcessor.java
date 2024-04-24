@@ -39,10 +39,9 @@ public abstract class FileTransferProcessor implements IFileTransferProcessor {
     protected SftpExecutor executor;
 
     protected FileTransferLog record;
-    protected Long accountId;
+    protected String accountId;
 
     protected String hostId;
-
     protected String fileToken;
 
     protected ByteTransferRateProgress progress;

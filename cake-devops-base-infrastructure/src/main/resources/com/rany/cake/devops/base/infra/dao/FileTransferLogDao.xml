@@ -50,6 +50,15 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
 
+    <select id="selectByToken" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from file_transfer_log
+        where file_token = #{token}
+        limit 1
+    </select>
+
+
     <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.FileTransferLog">
         update file_transfer_log
         <set>

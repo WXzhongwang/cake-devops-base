@@ -35,9 +35,9 @@ public enum DevOpsErrorMessage implements ResponseCode {
     SYSTEM_ENV_NOT_FOUND("47000", "系统环境未找到"),
     TIMEOUT_EXCEPTION_MESSAGE("48000", "连接超时"),
     HOST_NOT_FOUND("49000", "主机未找到"),
-    MEMBER_DUPLICATED("50000", "项目成员已存在"),
-    SFTP_TOKEN_EMPTY("50000", "token为空"),
-    SFTP_TOKEN_EXPIRE("50000", "token过期"),
+    MEMBER_DUPLICATED("51000", "项目成员已存在"),
+    SFTP_TOKEN_EMPTY("52000", "token为空"),
+    SFTP_TOKEN_EXPIRE("53000", "token过期"),
 
     ;
 

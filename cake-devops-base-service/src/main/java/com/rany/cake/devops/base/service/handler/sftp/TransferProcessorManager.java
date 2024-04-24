@@ -3,7 +3,7 @@ package com.rany.cake.devops.base.service.handler.sftp;
 import com.rany.cake.devops.base.api.dto.FileTransferLogDTO;
 import com.rany.cake.devops.base.api.dto.FileTransferNotifyDTO;
 import com.rany.cake.devops.base.api.dto.FileTransferNotifyProgressDTO;
-import com.rany.cake.devops.base.infra.po.FileTransferLogPO;
+import com.rany.cake.devops.base.domain.entity.FileTransferLog;
 import com.rany.cake.devops.base.util.Const;
 import com.rany.cake.devops.base.util.sftp.SftpNotifyType;
 import com.rany.cake.toolkit.lang.Threads;
@@ -98,7 +98,7 @@ public class TransferProcessorManager {
      * @param userId    userId
      * @param machineId machineId
      */
-    public void registerSessionNotify(String id, WebSocketSession session, Long userId, String machineId) {
+    public void registerSessionNotify(String id, WebSocketSession session, String userId, String machineId) {
         idMapping.put(id, session);
         userMachineSessionMapping.computeIfAbsent(this.getUserMachine(userId, machineId), s -> Lists.newList()).add(id);
     }
@@ -126,7 +126,7 @@ public class TransferProcessorManager {
      * @param machineId machineId
      * @param record    record
      */
-    public void notifySessionAddEvent(Long userId, String machineId, FileTransferLogPO record) {
+    public void notifySessionAddEvent(String userId, String machineId, FileTransferLog record) {
         FileTransferNotifyDTO notify = new FileTransferNotifyDTO();
         notify.setType(SftpNotifyType.ADD.getType());
         notify.setFileToken(record.getFileToken());
@@ -142,7 +142,7 @@ public class TransferProcessorManager {
      * @param fileToken fileToken
      * @param progress  progress
      */
-    public void notifySessionProgressEvent(Long userId, String machineId, String fileToken, FileTransferNotifyProgressDTO progress) {
+    public void notifySessionProgressEvent(String userId, String machineId, String fileToken, FileTransferNotifyProgressDTO progress) {
         // 设置进度
         TRANSFER_PROGRESS.put(fileToken, progress.getProgress());
         // 通知
@@ -161,7 +161,7 @@ public class TransferProcessorManager {
      * @param fileToken fileToken
      * @param status    status
      */
-    public void notifySessionStatusEvent(Long userId, String machineId, String fileToken, Integer status) {
+    public void notifySessionStatusEvent(String userId, String machineId, String fileToken, Integer status) {
         // 清除进度
         TRANSFER_PROGRESS.remove(fileToken);
         // 通知
@@ -179,7 +179,7 @@ public class TransferProcessorManager {
      * @param machineId machineId
      * @param notify    notifyInfo
      */
-    public void notifySession(Long userId, String machineId, FileTransferNotifyDTO notify) {
+    public void notifySession(String userId, String machineId, FileTransferNotifyDTO notify) {
         List<String> sessionIds = userMachineSessionMapping.get(this.getUserMachine(userId, machineId));
         if (Lists.isEmpty(sessionIds)) {
             return;
@@ -218,7 +218,7 @@ public class TransferProcessorManager {
      * @param machineId machineId
      * @return key
      */
-    private String getUserMachine(Long userId, String machineId) {
+    private String getUserMachine(String userId, String machineId) {
         return userId + "_" + machineId;
     }
 

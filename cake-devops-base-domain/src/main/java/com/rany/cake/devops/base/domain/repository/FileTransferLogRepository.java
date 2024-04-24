@@ -8,4 +8,7 @@ public interface FileTransferLogRepository {
     void save(FileTransferLog log);
 
     int update(FileTransferLog log);
+
+    FileTransferLog getTransferLogByToken(String fileToken);
+
 }

@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.entity.FileTransferLog;
 import com.rany.cake.devops.base.infra.po.FileTransferLogPO;
+import org.apache.ibatis.annotations.Param;
 
 public interface FileTransferLogDao {
 
@@ -22,6 +23,14 @@ public interface FileTransferLogDao {
      * @return
      */
     FileTransferLogPO selectById(Long id);
+
+    /**
+     * token查日志
+     *
+     * @param token token
+     * @return
+     */
+    FileTransferLogPO selectByToken(@Param("token") String token);
 
 
     /**

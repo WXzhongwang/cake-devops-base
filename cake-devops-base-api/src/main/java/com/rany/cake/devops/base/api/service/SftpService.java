@@ -118,10 +118,9 @@ public interface SftpService {
     /**
      * 上传文件
      *
-     * @param hostId       hostId
-     * @param requestFiles requestFiles
+     * @param uploadCommand uploadCommand
      */
-    void upload(String hostId, List<FileUploadCommand> requestFiles);
+    void upload(BatchFileUploadCommand uploadCommand);
 
     /**
      * 下载文件
