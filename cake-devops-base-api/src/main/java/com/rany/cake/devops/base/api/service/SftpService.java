@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.api.service;
 
 import com.rany.cake.devops.base.api.command.sftp.*;
+import com.rany.cake.devops.base.api.command.sftp.transfer.*;
 import com.rany.cake.devops.base.api.dto.*;
 
 import java.util.List;
@@ -139,81 +140,81 @@ public interface SftpService {
     /**
      * 传输暂停
      *
-     * @param fileToken fileToken
+     * @param transferPauseCommand command
      */
-    void transferPause(String fileToken);
+    void transferPause(TransferPauseCommand transferPauseCommand);
 
     /**
      * 传输恢复
      *
-     * @param fileToken fileToken
+     * @param transferResumeCommand command
      */
-    void transferResume(String fileToken);
+    void transferResume(TransferResumeCommand transferResumeCommand);
 
     /**
      * 传输失败重试
      *
-     * @param fileToken fileToken
+     * @param transferRetryCommand command
      */
-    void transferRetry(String fileToken);
+    void transferRetry(TransferRetryCommand transferRetryCommand);
 
     /**
      * 重新上传
      *
-     * @param fileToken fileToken
+     * @param transferReUploadCommand command
      */
-    void transferReUpload(String fileToken);
+    void transferReUpload(TransferReUploadCommand transferReUploadCommand);
 
     /**
      * 重新下载
      *
-     * @param fileToken fileToken
+     * @param transferReDownloadCommand command
      */
-    void transferReDownload(String fileToken);
+    void transferReDownload(TransferReDownloadCommand transferReDownloadCommand);
 
     /**
      * 传输暂停
      *
-     * @param sessionToken sessionToken
+     * @param transferPauseAllCommand command
      */
-    void transferPauseAll(String sessionToken);
+    void transferPauseAll(TransferPauseAllCommand transferPauseAllCommand);
 
     /**
      * 传输恢复
      *
-     * @param sessionToken sessionToken
+     * @param transferResumeAllCommand command
      */
-    void transferResumeAll(String sessionToken);
+    void transferResumeAll(TransferResumeAllCommand transferResumeAllCommand);
 
     /**
      * 传输失败重试
      *
-     * @param sessionToken sessionToken
+     * @param transferRetryAllCommand command
      */
-    void transferRetryAll(String sessionToken);
+    void transferRetryAll(TransferRetryAllCommand transferRetryAllCommand);
 
     /**
      * 传输列表
      *
-     * @param hostId hostId
+     * @param sessionToken sessionToken
      * @return rows
      */
-    List<FileTransferLogDTO> transferList(String hostId);
+    List<FileTransferLogDTO> transferList(String sessionToken);
 
     /**
      * 传输删除 (单个)
      *
-     * @param fileToken fileToken
+     * @param transferRemoveCommand command
      */
-    void transferRemove(String fileToken);
+    void transferRemove(TransferRemoveCommand transferRemoveCommand);
 
     /**
      * 传输清空 (全部)
      *
-     * @param hostId hostId
+     * @param command command
      * @return effect
      */
-    Integer transferClear(String hostId);
+    Integer transferClear(TransferClearCommand command);
 
     /**
      * 传输打包 全部已完成未删除的文件
@@ -226,10 +227,10 @@ public interface SftpService {
     /**
      * 获取 sftp 下载文件本地路径
      *
-     * @param id id
-     * @return FileTransferLogDO
+     * @param logId logId
+     * @return FileTransferLogDTO
      */
-    FileTransferLogDTO getDownloadFilePath(Long id);
+    FileTransferLogDTO getDownloadFilePath(Long logId);
 
 
     /**

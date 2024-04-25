@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.infra.repository.impl;
 
 import com.rany.cake.devops.base.domain.entity.FileTransferLog;
 import com.rany.cake.devops.base.domain.repository.FileTransferLogRepository;
+import com.rany.cake.devops.base.domain.repository.param.FileTransferLogParam;
 import com.rany.cake.devops.base.infra.convertor.FileTransferLogDataConvertor;
 import com.rany.cake.devops.base.infra.dao.FileTransferLogDao;
 import com.rany.cake.devops.base.infra.mapper.FileTransferLogPOMapper;
@@ -9,6 +10,8 @@ import com.rany.cake.devops.base.infra.po.FileTransferLogPO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -36,8 +39,19 @@ public class FileTransferLogRepositoryImpl implements FileTransferLogRepository 
     }
 
     @Override
-    public FileTransferLog getTransferLogByToken(String fileToken) {
-        FileTransferLogPO fileTransferLogPO = fileTransferLogDao.selectByToken(fileToken);
+    public FileTransferLog getTransferLogByToken(String fileToken, String userId) {
+        FileTransferLogPO fileTransferLogPO = fileTransferLogDao.selectByToken(fileToken, userId);
         return fileTransferLogDataConvertor.targetToSource(fileTransferLogPO);
+    }
+
+    @Override
+    public List<FileTransferLog> getTransferLogByParam(FileTransferLogParam param) {
+        List<FileTransferLogPO> fileTransferLogPOList = fileTransferLogDao.selectTransferLogByParam(param);
+        return fileTransferLogDataConvertor.targetToSource(fileTransferLogPOList);
+    }
+
+    @Override
+    public int transferClear(String userId, Byte status) {
+        return fileTransferLogDao.transferClear(userId, status);
     }
 }

@@ -55,9 +55,35 @@
         <include refid="Base_Column_List"/>
         from file_transfer_log
         where file_token = #{token}
+        and account_id = #{userId}
         limit 1
     </select>
 
+    <select id="selectTransferLogByParam"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.FileTransferLogParam"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from file_transfer_log
+        where
+        is_deleted = '0' and account_id = #{accountId}
+        and transfer_status in
+        <foreach collection="transferStatus" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and transfer_type in
+        <foreach collection="transferType" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and host_id = #{hostId}
+    </select>
+
+    <update id="transferClear">
+        update file_transfer_log
+        set is_deleted = '1'
+        where account_id = #{userId}
+          and transfer_status = #{status}
+    </update>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.FileTransferLog">
         update file_transfer_log

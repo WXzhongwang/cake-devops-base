@@ -1,8 +1,11 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.entity.FileTransferLog;
+import com.rany.cake.devops.base.domain.repository.param.FileTransferLogParam;
 import com.rany.cake.devops.base.infra.po.FileTransferLogPO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface FileTransferLogDao {
 
@@ -30,7 +33,10 @@ public interface FileTransferLogDao {
      * @param token token
      * @return
      */
-    FileTransferLogPO selectByToken(@Param("token") String token);
+    FileTransferLogPO selectByToken(@Param("token") String token,
+                                    @Param("userId") String userId);
+
+    List<FileTransferLogPO> selectTransferLogByParam(FileTransferLogParam param);
 
 
     /**
@@ -41,4 +47,6 @@ public interface FileTransferLogDao {
      */
     int update(FileTransferLog log);
 
+
+    int transferClear(String userId, Byte status);
 }
