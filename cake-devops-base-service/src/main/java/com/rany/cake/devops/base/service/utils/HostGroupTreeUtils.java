@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HostGroupTreeConverter {
+public class HostGroupTreeUtils {
 
-    private HostGroupTreeConverter() {
+    private HostGroupTreeUtils() {
     }
 
     public static List<HostGroupTreeDTO> convertListToTree(List<HostGroupTreeDTO> nodeList) {

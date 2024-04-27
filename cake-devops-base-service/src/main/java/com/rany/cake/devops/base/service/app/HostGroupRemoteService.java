@@ -13,7 +13,7 @@ import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.pk.HostGroupId;
 import com.rany.cake.devops.base.domain.service.HostGroupDomainService;
 import com.rany.cake.devops.base.service.adapter.HostGroupDataAdapter;
-import com.rany.cake.devops.base.service.utils.HostGroupTreeConverter;
+import com.rany.cake.devops.base.service.utils.HostGroupTreeUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
@@ -52,7 +52,7 @@ public class HostGroupRemoteService implements HostGroupService {
         List<HostGroup> hostGroups = hostGroupDomainService.listAllHostGroup();
         List<HostGroupDTO> hostGroupDTOS = hostGroupDataAdapter.sourceToTarget(hostGroups);
         List<HostGroupTreeDTO> treeDTOS = hostGroupDataAdapter.toTreeDTO(hostGroupDTOS);
-        List<HostGroupTreeDTO> hostGroupTreeDTOS = HostGroupTreeConverter.convertListToTree(treeDTOS);
+        List<HostGroupTreeDTO> hostGroupTreeDTOS = HostGroupTreeUtils.convertListToTree(treeDTOS);
         return hostGroupTreeDTOS;
     }
 
