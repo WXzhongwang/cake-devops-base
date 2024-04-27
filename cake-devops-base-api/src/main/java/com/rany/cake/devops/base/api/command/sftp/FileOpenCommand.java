@@ -18,6 +18,6 @@ public class FileOpenCommand extends BaseCommand {
     /**
      * 机器id
      */
-    private Long machineId;
+    private String hostId;
 
 }
