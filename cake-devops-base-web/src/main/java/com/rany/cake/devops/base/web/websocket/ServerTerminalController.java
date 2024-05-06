@@ -43,8 +43,7 @@ public class ServerTerminalController extends SocketBaseController {
     private static final HostInfo SERVER_INFO = HostInfo.build();
 
     private static TerminalSessionFactory terminalSessionFactory;
-
-
+    
     private static TerminalSessionRepository terminalSessionRepository;
 
     private TerminalSession terminalSession;

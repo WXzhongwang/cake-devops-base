@@ -186,5 +186,17 @@
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
+        <table schema="cake_devops" tableName="host_terminal_config"
+               domainObjectName="HostTerminalConfigPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+
+        <table schema="cake_devops" tableName="host_terminal_log"
+               domainObjectName="HostTerminalLogPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+
     </context>
 </generatorConfiguration>

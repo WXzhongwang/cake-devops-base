@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rany.cake.devops.base.infra.dao.HostTerminalLogDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.HostTerminalLogPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="host_id" property="hostId" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="access_token" property="accessToken" jdbcType="VARCHAR"/>
+        <result column="connected_time" property="connectedTime" jdbcType="TIMESTAMP"/>
+        <result column="disconnected_time" property="disconnectedTime" jdbcType="TIMESTAMP"/>
+        <result column="close_code" property="closeCode" jdbcType="INTEGER"/>
+        <result column="screen_path" property="screenPath" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+        id
+        , host_id, user_id, username, access_token, connected_time, disconnected_time,
+        close_code, screen_path, is_deleted, gmt_create, gmt_modified, creator, modifier
+    </sql>
+
+    <select id="getAccessLog" resultMap="BaseResultMap" parameterType="java.lang.Long">
+
+        select
+        <include refid="Base_Column_List"/>
+        from host_terminal_log
+        where access_token = #{accessToken}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from host_terminal_log
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.HostTerminalLog"
+            useGeneratedKeys="true" keyProperty="id">
+
+        insert into host_terminal_log (host_id, user_id,
+                                       username, access_token, connected_time,
+                                       disconnected_time, close_code, screen_path,
+                                       is_deleted, gmt_create, gmt_modified,
+                                       creator, modifier)
+        values (#{hostId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR},
+                #{username,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR}, #{connectedTime,jdbcType=TIMESTAMP},
+                #{disconnectedTime,jdbcType=TIMESTAMP}, #{closeCode,jdbcType=INTEGER}, #{screenPath,jdbcType=VARCHAR},
+                #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.HostTerminalLog">
+
+        update host_terminal_log
+        <set>
+            <if test="hostId != null">
+                host_id = #{hostId,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="accessToken != null">
+                access_token = #{accessToken,jdbcType=VARCHAR},
+            </if>
+            <if test="connectedTime != null">
+                connected_time = #{connectedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="disconnectedTime != null">
+                disconnected_time = #{disconnectedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="closeCode != null">
+                close_code = #{closeCode,jdbcType=INTEGER},
+            </if>
+            <if test="screenPath != null">
+                screen_path = #{screenPath,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

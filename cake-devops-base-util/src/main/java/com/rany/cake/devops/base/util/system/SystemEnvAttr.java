@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  *
  * @author zhongshengwang
  * @version 1.0.0
- * @since 2022/2/15 16:58
+ * @since 2024/5/15 16:58
  */
 @Getter
 public enum SystemEnvAttr {

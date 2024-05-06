@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rany.cake.devops.base.infra.dao.HostTerminalConfigDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.HostTerminalConfigPO">
+
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="host_id" property="hostId" jdbcType="VARCHAR"/>
+        <result column="terminal_type" property="terminalType" jdbcType="VARCHAR"/>
+        <result column="background_color" property="backgroundColor" jdbcType="VARCHAR"/>
+        <result column="font_color" property="fontColor" jdbcType="VARCHAR"/>
+        <result column="font_size" property="fontSize" jdbcType="INTEGER"/>
+        <result column="font_family" property="fontFamily" jdbcType="VARCHAR"/>
+        <result column="enable_web_link" property="enableWebLink" jdbcType="INTEGER"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+        id
+        , host_id, terminal_type, background_color, font_color, font_size, font_family,
+    enable_web_link, is_deleted, gmt_create, gmt_modified, creator, modifier
+    </sql>
+
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.HostTerminalConfig">
+
+        insert into host_terminal_config (host_id, terminal_type,
+                                          background_color, font_color, font_size,
+                                          font_family, enable_web_link, is_deleted,
+                                          gmt_create, gmt_modified, creator,
+                                          modifier)
+        values (#{hostId,jdbcType=VARCHAR}, #{terminalType,jdbcType=VARCHAR},
+                #{backgroundColor,jdbcType=VARCHAR}, #{fontColor,jdbcType=VARCHAR}, #{fontSize,jdbcType=INTEGER},
+                #{fontFamily,jdbcType=VARCHAR}, #{enableWebLink,jdbcType=INTEGER}, #{isDeleted,jdbcType=VARCHAR},
+                #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
+                #{modifier,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="findByHostId"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host_terminal_config
+        where host_id = #{hostId,jdbcType=VARCHAR}
+        and is_deleted = '0'
+        limit 1
+    </select>
+
+    <update id="update"
+            parameterType="com.rany.cake.devops.base.domain.entity.HostTerminalConfig">
+        update host_terminal_config
+        <set>
+            <if test="hostId != null">
+                host_id = #{hostId,jdbcType=VARCHAR},
+            </if>
+            <if test="terminalType != null">
+                terminal_type = #{terminalType,jdbcType=VARCHAR},
+            </if>
+            <if test="backgroundColor != null">
+                background_color = #{backgroundColor,jdbcType=VARCHAR},
+            </if>
+            <if test="fontColor != null">
+                font_color = #{fontColor,jdbcType=VARCHAR},
+            </if>
+            <if test="fontSize != null">
+                font_size = #{fontSize,jdbcType=INTEGER},
+            </if>
+            <if test="fontFamily != null">
+                font_family = #{fontFamily,jdbcType=VARCHAR},
+            </if>
+            <if test="enableWebLink != null">
+                enable_web_link = #{enableWebLink,jdbcType=INTEGER},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

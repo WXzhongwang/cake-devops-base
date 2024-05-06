@@ -28,7 +28,7 @@ public class PathBuilders {
      * @param machineId machineId
      * @return path
      */
-    public static String getTerminalScreenPath(Long userId, Long machineId) {
+    public static String getTerminalScreenPath(String userId, String machineId) {
         return Const.TERMINAL_DIR
                 + "/" + userId
                 + "_" + machineId
@@ -44,7 +44,7 @@ public class PathBuilders {
      * @param machineId machineId
      * @return path
      */
-    public static String getExecLogPath(String suffix, Long execId, Long machineId) {
+    public static String getExecLogPath(String suffix, Long execId, String machineId) {
         return Const.EXEC_DIR + suffix
                 + "/" + execId
                 + "_" + machineId
@@ -96,7 +96,7 @@ public class PathBuilders {
      * @param machineId 机器id
      * @return path
      */
-    public static String getReleaseMachineLogPath(Long releaseId, Long machineId) {
+    public static String getReleaseMachineLogPath(Long releaseId, String machineId) {
         return Const.RELEASE_DIR
                 + "/" + releaseId
                 + Const.RELEASE_MACHINE_PREFIX
@@ -112,7 +112,7 @@ public class PathBuilders {
      * @param actionId  actionId
      * @return path
      */
-    public static String getReleaseActionLogPath(Long releaseId, Long machineId, Long actionId) {
+    public static String getReleaseActionLogPath(Long releaseId, String machineId, Long actionId) {
         return Const.RELEASE_DIR
                 + "/" + releaseId
                 + Const.RELEASE_MACHINE_PREFIX

@@ -169,7 +169,7 @@ public class ValueMix {
      * @param timestamp 时间戳
      * @return token
      */
-    public static String createLoginToken(Long uid, Long timestamp) {
+    public static String createLoginToken(String uid, Long timestamp) {
         return ValueMix.base62ecbEnc(uid + "_" + timestamp, PropertiesConst.VALUE_MIX_SECRET_KEY);
     }
 
