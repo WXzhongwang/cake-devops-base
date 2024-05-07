@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.web.config;
+package com.rany.cake.devops.base.web.interceptor;
 
 import com.rany.cake.devops.base.service.base.UserHolder;
 import com.rany.cake.devops.base.service.utils.Servlets;

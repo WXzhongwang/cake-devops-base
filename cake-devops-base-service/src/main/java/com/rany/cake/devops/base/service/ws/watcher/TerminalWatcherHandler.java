@@ -1,14 +1,18 @@
-package com.rany.cake.devops.base.service.ws;
+package com.rany.cake.devops.base.service.ws.watcher;
 
 
 import com.rany.cake.devops.base.api.dto.user.UserDTO;
 import com.rany.cake.devops.base.service.base.WebSockets;
+import com.rany.cake.devops.base.service.ws.IOperateHandler;
+import com.rany.cake.devops.base.service.ws.PassportService;
+import com.rany.cake.devops.base.service.ws.manager.TerminalSessionManager;
 import com.rany.cake.devops.base.util.Const;
 import com.rany.cake.devops.base.util.terminal.TerminalClientOperate;
 import com.rany.cake.devops.base.util.ws.WsCloseCode;
 import com.rany.cake.devops.base.util.ws.WsProtocol;
 import com.rany.cake.toolkit.lang.wrapper.Tuple;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
@@ -32,12 +36,12 @@ public class TerminalWatcherHandler implements WebSocketHandler {
     private PassportService passportService;
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) {
+    public void afterConnectionEstablished(@NotNull WebSocketSession session) {
         log.info("terminal-watcher 已建立连接 token: {}, id: {}, params: {}", WebSockets.getToken(session), session.getId(), session.getAttributes());
     }
 
     @Override
-    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
+    public void handleMessage(@NotNull WebSocketSession session, @NotNull WebSocketMessage<?> message) {
         if (!(message instanceof TextMessage)) {
             return;
         }
@@ -90,7 +94,7 @@ public class TerminalWatcherHandler implements WebSocketHandler {
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) {
+    public void handleTransportError(WebSocketSession session, @NotNull Throwable exception) {
         log.error("terminal-watcher 操作异常拦截 token: {}", session.getId(), exception);
     }
 

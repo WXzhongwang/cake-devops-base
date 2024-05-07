@@ -1,5 +1,6 @@
-package com.rany.cake.devops.base.service.ws;
+package com.rany.cake.devops.base.service.ws.manager;
 
+import com.rany.cake.devops.base.service.ws.IOperateHandler;
 import com.rany.cake.devops.base.util.MessageConst;
 import com.rany.cake.devops.base.util.Valid;
 import com.rany.cake.toolkit.lang.utils.Exceptions;

@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.service.ws;
+package com.rany.cake.devops.base.service.ws.watcher;
 
 import com.rany.cake.toolkit.lang.Watchable;
 import com.rany.cake.toolkit.lang.io.SafeCloseable;

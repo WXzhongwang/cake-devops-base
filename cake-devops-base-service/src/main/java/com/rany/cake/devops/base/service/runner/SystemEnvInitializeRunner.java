@@ -44,9 +44,6 @@ public class SystemEnvInitializeRunner implements CommandLineRunner {
         // 查询所有的key
         List<String> keys = SystemEnvAttr.getKeys();
         List<SystemEnvPO> envList = systemEnvDAO.selectByNames(keys);
-        for (SystemEnvPO systemEnvPO : envList) {
-            System.out.println("key:" + systemEnvPO.getAttrKey());
-        }
         // 初始化数据
         for (String key : keys) {
             SystemEnvAttr attr = SystemEnvAttr.of(key);

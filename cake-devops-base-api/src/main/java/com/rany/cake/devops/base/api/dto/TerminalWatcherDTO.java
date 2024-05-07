@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("ALL")
 public class TerminalWatcherDTO {
 
-    private Long userId;
+    private String userId;
 
     private String token;
 

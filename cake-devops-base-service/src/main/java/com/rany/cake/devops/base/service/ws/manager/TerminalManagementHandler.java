@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.service.ws;
+package com.rany.cake.devops.base.service.ws.manager;
 
 /**
  * 管理handler

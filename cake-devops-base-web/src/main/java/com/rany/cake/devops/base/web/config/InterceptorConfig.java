@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.web.config;
 
+import com.rany.cake.devops.base.web.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

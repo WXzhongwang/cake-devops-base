@@ -11,12 +11,14 @@ import com.rany.cake.devops.base.domain.repository.HostTerminalLogRepository;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.base.WebSockets;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
+import com.rany.cake.devops.base.service.ws.manager.TerminalSessionManager;
 import com.rany.cake.devops.base.util.terminal.TerminalClientOperate;
 import com.rany.cake.devops.base.util.ws.WsCloseCode;
 import com.rany.cake.devops.base.util.ws.WsProtocol;
 import com.rany.cake.toolkit.lang.wrapper.Tuple;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
@@ -33,13 +35,10 @@ import java.util.Date;
 @Slf4j
 @Component("terminalMessageHandler")
 public class TerminalMessageHandler implements WebSocketHandler {
-
     @Resource
     private TerminalSessionManager terminalSessionManager;
-
     @Resource
     private PassportService passportService;
-
     @Resource
     private HostDomainService hostDomainService;
     @Resource
@@ -50,12 +49,12 @@ public class TerminalMessageHandler implements WebSocketHandler {
     private HostTerminalLogRepository hostTerminalLogRepository;
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) {
+    public void afterConnectionEstablished(@NotNull WebSocketSession session) {
         log.info("terminal 已建立连接 token: {}, id: {}, params: {}", WebSockets.getToken(session), session.getId(), session.getAttributes());
     }
 
     @Override
-    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
+    public void handleMessage(@NotNull WebSocketSession session, @NotNull WebSocketMessage<?> message) {
         if (!(message instanceof TextMessage)) {
             return;
         }
@@ -99,7 +98,7 @@ public class TerminalMessageHandler implements WebSocketHandler {
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) {
+    public void handleTransportError(WebSocketSession session, @NotNull Throwable exception) {
         log.error("terminal 操作异常拦截 token: {}", session.getId(), exception);
     }
 
