@@ -152,6 +152,12 @@ cp -R  dist/* ../start/src/main/resources/static
 
 ```
 
+>
+因为工程目前是一个人独立开发，所以也不想整的太复杂，所以直接把前端资源拷贝到后端工程resources目录下了，有条件的同学或者对NGINX比较熟悉的同学，可以考虑将前端资源部署到Nginx上，然后通过Nginx进行反向代理进行负载均衡，这样会更安全一些。
+> 但是注意一点，这个时候，com.rany.cake.devops.base.web.controller.IndexController中关于资源托管的部分，需要注释掉。
+
+![前端资源代码.jpg](https://github.com/WXzhongwang/cake-devops-base/blob/main/images%2F%E5%89%8D%E7%AB%AF%E8%B5%84%E6%BA%90%E4%BB%A3%E7%A0%81.jpg)
+
 ### 3.5 启动本地服务
 
 SprintBoot启动，端口默认为：8300
