@@ -7,6 +7,7 @@
 3. maven 安装
 4. 数据库MySQL8.0.16安装（具体5.7以上都可以，最好是8.0）
 5. idea 安装
+6. nvm && pnpm 安装 建议使用nvm && pnpm管理前端依赖
 
 ## 1. 安装cake相关依赖
 
@@ -101,3 +102,59 @@ SprintBoot启动，端口默认为：8765
 > 启动类：com.rany.cake.dingtalk.server.SsoServerApplication
 
 ## 4. 启动cake-devops-base
+
+### 3.1 拉取代码&&安装依赖到本地
+
+```shell
+
+cd ~/cake-workspace
+
+git clone https://github.com/WXzhongwang/cake-devops-base
+
+cd cake-devops-base
+
+mvn clean install -DskipTests=true 
+
+```
+
+### 3.2 数据库还原
+
+在代码根路径中包含一个devops主工程服务所需数据库的dump文件，
+请通过数据库SQL文件还原数据库。
+
+```text
+比如：cake-devops-base/sql/devops-2024_01_17_20_41_13-dump.sql
+```
+
+### 3.3 前端资源启动打包
+
+```shell
+nvm current ## 建议使用nvm && pnpm管理前端依赖
+> v16.20.2
+
+cd cake-devops-base/devops-frontend
+
+pnpm install 
+
+pnpm run build ##这异步会将前端资源打包到dist目录下
+```
+
+### 3.4 前端资源拷贝到后端工程resources目录下
+
+源：cake-devops-base/devops-frontend/dist下全部资源
+目标：cake-devops-base/start/src/main/resources/static下
+
+```shell
+
+cd cake-devops-front
+
+cp -R  dist/* ../start/src/main/resources/static
+
+```
+
+### 3.5 启动本地服务
+
+SprintBoot启动，端口默认为：8300
+
+检查cake-devops-base/start/src/main/resources/application.yml配置文件，部分钉钉配置信息需要替换
+> 启动类：com.rany.cake.devops.base.CakeDevopsBaseApplication
