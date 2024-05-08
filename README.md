@@ -10,14 +10,12 @@
 
 - [x] **sonarqube**: 质量检测https://www.sonarsource.com/products/sonarqube/downloads/
 - [x] **sonar-scan-cli**: sonarqube提供的缺陷检测扫描工具
-- [x] **Jenkins**: 构建工具 https://jenkins.io/
-- [x] **Jenkins Pipeline**: 流水线工具 https://jenkins.io/
+- [x] **linux shell**: shell
 - [x] **GitLab**: 代码管理SCM https://docs.gitlab.cn/jh/api/api_resources.html
 - [x] **Harbor**: 容器镜像仓库 https://goharbor.io/
 - [x] **Docker**: 容器技术、虚拟化 https://www.docker.com/
 - [x] **Docker Compose**: docker工具 https://github.com/docker/compose
 - [x] **kubernetes**: 容器集群管理系统 http://docs.kubernetes.org.cn/
-- [x] **kuboard**: 图形化管理工具 http://kuboard.cn
 - [x] **AliYun ACR容器镜像服务**: 容器镜像服务(镜像加速中心)https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
 - [x] **websocket+rabbitmq**: 日志推送
 
@@ -60,22 +58,19 @@
 - [ ] **集群管理**: 集群终端、集群运维
 - [ ] **应用环境**: 创建发布单，发布pipeline，发布历史
 
+## 部分系统截图
+
 ![log_display.png](https://github.com/WXzhongwang/cake-devops-base/blob/main/images%2Flog_display.png)
 
 ![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/WechatIMG869.jpeg)
 
 ![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/web.jpg)
 
-## 向导
+## 工程依赖
 
-![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/img.png)
-
-[手把手踩坑向导](https://github.com/WXzhongwang/cake-devops-base/blob/main/README_GUIDE.md)
-
-![CICD](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/2021-11-23_175935.png)
-
-![核心业务](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/image-20211125154112097.png)
-
-![DEVOPS](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/devops.jpg)
-
-![K8S](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/k8s%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3.jpg)
+| 底层依赖              | 依赖类型       | 最新版本         | 必须 | 说明         | 地址                                               |
+|:------------------|:-----------|:-------------|:---|:-----------|:-------------------------------------------------|
+| uic-center        | 服务依赖       | 1.0-SNAPSHOT | 是  | 用户中心       | https://github.com/WXzhongwang/uic-center        | 
+| cake-toolkit-all  | JAR 依赖     | 1.0.0        | 是  | toolkit工具包 | https://github.com/WXzhongwang/cake-toolkit      | 
+| cake-dingtalk-sso | 服务依赖&jar依赖 | 1.0-SNAPSHOT | 是  | SSO        | https://github.com/WXzhongwang/cake-dingtalk-sso | 
+| cake              | JAR 依赖     | 1.0-SNAPSHOT | 是  | DDD        | https://github.com/WXzhongwang/cake              | 

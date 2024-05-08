@@ -40,4 +40,18 @@ DevOps流水线上用的 SonarQube就是用的这个插件。idea自带插件，
 注意挂载-v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/usr/bin/docker，才可以共享宿主机的docker资源
 ```
 
-Jenkins slave agent 
+Jenkins slave agent
+
+## 其他参考资料
+
+![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/img.png)
+
+[手把手踩坑向导](https://github.com/WXzhongwang/cake-devops-base/blob/main/README_GUIDE.md)
+
+![CICD](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/2021-11-23_175935.png)
+
+![核心业务](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/image-20211125154112097.png)
+
+![DEVOPS](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/devops.jpg)
+
+![K8S](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/k8s%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3.jpg)
