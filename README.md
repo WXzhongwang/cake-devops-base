@@ -82,3 +82,7 @@
 ## 欢迎共建
 
 welcome to fork me !!!
+
+## 联系我
+
+![联系我](https://github.com/WXzhongwang/cake-devops-base/blob/images/CONTACT_ME.png)
