@@ -78,3 +78,7 @@
 # 快速开始
 
 [快速开始](https://github.com/WXzhongwang/cake-devops-base/blob/main/README_QUICKSTART.md)
+
+## 欢迎共建
+
+welcome to fork me !!!
