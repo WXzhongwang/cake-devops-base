@@ -58,12 +58,6 @@ export default {
             icon: <ApiFilled />,
             component: "ops/server-monitor",
           },
-          {
-            path: "/ops/sftp-manage",
-            name: "主机sftp",
-            icon: <ApiFilled />,
-            component: "ops/sftp-manage",
-          },
         ],
       },
       {
