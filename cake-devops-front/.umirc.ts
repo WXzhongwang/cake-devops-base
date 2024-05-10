@@ -44,6 +44,11 @@ export default defineConfig({
           component: "ops/server-monitor",
           name: "主机监控",
         },
+        {
+          path: "/ops/sftp-manage",
+          component: "ops/sftp-manage",
+          name: "主机SFTP",
+        },
       ],
     },
     {
