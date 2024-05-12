@@ -14,7 +14,7 @@ import {
   Modal,
 } from "antd";
 import { PageContainer } from "@ant-design/pro-components";
-import { connect, Dispatch } from "umi";
+import { connect, Dispatch, history } from "umi";
 import HostGroupTree from "./components/host-group-tree";
 import { HostModel, HostGroupModel, ServerKey } from "@/models/host";
 import { ProxyModel } from "@/models/proxy";
@@ -56,6 +56,11 @@ const HostPage: React.FC<HostListProps> = ({
       type: "host/fetchHosts",
       payload: { ...pagination, ...filters },
     });
+  };
+
+  const handleSftpView = (record: HostModel) => {
+    // 示例：跳转到详情页，使用 history.push
+    history.push(`/ops/sftp-manage/${record.hostId}`);
   };
 
   const handleEdit = (host: HostModel) => {
@@ -310,6 +315,7 @@ const HostPage: React.FC<HostListProps> = ({
           <a type="link" onClick={() => handlePing(record.hostId)}>
             Ping
           </a>
+          <a onClick={() => handleSftpView(record)}>SFTP</a>
           {/* 调用 handleCopy 处理函数 */}
           <a type="link" onClick={() => handleCopy(record.hostId)}>
             复制

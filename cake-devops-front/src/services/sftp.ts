@@ -9,6 +9,14 @@ export async function openSftpConnection(data: any) {
 }
 
 // 获取文件夹列表
+export async function getDirList(data: any) {
+  return request("/api/devops/sftp/list-dir", {
+    method: "POST",
+    data,
+  });
+}
+
+// 获取文件夹列表
 export async function getFileList(data: any) {
   return request("/api/devops/sftp/list", {
     method: "POST",
@@ -142,14 +150,14 @@ export async function retryFailedTransfer(data: any) {
 }
 
 // 重新上传文件
-export async function reuploadFile(data: any) {
+export async function reUploadFile(data: any) {
   return request(`/api/devops/sftp/transfer/${data.fileToken}/re-upload`, {
     method: "GET",
   });
 }
 
 // 重新下载文件
-export async function redownloadFile(data: any) {
+export async function reDownloadFile(data: any) {
   return request(`/api/devops/sftp/transfer/${data.fileToken}/re-download`, {
     method: "GET",
   });

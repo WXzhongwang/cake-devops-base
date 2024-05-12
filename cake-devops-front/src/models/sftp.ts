@@ -1,5 +1,5 @@
 import { Effect, Reducer } from "umi";
-import * as api from "@/services/script-template";
+import * as api from "@/services/sftp";
 import { BaseAction } from "typings";
 import { message } from "antd";
 
@@ -154,7 +154,7 @@ export interface RetryFailedTransferRequest {
 }
 
 // 重新上传文件请求
-export interface ReuploadFileRequest {
+export interface ReUploadFileRequest {
   fileToken: string; // 文件token
 }
 
@@ -203,3 +203,557 @@ export interface PackageAllFilesRequest {
   sessionToken: string; // 会话token
   packageType: number; // 打包类型
 }
+
+interface OpenSftpAction {
+  type: "sftp/open";
+  payload: OpenSftpRequest;
+}
+
+interface ListDirAction {
+  type: "sftp/listDir";
+  payload: GetFileListRequest;
+}
+
+interface ListFileAction {
+  type: "sftp/list";
+  payload: GetFileListRequest;
+}
+
+interface CreateFolderAction extends BaseAction {
+  type: "sftp/createFolder";
+  payload: CreateFolderRequest;
+}
+
+interface CreateFileAction extends BaseAction {
+  type: "sftp/createFile";
+  payload: CreateFileRequest;
+}
+
+interface TruncateFileAction extends BaseAction {
+  type: "sftp/truncateFile";
+  payload: TruncateFileRequest;
+}
+
+interface MoveFileAction extends BaseAction {
+  type: "sftp/moveFile";
+  payload: MoveFileRequest;
+}
+
+interface RemoveFileAction extends BaseAction {
+  type: "sftp/removeFile";
+  payload: RemoveFileRequest;
+}
+
+interface ChangeFilePermissionsAction extends BaseAction {
+  type: "sftp/changeFilePermissions";
+  payload: ChangeFilePermissionsRequest;
+}
+
+interface ChangeFileOwnerAction extends BaseAction {
+  type: "sftp/changeFileOwner";
+  payload: ChangeFileOwnerRequest;
+}
+
+interface ChangeFileGroupAction extends BaseAction {
+  type: "sftp/changeFileGroup";
+  payload: ChangeFileGroupRequest;
+}
+
+interface CheckFileExistenceAction extends BaseAction {
+  type: "sftp/checkFileExistence";
+  payload: CheckFileExistenceRequest;
+}
+
+interface GetUploadAccessTokenAction extends BaseAction {
+  type: "sftp/getUploadAccessToken";
+  payload: GetUploadAccessTokenRequest;
+}
+
+interface UploadFileAction extends BaseAction {
+  type: "sftp/uploadFile";
+  payload: UploadFileRequest;
+}
+
+interface DownloadFileAction extends BaseAction {
+  type: "sftp/downloadFile";
+  payload: DownloadFileRequest;
+}
+
+interface PackageDownloadFileAction extends BaseAction {
+  type: "sftp/packageDownloadFile";
+  payload: PackageDownloadFileRequest;
+}
+
+interface PauseFileTransferAction extends BaseAction {
+  type: "sftp/pauseFileTransfer";
+  payload: PauseFileTransferRequest;
+}
+
+interface ResumeFileTransferAction extends BaseAction {
+  type: "sftp/resumeFileTransfer";
+  payload: ResumeFileTransferRequest;
+}
+
+interface RetryFailedTransferAction extends BaseAction {
+  type: "sftp/retryFailedTransfer";
+  payload: RetryFailedTransferRequest;
+}
+
+interface ReUploadFileAction extends BaseAction {
+  type: "sftp/reUploadFile";
+  payload: ReUploadFileRequest;
+}
+
+interface ReDownloadFileAction extends BaseAction {
+  type: "sftp/reDownloadFile";
+  payload: ReDownloadFileRequest;
+}
+
+interface PauseAllTransfersAction extends BaseAction {
+  type: "sftp/pauseAllTransfers";
+  payload: PauseAllTransfersRequest;
+}
+interface ResumeAllTransfersAction extends BaseAction {
+  type: "sftp/resumeAllTransfers";
+  payload: ResumeAllTransfersRequest;
+}
+interface RetryAllFailedTransfersAction extends BaseAction {
+  type: "sftp/retryAllFailedTransfer";
+  payload: RetryAllFailedTransfersRequest;
+}
+interface GetTransferListAction extends BaseAction {
+  type: "sftp/getTransferList";
+  payload: GetTransferListRequest;
+}
+interface DeleteSingleTransferAction extends BaseAction {
+  type: "sftp/removeSingleTransfer";
+  payload: DeleteSingleTransferRequest;
+}
+
+interface ClearAllTransfersAction extends BaseAction {
+  type: "sftp/clearAllTransfers";
+  payload: ClearAllTransfersRequest;
+}
+
+interface PackageAllFilesAction extends BaseAction {
+  type: "sftp/packageAllCompletedFiles";
+  payload: PackageAllFilesRequest;
+}
+
+export interface SftpModelState {
+  files: FileDetailDTO[];
+  total: number;
+  dirs: FileDetailDTO[];
+}
+
+export interface SftpModelType {
+  namespace: "sftp";
+  state: SftpModelState;
+  effects: {
+    fetchDirs: Effect;
+    fetchList: Effect;
+    createFolder: Effect;
+    createFile: Effect;
+    truncateFile: Effect;
+    moveFile: Effect;
+    removeFile: Effect;
+    changeFilePermissions: Effect;
+    changeFileOwner: Effect;
+    changeFileGroup: Effect;
+    checkFileExistence: Effect;
+    getUploadAccessToken: Effect;
+    uploadFile: Effect;
+    downloadFile: Effect;
+    packageDownloadFile: Effect;
+    pauseFileTransfer: Effect;
+    resumeFileTransfer: Effect;
+    retryFailedTransfer: Effect;
+    reUploadFile: Effect;
+    reDownloadFile: Effect;
+    pauseAllTransfers: Effect;
+    resumeAllTransfers: Effect;
+    retryAllFailedTransfers: Effect;
+    getTransferList: Effect;
+    removeSingleTransfer: Effect;
+    clearAllTransfers: Effect;
+    packageAllCompletedFiles: Effect;
+  };
+  reducers: {
+    saveFiles: Reducer<SftpModelState>;
+    saveDirs: Reducer<SftpModelState>;
+  };
+}
+
+const SftpModel: SftpModelType = {
+  namespace: "sftp",
+
+  state: {
+    files: [],
+    total: 0,
+    dirs: [],
+  },
+
+  effects: {
+    *fetchDirs({ payload }: ListDirAction, { call, put }) {
+      const response = yield call(api.getDirList, payload);
+      yield put({
+        type: "saveDirs",
+        payload: response.content,
+      });
+    },
+    *fetchFiles({ payload }: ListFileAction, { call, put }) {
+      const response = yield call(api.getFileList, payload);
+      yield put({
+        type: "saveFiles",
+        payload: response.content,
+      });
+    },
+
+    *createFolder({ payload, callback }: CreateFolderAction, { call, put }) {
+      const response = yield call(api.createFolder, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *createFile({ payload, callback }: CreateFileAction, { call, put }) {
+      const response = yield call(api.createFile, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *truncateFile({ payload, callback }: TruncateFileAction, { call, put }) {
+      const response = yield call(api.truncateFile, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *moveFile({ payload, callback }: MoveFileAction, { call, put }) {
+      const response = yield call(api.moveFile, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *removeFile({ payload, callback }: RemoveFileAction, { call, put }) {
+      const response = yield call(api.removeFile, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *changeFilePermissions(
+      { payload, callback }: ChangeFilePermissionsAction,
+      { call, put }
+    ) {
+      const response = yield call(api.changeFilePermissions, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *changeFileOwner(
+      { payload, callback }: ChangeFileOwnerAction,
+      { call, put }
+    ) {
+      const response = yield call(api.changeFileOwner, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *changeFileGroup(
+      { payload, callback }: ChangeFileGroupAction,
+      { call, put }
+    ) {
+      const response = yield call(api.changeFileGroup, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *checkFileExistence(
+      { payload, callback }: CheckFileExistenceAction,
+      { call, put }
+    ) {
+      const response = yield call(api.checkFileExistence, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *getUploadAccessToken(
+      { payload, callback }: GetUploadAccessTokenAction,
+      { call, put }
+    ) {
+      const response = yield call(api.getUploadAccessToken, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *uploadFile({ payload, callback }: UploadFileAction, { call, put }) {
+      const response = yield call(api.uploadFile, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *downloadFile({ payload, callback }: DownloadFileAction, { call, put }) {
+      const response = yield call(api.downloadFile, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *packageDownloadFile(
+      { payload, callback }: PackageDownloadFileAction,
+      { call, put }
+    ) {
+      const response = yield call(api.packageDownloadFile, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *pauseFileTransfer(
+      { payload, callback }: PauseFileTransferAction,
+      { call, put }
+    ) {
+      const response = yield call(api.pauseFileTransfer, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *resumeFileTransfer(
+      { payload, callback }: ResumeFileTransferAction,
+      { call, put }
+    ) {
+      const response = yield call(api.resumeFileTransfer, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *retryFailedTransfer(
+      { payload, callback }: RetryFailedTransferAction,
+      { call, put }
+    ) {
+      const response = yield call(api.retryFailedTransfer, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *reUploadFile({ payload, callback }: ReUploadFileAction, { call, put }) {
+      const response = yield call(api.reUploadFile, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *reDownloadFile(
+      { payload, callback }: ReDownloadFileAction,
+      { call, put }
+    ) {
+      const response = yield call(api.reDownloadFile, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *pauseAllTransfers(
+      { payload, callback }: PauseAllTransfersAction,
+      { call, put }
+    ) {
+      const response = yield call(api.pauseAllTransfers, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *resumeAllTransfers(
+      { payload, callback }: ResumeAllTransfersAction,
+      { call, put }
+    ) {
+      const response = yield call(api.resumeAllTransfers, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *retryAllFailedTransfers(
+      { payload, callback }: RetryAllFailedTransfersAction,
+      { call, put }
+    ) {
+      const response = yield call(api.retryAllFailedTransfers, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *getTransferList(
+      { payload, callback }: GetTransferListAction,
+      { call, put }
+    ) {
+      const response = yield call(api.getTransferList, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *removeSingleTransfer(
+      { payload, callback }: DeleteSingleTransferAction,
+      { call, put }
+    ) {
+      const response = yield call(api.removeSingleTransfer, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *clearAllTransfers(
+      { payload, callback }: ClearAllTransfersAction,
+      { call, put }
+    ) {
+      const response = yield call(api.clearAllTransfers, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+    *packageAllCompletedFiles(
+      { payload, callback }: PackageAllFilesAction,
+      { call, put }
+    ) {
+      const response = yield call(api.packageAllCompletedFiles, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback();
+      } else {
+        message.error(msg);
+      }
+    },
+  },
+
+  reducers: {
+    saveDirs(state, action) {
+      return {
+        ...state,
+        files: action.payload.items,
+      };
+    },
+    saveFiles(state, action) {
+      return {
+        ...state,
+        dirs: action.payload.items,
+        total: action.payload.total,
+      };
+    },
+  },
+};
+SftpModel;
+export default SftpModel;
