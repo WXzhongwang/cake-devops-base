@@ -1,9 +1,33 @@
 import { defineConfig } from "umi";
 
+const { BUILD_ENV } = process.env;
+const name = process.env.npm_package_name;
+const version = process.env.npm_package_version;
+let publicPath = "/";
+
+switch (BUILD_ENV) {
+  case "test":
+    publicPath =
+      publicPath = `https://rany-ops.oss-cn-hangzhou.aliyuncs.com/fe-res/test/${name}/${version}/`;
+    break;
+  case "pre":
+    publicPath = `https://rany-ops.oss-cn-hangzhou.aliyuncs.com/fe-res/pre/${name}/${version}/`;
+    break;
+  case "prod":
+    publicPath = `https://rany-ops.oss-cn-hangzhou.aliyuncs.com/fe-res/prod/${name}/${version}/`;
+    break;
+  default:
+    break;
+}
+
 export default defineConfig({
   base: "/",
+  publicPath: publicPath,
   plugins: ["@umijs/plugins/dist/react-query", "@umijs/plugins/dist/dva"],
   reactQuery: {},
+  extraBabelPlugins:
+    process.env.NODE_ENV === "prod" ? ["babel-plugin-dynamic-import-node"] : [],
+
   routes: [
     { path: "/", redirect: "/apps" },
     { path: "/apps", component: "app/app-list", name: "应用中心" },
