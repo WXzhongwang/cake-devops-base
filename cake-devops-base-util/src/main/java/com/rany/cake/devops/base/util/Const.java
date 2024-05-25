@@ -27,7 +27,7 @@ public class Const extends com.rany.cake.toolkit.lang.constant.Const {
 
     public static final String DIST_PATH = "dist";
 
-    public static final String MACHINE_MONITOR_AGENT_PATH = "/lib/machine-monitor-agent-latest.jar";
+    public static final String MACHINE_MONITOR_AGENT_PATH = "/lib/cake-devops-base-plugin-agent-0.0.1-SNAPSHOT.jar";
 
     public static final String TAIL_FILE_PATH = "tail";
 
