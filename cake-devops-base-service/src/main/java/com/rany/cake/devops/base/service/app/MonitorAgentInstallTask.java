@@ -83,7 +83,7 @@ public class MonitorAgentInstallTask implements Runnable {
         try {
             // 查询机器信息
             // 打开日志流
-            String logPath = PathBuilders.getInstallLogPath(host.getHostId().getHostId(), MonitorConst.AGENT_FILE_NAME_PREFIX);
+            String logPath = PathBuilders.getInstallLogPath(hostId, MonitorConst.AGENT_FILE_NAME_PREFIX);
             File logFile = new File(Files1.getPath(SystemEnvAttr.LOG_PATH.getValue(), logPath));
             Files1.touch(logFile);
             this.logStream = Files1.openOutputStreamFast(logFile);
@@ -132,7 +132,7 @@ public class MonitorAgentInstallTask implements Runnable {
             executor = session.getSftpExecutor(charset);
             executor.connect();
             // 传输启动脚本文件
-            String startScript = this.getStartScript(hostId, agentPath);
+            String startScript = this.getStartScript(agentPath, hostId);
             this.appendLog("开始生成启动脚本 path: {}, command: \n{}", agentPath, startScript);
             executor.write(startScriptPath, Strings.bytes(startScript));
             executor.chmod(startScriptPath, 777);

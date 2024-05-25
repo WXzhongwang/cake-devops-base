@@ -271,6 +271,12 @@ public class PathBuilders {
      * @return path
      */
     public static String getPluginPath(String username) {
+        // 判断操作系统类型
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("mac")) {
+            return "/Users/" + username;
+        }
+
         return PathBuilders.getHomePath(username)
                 + "/" + Const.CAKE_OPS
                 + "/" + Const.PLUGINS;
