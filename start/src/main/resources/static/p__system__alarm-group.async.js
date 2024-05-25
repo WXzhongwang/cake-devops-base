@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[335],{70258:function(e,u,t){t.r(u),t.d(u,{default:function(){return a}});var s=t(93236),l={title:"title___DdMcu"},n=t(62086);function a(){return(0,n.jsx)("div",{children:(0,n.jsx)("h1",{className:l.title,children:"Page alarm-group"})})}}}]);

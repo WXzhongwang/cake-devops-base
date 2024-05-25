@@ -28,10 +28,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableKnife4j
 @Profile({"dev"})
 public class SwaggerConfig {
-
-//    @Value("${agent.access.header}")
-//    private String accessHeader;
-
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -57,15 +53,5 @@ public class SwaggerConfig {
                 .description("Cake Devops api管理")
                 .build();
     }
-
-//    /**
-//     * 认证配置
-//     *
-//     * @return security scheme
-//     */
-//    private List<SecurityScheme> getSecuritySchemes() {
-//        ApiKey loginToken = new ApiKey(accessHeader, accessHeader, "header");
-//        return Lists.of(loginToken);
-//    }
 
 }

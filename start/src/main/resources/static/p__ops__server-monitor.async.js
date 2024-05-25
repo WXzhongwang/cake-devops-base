@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[690],{23448:function(r,n,t){t.r(n),t.d(n,{default:function(){return l}});var u=t(93236),s={title:"title___Xl0Jo"},e=t(62086);function l(){return(0,e.jsx)("div",{children:(0,e.jsx)("h1",{className:s.title,children:"Page server-monitor"})})}}}]);

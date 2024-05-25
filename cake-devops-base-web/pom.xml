@@ -69,6 +69,11 @@
             <artifactId>knife4j-spring-ui</artifactId>
             <version>${knife4j.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.rany.cms</groupId>
+            <artifactId>cake-cms-client</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

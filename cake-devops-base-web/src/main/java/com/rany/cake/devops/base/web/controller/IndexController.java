@@ -1,25 +1,35 @@
 package com.rany.cake.devops.base.web.controller;
 
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
+import com.cake.cms.client.CmsClient;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
- * 测试
+ * 页面资源托管
  */
-@Controller
+@Slf4j
+@RestController
 public class IndexController {
 
+    @Value("${cms.page.path}")
+    private String cmsPagePath;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    @Resource
+    private CmsClient cmsClient;
+
+    @RequestMapping(value = {"/**", "/app/**"}, produces = "text/html;charset=utf-8", method = RequestMethod.GET)
     public String index() {
-        return "index";
+        try {
+            log.info("CMS load page from {}.", cmsPagePath);
+            return cmsClient.load(cmsPagePath);
+        } catch (Exception e) {
+            log.error("[CMS] 拉取页面,出现异常,", e);
+            return null;
+        }
     }
-
-    @RequestMapping(value = "/**/{path:[^\\.]*}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public String home() {
-        return "index";
-    }
-    
 }

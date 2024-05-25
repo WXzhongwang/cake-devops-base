@@ -40,8 +40,7 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
-        ;
+        // registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
 
         registry.addResourceHandler("/api/devops/**")
                 .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
