@@ -14,6 +14,7 @@ import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.query.agent.HostMonitorPageQuery;
 import com.rany.cake.devops.base.api.service.HostMonitorService;
 import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.domain.base.AppConfig;
 import com.rany.cake.devops.base.domain.entity.HostMonitor;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.HostMonitorRepository;
@@ -70,6 +71,7 @@ public class HostMonitorRemoteService implements HostMonitorService {
     private final WebSideMessageRepository webSideMessageService;
     private final AccountFacade accountFacade;
     private final AppMemberAdapter appMemberAdapter;
+    private final AppConfig appConfig;
 
     @Override
     public Page<HostMonitorDTO> pageHostMonitor(HostMonitorPageQuery hostMonitorPageQuery) {
@@ -129,6 +131,8 @@ public class HostMonitorRemoteService implements HostMonitorService {
             monitor.setMonitorStatus(MonitorStatus.STARTING.getStatus());
             // 创建安装任务
             AccountBasicQuery accountBasicQuery = new AccountBasicQuery();
+            accountBasicQuery.setAccountId(Long.valueOf(command.getUser()));
+            accountBasicQuery.setTenantId(appConfig.getTenantId());
             PojoResult<AccountDTO> account = accountFacade.getAccount(accountBasicQuery);
             AccountDTO content = account.getContent();
             AppAccountDTO appAccountDTO = appMemberAdapter.toDTO(content);

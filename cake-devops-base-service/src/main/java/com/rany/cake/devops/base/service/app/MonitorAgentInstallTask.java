@@ -49,13 +49,13 @@ import java.util.Map;
  */
 @Slf4j
 public class MonitorAgentInstallTask implements Runnable {
-    private HostConnectionService hostConnectionService;
-    private HostDomainService hostDomainService;
-    private MonitorAgents monitorAgents;
-    private HostMonitorRepository hostMonitorRepository;
-    private WebSideMessageRepository webSideMessageService;
-    private AppAccountDTO appAccountDTO;
-    private Host host;
+    private final HostConnectionService hostConnectionService;
+    private final HostDomainService hostDomainService;
+    private final MonitorAgents monitorAgents;
+    private final HostMonitorRepository hostMonitorRepository;
+    private final WebSideMessageRepository webSideMessageService;
+    private final AppAccountDTO appAccountDTO;
+    private final Host host;
 
     private SessionStore session;
     private OutputStream logStream;
@@ -217,11 +217,11 @@ public class MonitorAgentInstallTask implements Runnable {
         params.put(EventKeys.NAME, host.getName());
         WebSideMessage message = new WebSideMessage();
         message.setMessageClassify(Converts.toByte(type.getClassify().getClassify()));
-        message.setMessageType(MessageType.MACHINE_ALARM.getType());
+        message.setMessageType(type.getType());
         message.setReadStatus(Converts.toByte(ReadStatus.UNREAD.getStatus()));
         message.setToUserId(Long.parseLong(appAccountDTO.getId()));
         message.setToUserName(appAccountDTO.getAccountName());
-        message.setSendMessage(Strings.format(MessageType.MACHINE_ALARM.getTemplate(), params));
+        message.setSendMessage(Strings.format(type.getTemplate(), params));
         message.setRelId(host.getHostId().getHostId());
         message.setIsDeleted(DeleteStatusEnum.NO.getValue());
         webSideMessageService.save(message);

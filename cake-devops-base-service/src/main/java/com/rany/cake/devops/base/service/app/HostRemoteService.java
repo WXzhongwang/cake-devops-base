@@ -24,7 +24,9 @@ import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.HostDataAdapter;
 import com.rany.cake.devops.base.service.adapter.HostGroupDataAdapter;
 import com.rany.cake.devops.base.service.base.Constants;
+import com.rany.cake.devops.base.service.base.ValueMix;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import com.rany.cake.devops.base.util.enums.MachineAuthType;
 import com.rany.cake.devops.base.util.enums.MonitorStatus;
 import com.rany.cake.toolkit.lang.net.IPs;
 import com.rany.cake.toolkit.lang.utils.Strings;
@@ -64,10 +66,18 @@ public class HostRemoteService implements HostService {
         Host host = new Host(new HostId(String.valueOf(snowflakeIdWorker.nextId())), createHostCommand.getName(),
                 createHostCommand.getHostName(), createHostCommand.getServerAddr(), createHostCommand.getPort());
         host.setUsername(createHostCommand.getUsername());
-        host.setPwd(createHostCommand.getPwd());
+
         host.setKeyId(createHostCommand.getKeyId());
         host.setProxyId(createHostCommand.getProxyId());
         host.setAuthType(createHostCommand.getAuthType());
+
+        // 加密
+        if (MachineAuthType.PASSWORD.getType().equals(createHostCommand.getAuthType())) {
+            String password = createHostCommand.getPwd();
+            if (Strings.isNotBlank(password)) {
+                host.setPwd(ValueMix.encrypt(password));
+            }
+        }
 
         List<GroupHost> groupHosts = new ArrayList<>();
         for (String hostGroupId : createHostCommand.getHostGroupIds()) {
@@ -161,11 +171,18 @@ public class HostRemoteService implements HostService {
     @Override
     public Boolean modifyHost(ModifyHostCommand modifyHostCommand) {
         Host host = hostDomainService.getHost(new HostId(modifyHostCommand.getHostId()));
-        host.setHostName(modifyHostCommand.getHostname());
+        host.setHostName(modifyHostCommand.getHostName());
         host.setName(modifyHostCommand.getName());
         host.setPort(modifyHostCommand.getPort());
         host.setUsername(modifyHostCommand.getUsername());
-        host.setPwd(modifyHostCommand.getPkey());
+
+        // 加密
+        if (MachineAuthType.PASSWORD.getType().equals(modifyHostCommand.getAuthType())) {
+            String password = modifyHostCommand.getPwd();
+            if (Strings.isNotBlank(password)) {
+                host.setPwd(ValueMix.encrypt(password));
+            }
+        }
         host.setKeyId(modifyHostCommand.getKeyId());
         host.setProxyId(modifyHostCommand.getProxyId());
         host.modify(modifyHostCommand.getUser());

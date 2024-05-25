@@ -4,6 +4,8 @@ import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * 更新主机基本信息
  *
@@ -17,6 +19,8 @@ import lombok.EqualsAndHashCode;
 public class ModifyHostCommand extends BaseCommand {
 
     private String hostId;
+
+
     /**
      * name
      */
@@ -24,7 +28,17 @@ public class ModifyHostCommand extends BaseCommand {
     /**
      * hostname
      */
-    private String hostname;
+    private String hostName;
+
+    /**
+     * 服务地址
+     */
+    private String serverAddr;
+
+    /**
+     * 认证模式
+     */
+    private Integer authType;
 
     /**
      * port
@@ -37,9 +51,15 @@ public class ModifyHostCommand extends BaseCommand {
     private String username;
 
     /**
-     * pkey
+     * pwd
      */
-    private String pkey;
+    private String pwd;
+
+
+    /**
+     * 主机组
+     */
+    private List<String> hostGroupIds;
 
     /**
      * 密钥ID
