@@ -8,4 +8,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class TransferReDownloadCommand extends BaseCommand {
     private String fileToken;
+    private String sessionToken;
 }

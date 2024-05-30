@@ -70,8 +70,8 @@ public class SftpRemoteService implements SftpService {
     @Override
     public FileOpenDTO open(OpenSftpCommand openSftpCommand) {
         String currentUser = openSftpCommand.getUser();
-        SftpExecutor executor = sftpBasicExecutorHolder.getBasicExecutor(openSftpCommand.getHostId());
         String sessionToken = sftpInternalService.createSessionToken(currentUser, openSftpCommand.getHostId());
+        SftpExecutor executor = sftpBasicExecutorHolder.getBasicExecutor(sessionToken);
         // 查询列表
         String path = executor.getHome();
         FileListDTO list = this.list(path, false, executor);
@@ -434,13 +434,13 @@ public class SftpRemoteService implements SftpService {
 
     @Override
     public void transferReUpload(TransferReUploadCommand transferReUploadCommand) {
-        this.transferReTransfer(transferReUploadCommand.getFileToken(),
+        this.transferReTransfer(transferReUploadCommand.getSessionToken(), transferReUploadCommand.getFileToken(),
                 transferReUploadCommand.getUser(), true);
     }
 
     @Override
     public void transferReDownload(TransferReDownloadCommand transferReDownloadCommand) {
-        this.transferReTransfer(transferReDownloadCommand.getFileToken(),
+        this.transferReTransfer(transferReDownloadCommand.getSessionToken(), transferReDownloadCommand.getFileToken(),
                 transferReDownloadCommand.getUser(), false);
     }
 
@@ -652,7 +652,7 @@ public class SftpRemoteService implements SftpService {
     /**
      * 重新传输
      */
-    private void transferReTransfer(String fileToken, String userId, boolean isUpload) {
+    private void transferReTransfer(String sessionToken, String fileToken, String userId, boolean isUpload) {
         // 获取请求文件
         FileTransferLog transferLog = fileTransferLogRepository.getTransferLogByToken(fileToken, userId);
         Valid.notNull(transferLog, MessageConst.UNSELECTED_TRANSFER_LOG);
@@ -664,7 +664,7 @@ public class SftpRemoteService implements SftpService {
         }
         if (isUpload) {
             // 删除远程文件
-            SftpExecutor executor = sftpBasicExecutorHolder.getBasicExecutor(machineId);
+            SftpExecutor executor = sftpBasicExecutorHolder.getBasicExecutor(sessionToken);
             SftpFile file = executor.getFile(transferLog.getRemoteFile());
             if (file != null) {
                 executor.removeFile(transferLog.getRemoteFile());

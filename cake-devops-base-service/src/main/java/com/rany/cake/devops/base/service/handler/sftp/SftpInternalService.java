@@ -30,7 +30,7 @@ public class SftpInternalService {
         info.setHostId(machineId);
         // 12h
         redisTemplate.opsForValue().set(key, JSON.toJSONString(info),
-                KeyConst.SFTP_SESSION_EXPIRE, TimeUnit.SECONDS);
+                KeyConst.SFTP_SESSION_EXPIRE, TimeUnit.HOURS);
         return sessionToken;
     }
 

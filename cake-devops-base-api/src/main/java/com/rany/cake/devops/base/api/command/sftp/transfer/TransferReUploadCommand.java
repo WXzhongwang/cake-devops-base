@@ -9,4 +9,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class TransferReUploadCommand extends BaseCommand {
     private String fileToken;
+    private String sessionToken;
 }

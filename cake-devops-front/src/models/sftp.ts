@@ -344,12 +344,14 @@ export interface SftpModelState {
   files: FileDetailDTO[];
   total: number;
   dirs: FileDetailDTO[];
+  token: string;
 }
 
 export interface SftpModelType {
   namespace: "sftp";
   state: SftpModelState;
   effects: {
+    open: Effect;
     fetchDirs: Effect;
     fetchList: Effect;
     createFolder: Effect;
@@ -379,6 +381,7 @@ export interface SftpModelType {
     packageAllCompletedFiles: Effect;
   };
   reducers: {
+    saveToken: Reducer<SftpModelState>;
     saveFiles: Reducer<SftpModelState>;
     saveDirs: Reducer<SftpModelState>;
   };
@@ -394,6 +397,14 @@ const SftpModel: SftpModelType = {
   },
 
   effects: {
+    *open({ payload }: OpenSftpAction, { call, put }) {
+      const response = yield call(api.openSftpConnection, payload);
+      yield put({
+        type: "saveToken",
+        payload: response.content,
+      });
+    },
+
     *fetchDirs({ payload }: ListDirAction, { call, put }) {
       const response = yield call(api.getDirList, payload);
       yield put({
@@ -740,6 +751,12 @@ const SftpModel: SftpModelType = {
   },
 
   reducers: {
+    saveToken(state, action) {
+      return {
+        ...state,
+        token: action.payload,
+      };
+    },
     saveDirs(state, action) {
       return {
         ...state,

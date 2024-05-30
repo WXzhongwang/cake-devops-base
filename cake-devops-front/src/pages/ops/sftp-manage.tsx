@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { PageContainer } from "@ant-design/pro-layout";
+import React, { useEffect, useState } from "react";
+import { PageContainer } from "@ant-design/pro-components";
 import {
   Card,
   Row,
@@ -9,14 +9,14 @@ import {
   Button,
   Space,
   Tooltip,
-  Checkbox,
   Switch,
   Breadcrumb,
   Divider,
+  message,
 } from "antd";
+import { FileDetailDTO } from "@/models/sftp";
+
 import {
-  FolderOutlined,
-  FileOutlined,
   UploadOutlined,
   DeleteOutlined,
   DownloadOutlined,
@@ -25,28 +25,28 @@ import {
   PlusOutlined,
   SyncOutlined,
   LeftOutlined,
-  UnorderedListOutlined,
 } from "@ant-design/icons";
+import { connect, Dispatch, useParams } from "umi";
 
 // 假设您有一个函数用于获取目录树数据和文件列表数据
-const getDirectoryTree = async () => {
-  // TODO: 发送请求获取目录树数据
-  return [
-    {
-      title: "Folder 1",
-      key: "1",
-      children: [
-        { title: "File 1", key: "1-1", isLeaf: true },
-        {
-          title: "Folder 2",
-          key: "1-2",
-          children: [{ title: "File 2", key: "1-2-1", isLeaf: true }],
-        },
-      ],
-    },
-    { title: "File 3", key: "2", isLeaf: true },
-  ];
-};
+// const getDirectoryTree = async () => {
+//   // TODO: 发送请求获取目录树数据
+//   return [
+//     {
+//       title: "Folder 1",
+//       key: "1",
+//       children: [
+//         { title: "File 1", key: "1-1", isLeaf: true },
+//         {
+//           title: "Folder 2",
+//           key: "1-2",
+//           children: [{ title: "File 2", key: "1-2-1", isLeaf: true }],
+//         },
+//       ],
+//     },
+//     { title: "File 3", key: "2", isLeaf: true },
+//   ];
+// };
 
 const getFileList = async (directoryKey: string) => {
   // TODO: 发送请求获取文件列表数据
@@ -57,8 +57,23 @@ const getFileList = async (directoryKey: string) => {
   ];
 };
 
-const SftpManagementPage: React.FC = () => {
+interface SftpManageProps {
+  dispatch: Dispatch;
+  dirs: FileDetailDTO[];
+  files: FileDetailDTO[];
+  total: number;
+}
+
+const SftpManagementPage: React.FC<SftpManageProps> = ({
+  dispatch,
+  dirs,
+  files,
+  total,
+  token,
+}) => {
+  const { id } = useParams();
   const [directoryTreeData, setDirectoryTreeData] = useState<any[]>([]);
+  const [sessionToken, setSessionToken] = useState<any[]>([]);
   const [fileList, setFileList] = useState<any[]>([]);
   const [selectedDirectoryKey, setSelectedDirectoryKey] = useState<
     string | null
@@ -66,12 +81,35 @@ const SftpManagementPage: React.FC = () => {
   const [showHiddenFiles, setShowHiddenFiles] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPath, setCurrentPath] = useState<string>("");
+  const [pathStack, setPathStack] = useState<string[]>([]);
 
-  // 加载目录树数据
-  const loadDirectoryTreeData = async () => {
-    const data = await getDirectoryTree();
-    setDirectoryTreeData(data);
+  useEffect(() => {
+    // 初始加载目录树数据
+    // loadDirectoryTreeData();
+    console.log("id:", id);
+    open(id);
+    getDirTrees();
+  }, []);
+
+  const getDirTrees = () => {
+    dispatch({
+      type: "sftp/listDir",
+      payload: { path: "/" },
+    });
   };
+
+  const open = (id: number) => {
+    dispatch({
+      type: "sftp/open",
+      payload: { hostId: id },
+    });
+  };
+
+  // // 加载目录树数据
+  // const loadDirectoryTreeData = async () => {
+  //   const data = await getDirectoryTree();
+  //   setDirectoryTreeData(data);
+  // };
 
   // 加载文件列表数据
   const loadFileListData = async (directoryKey: string) => {
@@ -81,39 +119,61 @@ const SftpManagementPage: React.FC = () => {
 
   // 目录树节点选中事件
   const handleDirectoryNodeSelect = (selectedKeys: any, info: any) => {
-    setSelectedDirectoryKey(selectedKeys[0]);
-    loadFileListData(selectedKeys[0]);
-    setCurrentPath(info.node.title);
+    if (selectedKeys.length > 0) {
+      const key = selectedKeys[0];
+      setSelectedDirectoryKey(key);
+      loadFileListData(key);
+      setCurrentPath(info.node.title);
+      setPathStack((prev) => [...prev, info.node.title]);
+    }
   };
 
   // 目录树节点展开事件
   const handleDirectoryNodeExpand = () => {
-    // Do something when directory node expands
+    // 执行目录节点展开时的操作
   };
 
   // 切换是否显示隐藏文件
   const toggleShowHiddenFiles = () => {
     setShowHiddenFiles(!showHiddenFiles);
+    // 过滤文件列表
+    if (!showHiddenFiles) {
+      setFileList((prevList) =>
+        prevList.filter((file) => !file.name.startsWith("."))
+      );
+    } else {
+      loadFileListData(selectedDirectoryKey as string);
+    }
   };
 
   // 返回上一级目录
   const goBack = () => {
-    // TODO: 返回上一级目录的逻辑
+    if (pathStack.length > 1) {
+      pathStack.pop();
+      const previousPath = pathStack[pathStack.length - 1];
+      setCurrentPath(previousPath);
+      // TODO: 加载上一级目录的文件列表逻辑
+    } else {
+      message.warning("已经是根目录");
+    }
   };
 
   // 删除选中文件
   const deleteSelectedFiles = () => {
     // TODO: 删除选中文件的逻辑
+    message.success("删除成功");
   };
 
   // 下载选中文件
   const downloadSelectedFiles = () => {
     // TODO: 下载选中文件的逻辑
+    message.success("下载成功");
   };
 
   // 复制选中文件路径
   const copySelectedFilesPath = () => {
     // TODO: 复制选中文件路径的逻辑
+    message.success("路径复制成功");
   };
 
   // 显示传输列表
@@ -133,7 +193,9 @@ const SftpManagementPage: React.FC = () => {
 
   // 刷新文件列表
   const refreshFileList = () => {
-    // TODO: 刷新文件列表的逻辑
+    if (selectedDirectoryKey) {
+      loadFileListData(selectedDirectoryKey);
+    }
   };
 
   // 文件列表列配置
@@ -173,6 +235,14 @@ const SftpManagementPage: React.FC = () => {
             <Card>
               <Space>
                 <Breadcrumb>
+                  <Breadcrumb.Item>
+                    <Button
+                      icon={<LeftOutlined />}
+                      onClick={goBack}
+                      disabled={pathStack.length <= 1}
+                      type="link"
+                    />
+                  </Breadcrumb.Item>
                   <Breadcrumb.Item>/</Breadcrumb.Item>
                   <Breadcrumb.Item>{currentPath}</Breadcrumb.Item>
                 </Breadcrumb>
@@ -238,4 +308,19 @@ const SftpManagementPage: React.FC = () => {
   );
 };
 
-export default SftpManagementPage;
+export default connect(
+  ({
+    sftp,
+  }: {
+    sftp: {
+      dirs: FileDetailDTO[];
+      files: FileDetailDTO[];
+      total: number;
+    };
+  }) => ({
+    dirs: sftp.dirs,
+    files: sftp.files,
+    total: sftp.total,
+    token: sftp.token,
+  })
+)(SftpManagementPage);
