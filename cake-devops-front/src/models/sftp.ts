@@ -8,6 +8,14 @@ export interface FileBaseCommand {
   all?: boolean; // 是否查询隐藏文件
 }
 
+export interface OpenSessionDTO {
+  home: string;
+  sessionToken: string;
+  charset: string;
+  path: string;
+  files: FileDetailDTO[];
+}
+
 export interface FileDetailDTO {
   name: string; // 名称
   path: string; // 绝对路径
@@ -343,8 +351,7 @@ interface PackageAllFilesAction extends BaseAction {
 export interface SftpModelState {
   files: FileDetailDTO[];
   total: number;
-  dirs: FileDetailDTO[];
-  token: string;
+  open: OpenSessionDTO;
 }
 
 export interface SftpModelType {
@@ -393,7 +400,7 @@ const SftpModel: SftpModelType = {
   state: {
     files: [],
     total: 0,
-    dirs: [],
+    open: undefined,
   },
 
   effects: {
@@ -752,9 +759,12 @@ const SftpModel: SftpModelType = {
 
   reducers: {
     saveToken(state, action) {
+      console.log("sessionToken", action.payload.sessionToken);
       return {
         ...state,
-        token: action.payload,
+        open: action.payload,
+        files: action.payload.files,
+        total: action.payload.files?.size,
       };
     },
     saveDirs(state, action) {
