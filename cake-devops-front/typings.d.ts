@@ -2,7 +2,7 @@ import { S } from "mockjs";
 import "umi/typings";
 
 export interface BaseAction {
-  callback?: () => void;
+  callback?: (res?: any) => void;
 }
 
 declare namespace API {

@@ -13,9 +13,10 @@ import {
   Divider,
   Input,
   message,
+  Typography,
 } from "antd";
 import dayjs from "dayjs";
-import { FileDetailDTO, OpenSessionDTO } from "@/models/sftp";
+import { FileDetailDTO, ListDirDTO, OpenSessionDTO } from "@/models/sftp";
 
 import {
   UploadOutlined,
@@ -26,35 +27,25 @@ import {
   PlusOutlined,
   SyncOutlined,
   LeftOutlined,
+  FolderOutlined,
+  FileOutlined,
 } from "@ant-design/icons";
 import { connect, Dispatch, useParams } from "umi";
-
-// 假设您有一个函数用于获取文件列表数据
-const getFileList = async (directoryKey: string) => {
-  // TODO: 发送请求获取文件列表数据
-  return [
-    { name: "File 1", type: "file", size: "10 KB", key: "1" },
-    { name: "Folder 2", type: "folder", size: "-", key: "2" },
-    { name: "File 3", type: "file", size: "20 KB", key: "3" },
-  ];
-};
 
 interface SftpManageProps {
   dispatch: Dispatch;
   open: OpenSessionDTO;
   files: FileDetailDTO[];
-  total: number;
+  dirs: ListDirDTO;
 }
 
 const SftpManagementPage: React.FC<SftpManageProps> = ({
   dispatch,
   open,
   files,
-  total,
 }) => {
   const { id } = useParams();
   const [directoryTreeData, setDirectoryTreeData] = useState<any[]>([]);
-  const [fileList, setFileList] = useState<any[]>([]);
   const [selectedDirectoryKey, setSelectedDirectoryKey] = useState<
     string | null
   >(null);
@@ -76,17 +67,9 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     }
     if (open?.home) {
       setCurrentPath(open.home);
+      getFileList(open.home);
     }
   }, [open]);
-
-  useEffect(() => {
-    if (files) {
-      // const treeData = convertToTreeData(open);
-      // console.log("tree", treeData);
-      // setDirectoryTreeData(treeData);
-      setFileList(files);
-    }
-  });
 
   const openSession = (id: string | undefined) => {
     if (id) {
@@ -99,15 +82,31 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
 
   const getDirTrees = (dirPath: string) => {
     dispatch({
-      type: "sftp/listDir",
+      type: "sftp/fetchDirs",
       payload: { path: dirPath, sessionToken: open.sessionToken },
+      callback: (_dir: { files: any[] }) => {
+        const treeData = _dir?.files?.map((file) => ({
+          title: <Typography.Text ellipsis={true}>{file.name}</Typography.Text>,
+          key: file.path,
+          isLeaf: !file.isDir,
+          children: undefined,
+        }));
+        setDirectoryTreeData(treeData);
+        // setAlarmDrawerVisible(true); // 打开抽屉
+      },
+    });
+  };
+
+  const getFileList = (dirPath: string) => {
+    dispatch({
+      type: "sftp/fetchFiles",
+      payload: { path: dirPath, sessionToken: open.sessionToken, all: true },
     });
   };
 
   // 加载文件列表数据
   const loadFileListData = async (directoryKey: string) => {
-    const data = await getFileList(directoryKey);
-    setFileList(data);
+    getFileList(directoryKey);
   };
 
   // 目录树节点选中事件
@@ -117,7 +116,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       setSelectedDirectoryKey(key);
       loadFileListData(key);
       setCurrentPath(info.node.title);
-      setInputPath(info.node.title); // Update inputPath when selecting a directory
+      setInputPath(info.node.key); // Update inputPath when selecting a directory
       setPathStack((prev) => [...prev, info.node.title]);
     }
   };
@@ -190,7 +189,25 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
 
   // 文件列表列配置
   const columns = [
-    { title: "名称", dataIndex: "name", key: "name" },
+    {
+      title: "名称",
+      dataIndex: "name",
+      key: "name",
+      render: (val, record) => {
+        return (
+          <Space
+            onClick={() => {
+              if (record.isDir) {
+                getFileList(record.path);
+              }
+            }}
+          >
+            {record.isDir ? <FolderOutlined /> : <FileOutlined />}
+            <Typography.Link>{val}</Typography.Link>
+          </Space>
+        );
+      },
+    },
     { title: "大小", dataIndex: "size", key: "size" },
     {
       title: "文件属性",
@@ -206,7 +223,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       ),
     },
     {
-      title: "Action",
+      title: "操作",
       key: "action",
       render: () => <Button type="link">Action</Button>,
     },
@@ -217,19 +234,6 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       setSelectedRows(selectedRows);
     },
     selectedRowKeys: selectedRows.map((row) => row.key),
-  };
-
-  // 将目录结构转换为 Tree 组件的格式
-  const convertToTreeData = (dirs: OpenSessionDTO) => {
-    const formatData = (files: FileDetailDTO[]) => {
-      return files?.map((file) => ({
-        title: file.name,
-        key: file.path,
-        isLeaf: !file.isDir,
-        children: file.isDir ? [] : undefined,
-      }));
-    };
-    return formatData(dirs?.files);
   };
 
   // Handle input path change
@@ -245,6 +249,54 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     setPathStack((prev) => [...prev, inputPath]);
   };
 
+  const updateTreeData = (list, key, children) =>
+    list.map((node) => {
+      if (node.key === key) {
+        return {
+          ...node,
+          children,
+        };
+      }
+      if (node.children) {
+        return {
+          ...node,
+          children: updateTreeData(node.children, key, children),
+        };
+      }
+      return node;
+    });
+
+  const onLoadData = ({ key, children }) =>
+    new Promise<void>((resolve) => {
+      if (children) {
+        resolve();
+        return;
+      }
+      dispatch({
+        type: "sftp/fetchDirs",
+        payload: { path: key, sessionToken: open.sessionToken },
+        callback: (res: { files: any[] }) => {
+          setDirectoryTreeData((origin) =>
+            updateTreeData(
+              origin,
+              key,
+              res.files.map((file) => ({
+                title: (
+                  <Typography.Text style={{ maxWidth: 300 }} ellipsis={true}>
+                    {file.name}
+                  </Typography.Text>
+                ),
+                key: file.path,
+                isLeaf: !file.isDir,
+                children: undefined,
+              }))
+            )
+          );
+          resolve();
+        },
+      });
+    });
+  console.log("files", files);
   return (
     <PageContainer title="SFTP">
       <Card>
@@ -252,7 +304,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           <Col span={8}>
             <Card title="目录树">
               <Space direction="vertical">
-                <Breadcrumb style={{ marginBottom: 16 }}>
+                {/* <Breadcrumb style={{ marginBottom: 16 }}>
                   <Breadcrumb.Item>
                     <Button
                       icon={<LeftOutlined />}
@@ -263,17 +315,16 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   </Breadcrumb.Item>
                   <Breadcrumb.Item>/</Breadcrumb.Item>
                   <Breadcrumb.Item>{currentPath}</Breadcrumb.Item>
-                </Breadcrumb>
+                </Breadcrumb> */}
                 <Input
                   value={inputPath}
                   onChange={handleInputPathChange}
                   onPressEnter={handleInputPathSubmit}
                 />
                 <Tree
-                  showLine
-                  blockNode
                   onSelect={handleDirectoryNodeSelect}
                   treeData={directoryTreeData}
+                  loadData={onLoadData}
                 />
               </Space>
             </Card>
@@ -281,12 +332,12 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           <Col span={16}>
             <Card>
               <Space style={{ marginBottom: 16 }}>
-                <Switch
+                {/* <Switch
                   checked={showHiddenFiles}
                   onChange={toggleShowHiddenFiles}
                   checkedChildren="显示隐藏文件"
                   unCheckedChildren="隐藏隐藏文件"
-                />
+                /> */}
                 <Button
                   icon={<DeleteOutlined />}
                   onClick={deleteSelectedFiles}
@@ -326,10 +377,9 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                 ></Button>
               </Space>
               <Table
-                dataSource={fileList}
+                dataSource={files}
                 columns={columns}
-                rowKey="key"
-                pagination={false}
+                rowKey="path"
                 rowSelection={{ ...rowSelection }}
               />
             </Card>
@@ -347,9 +397,11 @@ export default connect(
     sftp: {
       open: OpenSessionDTO;
       files: FileDetailDTO[];
+      dirs: ListDirDTO;
     };
   }) => ({
     files: sftp.files,
     open: sftp.open,
+    dirs: sftp.dirs,
   })
 )(SftpManagementPage);

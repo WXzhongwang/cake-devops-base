@@ -16,6 +16,11 @@ export interface OpenSessionDTO {
   files: FileDetailDTO[];
 }
 
+export interface ListDirDTO {
+  path: string;
+  files: FileDetailDTO[];
+}
+
 export interface FileDetailDTO {
   name: string; // 名称
   path: string; // 绝对路径
@@ -217,7 +222,7 @@ interface OpenSftpAction {
   payload: OpenSftpRequest;
 }
 
-interface ListDirAction {
+interface ListDirAction extends BaseAction {
   type: "sftp/listDir";
   payload: GetFileListRequest;
 }
@@ -350,8 +355,8 @@ interface PackageAllFilesAction extends BaseAction {
 
 export interface SftpModelState {
   files: FileDetailDTO[];
-  total: number;
-  open: OpenSessionDTO;
+  open?: OpenSessionDTO;
+  dirs: ListDirDTO | null;
 }
 
 export interface SftpModelType {
@@ -400,7 +405,7 @@ const SftpModel: SftpModelType = {
   state: {
     files: [],
     total: 0,
-    open: undefined,
+    dirs: null,
   },
 
   effects: {
@@ -412,12 +417,18 @@ const SftpModel: SftpModelType = {
       });
     },
 
-    *fetchDirs({ payload }: ListDirAction, { call, put }) {
+    *fetchDirs({ payload, callback }: ListDirAction, { call, put }) {
       const response = yield call(api.getDirList, payload);
+      const { success, msg } = response;
       yield put({
         type: "saveDirs",
         payload: response.content,
       });
+      if (success && callback && typeof callback === "function") {
+        callback(response.content);
+      } else {
+        message.error(msg);
+      }
     },
     *fetchFiles({ payload }: ListFileAction, { call, put }) {
       const response = yield call(api.getFileList, payload);
@@ -763,21 +774,18 @@ const SftpModel: SftpModelType = {
       return {
         ...state,
         open: action.payload,
-        files: action.payload.files,
-        total: action.payload.files?.size,
       };
     },
     saveDirs(state, action) {
       return {
         ...state,
-        files: action.payload.items,
+        dirs: action.payload,
       };
     },
     saveFiles(state, action) {
       return {
         ...state,
-        dirs: action.payload.items,
-        total: action.payload.total,
+        files: action.payload.files,
       };
     },
   },
