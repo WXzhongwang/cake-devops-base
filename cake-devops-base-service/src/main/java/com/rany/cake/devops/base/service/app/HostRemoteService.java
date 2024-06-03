@@ -185,6 +185,7 @@ public class HostRemoteService implements HostService {
         }
         host.setKeyId(modifyHostCommand.getKeyId());
         host.setProxyId(modifyHostCommand.getProxyId());
+        host.setServerAddr(modifyHostCommand.getServerAddr());
         host.modify(modifyHostCommand.getUser());
         hostDomainService.update(host);
         return Boolean.TRUE;
