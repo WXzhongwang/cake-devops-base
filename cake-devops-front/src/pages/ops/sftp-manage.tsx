@@ -27,8 +27,10 @@ import {
   PlusOutlined,
   SyncOutlined,
   LeftOutlined,
+  ScissorOutlined,
   FolderOutlined,
   FileOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import { connect, Dispatch, useParams } from "umi";
 
@@ -67,7 +69,8 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     }
     if (open?.home) {
       setCurrentPath(open.home);
-      getFileList(open.home);
+      setSelectedDirectoryKey(open.home);
+      getFileList(open.home, showHiddenFiles);
     }
   }, [open]);
 
@@ -92,21 +95,27 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           children: undefined,
         }));
         setDirectoryTreeData(treeData);
-        // setAlarmDrawerVisible(true); // 打开抽屉
       },
     });
   };
 
-  const getFileList = (dirPath: string) => {
+  const getFileList = (dirPath: string, showHidden: boolean) => {
     dispatch({
       type: "sftp/fetchFiles",
-      payload: { path: dirPath, sessionToken: open.sessionToken, all: true },
+      payload: {
+        path: dirPath,
+        sessionToken: open.sessionToken,
+        all: showHidden,
+      },
     });
   };
 
   // 加载文件列表数据
-  const loadFileListData = async (directoryKey: string) => {
-    getFileList(directoryKey);
+  const loadFileListData = async (
+    directoryKey: string,
+    showHidden: boolean
+  ) => {
+    getFileList(directoryKey, showHidden);
   };
 
   // 目录树节点选中事件
@@ -114,9 +123,9 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     if (selectedKeys.length > 0) {
       const key = selectedKeys[0];
       setSelectedDirectoryKey(key);
-      loadFileListData(key);
+      loadFileListData(key, showHiddenFiles);
       setCurrentPath(info.node.title);
-      setInputPath(info.node.key); // Update inputPath when selecting a directory
+      setInputPath(info.node.key);
       setPathStack((prev) => [...prev, info.node.title]);
     }
   };
@@ -125,13 +134,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   const toggleShowHiddenFiles = () => {
     setShowHiddenFiles(!showHiddenFiles);
     // 过滤文件列表
-    if (!showHiddenFiles) {
-      setFileList((prevList) =>
-        prevList.filter((file) => !file.name.startsWith("."))
-      );
-    } else {
-      loadFileListData(selectedDirectoryKey as string);
-    }
+    getFileList(selectedDirectoryKey as string, !showHiddenFiles);
   };
 
   // 返回上一级目录
@@ -160,9 +163,16 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   };
 
   // 复制选中文件路径
-  const copySelectedFilesPath = () => {
+  const copySelectedFilesPath = (path: string) => {
     // TODO: 复制选中文件路径的逻辑
-    message.success("路径复制成功");
+    navigator.clipboard.writeText(path).then(
+      () => {
+        message.success("路径复制成功");
+      },
+      (err) => {
+        message.error("复制失败");
+      }
+    );
   };
 
   // 显示传输列表
@@ -183,7 +193,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   // 刷新文件列表
   const refreshFileList = () => {
     if (selectedDirectoryKey) {
-      loadFileListData(selectedDirectoryKey);
+      loadFileListData(selectedDirectoryKey, showHiddenFiles);
     }
   };
 
@@ -198,7 +208,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           <Space
             onClick={() => {
               if (record.isDir) {
-                getFileList(record.path);
+                getFileList(record.path, showHiddenFiles);
               }
             }}
           >
@@ -225,7 +235,40 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     {
       title: "操作",
       key: "action",
-      render: () => <Button type="link">Action</Button>,
+      render: (text: string, record: FileDetailDTO) => (
+        <Space.Compact>
+          <Button
+            icon={<CopyOutlined />}
+            onClick={() => copySelectedFilesPath(record.path)}
+            title="复制路径"
+            size="small"
+          />
+          <Button
+            icon={<DownloadOutlined />}
+            onClick={() => downloadSelectedFiles()}
+            title="下载"
+            size="small"
+          />
+          <Button
+            icon={<DeleteOutlined />}
+            onClick={() => deleteSelectedFiles()}
+            title="删除"
+            size="small"
+          />
+          <Button
+            icon={<ScissorOutlined />}
+            onClick={() => moveFile(record)}
+            title="移动"
+            size="small"
+          />
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => updatePermission(record)}
+            title="修改权限"
+            size="small"
+          />
+        </Space.Compact>
+      ),
     },
   ];
 
@@ -245,7 +288,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   const handleInputPathSubmit = () => {
     setCurrentPath(inputPath);
     setSelectedDirectoryKey(inputPath);
-    loadFileListData(inputPath);
+    loadFileListData(inputPath, showHiddenFiles);
     setPathStack((prev) => [...prev, inputPath]);
   };
 
@@ -331,13 +374,14 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           </Col>
           <Col span={16}>
             <Card>
-              <Space style={{ marginBottom: 16 }}>
-                {/* <Switch
-                  checked={showHiddenFiles}
-                  onChange={toggleShowHiddenFiles}
-                  checkedChildren="显示隐藏文件"
-                  unCheckedChildren="隐藏隐藏文件"
-                /> */}
+              <Space.Compact style={{ marginBottom: 16 }}>
+                <Space style={{ marginRight: 5 }}>
+                  显示隐藏文件
+                  <Switch
+                    checked={showHiddenFiles}
+                    onChange={toggleShowHiddenFiles}
+                  />
+                </Space>
                 <Button
                   icon={<DeleteOutlined />}
                   onClick={deleteSelectedFiles}
@@ -375,7 +419,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   onClick={refreshFileList}
                   title="刷新"
                 ></Button>
-              </Space>
+              </Space.Compact>
               <Table
                 dataSource={files}
                 columns={columns}
