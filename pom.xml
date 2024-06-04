@@ -41,6 +41,23 @@
         <redisson.version>3.16.1</redisson.version>
         <spring-shell-starter.version>2.1.11</spring-shell-starter.version>
         <dingding.service.version>2.0.0</dingding.service.version>
+        <slf4j-api.version>1.7.36</slf4j-api.version>
+        <http-client.version>4.5.13</http-client.version>
+        <jsch.version>0.1.55</jsch.version>
+        <sshd-core.version>2.9.2</sshd-core.version>
+        <aliyun-acr.version>0.0.4</aliyun-acr.version>
+        <jline.version>3.23.0</jline.version>
+        <console-table-builder.version>1.2</console-table-builder.version>
+        <kubernetes-client.verison>16.0.2</kubernetes-client.verison>
+        <gitlab-api.verison>4.19.0</gitlab-api.verison>
+
+
+        <cake-cms.version>1.0.3</cake-cms.version>
+        <cake-toolkit.version>1.0.0</cake-toolkit.version>
+        <cake-sso.version>1.0-SNAPSHOT</cake-sso.version>
+        <cake-uic.verison>1.0-SNAPSHOT</cake-uic.verison>
+        <cake-framework.version>1.0-SNAPSHOT</cake-framework.version>
+
     </properties>
 
     <modules>
@@ -183,7 +200,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.36</version>
+                <version>${slf4j-api.version}</version>
             </dependency>
             <!-- druid链接池 -->
             <dependency>
@@ -204,16 +221,6 @@
                 <artifactId>spring-shell-starter</artifactId>
                 <version>${spring-shell-starter.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.jline</groupId>
-                <artifactId>jline-terminal-jna</artifactId>
-                <version>3.23.0</version>
-            </dependency>
-            <dependency>
-                <groupId>io.bretty</groupId>
-                <artifactId>console-table-builder</artifactId>
-                <version>1.2</version>
-            </dependency>
 
 
             <dependency>
@@ -229,54 +236,67 @@
             <dependency>
                 <groupId>com.rany.cake.devops</groupId>
                 <artifactId>cake-devops-base-infrastructure</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.rany.cake.devops</groupId>
                 <artifactId>cake-devops-base-domain</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.rany.cake.devops</groupId>
                 <artifactId>cake-devops-base-web</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.rany.cake.devops</groupId>
                 <artifactId>cake-devops-base-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.rany.cake.devops</groupId>
                 <artifactId>cake-devops-base-ssh</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
+
+
+            <!--cake-->
             <dependency>
                 <groupId>com.rany.uic</groupId>
                 <artifactId>uic-api</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${cake-uic.verison}</version>
             </dependency>
-            <!--cake-->
             <dependency>
                 <groupId>com.rany</groupId>
                 <artifactId>cake-framework-common</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${cake-framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.rany</groupId>
                 <artifactId>cake-framework-mybatis</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${cake-framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.rany</groupId>
                 <artifactId>cake-framework-ddd</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${cake-framework.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.rany.cms</groupId>
                 <artifactId>cake-cms-client</artifactId>
-                <version>1.0.0</version>
+                <version>${cake-cms.version}</version>
+            </dependency>
+            <!-- cake-toolkit-all -->
+            <dependency>
+                <groupId>com.rany.cake.toolkit</groupId>
+                <artifactId>cake-toolkit-all</artifactId>
+                <version>${cake-toolkit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rany.cake.dingtalk.sso</groupId>
+                <artifactId>cake-dingtalk-sso-starter</artifactId>
+                <version>${cake-sso.version}</version>
             </dependency>
 
             <!-- dingding -->
@@ -285,6 +305,55 @@
                 <artifactId>alibaba-dingtalk-service-sdk</artifactId>
                 <version>${dingding.service.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${http-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${jsch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.sshd</groupId>
+                <artifactId>sshd-core</artifactId>
+                <version>${sshd-core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>alibabacloud-cr20181201</artifactId>
+                <version>${aliyun-acr.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jline</groupId>
+                <artifactId>jline</artifactId>
+                <version>${jline.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jline</groupId>
+                <artifactId>jline-terminal-jna</artifactId>
+                <version>${jline.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bretty</groupId>
+                <artifactId>console-table-builder</artifactId>
+                <version>${console-table-builder.version}</version>
+            </dependency>
+            <!--K8S-->
+            <dependency>
+                <groupId>io.kubernetes</groupId>
+                <artifactId>client-java</artifactId>
+                <version>${kubernetes-client.verison}</version>
+            </dependency>
+            <!--   https://github.com/gitlab4j/gitlab4j-api   -->
+            <dependency>
+                <groupId>org.gitlab4j</groupId>
+                <artifactId>gitlab4j-api</artifactId>
+                <version>${gitlab-api.verison}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

@@ -13,12 +13,10 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <!-- START ADD 20230219 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <shenyu.version>2.6.0</shenyu.version>
-        <cake-dingtalk-sso.version>1.0-SNAPSHOT</cake-dingtalk-sso.version>
     </properties>
 
     <dependencies>
@@ -31,7 +29,6 @@
         <dependency>
             <groupId>com.rany.cake.dingtalk.sso</groupId>
             <artifactId>cake-dingtalk-sso-starter</artifactId>
-            <version>${cake-dingtalk-sso.version}</version>
         </dependency>
         <dependency>
             <groupId>org.redisson</groupId>
@@ -73,7 +70,6 @@
         <dependency>
             <groupId>com.rany.cake.devops</groupId>
             <artifactId>cake-devops-base-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rany.cake.devops</groupId>
@@ -97,7 +93,6 @@
         <dependency>
             <groupId>io.kubernetes</groupId>
             <artifactId>client-java</artifactId>
-            <version>16.0.2</version>
         </dependency>
 
 
@@ -105,7 +100,6 @@
         <dependency>
             <groupId>org.gitlab4j</groupId>
             <artifactId>gitlab4j-api</artifactId>
-            <version>4.19.0</version>
         </dependency>
 
         <dependency>
@@ -116,34 +110,24 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
         </dependency>
 
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sshd</groupId>
             <artifactId>sshd-core</artifactId>
-            <version>2.9.2</version>
         </dependency>
 
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>alibabacloud-cr20181201</artifactId>
-            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.jline</groupId>
             <artifactId>jline</artifactId>
-            <version>3.23.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
         </dependency>
     </dependencies>
 

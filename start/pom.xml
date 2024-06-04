@@ -14,7 +14,6 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <!-- START ADD 20230219 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -30,11 +29,6 @@
             <artifactId>cake-devops-base-service</artifactId>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>com.rany.cake.devops</groupId>-->
-        <!--            <artifactId>cake-devops-base-ssh</artifactId>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>com.rany.cake.devops</groupId>
             <artifactId>cake-devops-base-web</artifactId>
@@ -43,6 +37,7 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
+
         <!-- dubbo 2.7.x引入-->
         <dependency>
             <groupId>org.apache.dubbo</groupId>
@@ -69,22 +64,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <!--            <exclusions>-->
-            <!--                <exclusion>-->
-            <!--                    <groupId>org.junit.vintage</groupId>-->
-            <!--                    <artifactId>junit-vintage-engine</artifactId>-->
-            <!--                </exclusion>-->
-            <!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>junit</groupId>-->
-        <!--            <artifactId>junit</artifactId>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
     </dependencies>
 
 
