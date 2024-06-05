@@ -41,8 +41,8 @@ dependencies:
 
 devDependencies:
   '@rany/sheep':
-    specifier: ^1.0.5
-    version: 1.0.5
+    specifier: ^1.0.6
+    version: 1.0.6
   '@types/mockjs':
     specifier: ^1.0.10
     version: 1.0.10
@@ -1695,8 +1695,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@rany/sheep@1.0.5:
-    resolution: {integrity: sha512-qY8xLWnpjenpU1+g+M2/wAqXjxRn9ji0Jj/uH1jB+mxXrThaYHXcXchtn3nGt46Ru3PRt6upjrowdvuyb154XA==, tarball: https://packages.aliyun.com/66460922ced1b9e566e16df5/npm/npm-registry/@rany/sheep/-/@rany/sheep-1.0.5.tgz}
+  /@rany/sheep@1.0.6:
+    resolution: {integrity: sha512-CKbBlAmW/vE61ED3LLN3wg41gc1eLVxiv0H3VgohQONkhy/ZmH9hEcBwINsPtrwp27tg1xJPeQr72ZnT26rmzQ==, tarball: https://packages.aliyun.com/66460922ced1b9e566e16df5/npm/npm-registry/@rany/sheep/-/@rany/sheep-1.0.6.tgz}
     hasBin: true
     dependencies:
       '@babel/polyfill': 7.12.1

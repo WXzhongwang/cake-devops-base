@@ -1,13 +1,12 @@
 package com.rany.cake.devops.base.service.handler.sftp;
 
-import com.rany.cake.devops.base.api.dto.FileTransferLogDTO;
 import com.rany.cake.devops.base.api.dto.FileTransferNotifyDTO;
 import com.rany.cake.devops.base.api.dto.FileTransferNotifyProgressDTO;
 import com.rany.cake.devops.base.domain.entity.FileTransferLog;
+import com.rany.cake.devops.base.service.adapter.FileTransferLogDataAdapter;
 import com.rany.cake.devops.base.util.Const;
 import com.rany.cake.devops.base.util.sftp.SftpNotifyType;
 import com.rany.cake.toolkit.lang.Threads;
-import com.rany.cake.toolkit.lang.convert.Converts;
 import com.rany.cake.toolkit.lang.json.Jsons;
 import com.rany.cake.toolkit.lang.utils.Exceptions;
 import com.rany.cake.toolkit.lang.utils.Lists;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +30,8 @@ import java.util.Map;
 @Slf4j
 @Component
 public class TransferProcessorManager {
+    @Resource
+    private FileTransferLogDataAdapter fileTransferLogDataAdapter;
 
     /**
      * key: token
@@ -130,7 +132,7 @@ public class TransferProcessorManager {
         FileTransferNotifyDTO notify = new FileTransferNotifyDTO();
         notify.setType(SftpNotifyType.ADD.getType());
         notify.setFileToken(record.getFileToken());
-        notify.setBody(Jsons.toJsonWriteNull(Converts.to(record, FileTransferLogDTO.class)));
+        notify.setBody(Jsons.toJsonWriteNull(fileTransferLogDataAdapter.sourceToTarget(record)));
         this.notifySession(userId, machineId, notify);
     }
 

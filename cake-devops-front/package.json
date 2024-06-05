@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "cake-devops-base",
-  "version": "1.0.5",
+  "version": "1.0.8",
   "author": "1528683621@qq.com <18668485565@163.com>",
   "scripts": {
     "dev": "umi dev",
@@ -30,7 +30,7 @@
     "xterm": "^5.3.0"
   },
   "devDependencies": {
-    "@rany/sheep": "^1.0.5",
+    "@rany/sheep": "^1.0.6",
     "@types/mockjs": "^1.0.10",
     "@types/react": "^18.2.44",
     "@types/react-dom": "^18.2.17",

@@ -52,7 +52,7 @@
         <gitlab-api.verison>4.19.0</gitlab-api.verison>
 
 
-        <cake-cms.version>1.0.3</cake-cms.version>
+        <cake-cms.version>1.0.0</cake-cms.version>
         <cake-toolkit.version>1.0.0</cake-toolkit.version>
         <cake-sso.version>1.0-SNAPSHOT</cake-sso.version>
         <cake-uic.verison>1.0-SNAPSHOT</cake-uic.verison>

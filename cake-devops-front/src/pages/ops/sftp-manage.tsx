@@ -157,9 +157,15 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   };
 
   // 下载选中文件
-  const downloadSelectedFiles = () => {
+  const downloadSelectedFiles = (path: string) => {
     // TODO: 下载选中文件的逻辑
-    message.success("下载成功");
+    dispatch({
+      type: "sftp/downloadFile",
+      payload: { paths: [path], sessionToken: open.sessionToken },
+      callback: (res: { files: any[] }) => {
+        message.success("下载成功");
+      },
+    });
   };
 
   // 复制选中文件路径
@@ -245,7 +251,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           />
           <Button
             icon={<DownloadOutlined />}
-            onClick={() => downloadSelectedFiles()}
+            onClick={() => downloadSelectedFiles(record.path)}
             title="下载"
             size="small"
           />
@@ -276,7 +282,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     onChange: (selectedRowKeys: any, selectedRows: any) => {
       setSelectedRows(selectedRows);
     },
-    selectedRowKeys: selectedRows.map((row) => row.key),
+    selectedRowKeys: selectedRows.map((row) => row.path),
   };
 
   // Handle input path change
@@ -374,52 +380,55 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           </Col>
           <Col span={16}>
             <Card>
-              <Space.Compact style={{ marginBottom: 16 }}>
-                <Space style={{ marginRight: 5 }}>
-                  显示隐藏文件
-                  <Switch
-                    checked={showHiddenFiles}
-                    onChange={toggleShowHiddenFiles}
-                  />
-                </Space>
-                <Button
-                  icon={<DeleteOutlined />}
-                  onClick={deleteSelectedFiles}
-                  disabled={selectedRows.length === 0}
-                  title="删除"
-                ></Button>
-                <Button
-                  icon={<DownloadOutlined />}
-                  onClick={downloadSelectedFiles}
-                  disabled={selectedRows.length === 0}
-                  title="下载"
-                ></Button>
-                <Button
-                  icon={<CopyOutlined />}
-                  onClick={copySelectedFilesPath}
-                  title="复制路径"
-                ></Button>
-                <Button
-                  icon={<SwapOutlined />}
-                  onClick={showTransferList}
-                  title="传输列表"
-                ></Button>
-                <Button
-                  icon={<PlusOutlined />}
-                  onClick={createFileOrFolder}
-                  title="创建"
-                ></Button>
-                <Button
-                  icon={<UploadOutlined />}
-                  onClick={uploadFile}
-                  title="上传"
-                ></Button>
-                <Button
-                  icon={<SyncOutlined />}
-                  onClick={refreshFileList}
-                  title="刷新"
-                ></Button>
-              </Space.Compact>
+              <Space style={{ width: "100%", justifyContent: "space-between" }}>
+                <Breadcrumb />
+                <Space.Compact style={{ marginBottom: 16 }}>
+                  <Space style={{ marginRight: 5 }}>
+                    显示隐藏文件
+                    <Switch
+                      checked={showHiddenFiles}
+                      onChange={toggleShowHiddenFiles}
+                    />
+                  </Space>
+                  <Button
+                    icon={<DeleteOutlined />}
+                    onClick={deleteSelectedFiles}
+                    disabled={selectedRows.length === 0}
+                    title="删除"
+                  ></Button>
+                  <Button
+                    icon={<DownloadOutlined />}
+                    onClick={downloadSelectedFiles}
+                    disabled={selectedRows.length === 0}
+                    title="下载"
+                  ></Button>
+                  <Button
+                    icon={<CopyOutlined />}
+                    onClick={copySelectedFilesPath}
+                    title="复制路径"
+                  ></Button>
+                  <Button
+                    icon={<SwapOutlined />}
+                    onClick={showTransferList}
+                    title="传输列表"
+                  ></Button>
+                  <Button
+                    icon={<PlusOutlined />}
+                    onClick={createFileOrFolder}
+                    title="创建"
+                  ></Button>
+                  <Button
+                    icon={<UploadOutlined />}
+                    onClick={uploadFile}
+                    title="上传"
+                  ></Button>
+                  <Button
+                    icon={<SyncOutlined />}
+                    onClick={refreshFileList}
+                    title="刷新"
+                  ></Button>
+                </Space.Compact>
+              </Space>
               <Table
                 dataSource={files}
                 columns={columns}

@@ -185,100 +185,111 @@ public class SftpController {
 
     @PostMapping("/download/exec")
     @ApiOperation(value = "下载文件")
-    public void downloadFile(@RequestBody FileDownloadCommand request) {
+    public PojoResult<Void> downloadFile(@RequestBody FileDownloadCommand request) {
         List<String> paths = Valid.notEmpty(request.getPaths());
         paths.forEach(Valid::checkNormalize);
         sftpService.download(request);
+        return PojoResult.succeed();
     }
 
     @PostMapping("/package-download/exec")
     @ApiOperation(value = "打包下载文件")
-    public void packageDownloadFile(@RequestBody FileDownloadCommand request) {
+    public PojoResult<Void> packageDownloadFile(@RequestBody FileDownloadCommand request) {
         List<String> paths = Valid.notEmpty(request.getPaths());
         paths.forEach(Valid::checkNormalize);
         sftpService.packageDownload(request);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{fileToken}/pause")
     @ApiOperation(value = "暂停文件传输")
-    public void transferPause(@PathVariable("fileToken") String fileToken,
-                              @CurrentUser SsoUser ssoUser) {
+    public PojoResult<Void> transferPause(@PathVariable("fileToken") String fileToken,
+                                          @CurrentUser SsoUser ssoUser) {
         TransferPauseCommand transferPauseCommand = new TransferPauseCommand();
         transferPauseCommand.setFileToken(fileToken);
         transferPauseCommand.setUser(ssoUser.getUserId());
         sftpService.transferPause(transferPauseCommand);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{fileToken}/resume")
     @ApiOperation(value = "恢复文件传输")
-    public void transferResume(@PathVariable("fileToken") String fileToken,
-                               @CurrentUser SsoUser ssoUser) {
+    public PojoResult<Void> transferResume(@PathVariable("fileToken") String fileToken,
+                                           @CurrentUser SsoUser ssoUser) {
         TransferResumeCommand transferResumeCommand = new TransferResumeCommand();
         transferResumeCommand.setFileToken(fileToken);
         transferResumeCommand.setUser(ssoUser.getUserId());
         sftpService.transferResume(transferResumeCommand);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{fileToken}/retry")
     @ApiOperation(value = "传输失败重试")
-    public void transferRetry(@PathVariable("fileToken") String fileToken
+    public PojoResult<Void> transferRetry(@PathVariable("fileToken") String fileToken
             ,
-                              @CurrentUser SsoUser ssoUser) {
+                                          @CurrentUser SsoUser ssoUser) {
         TransferRetryCommand transferRetryCommand = new TransferRetryCommand();
         transferRetryCommand.setFileToken(fileToken);
         transferRetryCommand.setUser(ssoUser.getUserId());
         sftpService.transferRetry(transferRetryCommand);
+        return PojoResult.succeed();
     }
+
 
     @GetMapping("/transfer/{fileToken}/re-upload")
     @ApiOperation(value = "重新上传文件")
-    public void transferReUpload(@PathVariable("fileToken") String fileToken
+    public PojoResult<Void> transferReUpload(@PathVariable("fileToken") String fileToken
             ,
-                                 @CurrentUser SsoUser ssoUser) {
+                                             @CurrentUser SsoUser ssoUser) {
         TransferReUploadCommand transferReUploadCommand = new TransferReUploadCommand();
         transferReUploadCommand.setFileToken(fileToken);
         transferReUploadCommand.setUser(ssoUser.getUserId());
         sftpService.transferReUpload(transferReUploadCommand);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{fileToken}/re-download")
     @ApiOperation(value = "重新下载文件")
-    public void transferReDownload(@PathVariable("fileToken") String fileToken,
-                                   @CurrentUser SsoUser ssoUser) {
+    public PojoResult<Void> transferReDownload(@PathVariable("fileToken") String fileToken,
+                                               @CurrentUser SsoUser ssoUser) {
         TransferReDownloadCommand command = new TransferReDownloadCommand();
         command.setFileToken(fileToken);
         command.setUser(ssoUser.getUserId());
         sftpService.transferReDownload(command);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{sessionToken}/pause-all")
     @ApiOperation(value = "暂停所有传输")
-    public void transferPauseAll(@PathVariable("sessionToken") String sessionToken,
-                                 @CurrentUser SsoUser ssoUser) {
+    public PojoResult<Void> transferPauseAll(@PathVariable("sessionToken") String sessionToken,
+                                             @CurrentUser SsoUser ssoUser) {
         TransferPauseAllCommand command = new TransferPauseAllCommand();
         command.setSessionToken(sessionToken);
         command.setUser(ssoUser.getUserId());
         sftpService.transferPauseAll(command);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{sessionToken}/resume-all")
     @ApiOperation(value = "恢复所有传输")
-    public void transferResumeAll(@PathVariable("sessionToken") String sessionToken,
-                                  @CurrentUser SsoUser ssoUser) {
+    public PojoResult<Void> transferResumeAll(@PathVariable("sessionToken") String sessionToken,
+                                              @CurrentUser SsoUser ssoUser) {
         TransferResumeAllCommand command = new TransferResumeAllCommand();
         command.setSessionToken(sessionToken);
         command.setUser(ssoUser.getUserId());
         sftpService.transferResumeAll(command);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{sessionToken}/retry-all")
     @ApiOperation(value = "失败重试所有")
-    public void transferRetryAll(@PathVariable("sessionToken") String sessionToken
+    public PojoResult<Void> transferRetryAll(@PathVariable("sessionToken") String sessionToken
             , @CurrentUser SsoUser ssoUser) {
         TransferRetryAllCommand command = new TransferRetryAllCommand();
         command.setSessionToken(sessionToken);
         command.setUser(ssoUser.getUserId());
         sftpService.transferRetryAll(command);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{sessionToken}/list")
@@ -293,29 +304,32 @@ public class SftpController {
 
     @GetMapping("/transfer/{fileToken}/remove")
     @ApiOperation(value = "删除单个传输记录 (包含进行中的)")
-    public void transferRemove(@PathVariable("fileToken") String fileToken
+    public PojoResult<Void> transferRemove(@PathVariable("fileToken") String fileToken
             , @CurrentUser SsoUser ssoUser) {
         TransferRemoveCommand transferRemoveCommand = new TransferRemoveCommand();
         transferRemoveCommand.setFileToken(fileToken);
         transferRemoveCommand.setUser(ssoUser.getUserId());
         sftpService.transferRemove(transferRemoveCommand);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{sessionToken}/clear")
     @ApiOperation(value = "清空全部传输记录 (不包含进行中的)")
-    public Integer transferClear(@PathVariable("sessionToken") String sessionToken
+    public PojoResult<Void> transferClear(@PathVariable("sessionToken") String sessionToken
             , @CurrentUser SsoUser ssoUser) {
         SftpSessionTokenDTO tokenInfo = sftpService.getTokenInfo(sessionToken);
         Valid.isTrue(ssoUser.getUserId().equals(tokenInfo.getUserId()));
         TransferClearCommand command = new TransferClearCommand();
         command.setUser(ssoUser.getUserId());
-        return sftpService.transferClear(command);
+        sftpService.transferClear(command);
+        return PojoResult.succeed();
     }
 
     @GetMapping("/transfer/{sessionToken}/{packageType}/package")
     @ApiOperation(value = "传输打包全部已完成未删除的文件")
-    public void transferPackage(@PathVariable("sessionToken") String sessionToken, @PathVariable("packageType") Integer packageType) {
+    public PojoResult<Void> transferPackage(@PathVariable("sessionToken") String sessionToken, @PathVariable("packageType") Integer packageType) {
         SftpPackageType sftpPackageType = Valid.notNull(SftpPackageType.of(packageType));
         sftpService.transferPackage(sessionToken, sftpPackageType.name());
+        return PojoResult.succeed();
     }
 }

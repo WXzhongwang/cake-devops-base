@@ -16,7 +16,7 @@ public class FileTransferLogDTO extends DTO {
 
     private Long id;
 
-    private Long machineId;
+    private String hostId;
 
     private String fileToken;
 
