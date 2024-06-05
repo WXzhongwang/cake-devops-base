@@ -10,27 +10,35 @@ import {
   Space,
   Switch,
   Breadcrumb,
-  Divider,
+  Tooltip,
   Input,
   message,
   Typography,
+  Popover,
+  Upload,
+  Progress,
 } from "antd";
 import dayjs from "dayjs";
 import { FileDetailDTO, ListDirDTO, OpenSessionDTO } from "@/models/sftp";
 
 import {
   UploadOutlined,
-  DeleteOutlined,
   DownloadOutlined,
   CopyOutlined,
   SwapOutlined,
   PlusOutlined,
   SyncOutlined,
-  LeftOutlined,
+  InboxOutlined,
   ScissorOutlined,
   FolderOutlined,
   FileOutlined,
   EditOutlined,
+  ReloadOutlined,
+  CaretRightOutlined,
+  PauseOutlined,
+  IssuesCloseOutlined,
+  FileZipOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { connect, Dispatch, useParams } from "umi";
 
@@ -167,6 +175,10 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       },
     });
   };
+
+  const moveFile = (record: FileDetailDTO) => {};
+
+  const updatePermission = (record: FileDetailDTO) => {};
 
   // 复制选中文件路径
   const copySelectedFilesPath = (path: string) => {
@@ -407,21 +419,110 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                     onClick={copySelectedFilesPath}
                     title="复制路径"
                   ></Button>
-                  <Button
-                    icon={<SwapOutlined />}
-                    onClick={showTransferList}
-                    title="传输列表"
-                  ></Button>
+                  <Popover
+                    placement="bottomRight"
+                    content={
+                      <Space style={{ width: "100%" }} direction="vertical">
+                        <Space.Compact block>
+                          <Tooltip title="刷新">
+                            <Button size="small" icon={<ReloadOutlined />} />
+                          </Tooltip>
+                          <Tooltip title="开始所有">
+                            <Button
+                              size="small"
+                              icon={<CaretRightOutlined />}
+                            />
+                          </Tooltip>
+                          <Tooltip title="暂停所有">
+                            <Button size="small" icon={<PauseOutlined />} />
+                          </Tooltip>
+                          <Tooltip title="重试所有">
+                            <Button
+                              size="small"
+                              icon={<IssuesCloseOutlined />}
+                            />
+                          </Tooltip>
+                          <Tooltip title="打包传输">
+                            <Button size="small" icon={<FileZipOutlined />} />
+                          </Tooltip>
+                          <Tooltip title="清空">
+                            <Button size="small" icon={<DeleteOutlined />} />
+                          </Tooltip>
+                        </Space.Compact>
+                        {[
+                          {
+                            title: "filename",
+                            status: "success",
+                            path: "1",
+                          },
+                        ].map((item) => (
+                          <Space
+                            style={{ width: "100%" }}
+                            key={item.path}
+                            direction="vertical"
+                          >
+                            <Typography.Text ellipsis>
+                              {item.title}
+                            </Typography.Text>
+                            <Space style={{ width: "100%" }}>
+                              <Progress percent={100} showInfo={false} />
+                              <Tooltip title="下载">
+                                <DownloadOutlined />
+                              </Tooltip>
+                            </Space>
+                          </Space>
+                        ))}
+                      </Space>
+                    }
+                  >
+                    <Button
+                      icon={<SwapOutlined />}
+                      onClick={showTransferList}
+                      title="传输列表"
+                    ></Button>
+                  </Popover>
                   <Button
                     icon={<PlusOutlined />}
                     onClick={createFileOrFolder}
                     title="创建"
                   ></Button>
-                  <Button
-                    icon={<UploadOutlined />}
-                    onClick={uploadFile}
-                    title="上传"
-                  ></Button>
+                  <Popover
+                    placement="bottomRight"
+                    content={
+                      <Space style={{ width: "100%" }} direction="vertical">
+                        <Space align="center">
+                          文件夹： <Input style={{ width: 310 }} />
+                        </Space>
+                        <Space
+                          style={{ justifyContent: "space-between" }}
+                          align="center"
+                        >
+                          <Upload.Dragger
+                            multiple
+                            name="file"
+                            action={"/upload/api"}
+                          >
+                            <p className="ant-upload-drag-icon">
+                              <InboxOutlined />
+                            </p>
+                            <p className="ant-upload-text">
+                              单击或拖动文件到此区域进行上传
+                            </p>
+                          </Upload.Dragger>
+                          <Space direction="vertical">
+                            <Button type="primary">上传</Button>
+                            <Button>清空</Button>
+                          </Space>
+                        </Space>
+                      </Space>
+                    }
+                  >
+                    <Button
+                      icon={<UploadOutlined />}
+                      onClick={uploadFile}
+                      title="上传"
+                    ></Button>
+                  </Popover>
                   <Button
                     icon={<SyncOutlined />}
                     onClick={refreshFileList}
