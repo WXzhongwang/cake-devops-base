@@ -19,7 +19,12 @@ import {
   Progress,
 } from "antd";
 import dayjs from "dayjs";
-import { FileDetailDTO, ListDirDTO, OpenSessionDTO } from "@/models/sftp";
+import {
+  FileDetailDTO,
+  FileTransferLogDTO,
+  ListDirDTO,
+  OpenSessionDTO,
+} from "@/models/sftp";
 
 import {
   UploadOutlined,
@@ -47,18 +52,21 @@ interface SftpManageProps {
   open: OpenSessionDTO;
   files: FileDetailDTO[];
   dirs: ListDirDTO;
+  transferList: FileTransferLogDTO[];
 }
 
 const SftpManagementPage: React.FC<SftpManageProps> = ({
   dispatch,
   open,
   files,
+  transferList,
 }) => {
   const { id } = useParams();
   const [directoryTreeData, setDirectoryTreeData] = useState<any[]>([]);
   const [selectedDirectoryKey, setSelectedDirectoryKey] = useState<
     string | null
   >(null);
+  // const [transferList, setTransferList] = useState<FileTransferLogDTO[]>([]);a
   const [showHiddenFiles, setShowHiddenFiles] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPath, setCurrentPath] = useState<string>(open?.home || "/");
@@ -74,6 +82,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   useEffect(() => {
     if (open?.sessionToken) {
       getDirTrees("/");
+      getTransferList();
     }
     if (open?.home) {
       setCurrentPath(open.home);
@@ -105,6 +114,15 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
         setDirectoryTreeData(treeData);
       },
     });
+  };
+
+  const getTransferList = () => {
+    setInterval(() => {
+      dispatch({
+        type: "sftp/getTransferList",
+        payload: { sessionToken: open.sessionToken },
+      });
+    }, 5000);
   };
 
   const getFileList = (dirPath: string, showHidden: boolean) => {
@@ -494,7 +512,10 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                           文件夹： <Input style={{ width: 310 }} />
                         </Space>
                         <Space
-                          style={{ justifyContent: "space-between" }}
+                          style={{
+                            justifyContent: "space-between",
+                            width: "100%",
+                          }}
                           align="center"
                         >
                           <Upload.Dragger
@@ -505,7 +526,10 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                             <p className="ant-upload-drag-icon">
                               <InboxOutlined />
                             </p>
-                            <p className="ant-upload-text">
+                            <p
+                              style={{ padding: "0 10px" }}
+                              className="ant-upload-text"
+                            >
                               单击或拖动文件到此区域进行上传
                             </p>
                           </Upload.Dragger>
@@ -552,10 +576,12 @@ export default connect(
       open: OpenSessionDTO;
       files: FileDetailDTO[];
       dirs: ListDirDTO;
+      transferList: FileTransferLogDTO[];
     };
   }) => ({
     files: sftp.files,
     open: sftp.open,
     dirs: sftp.dirs,
+    transferList: sftp.transferList,
   })
 )(SftpManagementPage);

@@ -21,6 +21,18 @@ export interface ListDirDTO {
   files: FileDetailDTO[];
 }
 
+export interface FileTransferLogDTO {
+  id: number;
+  hostId: string;
+  fileToken: string;
+  type: number;
+  remoteFile: string;
+  current: number;
+  size: number;
+  progress: number;
+  status: number;
+}
+
 export interface FileDetailDTO {
   name: string; // 名称
   path: string; // 绝对路径
@@ -41,8 +53,8 @@ export interface FileTransferLogDTO {
   fileToken: string;
   type: number; // 传输类型 10上传 20下载 30传输
   remoteFile: string; // 远程文件
-  current: string; // 当前大小
-  size: string; // 文件大小
+  current: number; // 当前大小
+  size: number; // 文件大小
   progress: number; // 当前进度
   status: number; // 传输状态 10未开始 20进行中 30已暂停 40已完成 50已取消 60传输异常
 }
@@ -357,6 +369,7 @@ export interface SftpModelState {
   files: FileDetailDTO[];
   open?: OpenSessionDTO;
   dirs: ListDirDTO | null;
+  transferList: FileTransferLogDTO[];
 }
 
 export interface SftpModelType {
@@ -396,6 +409,7 @@ export interface SftpModelType {
     saveToken: Reducer<SftpModelState>;
     saveFiles: Reducer<SftpModelState>;
     saveDirs: Reducer<SftpModelState>;
+    saveTransferList: Reducer<SftpModelState>;
   };
 }
 
@@ -404,8 +418,8 @@ const SftpModel: SftpModelType = {
 
   state: {
     files: [],
-    total: 0,
     dirs: null,
+    transferList: [],
   },
 
   effects: {
@@ -715,6 +729,11 @@ const SftpModel: SftpModelType = {
       { call, put }
     ) {
       const response = yield call(api.getTransferList, payload);
+      yield put({
+        type: "saveTransferList",
+        payload: response.content,
+      });
+
       const { success, msg } = response;
       // 如果传入了回调函数，则执行回调函数
       // 调用回调函数
@@ -786,6 +805,12 @@ const SftpModel: SftpModelType = {
       return {
         ...state,
         files: action.payload.files,
+      };
+    },
+    saveTransferList(state, action) {
+      return {
+        ...state,
+        transferList: action.payload.content,
       };
     },
   },
