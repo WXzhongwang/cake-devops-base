@@ -607,10 +607,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.packageDownloadFile, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -621,10 +621,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.pauseFileTransfer, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -635,10 +635,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.resumeFileTransfer, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -649,10 +649,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.retryFailedTransfer, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -660,10 +660,10 @@ const SftpModel: SftpModelType = {
     *reUploadFile({ payload, callback }: ReUploadFileAction, { call, put }) {
       const response = yield call(api.reUploadFile, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -674,10 +674,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.reDownloadFile, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -688,10 +688,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.pauseAllTransfers, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -702,10 +702,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.resumeAllTransfers, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -716,10 +716,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.retryAllFailedTransfers, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -733,15 +733,6 @@ const SftpModel: SftpModelType = {
         type: "saveTransferList",
         payload: response.content,
       });
-
-      const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
-      } else {
-        message.error(msg);
-      }
     },
     *removeSingleTransfer(
       { payload, callback }: DeleteSingleTransferAction,
@@ -749,10 +740,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.removeSingleTransfer, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -763,10 +754,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.clearAllTransfers, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }
@@ -777,10 +768,10 @@ const SftpModel: SftpModelType = {
     ) {
       const response = yield call(api.packageAllCompletedFiles, payload);
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
       } else {
         message.error(msg);
       }

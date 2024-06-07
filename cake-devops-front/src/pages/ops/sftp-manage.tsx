@@ -66,7 +66,6 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   const [selectedDirectoryKey, setSelectedDirectoryKey] = useState<
     string | null
   >(null);
-  // const [transferList, setTransferList] = useState<FileTransferLogDTO[]>([]);a
   const [showHiddenFiles, setShowHiddenFiles] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPath, setCurrentPath] = useState<string>(open?.home || "/");
@@ -467,20 +466,14 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                             <Button size="small" icon={<DeleteOutlined />} />
                           </Tooltip>
                         </Space.Compact>
-                        {[
-                          {
-                            title: "filename",
-                            status: "success",
-                            path: "1",
-                          },
-                        ].map((item) => (
+                        {transferList?.map((item) => (
                           <Space
                             style={{ width: "100%" }}
-                            key={item.path}
+                            key={item.fileToken}
                             direction="vertical"
                           >
                             <Typography.Text ellipsis>
-                              {item.title}
+                              {item.remoteFile}
                             </Typography.Text>
                             <Space style={{ width: "100%" }}>
                               <Progress percent={100} showInfo={false} />

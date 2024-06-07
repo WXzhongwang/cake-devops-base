@@ -5,8 +5,10 @@ import com.cake.framework.common.base.BaseEntity;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class FileTransferLog extends BaseEntity<Long> {
     private String accountId;
