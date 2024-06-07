@@ -14,6 +14,7 @@ import com.rany.cake.devops.base.domain.repository.FileTransferLogRepository;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
 import com.rany.cake.devops.base.domain.repository.param.FileTransferLogParam;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
+import com.rany.cake.devops.base.service.adapter.FileTransferLogDataAdapter;
 import com.rany.cake.devops.base.service.base.PathBuilders;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.service.handler.sftp.*;
@@ -45,7 +46,6 @@ import org.apache.dubbo.config.annotation.Service;
 import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -64,8 +64,8 @@ public class SftpRemoteService implements SftpService {
     private final FileTransferLogRepository fileTransferLogRepository;
     private final TransferProcessorManager transferProcessorManager;
     private final HostConnectionService hostConnectionService;
-    @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final FileTransferLogDataAdapter fileTransferLogDataAdapter;
 
     @Override
     public FileOpenDTO open(OpenSftpCommand openSftpCommand) {
@@ -325,6 +325,7 @@ public class SftpRemoteService implements SftpService {
             }
         }
         for (FileTransferLog downloadFile : downloadFiles) {
+            downloadFile.init(request.getUser());
             fileTransferLogRepository.save(downloadFile);
             // 通知添加
             transferProcessorManager.notifySessionAddEvent(user, sftpSessionTokenDTO.getUserId(), downloadFile);
@@ -537,7 +538,7 @@ public class SftpRemoteService implements SftpService {
                 log.setNowProgress(progress);
             }
         });
-        return Converts.toList(transferLogs, FileTransferLogDTO.class);
+        return fileTransferLogDataAdapter.sourceToTarget(transferLogs);
     }
 
     @Override
@@ -613,6 +614,7 @@ public class SftpRemoteService implements SftpService {
         packageRecord.setFileSize(fileSize);
         packageRecord.setNowProgress(0D);
         packageRecord.setTransferStatus(SftpTransferStatus.WAIT.getStatus().byteValue());
+        packageRecord.init(sftpSessionTokenDTO.getUserId());
         fileTransferLogRepository.save(packageRecord);
         // 通知添加
         transferProcessorManager.notifySessionAddEvent(sftpSessionTokenDTO.getUserId(),

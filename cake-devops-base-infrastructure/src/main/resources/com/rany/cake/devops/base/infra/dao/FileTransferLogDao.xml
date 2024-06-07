@@ -66,15 +66,19 @@
         <include refid="Base_Column_List"/>
         from file_transfer_log
         where
-        is_deleted = '0' and account_id = #{accountId}
-        and transfer_status in
-        <foreach collection="transferStatus" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        and transfer_type in
-        <foreach collection="transferType" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+        is_deleted = '0' and account_id = #{userId}
+        <if test="transferStatus != null and transferStatus.size() > 0">
+            and transfer_status in
+            <foreach collection="transferStatus" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="transferType != null and transferType.size() > 0">
+            and transfer_type in
+            <foreach collection="transferType" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         and host_id = #{hostId}
     </select>
 
