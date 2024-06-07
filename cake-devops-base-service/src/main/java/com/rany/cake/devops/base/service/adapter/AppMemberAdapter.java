@@ -6,7 +6,7 @@ import com.rany.cake.devops.base.api.query.app.AppMemberPageQuery;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.repository.param.AppMemberPageQueryParam;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
-import com.rany.uic.common.dto.account.AccountDTO;
+import com.rany.ops.common.dto.account.AccountDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

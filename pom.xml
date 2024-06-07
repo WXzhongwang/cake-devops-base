@@ -55,7 +55,7 @@
         <cake-cms.version>1.0.0</cake-cms.version>
         <cake-toolkit.version>1.0.0</cake-toolkit.version>
         <cake-sso.version>1.0-SNAPSHOT</cake-sso.version>
-        <cake-uic.verison>1.0-SNAPSHOT</cake-uic.verison>
+        <cake-ops-api.verison>1.0-SNAPSHOT</cake-ops-api.verison>
         <cake-framework.version>1.0-SNAPSHOT</cake-framework.version>
 
     </properties>
@@ -262,9 +262,9 @@
 
             <!--cake-->
             <dependency>
-                <groupId>com.rany.uic</groupId>
-                <artifactId>uic-api</artifactId>
-                <version>${cake-uic.verison}</version>
+                <groupId>com.rany.ops</groupId>
+                <artifactId>cake-ops-api</artifactId>
+                <version>${cake-ops-api.verison}</version>
             </dependency>
             <dependency>
                 <groupId>com.rany</groupId>

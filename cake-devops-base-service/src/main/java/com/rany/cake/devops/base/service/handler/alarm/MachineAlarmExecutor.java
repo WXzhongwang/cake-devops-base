@@ -14,9 +14,9 @@ import com.rany.cake.devops.base.service.adapter.AppMemberAdapter;
 import com.rany.cake.devops.base.service.handler.alarm.push.AlarmWebSideMessagePusher;
 import com.rany.cake.devops.base.service.handler.alarm.push.AlarmWebhookPusher;
 import com.rany.cake.devops.base.util.enums.AlarmGroupNotifyType;
-import com.rany.uic.api.facade.account.AccountFacade;
-import com.rany.uic.api.query.account.AccountQuery;
-import com.rany.uic.common.dto.account.AccountDTO;
+import com.rany.ops.api.facade.account.AccountFacade;
+import com.rany.ops.api.query.account.AccountQuery;
+import com.rany.ops.common.dto.account.AccountDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

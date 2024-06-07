@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.service;
 
-import com.rany.uic.api.facade.account.AccountFacade;
+import com.rany.ops.api.facade.account.AccountFacade;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

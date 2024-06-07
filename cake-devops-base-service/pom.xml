@@ -103,10 +103,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.rany.uic</groupId>
-            <artifactId>uic-api</artifactId>
+            <groupId>com.rany.ops</groupId>
+            <artifactId>cake-ops-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
