@@ -538,7 +538,7 @@ public class SftpRemoteService implements SftpService {
                 log.setNowProgress(progress);
             }
         });
-        return fileTransferLogDataAdapter.sourceToTarget(transferLogs);
+        return Converts.toList(transferLogs, FileTransferLogDTO.class);
     }
 
     @Override

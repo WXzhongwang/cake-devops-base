@@ -2,7 +2,7 @@ package com.rany.cake.devops.base.service.adapter.conversions;
 
 
 import com.rany.cake.devops.base.api.dto.FileTransferLogDTO;
-import com.rany.cake.devops.base.infra.po.FileTransferLogPO;
+import com.rany.cake.devops.base.domain.entity.FileTransferLog;
 import com.rany.cake.toolkit.lang.convert.TypeStore;
 import com.rany.cake.toolkit.lang.io.Files1;
 
@@ -16,7 +16,7 @@ import com.rany.cake.toolkit.lang.io.Files1;
 public class FileTransferLogConversion {
 
     static {
-        TypeStore.STORE.register(FileTransferLogPO.class, FileTransferLogDTO.class, p -> {
+        TypeStore.STORE.register(FileTransferLog.class, FileTransferLogDTO.class, p -> {
             FileTransferLogDTO vo = new FileTransferLogDTO();
             vo.setId(p.getId());
             vo.setHostId(p.getHostId());
