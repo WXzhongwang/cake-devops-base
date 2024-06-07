@@ -36,7 +36,7 @@ public class SftpController {
 
     @PostMapping("/open")
     @ApiOperation(value = "打开sftp")
-    public PojoResult<FileOpenDTO> open(@RequestBody OpenSftpCommand command) {
+    public PojoResult<FileOpenDTO> open(@RequestBody OpenSftpCommand command, @CurrentUser SsoUser ssoUser) {
         Valid.notNull(command.getHostId());
         FileOpenDTO open = sftpService.open(command);
         return PojoResult.succeed(open);
