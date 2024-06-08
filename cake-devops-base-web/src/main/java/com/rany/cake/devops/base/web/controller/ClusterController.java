@@ -33,7 +33,7 @@ public class ClusterController {
         return PojoResult.succeed(clusterService.testConnect(testClusterConnectCommand));
     }
 
-    @GetMapping("/listAll")
+    @GetMapping("/list-all")
     public ListResult<ClusterDTO> listAll() {
         return ListResult.succeed(clusterService.listCluster());
     }

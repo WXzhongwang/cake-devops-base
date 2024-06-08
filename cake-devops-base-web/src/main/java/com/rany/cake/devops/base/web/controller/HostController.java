@@ -21,24 +21,24 @@ public class HostController {
     @Resource
     private HostService hostService;
 
-    @PostMapping("/pageHost")
+    @PostMapping("/page")
     public PageResult<HostDTO> pageHost(@RequestBody(required = false) HostPageQuery hostPageQuery) {
         return PageResult.succeed(hostService.pageHost(hostPageQuery));
     }
 
-    @GetMapping("/getHost")
+    @GetMapping("/get")
     public PojoResult<HostDTO> getHost(@RequestParam("id") String hostId) {
         HostBasicQuery hostBasicQuery = new HostBasicQuery();
         hostBasicQuery.setHostId(hostId);
         return PojoResult.succeed(hostService.getHost(hostBasicQuery));
     }
 
-    @PostMapping("/createHost")
+    @PostMapping("/create")
     public PojoResult<String> createHost(@RequestBody CreateHostCommand createHostCommand) {
         return PojoResult.succeed(hostService.createHost(createHostCommand));
     }
 
-    @PostMapping("/updateHost")
+    @PostMapping("/update")
     public PojoResult<Boolean> updateHost(@RequestBody ModifyHostCommand modifyHostCommand) {
         return PojoResult.succeed(hostService.modifyHost(modifyHostCommand));
     }

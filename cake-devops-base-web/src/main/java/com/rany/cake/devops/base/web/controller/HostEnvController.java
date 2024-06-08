@@ -59,7 +59,7 @@ public class HostEnvController {
         return PojoResult.succeed(hostEnvService.view(hostEnvViewQuery));
     }
 
-    @PostMapping("/saveView")
+    @PostMapping("/save-view")
     public PojoResult<String> saveView(@RequestBody HostEnvViewSaveCommand saveCommand) {
         return PojoResult.succeed(hostEnvService.saveView(saveCommand));
     }

@@ -24,7 +24,7 @@ public class UserController {
     @Resource
     private AppMemberService appMemberService;
 
-    @GetMapping("/getUser")
+    @GetMapping("/get-current-user")
     public PojoResult<SsoUser> getUser(HttpServletRequest request) {
         String token = request.getHeader(SsoConstants.TOKEN_AUTH_HEADER);
         if (StringUtils.isNotEmpty(token)) {
@@ -33,7 +33,7 @@ public class UserController {
         return PojoResult.succeed(SsoUtil.getCurrentUser(request));
     }
 
-    @PostMapping("/queryMembers")
+    @PostMapping("/query-members")
     public PageResult<AppAccountDTO> getUser(MemberPageQuery memberPageQuery) {
         return PageResult.succeed(appMemberService.pageQueryMember(memberPageQuery));
     }
