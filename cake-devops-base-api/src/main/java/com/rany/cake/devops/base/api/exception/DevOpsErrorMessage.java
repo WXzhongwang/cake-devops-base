@@ -14,6 +14,7 @@ import lombok.Getter;
  */
 public enum DevOpsErrorMessage implements ResponseCode {
 
+
     APP_NOT_FOUND("30000", "应用未找到"),
     CLUSTER_NOT_FOUND("31000", "集群未找到"),
     ENV_NOT_FOUND("32000", "环境未找到"),
@@ -38,8 +39,7 @@ public enum DevOpsErrorMessage implements ResponseCode {
     MEMBER_DUPLICATED("51000", "项目成员已存在"),
     SFTP_TOKEN_EMPTY("52000", "token为空"),
     SFTP_TOKEN_EXPIRE("53000", "token过期"),
-
-    ;
+    USER_MENU_INFO_ERROR("54000", "获取用户信息失败");
 
     private final String code;
     @Getter

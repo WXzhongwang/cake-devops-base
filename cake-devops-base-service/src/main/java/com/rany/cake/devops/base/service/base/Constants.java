@@ -19,6 +19,7 @@ public final class Constants {
     public static final String SYSTEM_VERSION = "1.0.0";
     public final static String TRACE_ID = "traceId";
     public final static String SYSTEM = "0";
+    public final static String CAKE_DEVOPS_ACL_APP_CODE = "CAKE_DEVOPS";
 
     public static final String CREATED_BY = "Created by cake";
     public static final String PONG = "pong";
