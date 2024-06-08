@@ -27,10 +27,12 @@ import {
 import defaultProps from "./_default";
 import { API } from "typings";
 import { ProConfigProvider, ProCard } from "@ant-design/pro-components";
+import { UserRoleMenuDTO } from "@/models/user";
 interface LayoutProps {
   dispatch: Dispatch;
   isLogin: boolean;
   userData: API.UserInfo;
+  menu: UserRoleMenuDTO;
 }
 
 const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
@@ -50,9 +52,15 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
       type: "user/getUserInfo",
     });
   };
+  const queryUserMenu = () => {
+    dispatch({
+      type: "user/queryMenu",
+    });
+  };
 
   useEffect(() => {
     getUserInfo();
+    queryUserMenu();
   }, []);
 
   return (
@@ -162,10 +170,19 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
 };
 
 export default connect(
-  ({ user }: { user: { isLogin: boolean; userData: API.UserInfo } }) => {
+  ({
+    user,
+  }: {
+    user: {
+      isLogin: boolean;
+      userData: API.UserInfo;
+      menu: UserRoleMenuDTO;
+    };
+  }) => {
     return {
       isLogin: user.isLogin,
       userData: user.userData,
+      menu: user.menu,
     };
   }
 )(Layout);

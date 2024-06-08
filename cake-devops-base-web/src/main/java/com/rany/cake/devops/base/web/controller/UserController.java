@@ -36,7 +36,7 @@ public class UserController {
     @Resource
     private AppConfig appConfig;
 
-    @GetMapping("/get-current-user")
+    @GetMapping("/current")
 
     public PojoResult<SsoUser> getUser(HttpServletRequest request) {
         String token = request.getHeader(SsoConstants.TOKEN_AUTH_HEADER);
@@ -51,7 +51,7 @@ public class UserController {
         return PageResult.succeed(appMemberService.pageQueryMember(memberPageQuery));
     }
 
-    @PostMapping("/menus")
+    @PostMapping("/menu")
     public PojoResult<UserRoleMenuDTO> getUser(@CurrentUser SsoUser ssoUser) {
         UserRoleMenuPermissionQuery userRoleMenuPermissionQuery = new UserRoleMenuPermissionQuery();
         userRoleMenuPermissionQuery.setAccountId(Long.valueOf(ssoUser.getUserId()));

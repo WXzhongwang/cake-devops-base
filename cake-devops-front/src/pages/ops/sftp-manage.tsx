@@ -18,6 +18,9 @@ import {
   Upload,
   Progress,
   Tag,
+  Modal,
+  Form,
+  Select,
 } from "antd";
 import dayjs from "dayjs";
 import {
@@ -48,6 +51,8 @@ import {
 } from "@ant-design/icons";
 import { connect, Dispatch, useParams } from "umi";
 
+const { Option } = Select;
+
 interface SftpManageProps {
   dispatch: Dispatch;
   open: OpenSessionDTO;
@@ -68,10 +73,13 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     string | null
   >(null);
   const [showHiddenFiles, setShowHiddenFiles] = useState<boolean>(false);
+  const [mkdirModalVisible, setMkdirModalVisible] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPath, setCurrentPath] = useState<string>(open?.home || "/");
+  const [homePath, setHomePath] = useState<string>(open?.path || "/");
   const [pathStack, setPathStack] = useState<string[]>([]);
   const [inputPath, setInputPath] = useState<string>(open?.home || "/");
+  const [mkdirTouchForm] = Form.useForm();
 
   useEffect(() => {
     if (id) {
@@ -117,12 +125,16 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   };
 
   const getTransferList = () => {
-    setInterval(() => {
-      dispatch({
-        type: "sftp/getTransferList",
-        payload: { sessionToken: open.sessionToken },
-      });
-    }, 5000);
+    // setInterval(() => {
+    dispatch({
+      type: "sftp/getTransferList",
+      payload: { sessionToken: open.sessionToken },
+    });
+    // }, 5000);
+  };
+
+  const showModal = () => {
+    setMkdirModalVisible(!mkdirModalVisible);
   };
 
   const getFileList = (dirPath: string, showHidden: boolean) => {
@@ -132,6 +144,9 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
         path: dirPath,
         sessionToken: open.sessionToken,
         all: showHidden,
+      },
+      callback: () => {
+        setCurrentPath(dirPath);
       },
     });
   };
@@ -217,8 +232,31 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   };
 
   // 创建文件或文件夹
-  const createFileOrFolder = () => {
+  const createFileOrFolder = (values: any) => {
     // TODO: 创建文件或文件夹的逻辑
+    console.log("values", values);
+    mkdirTouchForm.validateFields().then((values) => {
+      if (values?.type === "file") {
+        dispatch({
+          type: "sftp/createFile",
+          payload: { sessionToken: open.sessionToken, path: values.path },
+          callback: () => {
+            message.success("文件创建成功");
+          },
+        });
+      } else {
+        dispatch({
+          type: "sftp/createFolder",
+          payload: { sessionToken: open.sessionToken, path: values.path },
+          callback: () => {
+            message.success("文件夹创建成功");
+          },
+        });
+      }
+
+      showModal();
+      mkdirTouchForm.resetFields();
+    });
   };
 
   // 上传文件
@@ -314,6 +352,14 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     },
     selectedRowKeys: selectedRows.map((row) => row.path),
   };
+
+  const selectBefore = (
+    <Select defaultValue={currentPath}>
+      <Option value={currentPath}>当前路径</Option>
+      <Option value={homePath}>主目录</Option>
+      <Option value={"/"}>根目录</Option>
+    </Select>
+  );
 
   // Handle input path change
   const handleInputPathChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -411,6 +457,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
             <Card>
               <Space style={{ width: "100%", justifyContent: "space-between" }}>
                 <Breadcrumb />
+                {/* 顶部操作按钮工具栏 */}
                 <Space.Compact style={{ marginBottom: 16 }}>
                   <Space style={{ marginRight: 5 }}>
                     显示隐藏文件
@@ -438,7 +485,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   ></Button>
                   <Popover
                     placement="bottomRight"
-                    open={true}
+                    // open={true}
                     content={
                       <Space
                         style={{
@@ -523,7 +570,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   </Popover>
                   <Button
                     icon={<PlusOutlined />}
-                    onClick={createFileOrFolder}
+                    onClick={showModal}
                     title="创建"
                   ></Button>
                   <Popover
@@ -576,12 +623,55 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   ></Button>
                 </Space.Compact>
               </Space>
+              {/* 文件列表 */}
               <Table
                 dataSource={files}
                 columns={columns}
                 rowKey="path"
                 rowSelection={{ ...rowSelection }}
               />
+
+              <Modal
+                title="新建文件(夹)"
+                open={mkdirModalVisible}
+                onCancel={() => showModal()}
+                onOk={mkdirTouchForm.submit}
+              >
+                <Form
+                  form={mkdirTouchForm}
+                  initialValues={{ type: "file" }}
+                  layout="vertical"
+                  onFinish={createFileOrFolder}
+                >
+                  <Form.Item
+                    label="创建类型"
+                    name="type"
+                    rules={[
+                      {
+                        required: true,
+                        message: "请输入具体创建类型",
+                      },
+                    ]}
+                  >
+                    <Select defaultValue={"file"}>
+                      <Option value={"file"}>文件</Option>
+                      <Option value={"dir"}>文件夹</Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    label="文件"
+                    name="path"
+                    rules={[
+                      {
+                        required: true,
+                        message: "请输入具体文件或文件夹名称",
+                      },
+                    ]}
+                  >
+                    <Input addonBefore={selectBefore} />
+                  </Form.Item>
+                </Form>
+              </Modal>
             </Card>
           </Col>
         </Row>

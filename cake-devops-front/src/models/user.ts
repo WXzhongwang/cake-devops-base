@@ -7,6 +7,7 @@ type UserModelState = {
   userData: API.UserInfo;
   members: AppAccountDTO[];
   appMembers: AppAccountDTO[];
+  menu: UserRoleMenuDTO | null;
 };
 
 interface QueryCurrentUserAction {
@@ -23,6 +24,10 @@ interface QueryAppMembersAction {
   payload: QueryAppAccountPayload;
 }
 
+interface QueryMenuAction {
+  type: "user/queryMenu";
+}
+
 export interface QueryAccountPayload {
   name: string;
   pageNo: number;
@@ -34,6 +39,32 @@ export interface QueryAppAccountPayload {
   name: string;
   pageNo: number;
   pageSize: number;
+}
+
+export interface UserRoleMenuDTO {
+  roles: RoleDTO[];
+  menuTree: MenuTreeDTO[];
+}
+export interface RoleDTO {
+  roleId: string;
+  roleName: string;
+  roleDesc: string;
+  roleKey: string;
+  parentId: string;
+  isDeleted: string;
+  status: string;
+}
+export interface MenuTreeDTO {
+  menuId: string;
+  name: string;
+  path: string;
+  parentId: string;
+  level: number;
+  icon: string;
+  hidden: boolean;
+  isDeleted: string;
+  sort: number;
+  children?: MenuTreeDTO[];
 }
 
 export interface AppAccountDTO {
@@ -67,11 +98,13 @@ type UserModelType = {
     getUserInfo: Effect;
     queryMembers: Effect;
     queryAppMembers: Effect;
+    queryMenu: Effect;
   };
   reducers: {
     setUserInfo: Reducer<UserModelState>;
     setAppMembers: Reducer<UserModelState>;
     setMembers: Reducer<UserModelState>;
+    setMenu: Reducer<UserModelState>;
   };
 };
 
@@ -86,6 +119,7 @@ const UserModel: UserModelType = {
     },
     members: [],
     appMembers: [],
+    menu: null,
   },
   effects: {
     *logout(_, { call, put }) {
@@ -121,8 +155,15 @@ const UserModel: UserModelType = {
     *queryAppMembers({ payload }: QueryAppMembersAction, { call, put }) {
       const res = yield call(userService.queryAppMembers, payload);
       yield put({
-        type: "serAppMembers",
+        type: "setAppMembers",
         payload: res.content?.items,
+      });
+    },
+    *queryMenu({}: QueryMenuAction, { call, put }) {
+      const res = yield call(userService.queryUserMenu);
+      yield put({
+        type: "setMenu",
+        payload: res.content,
       });
     },
   },
@@ -143,6 +184,12 @@ const UserModel: UserModelType = {
       return {
         ...state,
         appMembers: action.payload,
+      };
+    },
+    setMenu(state, action) {
+      return {
+        ...state,
+        menu: action.payload,
       };
     },
   },

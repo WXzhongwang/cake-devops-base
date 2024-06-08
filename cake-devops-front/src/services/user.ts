@@ -7,7 +7,7 @@ export async function logout() {
 }
 
 export async function queryAppMembers(data: QueryAppAccountPayload) {
-  return request("/api/devops/user/pageAppMembers", {
+  return request("/api/devops/app/page-app-members", {
     method: "POST",
     data,
   });
@@ -21,7 +21,13 @@ export async function queryMembers(data: QueryAccountPayload) {
 }
 
 export async function getUserInfo() {
-  return request("/api/devops/user/get-current-user", {
+  return request("/api/devops/user/current", {
     method: "GET",
+  });
+}
+
+export async function queryUserMenu() {
+  return request("/api/devops/user/menu", {
+    method: "POST",
   });
 }
