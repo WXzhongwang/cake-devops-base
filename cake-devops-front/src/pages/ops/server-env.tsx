@@ -16,6 +16,7 @@ import { HostModel } from "@/models/host";
 import LeftHostList from "./components/left-host-list";
 import CreateHostEnvironmentVariableForm from "./components/create-host-env-form";
 import dayjs from "dayjs";
+import { PageContainer } from "@ant-design/pro-layout";
 
 const { Option } = Select;
 
@@ -159,74 +160,76 @@ const HostEnvironmentVariablesPage: React.FC<
   ];
 
   return (
-    <Row gutter={16}>
-      <Col span={6}>
-        {/* 左侧主机列表 */}
-        <LeftHostList onItemClick={handleHostItemClick} />
-      </Col>
-      <Col span={18}>
-        <Space size="middle" direction="vertical" style={{ width: "100%" }}>
-          <Form
-            layout="inline"
-            onFinish={(values) => {
-              // 将表单的搜索条件发送给后端进行过滤
-              setFilters(values);
-            }}
-          >
-            <Form.Item name="name" label="变量名称">
-              <Input placeholder="变量名称" />
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: 8 }}
-              >
-                查询
-              </Button>
-              <Button
-                onClick={() => {
-                  setFilters({
-                    name: "",
-                  });
-                }}
-              >
-                重置
-              </Button>
-            </Form.Item>
-          </Form>
-          <Button type="primary" onClick={handleAddNew}>
-            新增环境变量
-          </Button>
-          <Table
-            columns={columns}
-            dataSource={hostEnvs}
-            rowKey={"id"}
-            pagination={{
-              total: hostEnvsTotal,
-              current: pagination.pageNo,
-              pageSize: pagination.pageSize,
-              onChange: handlePaginationChange,
-            }}
-          />
-        </Space>
+    <PageContainer title="主机环境变量">
+      <Row gutter={16}>
+        <Col span={6}>
+          {/* 左侧主机列表 */}
+          <LeftHostList onItemClick={handleHostItemClick} />
+        </Col>
+        <Col span={18}>
+          <Space size="middle" direction="vertical" style={{ width: "100%" }}>
+            <Form
+              layout="inline"
+              onFinish={(values) => {
+                // 将表单的搜索条件发送给后端进行过滤
+                setFilters(values);
+              }}
+            >
+              <Form.Item name="name" label="变量名称">
+                <Input placeholder="变量名称" />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{ marginRight: 8 }}
+                >
+                  查询
+                </Button>
+                <Button
+                  onClick={() => {
+                    setFilters({
+                      name: "",
+                    });
+                  }}
+                >
+                  重置
+                </Button>
+              </Form.Item>
+            </Form>
+            <Button type="primary" onClick={handleAddNew}>
+              新增环境变量
+            </Button>
+            <Table
+              columns={columns}
+              dataSource={hostEnvs}
+              rowKey={"id"}
+              pagination={{
+                total: hostEnvsTotal,
+                current: pagination.pageNo,
+                pageSize: pagination.pageSize,
+                onChange: handlePaginationChange,
+              }}
+            />
+          </Space>
 
-        <Drawer
-          title={selectedEnv ? "编辑环境变量" : "新增环境变量"}
-          width={360}
-          open={drawerVisible}
-          onClose={onCloseDrawer}
-          destroyOnClose={true}
-        >
-          <CreateHostEnvironmentVariableForm
-            initialValues={selectedEnv}
-            onSave={handleSaveHostEnv}
-            onCancel={onCloseDrawer}
-            onUpdate={handleUpdateHostEnv}
-          />
-        </Drawer>
-      </Col>
-    </Row>
+          <Drawer
+            title={selectedEnv ? "编辑环境变量" : "新增环境变量"}
+            width={360}
+            open={drawerVisible}
+            onClose={onCloseDrawer}
+            destroyOnClose={true}
+          >
+            <CreateHostEnvironmentVariableForm
+              initialValues={selectedEnv}
+              onSave={handleSaveHostEnv}
+              onCancel={onCloseDrawer}
+              onUpdate={handleUpdateHostEnv}
+            />
+          </Drawer>
+        </Col>
+      </Row>
+    </PageContainer>
   );
 };
 

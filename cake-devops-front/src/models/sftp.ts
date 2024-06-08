@@ -780,7 +780,6 @@ const SftpModel: SftpModelType = {
 
   reducers: {
     saveToken(state, action) {
-      console.log("sessionToken", action.payload.sessionToken);
       return {
         ...state,
         open: action.payload,
@@ -801,7 +800,7 @@ const SftpModel: SftpModelType = {
     saveTransferList(state, action) {
       return {
         ...state,
-        transferList: action.payload.content,
+        transferList: action.payload,
       };
     },
   },

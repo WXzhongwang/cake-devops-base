@@ -4,7 +4,7 @@ import request from "@/services/request";
 import { CreateClusterPayload, ConnectClusterPayload } from "@/models/cluster";
 
 export async function listAll() {
-  return request("/api/devops/cluster/listAll", {
+  return request("/api/devops/cluster/list-all", {
     method: "GET",
     headers: {
       Accept: "application/json", // 设置 Accept 头为 application/json

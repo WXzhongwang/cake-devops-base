@@ -17,7 +17,7 @@ import {
 
 export async function fetchHosts(data: QueryHostPayload) {
   console.log("payload", data);
-  return request("/api/devops/host/pageHost", {
+  return request("/api/devops/host/page", {
     method: "POST",
     data,
   });
@@ -25,7 +25,7 @@ export async function fetchHosts(data: QueryHostPayload) {
 
 export async function createHost(data: CreateHostPayload) {
   console.log("payload", data);
-  return request("/api/devops/host/createHost", {
+  return request("/api/devops/host/create", {
     method: "POST",
     data,
   });
@@ -57,7 +57,7 @@ export async function pingHost(data: PingHostPayload) {
 
 export async function updateHost(data: UpdateHostPayload) {
   console.log("payload", data);
-  return request("/api/devops/host/updateHost", {
+  return request("/api/devops/host/update", {
     method: "POST",
     data,
   });
@@ -70,14 +70,14 @@ export async function fetchHostGroups() {
 }
 
 export async function createHostGroup(data: CreateHostGroupPayload) {
-  return request("/api/devops/host-group/createGroup", {
+  return request("/api/devops/host-group/create", {
     method: "POST",
     data,
   });
 }
 
 export async function updateHostGroup(data: UpdateHostGroupPayload) {
-  return request("/api/devops/host-group/createGroup", {
+  return request("/api/devops/host-group/update", {
     method: "POST",
     data,
   });

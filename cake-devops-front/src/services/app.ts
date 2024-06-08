@@ -10,35 +10,35 @@ import {
   AddAppMemberPayload,
 } from "@/models/app";
 export async function pageAppList(data: QueryAppPayload) {
-  return request("/api/devops/app/pageApp", {
+  return request("/api/devops/app/page", {
     method: "POST",
     data,
   });
 }
 
 export async function createApp(data: CreateAppPayload) {
-  return request("/api/devops/app/createApp", {
+  return request("/api/devops/app/create", {
     method: "POST",
     data,
   });
 }
 
 export async function updateMember(data: UpdateAppMemberPayload) {
-  return request("/api/devops/app/updateMember", {
+  return request("/api/devops/app/update-member", {
     method: "POST",
     data,
   });
 }
 
 export async function addMember(data: AddAppMemberPayload) {
-  return request("/api/devops/app/addMember", {
+  return request("/api/devops/app/add-member", {
     method: "POST",
     data,
   });
 }
 
 export async function deleteMember(data: DeleteAppMemberPayload) {
-  return request("/api/devops/app/deleteMember", {
+  return request("/api/devops/app/delete-member", {
     method: "POST",
     data,
   });
@@ -46,29 +46,29 @@ export async function deleteMember(data: DeleteAppMemberPayload) {
 
 export async function createAppEnv(data: CreateAppEnvPayload) {
   console.log(data);
-  return request("/api/devops/app/createEnv", {
+  return request("/api/devops/app/create-env", {
     method: "POST",
     data,
   });
 }
 
 export async function getAppDetail(id: number) {
-  return request(`/api/devops/app/getApp?id=${id}`);
+  return request(`/api/devops/app/get?id=${id}`);
 }
 
 export async function getAppEnv(data: any) {
-  return request(`/api/devops/app/getAppEnv`, {
+  return request(`/api/devops/app/get-app-env`, {
     method: "POST",
     data,
   });
 }
 
 export async function getDepartments() {
-  return request(`/api/devops/app/getDepartments`);
+  return request(`/api/devops/app/departments`);
 }
 
 export async function pageAppMembers(data: QueryAppMemberPayload) {
-  return request(`/api/devops/app/pageAppMembers`, {
+  return request(`/api/devops/app/page-app-members`, {
     method: "POST",
     data,
   });

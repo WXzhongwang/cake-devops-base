@@ -17,6 +17,7 @@ import {
   Popover,
   Upload,
   Progress,
+  Tag,
 } from "antd";
 import dayjs from "dayjs";
 import {
@@ -374,7 +375,6 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
         },
       });
     });
-  console.log("files", files);
   return (
     <PageContainer title="SFTP">
       <Card>
@@ -438,8 +438,14 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   ></Button>
                   <Popover
                     placement="bottomRight"
+                    open={true}
                     content={
-                      <Space style={{ width: "100%" }} direction="vertical">
+                      <Space
+                        style={{
+                          width: "100%",
+                        }}
+                        direction="vertical"
+                      >
                         <Space.Compact block>
                           <Tooltip title="刷新">
                             <Button size="small" icon={<ReloadOutlined />} />
@@ -466,23 +472,46 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                             <Button size="small" icon={<DeleteOutlined />} />
                           </Tooltip>
                         </Space.Compact>
-                        {transferList?.map((item) => (
-                          <Space
-                            style={{ width: "100%" }}
-                            key={item.fileToken}
-                            direction="vertical"
-                          >
-                            <Typography.Text ellipsis>
-                              {item.remoteFile}
-                            </Typography.Text>
-                            <Space style={{ width: "100%" }}>
-                              <Progress percent={100} showInfo={false} />
-                              <Tooltip title="下载">
-                                <DownloadOutlined />
+                        <Space
+                          style={{
+                            width: "100%",
+                            maxHeight: 300,
+                            overflowY: "auto",
+                            padding: "0 20px 0 0",
+                          }}
+                          direction="vertical"
+                        >
+                          {transferList?.map((item) => (
+                            <Space
+                              style={{ width: "100%" }}
+                              key={item.fileToken}
+                              direction="vertical"
+                              size="small"
+                            >
+                              <Tooltip title={item.remoteFile}>
+                                <Typography.Text
+                                  style={{ maxWidth: 360 }}
+                                  ellipsis
+                                >
+                                  {item.remoteFile}
+                                </Typography.Text>
                               </Tooltip>
+                              <Space style={{ width: "100%" }} size={4}>
+                                <Tag color={StatusColorMapper[item.status]}>
+                                  {StatusMapper[item.status]}
+                                </Tag>
+                                <Progress
+                                  style={{ width: 300 }}
+                                  percent={item.progress}
+                                  showInfo={false}
+                                />
+                                <Tooltip title="下载">
+                                  <DownloadOutlined />
+                                </Tooltip>
+                              </Space>
                             </Space>
-                          </Space>
-                        ))}
+                          ))}
+                        </Space>
                       </Space>
                     }
                   >
@@ -578,3 +607,21 @@ export default connect(
     transferList: sftp.transferList,
   })
 )(SftpManagementPage);
+
+const StatusMapper: Record<number, string> = {
+  10: "未开始",
+  20: "进行中",
+  30: "已暂停",
+  40: "已完成",
+  50: "已取消",
+  60: "传输异常",
+};
+
+const StatusColorMapper: Record<number, string> = {
+  10: "default",
+  20: "processing",
+  30: "purple",
+  40: "success",
+  50: "warning",
+  60: "error",
+};

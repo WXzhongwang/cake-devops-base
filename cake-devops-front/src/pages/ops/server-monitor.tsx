@@ -345,7 +345,7 @@ const HostPage: React.FC<HostListProps> = ({
   ];
 
   return (
-    <PageContainer title="主机监控管理">
+    <PageContainer title="主机监控">
       <Card>
         <Space size="middle" direction="vertical" style={{ width: "100%" }}>
           <Form

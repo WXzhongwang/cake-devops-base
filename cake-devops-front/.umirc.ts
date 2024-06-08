@@ -28,6 +28,7 @@ export default defineConfig({
   extraBabelPlugins:
     process.env.NODE_ENV === "prod" ? ["babel-plugin-dynamic-import-node"] : [],
 
+  // 全部路由配置
   routes: [
     { path: "/", redirect: "/apps" },
     { path: "/apps", component: "app/app-list", name: "应用中心" },
@@ -68,7 +69,11 @@ export default defineConfig({
           component: "ops/server-monitor",
           name: "主机监控",
         },
-        { path: "/ops/sftp-manage/:id", component: "ops/sftp-manage" },
+        {
+          path: "/ops/sftp-manage/:id",
+          component: "ops/sftp-manage",
+          layout: false,
+        },
       ],
     },
     {

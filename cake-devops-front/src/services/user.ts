@@ -14,18 +14,14 @@ export async function queryAppMembers(data: QueryAppAccountPayload) {
 }
 
 export async function queryMembers(data: QueryAccountPayload) {
-  return request("/api/devops/user/queryMembers", {
+  return request("/api/devops/user/query-members", {
     method: "POST",
     data,
   });
 }
 
 export async function getUserInfo() {
-  return request("/api/devops/user/getUser", {
+  return request("/api/devops/user/get-current-user", {
     method: "GET",
-    headers: {
-      Accept: "application/json", // 设置 Accept 头为 application/json
-      // 其他头部信息...
-    },
   });
 }

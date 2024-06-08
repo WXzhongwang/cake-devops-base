@@ -7,6 +7,7 @@ import {
 } from "@ant-design/icons";
 
 export default {
+  // 布局路由配置
   route: {
     path: "/",
     redirect: "/apps",
@@ -91,14 +92,30 @@ export default {
           },
         ],
       },
-      // {
-      //   path: "https://ant.design",
-      //   name: "Ant Design 官网外链",
-      //   icon: <ChromeFilled />,
-      // },
     ],
   },
   location: {
     pathname: "/",
   },
+  appList: [
+    {
+      icon: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
+      title: "账号中心",
+      desc: "UIC",
+      url: "https://ant.design",
+    },
+    {
+      icon: "https://gw.alipayobjects.com/zos/antfincdn/FLrTNDvlna/antv.png",
+      title: "ACL",
+      desc: "角色平台",
+      url: "https://antv.vision/",
+      target: "_blank",
+    },
+    {
+      icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
+      title: "Pro Components",
+      desc: "搜索中台",
+      url: "https://procomponents.ant.design/",
+    },
+  ],
 };

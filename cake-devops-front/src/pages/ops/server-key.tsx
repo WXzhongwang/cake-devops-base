@@ -145,7 +145,7 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
   };
 
   return (
-    <PageContainer title="主机秘钥管理">
+    <PageContainer title="主机秘钥">
       <Card>
         <Space size="middle" direction="vertical" style={{ width: "100%" }}>
           <Form
