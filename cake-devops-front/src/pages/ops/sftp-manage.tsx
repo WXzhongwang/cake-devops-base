@@ -21,6 +21,7 @@ import {
   Modal,
   Form,
   Select,
+  InputNumber,
 } from "antd";
 import dayjs from "dayjs";
 import {
@@ -80,6 +81,14 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   const [pathStack, setPathStack] = useState<string[]>([]);
   const [inputPath, setInputPath] = useState<string>(open?.home || "/");
   const [mkdirTouchForm] = Form.useForm();
+  const [basicPath, setBasicPath] = useState(currentPath);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentRwx, setCurrentRwx] = useState("");
+  const [currentRecordPath, setCurrentRecordPath] = useState<string | null>(
+    null
+  );
+
+  const [modalForm] = Form.useForm();
 
   useEffect(() => {
     if (id) {
@@ -94,6 +103,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     }
     if (open?.home) {
       setCurrentPath(open.home);
+      setBasicPath(open.home);
       setSelectedDirectoryKey(open.home);
       getFileList(open.home, showHiddenFiles);
     }
@@ -192,14 +202,22 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   };
 
   // 删除选中文件
-  const deleteSelectedFiles = () => {
-    // TODO: 删除选中文件的逻辑
-    message.success("删除成功");
+  const deleteSelectedFiles = (files: string[]) => {
+    dispatch({
+      type: "sftp/removeFile",
+      payload: {
+        paths: files,
+        sessionToken: open?.sessionToken,
+      },
+      callback: () => {
+        message.success("删除成功");
+        getFileList(open.home, showHiddenFiles);
+      },
+    });
   };
 
   // 下载选中文件
   const downloadSelectedFiles = (path: string) => {
-    // TODO: 下载选中文件的逻辑
     dispatch({
       type: "sftp/downloadFile",
       payload: { paths: [path], sessionToken: open.sessionToken },
@@ -211,7 +229,20 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
 
   const moveFile = (record: FileDetailDTO) => {};
 
-  const updatePermission = (record: FileDetailDTO) => {};
+  const updatePermission = (auth: number) => {
+    dispatch({
+      type: "sftp/changeFilePermissions",
+      payload: {
+        permission: auth,
+        path: currentRecordPath,
+        sessionToken: open.sessionToken,
+      },
+      callback: () => {
+        message.success("修改文件权限成功");
+        getFileList(open.home, showHiddenFiles);
+      },
+    });
+  };
 
   // 复制选中文件路径
   const copySelectedFilesPath = (path: string) => {
@@ -239,17 +270,25 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       if (values?.type === "file") {
         dispatch({
           type: "sftp/createFile",
-          payload: { sessionToken: open.sessionToken, path: values.path },
+          payload: {
+            sessionToken: open.sessionToken,
+            path: `${basicPath}/${values.path}`,
+          },
           callback: () => {
             message.success("文件创建成功");
+            getFileList(open.home, showHiddenFiles);
           },
         });
       } else {
         dispatch({
           type: "sftp/createFolder",
-          payload: { sessionToken: open.sessionToken, path: values.path },
+          payload: {
+            sessionToken: open.sessionToken,
+            path: `${basicPath}/${values.path}`,
+          },
           callback: () => {
             message.success("文件夹创建成功");
+            getFileList(open.home, showHiddenFiles);
           },
         });
       }
@@ -325,7 +364,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           />
           <Button
             icon={<DeleteOutlined />}
-            onClick={() => deleteSelectedFiles()}
+            onClick={() => deleteSelectedFiles([record.path])}
             title="删除"
             size="small"
           />
@@ -337,7 +376,11 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           />
           <Button
             icon={<EditOutlined />}
-            onClick={() => updatePermission(record)}
+            onClick={() => {
+              setCurrentRecordPath(record.path);
+              setCurrentRwx(modeToRwx(record.permission));
+              setModalVisible(true);
+            }}
             title="修改权限"
             size="small"
           />
@@ -354,10 +397,17 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   };
 
   const selectBefore = (
-    <Select defaultValue={currentPath}>
+    <Select
+      // defaultValue={currentPath}
+      value={basicPath}
+      onChange={(value) => {
+        console.log(value);
+        setBasicPath(value);
+      }}
+    >
       <Option value={currentPath}>当前路径</Option>
       <Option value={homePath}>主目录</Option>
-      <Option value={"/"}>根目录</Option>
+      <Option value={""}>根目录</Option>
     </Select>
   );
 
@@ -468,7 +518,9 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   </Space>
                   <Button
                     icon={<DeleteOutlined />}
-                    onClick={deleteSelectedFiles}
+                    onClick={() =>
+                      deleteSelectedFiles(selectedRows.map((row) => row.path))
+                    }
                     disabled={selectedRows.length === 0}
                     title="删除"
                   ></Button>
@@ -672,6 +724,37 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   </Form.Item>
                 </Form>
               </Modal>
+
+              <Modal
+                open={modalVisible}
+                title="文件提权"
+                width={300}
+                onCancel={() => setModalVisible(false)}
+                onOk={() => {
+                  modalForm.validateFields().then((values) => {
+                    updatePermission(values.auth);
+                  });
+                }}
+              >
+                <Form form={modalForm}>
+                  <Form.Item label="文件路径">
+                    <Typography.Text copyable>
+                      {currentRecordPath}
+                    </Typography.Text>
+                  </Form.Item>
+
+                  <Form.Item label="权限" name="auth">
+                    <InputNumber
+                      width={100}
+                      max={777}
+                      onChange={(value) => {
+                        setCurrentRwx(modeToRwx(value));
+                      }}
+                    />
+                  </Form.Item>
+                  <Form.Item label="当前文件权限">{currentRwx}</Form.Item>
+                </Form>
+              </Modal>
             </Card>
           </Col>
         </Row>
@@ -715,3 +798,27 @@ const StatusColorMapper: Record<number, string> = {
   50: "warning",
   60: "error",
 };
+
+function modeToRwx(mode: number | null) {
+  if (mode === null) return "";
+  const permsMap = {
+    4: "r",
+    2: "w",
+    1: "x",
+  };
+
+  let rwx = "";
+
+  for (let i = 0; i < 3; i++) {
+    let userPerm = "";
+    let num = (mode >> (i * 3)) & 7;
+
+    if (num & 4) userPerm += permsMap[4];
+    if (num & 2) userPerm += permsMap[2];
+    if (num & 1) userPerm += permsMap[1];
+
+    rwx += userPerm;
+  }
+
+  return rwx;
+}
