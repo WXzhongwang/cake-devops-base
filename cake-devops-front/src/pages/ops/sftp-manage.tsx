@@ -49,6 +49,7 @@ import {
   IssuesCloseOutlined,
   FileZipOutlined,
   DeleteOutlined,
+  BackwardOutlined,
 } from "@ant-design/icons";
 import { connect, Dispatch, useParams } from "umi";
 
@@ -78,7 +79,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPath, setCurrentPath] = useState<string>(open?.home || "/");
   const [homePath, setHomePath] = useState<string>(open?.path || "/");
-  const [pathStack, setPathStack] = useState<string[]>([]);
+  const [pathStack, setPathStack] = useState<string[]>(["/"]);
   const [inputPath, setInputPath] = useState<string>(open?.home || "/");
   const [mkdirTouchForm] = Form.useForm();
   const [basicPath, setBasicPath] = useState(currentPath);
@@ -100,7 +101,11 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       getTransferList();
     }
     if (open?.home) {
+      console.log("current stack", pathStack);
       setCurrentPath(open.home);
+      console.log("init home", open.home);
+      pathStack.push(open.home);
+      console.log("current stack", pathStack);
       setBasicPath(open.home);
       setSelectedDirectoryKey(open.home);
       getFileList(open.home, showHiddenFiles);
@@ -173,27 +178,26 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       const key = selectedKeys[0];
       setSelectedDirectoryKey(key);
       loadFileListData(key, showHiddenFiles);
-      setCurrentPath(info.node.title);
+      setCurrentPath(key);
       setInputPath(info.node.key);
-      setPathStack((prev) => [...prev, info.node.title]);
+      setPathStack((prev) => [...prev, info.node.key]);
     }
   };
 
   // 切换是否显示隐藏文件
   const toggleShowHiddenFiles = () => {
     setShowHiddenFiles(!showHiddenFiles);
-    // 过滤文件列表
-    getFileList(selectedDirectoryKey as string, !showHiddenFiles);
+    loadFileListData(selectedDirectoryKey as string, !showHiddenFiles);
   };
 
   // 返回上一级目录
   const goBack = () => {
-    if (pathStack.length > 1) {
+    if (pathStack.length >= 1) {
       pathStack.pop();
       const previousPath = pathStack[pathStack.length - 1];
+      console.log("pop stack", previousPath);
       setCurrentPath(previousPath);
-      setInputPath(previousPath); // Update inputPath when going back
-      // TODO: 加载上一级目录的文件列表逻辑
+      loadFileListData(previousPath, showHiddenFiles);
     } else {
       message.warning("已经是根目录");
     }
@@ -215,10 +219,10 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   };
 
   // 下载选中文件
-  const downloadSelectedFiles = (path: string) => {
+  const downloadSelectedFiles = (path: string[]) => {
     dispatch({
       type: "sftp/downloadFile",
-      payload: { paths: [path], sessionToken: open.sessionToken },
+      payload: { paths: path, sessionToken: open.sessionToken },
       callback: (res: { files: any[] }) => {
         message.success("下载成功");
       },
@@ -232,7 +236,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       type: "sftp/changeFilePermissions",
       payload: {
         permission: auth,
-        path: currentRecordPath,
+        path: currentFile?.path,
         sessionToken: open.sessionToken,
       },
       callback: () => {
@@ -314,17 +318,20 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       title: "名称",
       dataIndex: "name",
       key: "name",
-      render: (val, record) => {
+      render: (text: string, record: FileDetailDTO) => {
         return (
           <Space
             onClick={() => {
               if (record.isDir) {
-                getFileList(record.path, showHiddenFiles);
+                setCurrentPath(record.path);
+                pathStack.push(record.path);
+                console.log("push stack", pathStack);
+                loadFileListData(record.path, showHiddenFiles);
               }
             }}
           >
             {record.isDir ? <FolderOutlined /> : <FileOutlined />}
-            <Typography.Link>{val}</Typography.Link>
+            <Typography.Link>{record.name}</Typography.Link>
           </Space>
         );
       },
@@ -356,7 +363,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           />
           <Button
             icon={<DownloadOutlined />}
-            onClick={() => downloadSelectedFiles(record.path)}
+            onClick={() => downloadSelectedFiles([record.path])}
             title="下载"
             size="small"
           />
@@ -422,7 +429,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     setPathStack((prev) => [...prev, inputPath]);
   };
 
-  const updateTreeData = (list, key, children) =>
+  const updateTreeData = (list: any, key: any, children: any) =>
     list.map((node) => {
       if (node.key === key) {
         return {
@@ -476,18 +483,6 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           <Col span={8}>
             <Card title="目录树">
               <Space direction="vertical">
-                {/* <Breadcrumb style={{ marginBottom: 16 }}>
-                  <Breadcrumb.Item>
-                    <Button
-                      icon={<LeftOutlined />}
-                      onClick={goBack}
-                      disabled={pathStack.length <= 1}
-                      type="link"
-                    />
-                  </Breadcrumb.Item>
-                  <Breadcrumb.Item>/</Breadcrumb.Item>
-                  <Breadcrumb.Item>{currentPath}</Breadcrumb.Item>
-                </Breadcrumb> */}
                 <Input
                   value={inputPath}
                   onChange={handleInputPathChange}
@@ -504,7 +499,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           <Col span={16}>
             <Card>
               <Space style={{ width: "100%", justifyContent: "space-between" }}>
-                <Breadcrumb />
+                {pathToBreadcrumb(currentPath)}
                 {/* 顶部操作按钮工具栏 */}
                 <Space.Compact style={{ marginBottom: 16 }}>
                   <Space style={{ marginRight: 5 }}>
@@ -515,6 +510,12 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                     />
                   </Space>
                   <Button
+                    icon={<BackwardOutlined />}
+                    onClick={() => goBack()}
+                    disabled={currentPath === "/"}
+                    title="删除"
+                  ></Button>
+                  <Button
                     icon={<DeleteOutlined />}
                     onClick={() =>
                       deleteSelectedFiles(selectedRows.map((row) => row.path))
@@ -524,13 +525,15 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   ></Button>
                   <Button
                     icon={<DownloadOutlined />}
-                    onClick={downloadSelectedFiles}
+                    onClick={() =>
+                      downloadSelectedFiles(selectedRows.map((row) => row.path))
+                    }
                     disabled={selectedRows.length === 0}
                     title="下载"
                   ></Button>
                   <Button
                     icon={<CopyOutlined />}
-                    onClick={copySelectedFilesPath}
+                    onClick={() => copySelectedFilesPath(currentPath)}
                     title="复制路径"
                   ></Button>
                   <Popover
@@ -836,4 +839,17 @@ function modeToRwx(isDir: boolean | undefined, mode: number | null): string {
 
   // 根据是否是目录在最前面添加 'd' 或 '-'
   return (isDir ? "d" : "-") + user + group + other;
+}
+
+function pathToBreadcrumb(path: string) {
+  const parts = path.split("/"); // 去除空字符串
+  return (
+    <Breadcrumb>
+      {parts?.map((part, index) => (
+        <Breadcrumb.Item key={index}>
+          {part === null ? "/" : part}
+        </Breadcrumb.Item>
+      ))}
+    </Breadcrumb>
+  );
 }
