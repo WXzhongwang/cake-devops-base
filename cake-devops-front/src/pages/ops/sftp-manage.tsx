@@ -83,10 +83,8 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   const [mkdirTouchForm] = Form.useForm();
   const [basicPath, setBasicPath] = useState(currentPath);
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentRwx, setCurrentRwx] = useState("");
-  const [currentRecordPath, setCurrentRecordPath] = useState<string | null>(
-    null
-  );
+  const [currentFile, setCurrentFile] = useState<FileDetailDTO | null>(null);
+  const [displayRwx, setDisplayRwx] = useState<string | null>(null);
 
   const [modalForm] = Form.useForm();
 
@@ -377,8 +375,8 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           <Button
             icon={<EditOutlined />}
             onClick={() => {
-              setCurrentRecordPath(record.path);
-              setCurrentRwx(modeToRwx(record.permission));
+              setCurrentFile(record);
+              setDisplayRwx(modeToRwx(record?.isDir, record?.permission));
               setModalVisible(true);
             }}
             title="修改权限"
@@ -739,7 +737,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                 <Form form={modalForm}>
                   <Form.Item label="文件路径">
                     <Typography.Text copyable>
-                      {currentRecordPath}
+                      {currentFile?.path}
                     </Typography.Text>
                   </Form.Item>
 
@@ -748,11 +746,15 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                       width={100}
                       max={777}
                       onChange={(value) => {
-                        setCurrentRwx(modeToRwx(value));
+                        {
+                          if (currentFile !== null) {
+                            setDisplayRwx(modeToRwx(currentFile?.isDir, value));
+                          }
+                        }
                       }}
                     />
                   </Form.Item>
-                  <Form.Item label="当前文件权限">{currentRwx}</Form.Item>
+                  <Form.Item label="当前文件权限">{displayRwx}</Form.Item>
                 </Form>
               </Modal>
             </Card>
@@ -799,26 +801,39 @@ const StatusColorMapper: Record<number, string> = {
   60: "error",
 };
 
-function modeToRwx(mode: number | null) {
-  if (mode === null) return "";
-  const permsMap = {
-    4: "r",
-    2: "w",
-    1: "x",
-  };
-
-  let rwx = "";
-
-  for (let i = 0; i < 3; i++) {
-    let userPerm = "";
-    let num = (mode >> (i * 3)) & 7;
-
-    if (num & 4) userPerm += permsMap[4];
-    if (num & 2) userPerm += permsMap[2];
-    if (num & 1) userPerm += permsMap[1];
-
-    rwx += userPerm;
+function modeToRwx(isDir: boolean | undefined, mode: number | null): string {
+  if (mode === null || mode === undefined) {
+    return "----------";
   }
 
-  return rwx;
+  // 将字符串形式的mode转换为八进制数值
+  const numericMode = parseInt(mode.toString(), 8);
+
+  // 定义rwx权限位的掩码
+  const rMask = 4; // 0400 -> 4
+  const wMask = 2; // 0200 -> 2
+  const xMask = 1; // 0100 -> 1
+
+  // 根据掩码检查rwx权限
+  const rUser = (numericMode & (rMask << 6)) !== 0; // 用户读权限
+  const wUser = (numericMode & (wMask << 6)) !== 0; // 用户写权限
+  const xUser = (numericMode & (xMask << 6)) !== 0; // 用户执行权限
+  const rGroup = (numericMode & (rMask << 3)) !== 0; // 组读权限
+  const wGroup = (numericMode & (wMask << 3)) !== 0; // 组写权限
+  const xGroup = (numericMode & (xMask << 3)) !== 0; // 组执行权限
+  const rOther = (numericMode & rMask) !== 0; // 其他读权限
+  const wOther = (numericMode & wMask) !== 0; // 其他写权限
+  const xOther = (numericMode & xMask) !== 0; // 其他执行权限
+
+  // 根据权限构建字符串
+  const user = `${rUser ? "r" : "-"}${wUser ? "w" : "-"}${xUser ? "x" : "-"}`;
+  const group = `${rGroup ? "r" : "-"}${wGroup ? "w" : "-"}${
+    xGroup ? "x" : "-"
+  }`;
+  const other = `${rOther ? "r" : "-"}${wOther ? "w" : "-"}${
+    xOther ? "x" : "-"
+  }`;
+
+  // 根据是否是目录在最前面添加 'd' 或 '-'
+  return (isDir ? "d" : "-") + user + group + other;
 }
