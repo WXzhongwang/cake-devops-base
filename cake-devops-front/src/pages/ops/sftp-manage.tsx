@@ -76,6 +76,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   >(null);
   const [showHiddenFiles, setShowHiddenFiles] = useState<boolean>(false);
   const [mkdirModalVisible, setMkdirModalVisible] = useState<boolean>(false);
+  const [moveModalVisible, setMoveModalVisible] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPath, setCurrentPath] = useState<string>(open?.home || "/");
   const [homePath, setHomePath] = useState<string>(open?.path || "/");
@@ -88,6 +89,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   const [displayRwx, setDisplayRwx] = useState<string | null>(null);
 
   const [modalForm] = Form.useForm();
+  const [moveModalForm] = Form.useForm();
 
   useEffect(() => {
     if (id) {
@@ -213,7 +215,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       },
       callback: () => {
         message.success("删除成功");
-        getFileList(open.home, showHiddenFiles);
+        loadFileListData(currentPath, showHiddenFiles);
       },
     });
   };
@@ -229,7 +231,26 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     });
   };
 
-  const moveFile = (record: FileDetailDTO) => {};
+  const moveFile = (source: string | null, target: string) => {
+    if (source === null) {
+      console.log("no chosen file", source);
+      return;
+    }
+    dispatch({
+      type: "sftp/moveFile",
+      payload: {
+        source: source,
+        target: target,
+        sessionToken: open.sessionToken,
+      },
+      callback: () => {
+        message.success("移动成功");
+        loadFileListData(currentPath, showHiddenFiles);
+      },
+    });
+    setMoveModalVisible(false);
+    moveModalForm.resetFields();
+  };
 
   const updatePermission = (auth: number) => {
     dispatch({
@@ -241,7 +262,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       },
       callback: () => {
         message.success("修改文件权限成功");
-        getFileList(open.home, showHiddenFiles);
+        loadFileListData(currentPath, showHiddenFiles);
       },
     });
   };
@@ -266,8 +287,6 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
 
   // 创建文件或文件夹
   const createFileOrFolder = (values: any) => {
-    // TODO: 创建文件或文件夹的逻辑
-    console.log("values", values);
     mkdirTouchForm.validateFields().then((values) => {
       if (values?.type === "file") {
         dispatch({
@@ -278,7 +297,6 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           },
           callback: () => {
             message.success("文件创建成功");
-            getFileList(open.home, showHiddenFiles);
           },
         });
       } else {
@@ -290,12 +308,12 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           },
           callback: () => {
             message.success("文件夹创建成功");
-            getFileList(open.home, showHiddenFiles);
           },
         });
       }
 
-      showModal();
+      loadFileListData(currentPath, showHiddenFiles);
+      setMkdirModalVisible(false);
       mkdirTouchForm.resetFields();
     });
   };
@@ -375,7 +393,10 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
           />
           <Button
             icon={<ScissorOutlined />}
-            onClick={() => moveFile(record)}
+            onClick={() => {
+              setCurrentFile(record);
+              setMoveModalVisible(true);
+            }}
             title="移动"
             size="small"
           />
@@ -623,7 +644,9 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   </Popover>
                   <Button
                     icon={<PlusOutlined />}
-                    onClick={showModal}
+                    onClick={() => {
+                      setMkdirModalVisible(!mkdirModalVisible);
+                    }}
                     title="创建"
                   ></Button>
                   <Popover
@@ -758,6 +781,38 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                     />
                   </Form.Item>
                   <Form.Item label="当前文件权限">{displayRwx}</Form.Item>
+                </Form>
+              </Modal>
+
+              <Modal
+                open={moveModalVisible}
+                title="文件移动"
+                width={300}
+                onCancel={() => setMoveModalVisible(false)}
+                onOk={() => {
+                  moveModalForm.validateFields().then((values) => {
+                    moveFile(currentFile?.path, values.target);
+                  });
+                }}
+              >
+                <Form form={moveModalForm}>
+                  <Form.Item label="文件路径" name="source">
+                    <Typography.Text copyable>
+                      {currentFile?.path}
+                    </Typography.Text>
+                  </Form.Item>
+                  <Form.Item
+                    label="目标路径"
+                    name="target"
+                    rules={[
+                      {
+                        required: true,
+                        message: "请输入移动后目标路径",
+                      },
+                    ]}
+                  >
+                    <Input type="text" />
+                  </Form.Item>
                 </Form>
               </Modal>
             </Card>
