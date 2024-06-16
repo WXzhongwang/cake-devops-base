@@ -28,7 +28,8 @@
         gmt_create, gmt_modified
     </sql>
 
-    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.FileTransferLog">
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.FileTransferLog"
+            useGeneratedKeys="true" keyProperty="id">
         insert into file_transfer_log (account_id, username,
                                        file_token, transfer_type, host_id,
                                        remote_file, local_file, current_size,
