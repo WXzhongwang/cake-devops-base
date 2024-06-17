@@ -50,6 +50,8 @@ import {
   FileZipOutlined,
   DeleteOutlined,
   BackwardOutlined,
+  PlayCircleOutlined,
+  RedoOutlined,
 } from "@ant-design/icons";
 import { connect, Dispatch, useParams } from "umi";
 
@@ -139,6 +141,34 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     });
   };
 
+  const retryFailedTransfer = () => {
+    dispatch({
+      type: "sftp/retryAllFailedTransfers",
+      payload: { sessionToken: open.sessionToken },
+    });
+  };
+
+  const clearAllTransfers = () => {
+    dispatch({
+      type: "sftp/clearAllTransfers",
+      payload: { sessionToken: open.sessionToken },
+    });
+  };
+
+  const pauseAllTransfers = () => {
+    dispatch({
+      type: "sftp/pauseAllTransfers",
+      payload: { sessionToken: open.sessionToken },
+    });
+  };
+
+  const resumeAllTransfers = () => {
+    dispatch({
+      type: "sftp/resumeAllTransfers",
+      payload: { sessionToken: open.sessionToken },
+    });
+  };
+
   const getTransferList = () => {
     // setInterval(() => {
     dispatch({
@@ -146,6 +176,56 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       payload: { sessionToken: open.sessionToken },
     });
     // }, 5000);
+  };
+
+  const handleAction = (item: FileTransferLogDTO, action: string) => {
+    switch (action) {
+      case "pause":
+        // 暂停逻辑
+        dispatch({
+          type: "sftp/pauseFileTransfer",
+          payload: {
+            sessionToken: open.sessionToken,
+            fileToken: item.fileToken,
+          },
+        });
+        break;
+      case "resume":
+        dispatch({
+          type: "sftp/resumeFileTransfer",
+          payload: {
+            sessionToken: open.sessionToken,
+            fileToken: item.fileToken,
+          },
+        });
+        break;
+      case "download":
+        // 下载逻辑
+        // downloadSelectedFiles([item?.remoteFile]);
+        break;
+      case "retry":
+        // 重新传输逻辑
+        dispatch({
+          type: "sftp/retryFailedTransfer",
+          payload: {
+            sessionToken: open.sessionToken,
+            fileToken: item.fileToken,
+          },
+        });
+        break;
+      case "delete":
+        // 删除逻辑
+        dispatch({
+          type: "sftp/removeSingleTransfer",
+          payload: {
+            sessionToken: open.sessionToken,
+            fileToken: item.fileToken,
+          },
+        });
+        break;
+      default:
+        break;
+    }
   };
 
   const showModal = () => {
@@ -231,7 +311,8 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     });
   };
 
-  const moveFile = (source: string | null, target: string) => {
+  // 移动文件
+  const moveFile = (source: string | undefined, target: string) => {
     if (source === null) {
       console.log("no chosen file", source);
       return;
@@ -252,6 +333,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     moveModalForm.resetFields();
   };
 
+  // 更新文件权限
   const updatePermission = (auth: number) => {
     dispatch({
       type: "sftp/changeFilePermissions",
@@ -278,11 +360,6 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
         message.error("复制失败");
       }
     );
-  };
-
-  // 显示传输列表
-  const showTransferList = () => {
-    // TODO: 显示传输列表的逻辑
   };
 
   // 创建文件或文件夹
@@ -569,20 +646,38 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                       >
                         <Space.Compact block>
                           <Tooltip title="刷新">
-                            <Button size="small" icon={<ReloadOutlined />} />
-                          </Tooltip>
-                          <Tooltip title="开始所有">
                             <Button
                               size="small"
-                              icon={<CaretRightOutlined />}
+                              icon={<ReloadOutlined />}
+                              onClick={() => {
+                                getTransferList();
+                              }}
                             />
                           </Tooltip>
                           <Tooltip title="暂停所有">
-                            <Button size="small" icon={<PauseOutlined />} />
+                            <Button
+                              size="small"
+                              icon={<PauseOutlined />}
+                              onClick={() => {
+                                pauseAllTransfers();
+                              }}
+                            />
+                          </Tooltip>
+                          <Tooltip title="恢复所有">
+                            <Button
+                              size="small"
+                              icon={<RedoOutlined />}
+                              onClick={() => {
+                                resumeAllTransfers();
+                              }}
+                            />
                           </Tooltip>
                           <Tooltip title="重试所有">
                             <Button
                               size="small"
+                              onClick={() => {
+                                retryFailedTransfer();
+                              }}
                               icon={<IssuesCloseOutlined />}
                             />
                           </Tooltip>
@@ -590,7 +685,13 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                             <Button size="small" icon={<FileZipOutlined />} />
                           </Tooltip>
                           <Tooltip title="清空">
-                            <Button size="small" icon={<DeleteOutlined />} />
+                            <Button
+                              size="small"
+                              icon={<DeleteOutlined />}
+                              onClick={() => {
+                                clearAllTransfers();
+                              }}
+                            />
                           </Tooltip>
                         </Space.Compact>
                         <Space
@@ -626,9 +727,51 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                                   percent={item.progress}
                                   showInfo={false}
                                 />
-                                <Tooltip title="下载">
-                                  <DownloadOutlined />
-                                </Tooltip>
+                                {item.status === 20 && (
+                                  <Button
+                                    onClick={() => handleAction(item, "pause")}
+                                  >
+                                    <Tooltip title="暂停">
+                                      <PauseOutlined />
+                                    </Tooltip>
+                                  </Button>
+                                )}
+                                {item.status === 30 && (
+                                  <Button
+                                    onClick={() => handleAction(item, "resume")}
+                                  >
+                                    <Tooltip title="恢复">
+                                      <PlayCircleOutlined />
+                                    </Tooltip>
+                                  </Button>
+                                )}
+                                {item.status === 40 && (
+                                  <Button
+                                    onClick={() =>
+                                      handleAction(item, "download")
+                                    }
+                                  >
+                                    <Tooltip title="下载">
+                                      <DownloadOutlined />
+                                    </Tooltip>
+                                  </Button>
+                                )}
+                                {(item.status === 50 || item.status === 60) && (
+                                  <Button
+                                    onClick={() => handleAction(item, "retry")}
+                                  >
+                                    <Tooltip title="重新传输">
+                                      <RedoOutlined />
+                                    </Tooltip>
+                                  </Button>
+                                )}
+                                <Button
+                                  onClick={() => handleAction(item, "delete")}
+                                >
+                                  <Tooltip title="删除">
+                                    <DeleteOutlined />
+                                  </Tooltip>
+                                </Button>
                               </Space>
                             </Space>
                           ))}
@@ -638,7 +781,9 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                   >
                     <Button
                       icon={<SwapOutlined />}
-                      onClick={showTransferList}
+                      onClick={() => {
+                        getTransferList();
+                      }}
                       title="传输列表"
                     ></Button>
                   </Popover>

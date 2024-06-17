@@ -48,5 +48,5 @@ public interface FileTransferLogDao {
     int update(FileTransferLog log);
 
 
-    int transferClear(String userId, Byte status);
+    int transferClear(@Param("userId") String userId, @Param("status") Byte status);
 }
