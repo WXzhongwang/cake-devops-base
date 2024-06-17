@@ -51,7 +51,7 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectByToken" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByToken" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from file_transfer_log
