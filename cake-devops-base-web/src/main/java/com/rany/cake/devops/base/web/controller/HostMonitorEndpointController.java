@@ -48,7 +48,7 @@ public class HostMonitorEndpointController {
 
     @GetMapping("/disk-name")
     @ApiOperation(value = "获取磁盘名称")
-    public JSONArray getCpuStatistics(@RequestParam("hostId") String hostId) {
+    public JSONArray getDiskName(@RequestParam("hostId") String hostId) {
         return hostMonitorEndpointService.getDiskName(hostId);
     }
 

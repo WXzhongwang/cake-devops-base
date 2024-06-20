@@ -48,6 +48,8 @@ const HostPage: React.FC<HostListProps> = ({
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [alarmDrawerVisible, setAlarmDrawerVisible] = useState(false);
+  const [monitorViewDrawerVisible, setMonitorViewDrawerVisible] =
+    useState(false);
   const [editingHostForAlarm, setEditingHostForAlarm] = useState<
     HostMonitorDTO | undefined
   >(undefined);
@@ -237,6 +239,26 @@ const HostPage: React.FC<HostListProps> = ({
     history.push(`/host/alarm/history/${record.hostId}`);
   };
 
+  const handleMonitorViewPanel = (record: HostMonitorDTO) => {
+    setMonitorViewDrawerVisible(!monitorViewDrawerVisible);
+    loadMetricData(record);
+  };
+
+  const loadMetricData = (record: HostMonitorDTO) => {
+    //setEditingHostForAlarm(undefined);
+    dispatch({
+      type: "hostMonitor/ping",
+      payload: { hostId: record.hostId },
+      callback: () => {},
+    });
+
+    dispatch({
+      type: "hostMonitor/top",
+      payload: { hostId: record.hostId, name: "" },
+      callback: () => {},
+    });
+  };
+
   const columns = [
     {
       title: "实例名称",
@@ -332,14 +354,29 @@ const HostPage: React.FC<HostListProps> = ({
       title: "操作",
       key: "action",
       render: (text: any, record: HostMonitorDTO) => (
-        <Space size="middle">
-          <a onClick={() => handleConnect(record)}>测试</a>
-          <a onClick={() => handleInstall(record.hostId)}>安装</a>
-          <a onClick={() => handleEdit(record)}>插件配置</a>
-          <a onClick={() => handleSync(record)}>同步</a>
-          <a onClick={() => handleOpenAlarmDrawer(record)}>报警配置</a>
-          <a onClick={() => handleView(record)}>报警历史</a>
-        </Space>
+        <Space.Compact size="small">
+          <Button size="small" onClick={() => handleConnect(record)}>
+            测试
+          </Button>
+          <Button size="small" onClick={() => handleInstall(record.hostId)}>
+            安装
+          </Button>
+          <Button size="small" onClick={() => handleEdit(record)}>
+            插件配置
+          </Button>
+          <Button size="small" onClick={() => handleSync(record)}>
+            同步
+          </Button>
+          <Button size="small" onClick={() => handleOpenAlarmDrawer(record)}>
+            报警配置
+          </Button>
+          <Button size="small" onClick={() => handleView(record)}>
+            报警历史
+          </Button>
+          <Button size="small" onClick={() => handleMonitorViewPanel(record)}>
+            查看
+          </Button>
+        </Space.Compact>
       ),
     },
   ];
@@ -415,6 +452,16 @@ const HostPage: React.FC<HostListProps> = ({
               onCancel={handleCloseAlarmDrawer}
             />
           </Drawer>
+
+          <Drawer
+            title="监控"
+            width={1000}
+            open={monitorViewDrawerVisible}
+            onClose={() => {
+              setMonitorViewDrawerVisible(!monitorViewDrawerVisible);
+            }}
+            destroyOnClose={true}
+          ></Drawer>
 
           <Table
             columns={columns}

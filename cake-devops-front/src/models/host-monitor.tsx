@@ -109,6 +109,16 @@ export interface HostMonitorModelType {
     install: Effect;
     sync: Effect;
     checkStatus: Effect;
+
+    sendPing: Effect;
+    metrics: Effect;
+    load: Effect;
+    top: Effect;
+    getDiskName: Effect;
+    getCpuStatistics: Effect;
+    getMemoryStatistics: Effect;
+    getNetStatistics: Effect;
+    getDiskStatistics: Effect;
   };
   reducers: {
     saveHostMonitors: Reducer<HostMonitorModelState>;
@@ -197,6 +207,142 @@ const HostMonitorModel: HostMonitorModelType = {
     *checkStatus({ payload, callback }: CheckStatusAction, { call, put }) {
       // 调用 API 创建主机
       const response = yield call(api.checkStatus, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *ping({ payload, callback }, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.sendPing, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *load({ payload, callback }, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.load, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *top({ payload, callback }, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.top, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *metrics({ payload, callback }, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.metrics, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *getDiskName({ payload, callback }, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.getDiskName, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *getDiskStatistics({ payload, callback }, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.getDiskStatistics, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *getCpuStatistics({ payload, callback }, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.getCpuStatistics, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *getMemoryStatistics({ payload, callback }, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.getMemoryStatistics, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success) {
+        // 更新成功后重新获取主机数据
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *getNetStatistics({ payload, callback }, { call, put }) {
+      // 调用 API 创建主机
+      const response = yield call(api.getNetStatistics, payload);
       const { success, msg } = response;
       // 如果传入了回调函数，则执行回调函数
       // 调用回调函数
