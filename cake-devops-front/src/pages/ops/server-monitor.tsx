@@ -16,7 +16,13 @@ import {
 } from "antd";
 import { PageContainer } from "@ant-design/pro-components";
 import { connect, Dispatch, history } from "umi";
-import { HostMonitorDTO, HostInfoModel } from "@/models/host-monitor";
+import {
+  HostMonitorDTO,
+  LoadVO,
+  SystemProcessVO,
+  DiskNameVO,
+  BaseMetricVO,
+} from "@/models/host-monitor";
 import CreateHostForm from "./components/create-host-form";
 import { CopyOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import HostMonitorConfigForm from "./components/host-monitor-config-form";
@@ -26,6 +32,7 @@ import {
   AlarmConfigDTO,
   HostAlarmConfigWrapperDTO,
 } from "@/models/host-alarm-config";
+import SystemProcessTable from "./components/top-progress-table";
 
 const { confirm } = Modal;
 const { Paragraph } = Typography;
@@ -60,6 +67,11 @@ const HostPage: React.FC<HostListProps> = ({
   const [editingHost, setEditingHost] = useState<HostMonitorDTO | undefined>(
     undefined
   );
+
+  const [topProgress, setTopProgress] = useState<SystemProcessVO[]>([]);
+  const [disks, setDisks] = useState<DiskNameVO[]>([]);
+  const [basicMetricVO, setBasicMetricVO] = useState<BaseMetricVO>();
+  const [load, setLoad] = useState<LoadVO | undefined>();
 
   const handleOpenAlarmDrawer = (host: HostMonitorDTO) => {
     dispatch({
@@ -253,9 +265,19 @@ const HostPage: React.FC<HostListProps> = ({
     });
 
     dispatch({
-      type: "hostMonitor/top",
-      payload: { hostId: record.hostId, name: "" },
-      callback: () => {},
+      type: "hostMonitor/getDiskName",
+      payload: { hostId: record.hostId },
+      callback: (content: DiskNameVO[]) => {
+        setDisks(content);
+      },
+    });
+
+    dispatch({
+      type: "hostMonitor/metrics",
+      payload: { hostId: record.hostId },
+      callback: (content: BaseMetricVO) => {
+        setBasicMetricVO(content);
+      },
     });
   };
 
@@ -461,7 +483,15 @@ const HostPage: React.FC<HostListProps> = ({
               setMonitorViewDrawerVisible(!monitorViewDrawerVisible);
             }}
             destroyOnClose={true}
-          ></Drawer>
+          >
+            <SystemProcessTable
+              hostId={basicMetricVO?.machineId}
+              data={basicMetricVO?.processes}
+              load={load}
+              disks={disks}
+              basicMetricVO={basicMetricVO}
+            ></SystemProcessTable>
+          </Drawer>
 
           <Table
             columns={columns}

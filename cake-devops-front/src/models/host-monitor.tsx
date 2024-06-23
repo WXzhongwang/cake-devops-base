@@ -31,6 +31,58 @@ export interface HostInfoModel {
   keyId: string;
 }
 
+export interface SystemProcessVO {
+  pid: number;
+  name: string;
+  user: string;
+  cpuUsage: number;
+  memoryUsage: string;
+  openFile: number;
+  uptime: string;
+  commandLine: string;
+}
+
+export interface DiskNameVO {
+  name: string;
+  seq: string;
+}
+
+export interface OSInfoVO {
+  pid: string;
+  hostname: string;
+  cpuLogicalCore: number;
+  totalMemory: string;
+  osName: string;
+  cpuName: string;
+  cpuPhysicalCore: number;
+  uptime: string;
+  username: string;
+}
+
+export interface BaseMetricVO {
+  status: boolean;
+  version: string;
+  isWindows: boolean;
+  load: LoadVO;
+  disks: DiskStatVO[];
+  machineId: string;
+  processes: SystemProcessVO[];
+}
+
+export interface DiskStatVO {
+  usageSpace: string;
+  freeSpace: string;
+  usage: string;
+  name: string;
+  totalSpace: string;
+}
+
+export interface LoadVO {
+  fifteenMinuteLoad: number;
+  oneMinuteLoad: number;
+  fiveMinuteLoad: number;
+}
+
 export interface QueryHostMonitorPayload {
   name: string;
   hostName: string;
@@ -244,7 +296,7 @@ const HostMonitorModel: HostMonitorModelType = {
       if (success) {
         // 更新成功后重新获取主机数据
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -259,7 +311,7 @@ const HostMonitorModel: HostMonitorModelType = {
       if (success) {
         // 更新成功后重新获取主机数据
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -274,7 +326,7 @@ const HostMonitorModel: HostMonitorModelType = {
       if (success) {
         // 更新成功后重新获取主机数据
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -289,7 +341,7 @@ const HostMonitorModel: HostMonitorModelType = {
       if (success) {
         // 更新成功后重新获取主机数据
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -304,7 +356,7 @@ const HostMonitorModel: HostMonitorModelType = {
       if (success) {
         // 更新成功后重新获取主机数据
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -319,7 +371,7 @@ const HostMonitorModel: HostMonitorModelType = {
       if (success) {
         // 更新成功后重新获取主机数据
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -334,7 +386,7 @@ const HostMonitorModel: HostMonitorModelType = {
       if (success) {
         // 更新成功后重新获取主机数据
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -349,7 +401,7 @@ const HostMonitorModel: HostMonitorModelType = {
       if (success) {
         // 更新成功后重新获取主机数据
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
