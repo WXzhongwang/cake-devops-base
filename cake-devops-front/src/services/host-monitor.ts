@@ -110,7 +110,7 @@ export async function getMemoryStatistics(data: any) {
 
 export async function getNetStatistics(data: any) {
   console.log("payload", data);
-  return request("/api/devops/host-monitor/endpoint/chart-memory", {
+  return request("/api/devops/host-monitor/endpoint/chart-net", {
     method: "POST",
     data,
   });
@@ -118,7 +118,7 @@ export async function getNetStatistics(data: any) {
 
 export async function getDiskStatistics(data: any) {
   console.log("payload", data);
-  return request("/api/devops/host-monitor/endpoint/chart-memory", {
+  return request("/api/devops/host-monitor/endpoint/chart-disk", {
     method: "POST",
     data,
   });

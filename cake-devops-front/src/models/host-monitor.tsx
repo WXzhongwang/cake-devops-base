@@ -83,6 +83,42 @@ export interface LoadVO {
   fiveMinuteLoad: number;
 }
 
+export interface TimeMetricVO {
+  time: number;
+  value: number;
+}
+
+export interface MetricVO {
+  avg: number;
+  min: number;
+  max: number;
+  metrics: TimeMetricVO[];
+}
+
+export interface CpuStatisticsVO {
+  usage: MetricVO;
+}
+
+export interface MemoryStatisticsVO {
+  usage: MetricVO;
+  size: MetricVO;
+}
+
+export interface DiskStatisticsVO {
+  writeSpeed: MetricVO;
+  readSpeed: MetricVO;
+  writeCount: MetricVO;
+  usageTime: MetricVO;
+  readCount: MetricVO;
+}
+
+export interface NetStatisticsVO {
+  sentSpeed: MetricVO;
+  sentPacket: MetricVO;
+  recvSpeed: MetricVO;
+  recvPacket: MetricVO;
+}
+
 export interface QueryHostMonitorPayload {
   name: string;
   hostName: string;
