@@ -14,6 +14,7 @@ import com.rany.cake.devops.plugin.metrics.statistics.MemoryMetricsStatisticReso
 import com.rany.cake.devops.plugin.metrics.statistics.NetMetricsStatisticResolver;
 import com.rany.cake.toolkit.lang.utils.Strings;
 import com.rany.cake.toolkit.lang.utils.Valid;
+import com.rany.cake.toolkit.lang.wrapper.HttpWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,37 +42,37 @@ public class MachineMonitorController {
 
     @PostMapping("/cpu")
     @ApiOperation(value = "获取cpu数据")
-    public CpuMetricsStatisticsVO getCpuData(@RequestBody MetricsStatisticsRequest request) {
+    public HttpWrapper<CpuMetricsStatisticsVO> getCpuData(@RequestBody MetricsStatisticsRequest request) {
         this.validRequest(request);
         // 统计
         CpuMetricsStatisticResolver resolver = new CpuMetricsStatisticResolver(request);
         resolver.statistics();
-        return resolver.getMetrics();
+        return HttpWrapper.ok(resolver.getMetrics());
     }
 
     @PostMapping("/memory")
     @ApiOperation(value = "获取内存数据")
-    public MemoryMetricsStatisticsVO getMemoryData(@RequestBody MetricsStatisticsRequest request) {
+    public HttpWrapper<MemoryMetricsStatisticsVO> getMemoryData(@RequestBody MetricsStatisticsRequest request) {
         this.validRequest(request);
         // 统计
         MemoryMetricsStatisticResolver resolver = new MemoryMetricsStatisticResolver(request);
         resolver.statistics();
-        return resolver.getMetrics();
+        return HttpWrapper.ok(resolver.getMetrics());
     }
 
     @PostMapping("/net")
     @ApiOperation(value = "获取网络数据")
-    public NetBandwidthMetricsStatisticVO getNetBandwidthData(@RequestBody MetricsStatisticsRequest request) {
+    public HttpWrapper<NetBandwidthMetricsStatisticVO> getNetBandwidthData(@RequestBody MetricsStatisticsRequest request) {
         this.validRequest(request);
         // 统计
         NetMetricsStatisticResolver resolver = new NetMetricsStatisticResolver(request);
         resolver.statistics();
-        return resolver.getMetrics();
+        return HttpWrapper.ok(resolver.getMetrics());
     }
 
     @PostMapping("/disk")
     @ApiOperation(value = "获取磁盘数据")
-    public DiskMetricsStatisticVO getDiskData(@RequestBody MetricsStatisticsRequest request) {
+    public HttpWrapper<DiskMetricsStatisticVO> getDiskData(@RequestBody MetricsStatisticsRequest request) {
         this.validRequest(request);
         String seq = request.getSeq();
         if (Strings.isBlank(seq)) {
@@ -82,7 +83,7 @@ public class MachineMonitorController {
             // 统计
             DiskMetricsStatisticResolver resolver = new DiskMetricsStatisticResolver(request);
             resolver.statistics();
-            return resolver.getMetrics();
+            return HttpWrapper.ok(resolver.getMetrics());
         } finally {
             Currents.removeDiskSeq();
         }

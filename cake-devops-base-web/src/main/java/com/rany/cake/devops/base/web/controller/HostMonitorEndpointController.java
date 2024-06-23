@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.web.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.service.handler.host.HostMonitorEndpointService;
 import com.rany.cake.devops.base.service.handler.host.MachineMonitorEndpointRequest;
 import com.rany.cake.toolkit.lang.utils.Valid;
@@ -24,60 +25,60 @@ public class HostMonitorEndpointController {
      * @return
      */
     @GetMapping("/ping")
-    public Integer sendPing(@RequestParam("hostId") String hostId) {
-        return hostMonitorEndpointService.ping(hostId);
+    public PojoResult<Integer> sendPing(@RequestParam("hostId") String hostId) {
+        return PojoResult.succeed(hostMonitorEndpointService.ping(hostId));
     }
 
     @GetMapping("/metrics")
     @ApiOperation(value = "获取机器基本指标")
-    public JSONObject getBaseMetrics(@RequestParam("hostId") String hostId) {
-        return hostMonitorEndpointService.getBaseMetrics(hostId);
+    public PojoResult<JSONObject> getBaseMetrics(@RequestParam("hostId") String hostId) {
+        return PojoResult.succeed(hostMonitorEndpointService.getBaseMetrics(hostId));
     }
 
     @GetMapping("/load")
     @ApiOperation(value = "获取系统负载")
-    public JSONObject getSystemLoad(@RequestParam("hostId") String hostId) {
-        return hostMonitorEndpointService.getSystemLoad(hostId);
+    public PojoResult<JSONObject> getSystemLoad(@RequestParam("hostId") String hostId) {
+        return PojoResult.succeed(hostMonitorEndpointService.getSystemLoad(hostId));
     }
 
     @GetMapping("/top")
     @ApiOperation(value = "获取top进程")
-    public JSONArray getTopProcesses(@RequestParam("hostId") String hostId, String name) {
-        return hostMonitorEndpointService.getTopProcesses(hostId, name);
+    public PojoResult<JSONArray> getTopProcesses(@RequestParam("hostId") String hostId, String name) {
+        return PojoResult.succeed(hostMonitorEndpointService.getTopProcesses(hostId, name));
     }
 
     @GetMapping("/disk-name")
     @ApiOperation(value = "获取磁盘名称")
-    public JSONArray getDiskName(@RequestParam("hostId") String hostId) {
-        return hostMonitorEndpointService.getDiskName(hostId);
+    public PojoResult<JSONArray> getDiskName(@RequestParam("hostId") String hostId) {
+        return PojoResult.succeed(hostMonitorEndpointService.getDiskName(hostId));
     }
 
     @PostMapping("/chart-cpu")
     @ApiOperation(value = "获取cpu图表")
-    public JSONObject getCpuStatistics(@RequestBody MachineMonitorEndpointRequest request) {
+    public PojoResult<JSONObject> getCpuStatistics(@RequestBody MachineMonitorEndpointRequest request) {
         this.validChartParams(request);
-        return hostMonitorEndpointService.getCpuChart(request);
+        return PojoResult.succeed(hostMonitorEndpointService.getCpuChart(request));
     }
 
     @PostMapping("/chart-memory")
     @ApiOperation(value = "获取内存图表")
-    public JSONObject getMemoryStatistics(@RequestBody MachineMonitorEndpointRequest request) {
+    public PojoResult<JSONObject> getMemoryStatistics(@RequestBody MachineMonitorEndpointRequest request) {
         this.validChartParams(request);
-        return hostMonitorEndpointService.getMemoryChart(request);
+        return PojoResult.succeed(hostMonitorEndpointService.getMemoryChart(request));
     }
 
     @PostMapping("/chart-net")
     @ApiOperation(value = "获取网络图表")
-    public JSONObject getNetStatistics(@RequestBody MachineMonitorEndpointRequest request) {
+    public PojoResult<JSONObject> getNetStatistics(@RequestBody MachineMonitorEndpointRequest request) {
         this.validChartParams(request);
-        return hostMonitorEndpointService.getNetChart(request);
+        return PojoResult.succeed(hostMonitorEndpointService.getNetChart(request));
     }
 
     @PostMapping("/chart-disk")
     @ApiOperation(value = "获取磁盘图表")
-    public JSONObject getDiskStatistics(@RequestBody MachineMonitorEndpointRequest request) {
+    public PojoResult<JSONObject> getDiskStatistics(@RequestBody MachineMonitorEndpointRequest request) {
         this.validChartParams(request);
-        return hostMonitorEndpointService.getDiskChart(request);
+        return PojoResult.succeed(hostMonitorEndpointService.getDiskChart(request));
     }
 
     private void validChartParams(MachineMonitorEndpointRequest request) {
