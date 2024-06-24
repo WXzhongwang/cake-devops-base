@@ -336,44 +336,6 @@ const SystemProcessTable: React.FC<SystemProcessPros> = ({
         </Row>
       </Card>
 
-      <Table
-        size="small"
-        columns={columns}
-        dataSource={basicMetricVO?.processes}
-        rowKey={"pid"}
-        scroll={{ x: "max-content" }}
-        pagination={false}
-      />
-
-      <Row gutter={24}>
-        <Col span={8}>
-          <Table
-            size="small"
-            columns={diskColumns}
-            dataSource={disks?.map((item) => ({
-              ...item,
-              rowKey: nanoid(),
-            }))}
-            rowKey={"rowKey"}
-            scroll={{ x: "max-content" }}
-            pagination={false}
-          />
-        </Col>
-        <Col span={16}>
-          <Table
-            size="small"
-            columns={diskUsageColumns}
-            dataSource={basicMetricVO?.disks.map((item) => ({
-              ...item,
-              rowKey: nanoid(),
-            }))}
-            rowKey={"rowKey"}
-            scroll={{ x: "max-content" }}
-            pagination={false}
-          />
-        </Col>
-      </Row>
-
       <Row gutter={24}>
         <Form
           form={form}
@@ -541,6 +503,44 @@ const SystemProcessTable: React.FC<SystemProcessPros> = ({
               ]
             )}
             style={{ height: 400, width: 460 }}
+          />
+        </Col>
+      </Row>
+
+      <Table
+        size="small"
+        columns={columns}
+        dataSource={basicMetricVO?.processes}
+        rowKey={"pid"}
+        scroll={{ x: "max-content" }}
+        pagination={false}
+      />
+
+      <Row gutter={24}>
+        <Col span={8}>
+          <Table
+            size="small"
+            columns={diskColumns}
+            dataSource={disks?.map((item) => ({
+              ...item,
+              rowKey: nanoid(),
+            }))}
+            rowKey={"rowKey"}
+            scroll={{ x: "max-content" }}
+            pagination={false}
+          />
+        </Col>
+        <Col span={16}>
+          <Table
+            size="small"
+            columns={diskUsageColumns}
+            dataSource={basicMetricVO?.disks.map((item) => ({
+              ...item,
+              rowKey: nanoid(),
+            }))}
+            rowKey={"rowKey"}
+            scroll={{ x: "max-content" }}
+            pagination={false}
           />
         </Col>
       </Row>

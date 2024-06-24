@@ -21,6 +21,7 @@ switch (BUILD_ENV) {
 }
 
 export default defineConfig({
+  esbuildMinifyIIFE: true, // fatal - [esbuildHelperChecker] Found conflicts in esbuild helpers: Rn (872.async.js, umi.js), please set esbuildMinifyIIFE: true in your config file.
   base: "/",
   publicPath: publicPath,
   plugins: ["@umijs/plugins/dist/react-query", "@umijs/plugins/dist/dva"],
