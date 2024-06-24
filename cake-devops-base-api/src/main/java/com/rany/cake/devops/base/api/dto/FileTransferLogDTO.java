@@ -32,6 +32,11 @@ public class FileTransferLogDTO extends DTO {
     private String remoteFile;
 
     /**
+     * 远程文件
+     */
+    private String localFile;
+
+    /**
      * 当前大小
      */
     private String current;

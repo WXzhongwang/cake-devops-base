@@ -214,3 +214,9 @@ export async function packageAllCompletedFiles(data: any) {
     }
   );
 }
+
+export async function down(payload: any) {
+  return request(`/api/devops/download/sftp?logId=` + payload.logId, {
+    method: "GET",
+  });
+}

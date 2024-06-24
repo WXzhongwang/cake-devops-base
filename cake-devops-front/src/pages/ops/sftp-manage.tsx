@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import {
-  Card,
-  Row,
-  Col,
-  Tree,
-  Table,
+  Breadcrumb,
   Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Modal,
+  Popover,
+  Progress,
+  Row,
+  Select,
   Space,
   Switch,
-  Breadcrumb,
-  Tooltip,
-  Input,
-  message,
-  Typography,
-  Popover,
-  Upload,
-  Progress,
+  Table,
   Tag,
-  Modal,
-  Form,
-  Select,
-  InputNumber,
+  Tooltip,
+  Tree,
+  Typography,
+  Upload,
 } from "antd";
 import dayjs from "dayjs";
 import {
@@ -32,26 +32,25 @@ import {
 } from "@/models/sftp";
 
 import {
-  UploadOutlined,
-  DownloadOutlined,
-  CopyOutlined,
-  SwapOutlined,
-  PlusOutlined,
-  SyncOutlined,
-  InboxOutlined,
-  ScissorOutlined,
-  FolderOutlined,
-  FileOutlined,
-  EditOutlined,
-  ReloadOutlined,
-  CaretRightOutlined,
-  PauseOutlined,
-  IssuesCloseOutlined,
-  FileZipOutlined,
-  DeleteOutlined,
   BackwardOutlined,
+  CopyOutlined,
+  DeleteOutlined,
+  DownloadOutlined,
+  EditOutlined,
+  FileOutlined,
+  FileZipOutlined,
+  FolderOutlined,
+  InboxOutlined,
+  IssuesCloseOutlined,
+  PauseOutlined,
   PlayCircleOutlined,
+  PlusOutlined,
   RedoOutlined,
+  ReloadOutlined,
+  ScissorOutlined,
+  SwapOutlined,
+  SyncOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import { connect, Dispatch, useParams } from "umi";
 
@@ -200,8 +199,14 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
         });
         break;
       case "download":
+        console.log("item.id", item.id);
         // 下载逻辑
-        // downloadSelectedFiles([item?.remoteFile]);
+        dispatch({
+          type: "sftp/down",
+          payload: {
+            logId: item.id,
+          },
+        });
         break;
       case "retry":
         // 重新传输逻辑
@@ -351,7 +356,6 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
 
   // 复制选中文件路径
   const copySelectedFilesPath = (path: string) => {
-    // TODO: 复制选中文件路径的逻辑
     navigator.clipboard.writeText(path).then(
       () => {
         message.success("路径复制成功");

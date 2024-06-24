@@ -404,6 +404,7 @@ export interface SftpModelType {
     removeSingleTransfer: Effect;
     clearAllTransfers: Effect;
     packageAllCompletedFiles: Effect;
+    down: Effect;
   };
   reducers: {
     saveToken: Reducer<SftpModelState>;
@@ -767,6 +768,18 @@ const SftpModel: SftpModelType = {
       { call, put }
     ) {
       const response = yield call(api.packageAllCompletedFiles, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *down({ payload, callback }: any, { call, put }) {
+      const response = yield call(api.down, payload);
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
