@@ -71,11 +71,13 @@
 
 ![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/web.jpg)
 
+![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/主机监控.jpg)
+
 ## 工程依赖
 
 | 底层依赖              | 依赖类型       | 最新版本         | 必须 | 说明         | 地址                                               |
 |:------------------|:-----------|:-------------|:---|:-----------|:-------------------------------------------------|
-| uic-center        | 服务依赖       | 1.0-SNAPSHOT | 是  | 用户中心       | https://github.com/WXzhongwang/uic-center        | 
+| cake-ops          | 服务依赖       | 1.0-SNAPSHOT | 是  | 用户中心，角色中心  | https://github.com/WXzhongwang/cake-ops          | 
 | cake-toolkit-all  | JAR 依赖     | 1.0.0        | 是  | toolkit工具包 | https://github.com/WXzhongwang/cake-toolkit      | 
 | cake-dingtalk-sso | 服务依赖&jar依赖 | 1.0-SNAPSHOT | 是  | SSO        | https://github.com/WXzhongwang/cake-dingtalk-sso | 
 | cake              | JAR 依赖     | 1.0-SNAPSHOT | 是  | DDD        | https://github.com/WXzhongwang/cake              | 
