@@ -71,7 +71,7 @@
 
 ![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/web.jpg)
 
-![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/主机监控.jpg)
+![ROBOT](https://github.com/WXzhongwang/cake-devops-base/blob/main/images/主机监控.png)
 
 ## 工程依赖
 
