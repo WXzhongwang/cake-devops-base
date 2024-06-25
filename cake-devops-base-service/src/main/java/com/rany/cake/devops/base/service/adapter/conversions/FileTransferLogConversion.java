@@ -23,6 +23,7 @@ public class FileTransferLogConversion {
             vo.setFileToken(p.getFileToken());
             vo.setType(p.getTransferType().intValue());
             vo.setRemoteFile(p.getRemoteFile());
+            vo.setLocalFile(p.getLocalFile());
             vo.setCurrent(Files1.getSize(p.getCurrentSize()));
             vo.setSize(Files1.getSize(p.getFileSize()));
             vo.setProgress(p.getNowProgress());
