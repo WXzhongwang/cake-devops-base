@@ -322,7 +322,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       type: "sftp/downloadFile",
       payload: { paths: path, sessionToken: open.sessionToken },
       callback: (res: { files: any[] }) => {
-        message.success("下载成功");
+        message.success("添加传输列表成功");
       },
     });
   };
@@ -464,45 +464,28 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       title: "操作",
       key: "action",
       render: (text: string, record: FileDetailDTO) => (
-        <Space.Compact>
-          <Button
-            icon={<CopyOutlined />}
-            onClick={() => copySelectedFilesPath(record.path)}
-            title="复制路径"
-            size="small"
-          />
-          <Button
-            icon={<DownloadOutlined />}
-            onClick={() => downloadSelectedFiles([record.path])}
-            title="下载"
-            size="small"
-          />
-          <Button
-            icon={<DeleteOutlined />}
-            onClick={() => deleteSelectedFiles([record.path])}
-            title="删除"
-            size="small"
-          />
-          <Button
-            icon={<ScissorOutlined />}
+        <Space size="middle">
+          <a onClick={() => copySelectedFilesPath(record.path)}>复制路径</a>
+          <a onClick={() => downloadSelectedFiles([record.path])}>下载</a>
+          <a onClick={() => deleteSelectedFiles([record.path])}>删除</a>
+          <a
             onClick={() => {
               setCurrentFile(record);
               setMoveModalVisible(true);
             }}
-            title="移动"
-            size="small"
-          />
-          <Button
-            icon={<EditOutlined />}
+          >
+            移动
+          </a>
+          <a
             onClick={() => {
               setCurrentFile(record);
               setDisplayRwx(modeToRwx(record?.isDir, record?.permission));
               setModalVisible(true);
             }}
-            title="修改权限"
-            size="small"
-          />
-        </Space.Compact>
+          >
+            修改权限
+          </a>
+        </Space>
       ),
     },
   ];
@@ -600,7 +583,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     beforeUpload: (file) => {
       const isLt200M = file.size / 1024 / 1024 < 200;
       if (!isLt200M) {
-        message.error("Image must smaller than 200MB!");
+        message.error("文件大小必须小于200MB!");
         return false;
       }
       setFileList([...fileList, file]);
@@ -609,12 +592,16 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     fileList,
   };
 
+  const clearUploadFileList = () => {
+    setFileList([]);
+  };
+
   const handleUpload = () => {
     const formData = new FormData();
-    fileList.forEach((file) => {
-      formData.append("files[]", file as RcFile);
-    });
-
+    // 遍历文件数组并添加到formData中
+    for (let i = 0; i < fileList.length; i++) {
+      formData.append("files", fileList[i] as RcFile);
+    }
     setUploading(true);
     dispatch({
       type: "sftp/getUploadAccessToken",
@@ -627,11 +614,9 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
         setUploadToken(res);
         console.log("upload token", res);
         formData.append("accessToken", res);
+        console.log("formData", formData);
         fetch("/api/devops/sftp/upload/exec", {
           method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
           body: formData,
         })
           .then((res) => res.json())
@@ -653,7 +638,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
     <PageContainer title="SFTP">
       <Card>
         <Row gutter={24}>
-          <Col span={8}>
+          <Col span={6}>
             <Card title="目录树">
               <Space direction="vertical">
                 <Input
@@ -669,7 +654,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
               </Space>
             </Card>
           </Col>
-          <Col span={16}>
+          <Col span={18}>
             <Card>
               <Space style={{ width: "100%", justifyContent: "space-between" }}>
                 {pathToBreadcrumb(currentPath)}
@@ -873,9 +858,9 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                     placement="bottomRight"
                     content={
                       <Space style={{ width: "100%" }} direction="vertical">
-                        <Space align="center">
+                        {/* <Space align="center">
                           文件夹： <Input style={{ width: 310 }} />
-                        </Space>
+                        </Space> */}
                         <Space
                           style={{
                             justifyContent: "space-between",
@@ -910,7 +895,7 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                             >
                               {uploading ? "上传中" : "上传"}
                             </Button>
-                            <Button>清空</Button>
+                            <Button onClick={clearUploadFileList}>清空</Button>
                           </Space>
                         </Space>
                       </Space>

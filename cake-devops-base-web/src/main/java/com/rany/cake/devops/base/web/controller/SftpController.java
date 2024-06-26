@@ -149,7 +149,7 @@ public class SftpController {
 
     @PostMapping("/upload/exec")
     @ApiOperation(value = "上传文件")
-    public void uploadFile(@RequestParam("accessToken") String accessToken, @RequestParam("files") List<MultipartFile> files) throws IOException {
+    public PojoResult<Void> uploadFile(@RequestParam("accessToken") String accessToken, @RequestParam("files") List<MultipartFile> files) throws IOException {
         SsoUser ssoUser = UserHolder.get();
         // 检查文件
         Valid.notBlank(accessToken);
@@ -181,6 +181,7 @@ public class SftpController {
         batchFileUploadCommand.setHostId(machineId);
         batchFileUploadCommand.setFiles(requestFiles);
         sftpService.upload(batchFileUploadCommand);
+        return PojoResult.succeed();
     }
 
     @PostMapping("/download/exec")

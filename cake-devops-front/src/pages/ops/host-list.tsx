@@ -43,6 +43,7 @@ const HostPage: React.FC<HostListProps> = ({
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false); // 控制抽屉显示状态
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     name: "",
     hostName: "",
@@ -103,6 +104,8 @@ const HostPage: React.FC<HostListProps> = ({
       },
     });
   };
+
+  const openTerminal = (hostId: string) => {};
 
   const handleCopy = (hostId: string) => {
     dispatch({
@@ -311,15 +314,10 @@ const HostPage: React.FC<HostListProps> = ({
       key: "action",
       render: (text: any, record: HostModel) => (
         <Space size="middle">
-          {/* 调用 handlePing 处理函数 */}
-          <a type="link" onClick={() => handlePing(record.hostId)}>
-            Ping
-          </a>
+          <a onClick={() => handlePing(record.hostId)}>Ping</a>
+          <a onClick={() => openTerminal(record.hostId)}>终端</a>
           <a onClick={() => handleSftpView(record)}>SFTP</a>
-          {/* 调用 handleCopy 处理函数 */}
-          <a type="link" onClick={() => handleCopy(record.hostId)}>
-            复制
-          </a>
+          <a onClick={() => handleCopy(record.hostId)}>复制</a>
           <a onClick={() => handleEdit(record)}>编辑</a>
           <a onClick={() => handleDelete(record.hostId)}>删除</a>
         </Space>

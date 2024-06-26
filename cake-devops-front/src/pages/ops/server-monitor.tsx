@@ -376,29 +376,15 @@ const HostPage: React.FC<HostListProps> = ({
       title: "操作",
       key: "action",
       render: (text: any, record: HostMonitorDTO) => (
-        <Space.Compact size="small">
-          <Button size="small" onClick={() => handleConnect(record)}>
-            测试
-          </Button>
-          <Button size="small" onClick={() => handleInstall(record.hostId)}>
-            安装
-          </Button>
-          <Button size="small" onClick={() => handleEdit(record)}>
-            插件配置
-          </Button>
-          <Button size="small" onClick={() => handleSync(record)}>
-            同步
-          </Button>
-          <Button size="small" onClick={() => handleOpenAlarmDrawer(record)}>
-            报警配置
-          </Button>
-          <Button size="small" onClick={() => handleView(record)}>
-            报警历史
-          </Button>
-          <Button size="small" onClick={() => handleMonitorViewPanel(record)}>
-            查看
-          </Button>
-        </Space.Compact>
+        <Space size="small">
+          <a onClick={() => handleConnect(record)}>测试</a>
+          <a onClick={() => handleInstall(record.hostId)}>安装</a>
+          <a onClick={() => handleEdit(record)}>插件配置</a>
+          <a onClick={() => handleSync(record)}>同步</a>
+          <a onClick={() => handleOpenAlarmDrawer(record)}>报警配置</a>
+          <a onClick={() => handleView(record)}>报警历史</a>
+          <a onClick={() => handleMonitorViewPanel(record)}>查看</a>
+        </Space>
       ),
     },
   ];
