@@ -40,6 +40,11 @@ dubbo:
     basePackages: com.rany.cake.devops
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 200MB
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   profiles:

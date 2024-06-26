@@ -30,7 +30,7 @@ public class SftpUploadInfoDTO extends DTO {
     /**
      * 机器id
      */
-    private List<Long> machineIdList;
+    private List<Long> hostIds;
 
     /**
      * 用户id

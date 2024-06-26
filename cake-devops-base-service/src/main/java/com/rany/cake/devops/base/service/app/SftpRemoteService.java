@@ -224,7 +224,10 @@ public class SftpRemoteService implements SftpService {
             throw new BusinessException(DevOpsErrorMessage.SFTP_TOKEN_EXPIRE);
         }
         // 设置缓存信息
-        SftpUploadInfoDTO uploadInfo = Converts.to(command, SftpUploadInfoDTO.class);
+
+        SftpUploadInfoDTO uploadInfo = new SftpUploadInfoDTO();
+        uploadInfo.setRemotePath(command.getRemotePath());
+        // Converts.to(command, SftpUploadInfoDTO.class);
         uploadInfo.setUserId(command.getUser());
         uploadInfo.setHostId(tokenInfo.getHostId());
         // 设置缓存

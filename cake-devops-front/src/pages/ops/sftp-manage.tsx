@@ -99,6 +99,10 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
   const [modalForm] = Form.useForm();
   const [moveModalForm] = Form.useForm();
 
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadToken, setUploadToken] = useState("");
+
   useEffect(() => {
     if (id) {
       openSession(id);
@@ -586,45 +590,63 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
       });
     });
 
-  const getBase64 = (img: RcFile, callback: (url: string) => void) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result as string));
-    reader.readAsDataURL(img);
+  const props: UploadProps = {
+    onRemove: (file) => {
+      const index = fileList.indexOf(file);
+      const newFileList = fileList.slice();
+      newFileList.splice(index, 1);
+      setFileList(newFileList);
+    },
+    beforeUpload: (file) => {
+      const isLt200M = file.size / 1024 / 1024 < 200;
+      if (!isLt200M) {
+        message.error("Image must smaller than 200MB!");
+        return false;
+      }
+      setFileList([...fileList, file]);
+      return false;
+    },
+    fileList,
   };
 
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+  const handleUpload = () => {
+    const formData = new FormData();
+    fileList.forEach((file) => {
+      formData.append("files[]", file as RcFile);
+    });
 
-  const beforeUpload = (file: RcFile) => {
-    //   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    //   if (!isJpgOrPng) {
-    //     message.error("You can only upload JPG/PNG file!");
-    //   }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error("Image must smaller than 2MB!");
-    }
-    return isLt2M;
-  };
-
-  const handleChange: UploadProps["onChange"] = (
-    info: UploadChangeParam<UploadFile>
-  ) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj as RcFile, (url) => {
-        setLoading(false);
-        setImageUrl(url);
-      });
-    }
+    setUploading(true);
+    dispatch({
+      type: "sftp/getUploadAccessToken",
+      payload: {
+        sessionToken: open.sessionToken,
+        hostId: id,
+        remotePath: currentPath,
+      },
+      callback: (res: string) => {
+        setUploadToken(res);
+        console.log("upload token", res);
+        formData.append("accessToken", res);
+        fetch("/api/devops/sftp/upload/exec", {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then(() => {
+            setFileList([]);
+            message.success("上传成功");
+          })
+          .catch(() => {
+            message.error("上传失败");
+          })
+          .finally(() => {
+            setUploading(false);
+          });
+      },
+    });
   };
 
   return (
@@ -861,10 +883,12 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                           }}
                           align="center"
                         >
-                          {/* <Upload.Dragger
+                          <Upload.Dragger
                             multiple
                             name="file"
-                            action={"/upload/api"}
+                            // action={"/upload/api"}
+                            // beforeUpload={beforeUpload}
+                            {...props}
                           >
                             <p className="ant-upload-drag-icon">
                               <InboxOutlined />
@@ -875,30 +899,17 @@ const SftpManagementPage: React.FC<SftpManageProps> = ({
                             >
                               单击或拖动文件到此区域进行上传
                             </p>
-                          </Upload.Dragger> */}
-
-                          <Upload
-                            name="avatar"
-                            listType="picture-card"
-                            className="avatar-uploader"
-                            showUploadList={false}
-                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            beforeUpload={beforeUpload}
-                            onChange={handleChange}
-                          >
-                            {imageUrl ? (
-                              <img
-                                src={imageUrl}
-                                alt="avatar"
-                                style={{ width: "100%" }}
-                              />
-                            ) : (
-                              uploadButton
-                            )}
-                          </Upload>
-
+                          </Upload.Dragger>
                           <Space direction="vertical">
-                            <Button type="primary">上传</Button>
+                            <Button
+                              type="primary"
+                              onClick={handleUpload}
+                              disabled={fileList.length === 0}
+                              loading={uploading}
+                              style={{ marginTop: 16 }}
+                            >
+                              {uploading ? "上传中" : "上传"}
+                            </Button>
                             <Button>清空</Button>
                           </Space>
                         </Space>
