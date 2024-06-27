@@ -59,7 +59,7 @@ public class HostTerminalConfigRemoteService implements HostTerminalConfigServic
     private HostDomainService hostDomainService;
 
     @Override
-    public TerminalAccessDTO getAccessConfig(String hostId, Long userId) {
+    public TerminalAccessDTO getAccessConfig(String hostId, String userId) {
         // 获取机器信息
         Host machine = hostDomainService.getHost(new HostId(hostId));
         String token = UUIds.random32();
