@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Table,
   Row,
@@ -14,6 +14,8 @@ import {
   Modal,
 } from "antd";
 import { PageContainer } from "@ant-design/pro-components";
+import type { DraggableData, DraggableEvent } from "react-draggable";
+import Draggable from "react-draggable";
 import { connect, Dispatch, history } from "umi";
 import HostGroupTree from "./components/host-group-tree";
 import { HostModel, HostGroupModel, ServerKey } from "@/models/host";
@@ -43,7 +45,18 @@ const HostPage: React.FC<HostListProps> = ({
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false); // 控制抽屉显示状态
+  // 对话框部分
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [bounds, setBounds] = useState({
+    left: 0,
+    top: 0,
+    bottom: 0,
+    right: 0,
+  });
+  const draggleRef = useRef<HTMLDivElement>(null);
+  const [modalHost, setModalHost] = useState<HostModel | null>(null);
+
   const [filters, setFilters] = useState({
     name: "",
     hostName: "",
@@ -105,7 +118,24 @@ const HostPage: React.FC<HostListProps> = ({
     });
   };
 
-  const openTerminal = (hostId: string) => {};
+  const openTerminal = (record: HostModel) => {
+    setIsModalOpen(true);
+    setModalHost(record);
+  };
+
+  const onStart = (_event: DraggableEvent, uiData: DraggableData) => {
+    const { clientWidth, clientHeight } = window.document.documentElement;
+    const targetRect = draggleRef.current?.getBoundingClientRect();
+    if (!targetRect) {
+      return;
+    }
+    setBounds({
+      left: -targetRect.left + uiData.x,
+      right: clientWidth - (targetRect.right - uiData.x),
+      top: -targetRect.top + uiData.y,
+      bottom: clientHeight - (targetRect.bottom - uiData.y),
+    });
+  };
 
   const handleCopy = (hostId: string) => {
     dispatch({
@@ -315,7 +345,7 @@ const HostPage: React.FC<HostListProps> = ({
       render: (text: any, record: HostModel) => (
         <Space size="middle">
           <a onClick={() => handlePing(record.hostId)}>Ping</a>
-          <a onClick={() => openTerminal(record.hostId)}>终端</a>
+          <a onClick={() => openTerminal(record)}>终端</a>
           <a onClick={() => handleSftpView(record)}>SFTP</a>
           <a onClick={() => handleCopy(record.hostId)}>复制</a>
           <a onClick={() => handleEdit(record)}>编辑</a>
@@ -410,6 +440,56 @@ const HostPage: React.FC<HostListProps> = ({
           </Card>
         </Col>
       </Row>
+
+      <Modal
+        style={{ top: 20 }}
+        width={1200}
+        title={
+          <div
+            style={{
+              width: "100%",
+              cursor: "move",
+            }}
+            onMouseOver={() => {
+              if (disabled) {
+                setDisabled(false);
+              }
+            }}
+            onMouseOut={() => {
+              setDisabled(true);
+            }}
+            onFocus={() => {}}
+            onBlur={() => {}}
+          >
+            主机终端
+            <span style={{ fontSize: 12 }}>
+              {modalHost?.username + "@" + modalHost?.serverAddr}
+            </span>
+          </div>
+        }
+        destroyOnClose
+        open={isModalOpen}
+        footer={null}
+        keyboard
+        mask
+        maskClosable={false}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setModalHost(null);
+        }}
+        modalRender={(modal) => (
+          <Draggable
+            disabled={disabled}
+            bounds={bounds}
+            nodeRef={draggleRef}
+            onStart={(event, uiData) => onStart(event, uiData)}
+          >
+            <div ref={draggleRef}>{modal}</div>
+          </Draggable>
+        )}
+      >
+        hello!
+      </Modal>
     </PageContainer>
   );
 };
