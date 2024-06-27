@@ -18,5 +18,7 @@ public interface HostTerminalLogRepository {
 
     int deleteByIds(List<Long> ids);
 
+    int deleteByHostIds(List<String> hostIds);
+
     Page<HostTerminalLog> pageQueryTerminalLog(TerminalLogPageQueryParam param);
 }

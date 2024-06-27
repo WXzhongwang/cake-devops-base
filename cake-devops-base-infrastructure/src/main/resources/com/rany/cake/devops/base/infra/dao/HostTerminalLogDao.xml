@@ -101,11 +101,19 @@
     </update>
 
     <update id="deleteByIds">
-        update host_terminal_log set is_deleted = '1' where ids in
+        update host_terminal_log set is_deleted = '1' where id in
         <foreach collection="ids" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>
     </update>
+
+    <update id="deleteByHostIds">
+        update host_terminal_log set is_deleted = '1' where host_id in
+        <foreach collection="hostIds" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
 
     <select id="pageQueryTerminalLog" resultMap="BaseResultMap"
             parameterType="com.rany.cake.devops.base.domain.repository.param.TerminalLogPageQueryParam">

@@ -34,6 +34,8 @@ public interface HostTerminalLogDao {
      */
     int deleteByIds(@Param("ids") List<Long> ids);
 
+    int deleteByHostIds(@Param("hostIds") List<String> hostIds);
+
 
     List<HostTerminalLogPO> pageQueryTerminalLog(TerminalLogPageQueryParam param);
 }

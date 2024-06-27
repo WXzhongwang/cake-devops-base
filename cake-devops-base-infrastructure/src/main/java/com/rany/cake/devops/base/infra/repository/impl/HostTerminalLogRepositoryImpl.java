@@ -51,6 +51,11 @@ public class HostTerminalLogRepositoryImpl implements HostTerminalLogRepository 
     }
 
     @Override
+    public int deleteByHostIds(List<String> hostIds) {
+        return hostTerminalLogDao.deleteByHostIds(hostIds);
+    }
+
+    @Override
     @PagingQuery
     public Page<HostTerminalLog> pageQueryTerminalLog(TerminalLogPageQueryParam param) {
         List<HostTerminalLogPO> logs = hostTerminalLogDao.pageQueryTerminalLog(param);
