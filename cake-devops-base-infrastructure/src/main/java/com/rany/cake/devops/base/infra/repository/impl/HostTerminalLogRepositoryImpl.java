@@ -30,6 +30,12 @@ public class HostTerminalLogRepositoryImpl implements HostTerminalLogRepository 
     }
 
     @Override
+    public HostTerminalLog findById(Long id) {
+        HostTerminalLogPO hostTerminalLogPO = hostTerminalLogPOMapper.selectByPrimaryKey(id);
+        return hostTerminalConfigDataConvertor.targetToSource(hostTerminalLogPO);
+    }
+
+    @Override
     public void remove(HostTerminalLog log) {
         hostTerminalLogDao.update(log);
     }

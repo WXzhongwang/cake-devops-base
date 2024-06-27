@@ -10,6 +10,8 @@ import java.util.List;
 public interface HostTerminalLogRepository {
     HostTerminalLog getConfig(String accessToken);
 
+    HostTerminalLog findById(Long id);
+
     void remove(@NotNull HostTerminalLog log);
 
     Long save(@NotNull HostTerminalLog log);

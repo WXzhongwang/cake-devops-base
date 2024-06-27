@@ -162,11 +162,12 @@ public class HostTerminalConfigRemoteService implements HostTerminalConfigServic
 
     @Override
     public Integer deleteTerminalByMachineIdList(List<String> hostIdList) {
-        return null;
+        return hostTerminalLogRepository.deleteByHostIds(hostIdList);
     }
 
     @Override
     public String getTerminalScreenFilePath(Long id) {
-        return null;
+        HostTerminalLog log = hostTerminalLogRepository.findById(id);
+        return log.getScreenPath();
     }
 }
