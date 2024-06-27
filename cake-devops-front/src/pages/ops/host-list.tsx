@@ -22,6 +22,7 @@ import { HostModel, HostGroupModel, ServerKey } from "@/models/host";
 import { ProxyModel } from "@/models/proxy";
 import CreateHostForm from "./components/create-host-form";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
+import TerminalComponent from "./components/single-terminal-component";
 
 const { confirm } = Modal;
 
@@ -45,6 +46,8 @@ const HostPage: React.FC<HostListProps> = ({
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false); // 控制抽屉显示状态
+  // 获取主机的 WebSocket 地址，你需要根据实际数据结构获取正确的地址
+  const wsUrl = `ws://${window.location.host}/api/ws/terminal`;
   // 对话框部分
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -488,7 +491,7 @@ const HostPage: React.FC<HostListProps> = ({
           </Draggable>
         )}
       >
-        hello!
+        <TerminalComponent wsUrl={wsUrl} />
       </Modal>
     </PageContainer>
   );

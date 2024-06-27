@@ -1,8 +1,11 @@
 package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.entity.HostTerminalLog;
+import com.rany.cake.devops.base.domain.repository.param.TerminalLogPageQueryParam;
 import com.rany.cake.devops.base.infra.po.HostTerminalLogPO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface HostTerminalLogDao {
     /**
@@ -22,4 +25,15 @@ public interface HostTerminalLogDao {
      * @return 行数
      */
     int update(HostTerminalLog log);
+
+    /**
+     * 删除日志
+     *
+     * @param ids ids
+     * @return 行数
+     */
+    int deleteByIds(@Param("ids") List<Long> ids);
+
+
+    List<HostTerminalLogPO> pageQueryTerminalLog(TerminalLogPageQueryParam param);
 }
