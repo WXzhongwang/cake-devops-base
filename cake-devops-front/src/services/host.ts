@@ -114,3 +114,36 @@ export async function queryServerKeys(data: QueryServerKeysPayload) {
     data,
   });
 }
+
+export async function getTerminalAccessToken(data: any) {
+  console.log("payload", data);
+  return request("/api/devops/host/terminal/access?hostId=" + data.hostId);
+}
+
+export async function getSupportedPty() {
+  return request("/api/devops/host/terminal/support/pty");
+}
+
+export async function getConfig(data: any) {
+  return request("/api/devops/host/terminal/get-config?hostId=" + data.hostId);
+}
+
+export async function updateConfig(data: any) {
+  console.log("payload", data);
+  return request("/api/devops/host/terminal/update", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function queryLog(data: any) {
+  console.log("payload", data);
+  return request("/api/devops/host/terminal/log/list", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function getScreenPath(data: any) {
+  return request("/api/devops/host/terminal/log/screen?id=" + data.id);
+}

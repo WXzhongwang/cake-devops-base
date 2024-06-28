@@ -58,10 +58,10 @@ public class HostTerminalController {
     }
 
 
-    @GetMapping("/get/{machineId}")
+    @GetMapping("/get-config")
     @ApiOperation(value = "获取终端配置")
-    public PojoResult<HostTerminalConfigDTO> getSetting(@PathVariable String machineId) {
-        HostTerminalConfigDTO hostTerminalConfig = hostTerminalConfigService.getHostTerminalConfig(machineId);
+    public PojoResult<HostTerminalConfigDTO> getSetting(@RequestParam("hostId") String hostId) {
+        HostTerminalConfigDTO hostTerminalConfig = hostTerminalConfigService.getHostTerminalConfig(hostId);
         return PojoResult.succeed(hostTerminalConfig);
     }
 

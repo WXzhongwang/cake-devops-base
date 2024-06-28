@@ -1,14 +1,44 @@
-import React, { useEffect, useRef } from "react";
+import host, { HostModel, HostTerminalConfig } from "@/models/host";
+import React, { useEffect, useRef, useState } from "react";
+import { Dispatch, connect } from "umi";
 import { Terminal } from "xterm";
 import "xterm/css/xterm.css";
 
 interface TerminalComponentProps {
   wsUrl: string;
+  dispatch: Dispatch;
+  host: HostModel | null;
 }
 
-const TerminalComponent: React.FC<TerminalComponentProps> = ({ wsUrl }) => {
+const TerminalComponent: React.FC<TerminalComponentProps> = ({
+  wsUrl,
+  dispatch,
+  host,
+}) => {
   const terminalRef = useRef(null);
   const socketRef = useRef<WebSocket | null>(null);
+  const [terminalConfig, setTerminalConfig] =
+    useState<HostTerminalConfig | null>(null);
+  const [supportedPty, setSupportedPty] = useState<string[]>([]);
+
+  useEffect(() => {
+    dispatch({
+      type: "host/getSupportedPty",
+      payload: {},
+      callback: (res: string[]) => {
+        setSupportedPty(res);
+      },
+    });
+    dispatch({
+      type: "host/getTerminalConfig",
+      payload: {
+        hostId: host?.hostId,
+      },
+      callback: (res: HostTerminalConfig) => {
+        setTerminalConfig(terminalConfig);
+      },
+    });
+  }, []);
 
   useEffect(() => {
     const term = new Terminal();
@@ -16,7 +46,8 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ wsUrl }) => {
       term.open(terminalRef.current);
     }
 
-    const socket = new WebSocket(wsUrl);
+    console.log("wsUrl", wsUrl + host?.hostId);
+    const socket = new WebSocket(wsUrl + host?.hostId);
     socketRef.current = socket;
 
     socket.addEventListener("open", () => {
@@ -46,5 +77,4 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ wsUrl }) => {
 
   return <div ref={terminalRef} />;
 };
-
-export default TerminalComponent;
+export default connect(({ host }) => ({}))(TerminalComponent);

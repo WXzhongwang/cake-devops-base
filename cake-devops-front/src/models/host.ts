@@ -3,6 +3,7 @@
 import { Effect, Reducer, Subscription } from "umi";
 import * as api from "@/services/host";
 import { message } from "antd";
+import { BaseAction } from "typings";
 
 export interface ServerKey {
   id: number;
@@ -17,8 +18,15 @@ export interface ServerKey {
   gmtModified: Date;
 }
 
-export interface BaseAction {
-  callback?: () => void;
+export interface HostTerminalConfig {
+  id: number;
+  hostId: string;
+  terminalType: number;
+  backgroundColor: string;
+  fontColor: string;
+  fontSize: number;
+  fontFamily: string;
+  enableWebLink: number;
 }
 
 export interface CreateServerKeyPayload {
@@ -206,6 +214,12 @@ export interface HostModelType {
     updateServerKey: Effect;
     deleteServerKey: Effect;
     queryServerKeys: Effect;
+    getTerminalAccessToken: Effect;
+    getTerminalConfig: Effect;
+    updateTerminalConfig: Effect;
+    queryLog: Effect;
+    getSupportedPty: Effect;
+    getScreenPath: Effect;
   };
   reducers: {
     saveHosts: Reducer<HostModelState>;
@@ -363,6 +377,79 @@ const HostModel: HostModelType = {
       const response = yield call(api.queryServerKeys, payload);
       // 触发保存主机账号数据的 reducer
       yield put({ type: "saveServerKeys", payload: response.content });
+    },
+
+    *getTerminalAccessToken({ payload, callback }: any, { call, put }) {
+      // 调用 API 更新主机
+      const response = yield call(api.getTerminalAccessToken, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *getTerminalConfig({ payload, callback }: any, { call, put }) {
+      // 调用 API 更新主机
+      const response = yield call(api.getConfig, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *updateTerminalConfig({ payload, callback }: any, { call, put }) {
+      // 调用 API 更新主机
+      const response = yield call(api.updateConfig, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *queryLog({ payload, callback }: any, { call, put }) {
+      // 调用 API 更新主机
+      const response = yield call(api.queryLog, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *getSupportedPty({ payload, callback }: any, { call, put }) {
+      // 调用 API 更新主机
+      const response = yield call(api.getSupportedPty, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *getScreenPath({ payload, callback }: any, { call, put }) {
+      // 调用 API 更新主机
+      const response = yield call(api.getScreenPath, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
   },
 

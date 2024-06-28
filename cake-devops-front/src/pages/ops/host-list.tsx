@@ -47,7 +47,11 @@ const HostPage: React.FC<HostListProps> = ({
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false); // 控制抽屉显示状态
   // 获取主机的 WebSocket 地址，你需要根据实际数据结构获取正确的地址
-  const wsUrl = `ws://${window.location.host}/api/ws/terminal`;
+  const wsUrl = `ws://${window.location.host}/cake/keep-alive/machine/terminal/`;
+  const watchWsUrl = `ws://${window.location.host}/cake/keep-alive/watcher/terminal/`;
+  const tailWsUrl = `ws://${window.location.host}/cake/keep-alive/tail/`;
+  const sftpWsUrl = `ws://${window.location.host}/cake/keep-alive/sftp/notify/`;
+
   // 对话框部分
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -122,8 +126,16 @@ const HostPage: React.FC<HostListProps> = ({
   };
 
   const openTerminal = (record: HostModel) => {
-    setIsModalOpen(true);
-    setModalHost(record);
+    dispatch({
+      type: "host/getTerminalAccessToken",
+      payload: {
+        hostId: record.hostId,
+      },
+      callback: (res: string) => {
+        setIsModalOpen(true);
+        setModalHost(record);
+      },
+    });
   };
 
   const onStart = (_event: DraggableEvent, uiData: DraggableData) => {
@@ -491,7 +503,7 @@ const HostPage: React.FC<HostListProps> = ({
           </Draggable>
         )}
       >
-        <TerminalComponent wsUrl={wsUrl} />
+        <TerminalComponent wsUrl={wsUrl} host={modalHost} />
       </Modal>
     </PageContainer>
   );
