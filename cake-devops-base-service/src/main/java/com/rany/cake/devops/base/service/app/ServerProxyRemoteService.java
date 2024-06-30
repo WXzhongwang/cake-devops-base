@@ -19,7 +19,6 @@ import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +34,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-@ShenyuService("/server-proxy/**")
+//@ShenyuService("/server-proxy/**")
 @AllArgsConstructor
 public class ServerProxyRemoteService implements ServerProxyService {
 

@@ -19,14 +19,13 @@ import com.rany.cake.devops.base.util.enums.WebHookType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Service
-@ShenyuService("/webhook-config/**")
+//@ShenyuService("/webhook-config/**")
 @Slf4j
 @AllArgsConstructor
 public class WebhookConfigRemoteService implements WebhookConfigService {

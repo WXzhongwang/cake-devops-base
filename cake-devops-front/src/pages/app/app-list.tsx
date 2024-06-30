@@ -144,7 +144,7 @@ const AppList: React.FC<AppListProps> = ({
     // 处理查看操作
     console.log("查看应用详情", record);
     // 示例：跳转到详情页，使用 history.push
-    history.push(`/app/info/${record.appId}`);
+    history.push(`/apps/app/info/${record.appId}`);
   };
 
   return (

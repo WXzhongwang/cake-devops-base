@@ -23,7 +23,7 @@ import javax.annotation.Resource;
  * @version 1.0.0
  * @since 2021/6/11 23:48
  */
-@Component
+@Component("tailFileHandler")
 @Slf4j
 public class TailFileHandler implements WebSocketHandler {
 

@@ -21,14 +21,13 @@ import com.rany.cake.devops.base.service.handler.alarm.MachineAlarmExecutor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Service
-@ShenyuService("/host-alarm/**")
+//@ShenyuService("/host-alarm/**")
 @Slf4j
 @AllArgsConstructor
 public class HostAlarmRemoteService implements HostAlarmService {

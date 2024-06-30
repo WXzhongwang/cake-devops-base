@@ -8,62 +8,58 @@ import com.rany.cake.devops.base.web.interceptor.FileTransferNotifyInterceptor;
 import com.rany.cake.devops.base.web.interceptor.TailFileInterceptor;
 import com.rany.cake.devops.base.web.interceptor.TerminalAccessInterceptor;
 import com.rany.cake.devops.base.web.interceptor.TerminalWatcherInterceptor;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSocket
-public class WebSocketBean implements WebSocketConfigurer {
-    @Resource
+// @AutoConfigureAfter(value = WebMvcConfig.class)
+public class WebSocketConfig implements WebSocketConfigurer {
+    @Autowired
     private TerminalAccessInterceptor terminalAccessInterceptor;
-    @Resource
+    @Autowired
     private TerminalWatcherInterceptor terminalWatcherInterceptor;
-    @Resource
+    @Autowired
     private TailFileInterceptor tailFileInterceptor;
-    @Resource
+    @Autowired
     private FileTransferNotifyInterceptor fileTransferNotifyInterceptor;
-    @Resource
+    @Autowired
     private TerminalMessageHandler terminalMessageHandler;
-    @Resource
+    @Autowired
     private TerminalWatcherHandler terminalWatcherHandler;
-    @Resource
+    @Autowired
     private FileTransferNotifyHandler fileTransferNotifyHandler;
-    @Resource
+    @Autowired
     private TailFileHandler tailFileHandler;
-
+    @Resource
+    private TestMessageHandler testMessageHandler;
+    @Resource
+    private TestMessageInterceptor testMessageInterceptor;
 
     @Override
-    public void registerWebSocketHandlers(@NotNull WebSocketHandlerRegistry registry) {
-        registry.addHandler(terminalMessageHandler, "/cake/keep-alive/machine/terminal/{token}")
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(testMessageHandler, "/api/ws")
+                .addInterceptors(testMessageInterceptor)
+                .setAllowedOrigins("*");
+
+        registry.addHandler(terminalMessageHandler, "/api/keep-alive/machine/terminal/{token}")
                 .addInterceptors(terminalAccessInterceptor)
                 .setAllowedOrigins("*");
-        registry.addHandler(terminalWatcherHandler, "/cake/keep-alive/watcher/terminal/{token}")
+        registry.addHandler(terminalWatcherHandler, "/api/keep-alive/watcher/terminal/{token}")
                 .addInterceptors(terminalWatcherInterceptor)
                 .setAllowedOrigins("*");
-        registry.addHandler(tailFileHandler, "/cake/keep-alive/tail/{token}")
+        registry.addHandler(tailFileHandler, "/api/keep-alive/tail/{token}")
                 .addInterceptors(tailFileInterceptor)
                 .setAllowedOrigins("*");
-        registry.addHandler(fileTransferNotifyHandler, "/cake/keep-alive/sftp/notify/{token}")
+        registry.addHandler(fileTransferNotifyHandler, "/api/keep-alive/sftp/notify/{token}")
                 .addInterceptors(fileTransferNotifyInterceptor)
                 .setAllowedOrigins("*");
     }
 
-    /**
-     * web socket 缓冲区大小配置
-     */
-    @Bean
-    public ServletServerContainerFactoryBean servletServerContainerFactoryBean() {
-        ServletServerContainerFactoryBean factory = new ServletServerContainerFactoryBean();
-        factory.setMaxBinaryMessageBufferSize(1024 * 1024);
-        factory.setMaxTextMessageBufferSize(1024 * 1024);
-        factory.setMaxSessionIdleTimeout(30 * 60000L);
-        return factory;
-    }
+
 }

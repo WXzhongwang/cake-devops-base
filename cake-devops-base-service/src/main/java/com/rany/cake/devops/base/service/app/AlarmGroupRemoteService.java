@@ -34,7 +34,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +42,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@ShenyuService("/alarm-group/**")
+// @ShenyuService("/alarm-group/**")
 @Slf4j
 @AllArgsConstructor
 public class AlarmGroupRemoteService implements AlarmGroupService {

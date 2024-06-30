@@ -18,7 +18,7 @@ import com.rany.cake.devops.base.util.ws.WsProtocol;
 import com.rany.cake.toolkit.lang.wrapper.Tuple;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
@@ -34,7 +34,7 @@ import java.util.Date;
  */
 @Slf4j
 @Component("terminalMessageHandler")
-public class TerminalMessageHandler implements WebSocketHandler {
+public class TerminalMessageHandler implements WebSocketHandler, InitializingBean {
     @Resource
     private TerminalSessionManager terminalSessionManager;
     @Resource
@@ -48,13 +48,14 @@ public class TerminalMessageHandler implements WebSocketHandler {
     @Resource
     private HostTerminalLogRepository hostTerminalLogRepository;
 
+
     @Override
-    public void afterConnectionEstablished(@NotNull WebSocketSession session) {
+    public void afterConnectionEstablished(WebSocketSession session) {
         log.info("terminal 已建立连接 token: {}, id: {}, params: {}", WebSockets.getToken(session), session.getId(), session.getAttributes());
     }
 
     @Override
-    public void handleMessage(@NotNull WebSocketSession session, @NotNull WebSocketMessage<?> message) {
+    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
         if (!(message instanceof TextMessage)) {
             return;
         }
@@ -98,7 +99,7 @@ public class TerminalMessageHandler implements WebSocketHandler {
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, @NotNull Throwable exception) {
+    public void handleTransportError(WebSocketSession session, Throwable exception) {
         log.error("terminal 操作异常拦截 token: {}", session.getId(), exception);
     }
 
@@ -145,7 +146,7 @@ public class TerminalMessageHandler implements WebSocketHandler {
         String machineId = (String) session.getAttributes().get(WebSockets.MID);
 
         // 获取登陆用户
-        UserDTO userDTO = passportService.getUserByToken(connectInfo.getLoginToken(), null);
+        UserDTO userDTO = passportService.getUserByTerminalToken(connectInfo.getLoginToken(), null);
         if (userDTO == null || !userId.equals(userDTO.getUserId())) {
             log.info("terminal 建立连接拒绝-用户认证失败 token: {}", token);
             WebSockets.close(session, WsCloseCode.IDENTITY_MISMATCH);
@@ -197,4 +198,8 @@ public class TerminalMessageHandler implements WebSocketHandler {
         log.info("terminal 建立连接成功 uid: {}, machineId: {}", userId, machineId);
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.info("afterPropertiesSet TerminalMessageHandler");
+    }
 }

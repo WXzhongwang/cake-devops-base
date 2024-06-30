@@ -18,7 +18,12 @@ import type { DraggableData, DraggableEvent } from "react-draggable";
 import Draggable from "react-draggable";
 import { connect, Dispatch, history } from "umi";
 import HostGroupTree from "./components/host-group-tree";
-import { HostModel, HostGroupModel, ServerKey } from "@/models/host";
+import {
+  HostModel,
+  HostGroupModel,
+  ServerKey,
+  AccessTokenRes,
+} from "@/models/host";
 import { ProxyModel } from "@/models/proxy";
 import CreateHostForm from "./components/create-host-form";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
@@ -47,10 +52,10 @@ const HostPage: React.FC<HostListProps> = ({
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false); // 控制抽屉显示状态
   // 获取主机的 WebSocket 地址，你需要根据实际数据结构获取正确的地址
-  const wsUrl = `ws://${window.location.host}/cake/keep-alive/machine/terminal/`;
-  const watchWsUrl = `ws://${window.location.host}/cake/keep-alive/watcher/terminal/`;
-  const tailWsUrl = `ws://${window.location.host}/cake/keep-alive/tail/`;
-  const sftpWsUrl = `ws://${window.location.host}/cake/keep-alive/sftp/notify/`;
+  const wsUrl = `ws://${window.location.host}/api/keep-alive/machine/terminal/`;
+  const watchWsUrl = `ws://${window.location.host}/api/keep-alive/watcher/terminal/`;
+  const tailWsUrl = `ws://${window.location.host}/api/keep-alive/tail/`;
+  const sftpWsUrl = `ws://${window.location.host}/api/keep-alive/sftp/notify/`;
 
   // 对话框部分
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -81,7 +86,7 @@ const HostPage: React.FC<HostListProps> = ({
 
   const handleSftpView = (record: HostModel) => {
     // 示例：跳转到详情页，使用 history.push
-    history.push(`/ops/sftp-manage/${record.hostId}`);
+    history.push(`/apps/ops/sftp-manage/${record.hostId}`);
   };
 
   const handleEdit = (host: HostModel) => {
@@ -126,16 +131,8 @@ const HostPage: React.FC<HostListProps> = ({
   };
 
   const openTerminal = (record: HostModel) => {
-    dispatch({
-      type: "host/getTerminalAccessToken",
-      payload: {
-        hostId: record.hostId,
-      },
-      callback: (res: string) => {
-        setIsModalOpen(true);
-        setModalHost(record);
-      },
-    });
+    setModalHost(record);
+    setIsModalOpen(true);
   };
 
   const onStart = (_event: DraggableEvent, uiData: DraggableData) => {
@@ -503,7 +500,7 @@ const HostPage: React.FC<HostListProps> = ({
           </Draggable>
         )}
       >
-        <TerminalComponent wsUrl={wsUrl} host={modalHost} />
+        <TerminalComponent wsUrl={wsUrl} modalHost={modalHost} />
       </Modal>
     </PageContainer>
   );

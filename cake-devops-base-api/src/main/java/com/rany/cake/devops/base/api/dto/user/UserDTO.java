@@ -27,4 +27,6 @@ public class UserDTO implements Serializable {
 
     private Long currentBindTimestamp;
 
+    private String bindIp;
+
 }

@@ -15,14 +15,13 @@ import com.rany.cake.devops.base.service.adapter.WebSideMessageDataAdapter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Service
-@ShenyuService("/web-side-message/**")
+//@ShenyuService("/web-side-message/**")
 @Slf4j
 @AllArgsConstructor
 public class WebSideMessageRemoteService implements WebSideMessageService {

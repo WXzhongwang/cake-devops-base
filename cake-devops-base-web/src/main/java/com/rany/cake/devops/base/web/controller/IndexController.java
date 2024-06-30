@@ -22,7 +22,7 @@ public class IndexController {
     @Resource
     private CmsClient cmsClient;
 
-    @RequestMapping(value = {"/**", "/app/**"}, produces = "text/html;charset=utf-8", method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/apps", "/apps/**"}, produces = "text/html;charset=utf-8", method = RequestMethod.GET)
     public String index() {
         try {
             log.info("CMS load page from {}.", cmsPagePath);

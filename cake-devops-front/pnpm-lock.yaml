@@ -29,6 +29,9 @@ dependencies:
   echarts-for-react:
     specifier: ^3.0.2
     version: 3.0.2(echarts@5.5.0)(react@18.2.0)
+  lodash:
+    specifier: ^4.17.21
+    version: 4.17.21
   mockjs:
     specifier: ^1.1.0
     version: 1.1.0
@@ -38,6 +41,9 @@ dependencies:
   nanoid:
     specifier: ^5.0.7
     version: 5.0.7
+  npm:
+    specifier: ^10.8.1
+    version: 10.8.1
   react-draggable:
     specifier: ^4.4.6
     version: 4.4.6(react-dom@18.2.0)(react@18.2.0)
@@ -50,11 +56,23 @@ dependencies:
   xterm:
     specifier: ^5.3.0
     version: 5.3.0
+  xterm-addon-fit:
+    specifier: ^0.8.0
+    version: 0.8.0(xterm@5.3.0)
+  xterm-addon-search:
+    specifier: ^0.13.0
+    version: 0.13.0(xterm@5.3.0)
+  xterm-addon-web-links:
+    specifier: ^0.9.0
+    version: 0.9.0(xterm@5.3.0)
 
 devDependencies:
   '@rany/sheep':
     specifier: ^1.0.6
     version: 1.0.6
+  '@types/lodash':
+    specifier: ^4.17.6
+    version: 4.17.6
   '@types/mockjs':
     specifier: ^1.0.10
     version: 1.0.10
@@ -2043,6 +2061,10 @@ packages:
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
     dev: false
+
+  /@types/lodash@4.17.6:
+    resolution: {integrity: sha512-OpXEVoCKSS3lQqjx9GGGOapBeuW5eUboYHRlHP9urXPX25IKZ6AnP5ZRxtVf63iieUbsHxLn8NQ5Nlftc6yzAA==}
+    dev: true
 
   /@types/minimist@1.2.5:
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
@@ -6608,6 +6630,81 @@ packages:
       path-key: 4.0.0
     dev: false
 
+  /npm@10.8.1:
+    resolution: {integrity: sha512-Dp1C6SvSMYQI7YHq/y2l94uvI+59Eqbu1EpuKQHQ8p16txXRuRit5gH3Lnaagk2aXDIjg/Iru9pd05bnneKgdw==}
+    engines: {node: ^18.17.0 || >=20.5.0}
+    hasBin: true
+    dev: false
+    bundledDependencies:
+      - '@isaacs/string-locale-compare'
+      - '@npmcli/arborist'
+      - '@npmcli/config'
+      - '@npmcli/fs'
+      - '@npmcli/map-workspaces'
+      - '@npmcli/package-json'
+      - '@npmcli/promise-spawn'
+      - '@npmcli/redact'
+      - '@npmcli/run-script'
+      - '@sigstore/tuf'
+      - abbrev
+      - archy
+      - cacache
+      - chalk
+      - ci-info
+      - cli-columns
+      - fastest-levenshtein
+      - fs-minipass
+      - glob
+      - graceful-fs
+      - hosted-git-info
+      - ini
+      - init-package-json
+      - is-cidr
+      - json-parse-even-better-errors
+      - libnpmaccess
+      - libnpmdiff
+      - libnpmexec
+      - libnpmfund
+      - libnpmhook
+      - libnpmorg
+      - libnpmpack
+      - libnpmpublish
+      - libnpmsearch
+      - libnpmteam
+      - libnpmversion
+      - make-fetch-happen
+      - minimatch
+      - minipass
+      - minipass-pipeline
+      - ms
+      - node-gyp
+      - nopt
+      - normalize-package-data
+      - npm-audit-report
+      - npm-install-checks
+      - npm-package-arg
+      - npm-pick-manifest
+      - npm-profile
+      - npm-registry-fetch
+      - npm-user-validate
+      - p-map
+      - pacote
+      - parse-conflict-json
+      - proc-log
+      - qrcode-terminal
+      - read
+      - semver
+      - spdx-expression-parse
+      - ssri
+      - supports-color
+      - tar
+      - text-table
+      - tiny-relative-date
+      - treeverse
+      - validate-npm-package-name
+      - which
+      - write-file-atomic
+
   /nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
     dependencies:
@@ -9861,6 +9958,33 @@ packages:
   /xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
+
+  /xterm-addon-fit@0.8.0(xterm@5.3.0):
+    resolution: {integrity: sha512-yj3Np7XlvxxhYF/EJ7p3KHaMt6OdwQ+HDu573Vx1lRXsVxOcnVJs51RgjZOouIZOczTsskaS+CpXspK81/DLqw==}
+    deprecated: This package is now deprecated. Move to @xterm/addon-fit instead.
+    peerDependencies:
+      xterm: ^5.0.0
+    dependencies:
+      xterm: 5.3.0
+    dev: false
+
+  /xterm-addon-search@0.13.0(xterm@5.3.0):
+    resolution: {integrity: sha512-sDUwG4CnqxUjSEFh676DlS3gsh3XYCzAvBPSvJ5OPgF3MRL3iHLPfsb06doRicLC2xXNpeG2cWk8x1qpESWJMA==}
+    deprecated: This package is now deprecated. Move to @xterm/addon-search instead.
+    peerDependencies:
+      xterm: ^5.0.0
+    dependencies:
+      xterm: 5.3.0
+    dev: false
+
+  /xterm-addon-web-links@0.9.0(xterm@5.3.0):
+    resolution: {integrity: sha512-LIzi4jBbPlrKMZF3ihoyqayWyTXAwGfu4yprz1aK2p71e9UKXN6RRzVONR0L+Zd+Ik5tPVI9bwp9e8fDTQh49Q==}
+    deprecated: This package is now deprecated. Move to @xterm/addon-web-links instead.
+    peerDependencies:
+      xterm: ^5.0.0
+    dependencies:
+      xterm: 5.3.0
+    dev: false
 
   /xterm@5.3.0:
     resolution: {integrity: sha512-8QqjlekLUFTrU6x7xck1MsPzPA571K5zNqWm0M0oroYEWVOptZ0+ubQSkQ3uxIEhcIHRujJy6emDWX4A7qyFzg==}

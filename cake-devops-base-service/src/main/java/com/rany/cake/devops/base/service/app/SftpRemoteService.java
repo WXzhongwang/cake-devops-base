@@ -43,7 +43,6 @@ import com.rany.cake.toolkit.net.remote.channel.SftpExecutor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.*;
@@ -53,7 +52,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@ShenyuService("/sftp/**")
+//@ShenyuService("/sftp/**")
 @AllArgsConstructor
 public class SftpRemoteService implements SftpService {
 

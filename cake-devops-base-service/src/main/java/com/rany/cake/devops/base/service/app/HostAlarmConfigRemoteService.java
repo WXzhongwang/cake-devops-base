@@ -19,13 +19,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@ShenyuService("/host-alarm-config/**")
+//@ShenyuService("/host-alarm-config/**")
 @Slf4j
 @AllArgsConstructor
 public class HostAlarmConfigRemoteService implements HostAlarmConfigService {

@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.web.interceptor;
+package com.rany.cake.devops.base.web.config;
 
 import com.rany.cake.devops.base.service.base.UserHolder;
 import com.rany.cake.devops.base.service.utils.Servlets;
@@ -8,7 +8,6 @@ import com.rany.cake.dingtalk.sdk.beans.SsoUser;
 import com.rany.cake.dingtalk.sdk.utils.SsoUtil;
 import com.rany.cake.toolkit.lang.constant.StandardContentType;
 import com.rany.cake.toolkit.lang.wrapper.HttpWrapper;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
@@ -42,9 +41,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(@NotNull HttpServletRequest request,
-                                @NotNull HttpServletResponse response,
-                                @NotNull Object handler, Exception ex) {
+    public void afterCompletion(HttpServletRequest request,
+                                HttpServletResponse response,
+                                Object handler, Exception ex) {
         UserHolder.remove();
     }
 }

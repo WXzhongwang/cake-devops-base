@@ -10,6 +10,7 @@ import com.rany.cake.devops.base.api.dto.HostTerminalLogDTO;
 import com.rany.cake.devops.base.api.query.terminal.TerminalAccessDTO;
 import com.rany.cake.devops.base.api.query.terminal.TerminalAccessLogPageQuery;
 import com.rany.cake.devops.base.api.service.HostTerminalConfigService;
+import com.rany.cake.devops.base.service.utils.Servlets;
 import com.rany.cake.devops.base.util.Const;
 import com.rany.cake.devops.base.util.MessageConst;
 import com.rany.cake.devops.base.util.ResultCode;
@@ -26,6 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,10 +44,12 @@ public class HostTerminalController {
     @GetMapping("/access")
     @ApiOperation(value = "获取终端accessToken")
     public PojoResult<TerminalAccessDTO> getTerminalAccessToken(
+            HttpServletRequest request,
             @CurrentUser SsoUser ssoUser,
             @RequestParam("hostId") String hostId) {
         Valid.notNull(hostId);
-        TerminalAccessDTO accessConfig = hostTerminalConfigService.getAccessConfig(hostId, ssoUser.getUserId());
+        String remoteAddr = Servlets.getRemoteAddr(request);
+        TerminalAccessDTO accessConfig = hostTerminalConfigService.getAccessConfig(hostId, ssoUser.getUserId(), remoteAddr);
         return PojoResult.succeed(accessConfig);
     }
 

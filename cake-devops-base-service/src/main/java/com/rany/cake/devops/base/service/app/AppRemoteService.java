@@ -48,7 +48,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +65,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-@ShenyuService("/app/**")
+// @ShenyuService("/app/**")
 @AllArgsConstructor
 public class AppRemoteService implements AppService {
     private final AppConfig tenantConfig;

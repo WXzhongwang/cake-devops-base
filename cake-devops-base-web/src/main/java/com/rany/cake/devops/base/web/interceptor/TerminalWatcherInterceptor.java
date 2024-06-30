@@ -6,7 +6,6 @@ import com.rany.cake.devops.base.service.base.WebSockets;
 import com.rany.cake.devops.base.util.KeyConst;
 import com.rany.cake.toolkit.lang.utils.Strings;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -33,10 +32,10 @@ public class TerminalWatcherInterceptor implements HandshakeInterceptor {
     private RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public boolean beforeHandshake(@NotNull ServerHttpRequest request,
-                                   @NotNull ServerHttpResponse response,
-                                   @NotNull WebSocketHandler wsHandler,
-                                   @NotNull Map<String, Object> attributes) {
+    public boolean beforeHandshake(ServerHttpRequest request,
+                                   ServerHttpResponse response,
+                                   WebSocketHandler wsHandler,
+                                   Map<String, Object> attributes) {
         // 获取 token
         String token = WebSockets.getToken(request);
         String tokenKey = Strings.format(KeyConst.TERMINAL_WATCHER_TOKEN, token);
@@ -56,9 +55,9 @@ public class TerminalWatcherInterceptor implements HandshakeInterceptor {
     }
 
     @Override
-    public void afterHandshake(@NotNull ServerHttpRequest request,
-                               @NotNull ServerHttpResponse response,
-                               @NotNull WebSocketHandler wsHandler,
+    public void afterHandshake(ServerHttpRequest request,
+                               ServerHttpResponse response,
+                               WebSocketHandler wsHandler,
                                Exception exception) {
     }
 

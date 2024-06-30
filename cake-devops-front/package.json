@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "cake-devops-base",
-  "version": "1.0.10",
+  "version": "1.0.14",
   "author": "1528683621@qq.com <18668485565@163.com>",
   "scripts": {
     "dev": "umi dev",
@@ -25,16 +25,22 @@
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
     "echarts-for-react": "^3.0.2",
+    "lodash": "^4.17.21",
     "mockjs": "^1.1.0",
     "moment": "^2.30.1",
     "nanoid": "^5.0.7",
+    "npm": "^10.8.1",
     "react-draggable": "^4.4.6",
     "umi": "^4.0.89",
     "umi-request": "^1.4.0",
-    "xterm": "^5.3.0"
+    "xterm": "^5.3.0",
+    "xterm-addon-fit": "^0.8.0",
+    "xterm-addon-search": "^0.13.0",
+    "xterm-addon-web-links": "^0.9.0"
   },
   "devDependencies": {
     "@rany/sheep": "^1.0.6",
+    "@types/lodash": "^4.17.6",
     "@types/mockjs": "^1.0.10",
     "@types/react": "^18.2.44",
     "@types/react-dom": "^18.2.17",

@@ -20,11 +20,16 @@
     </properties>
 
     <dependencies>
-        <!-- apache shenyu apache dubbo plugin start-->
+        <!--        &lt;!&ndash; apache shenyu apache dubbo plugin start&ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.shenyu</groupId>-->
+        <!--            <artifactId>shenyu-spring-boot-starter-client-apache-dubbo</artifactId>-->
+        <!--            <version>${shenyu.version}</version>-->
+        <!--        </dependency>-->
+
         <dependency>
-            <groupId>org.apache.shenyu</groupId>
-            <artifactId>shenyu-spring-boot-starter-client-apache-dubbo</artifactId>
-            <version>${shenyu.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
         </dependency>
         <dependency>
             <groupId>com.rany.cake.dingtalk.sso</groupId>

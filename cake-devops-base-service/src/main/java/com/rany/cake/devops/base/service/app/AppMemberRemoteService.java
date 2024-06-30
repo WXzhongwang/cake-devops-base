@@ -34,7 +34,6 @@ import com.rany.ops.common.exception.BusinessErrorMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,7 +41,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@ShenyuService("/member/**")
+// @ShenyuService("/member/**")
 @AllArgsConstructor
 public class AppMemberRemoteService implements AppMemberService {
 

@@ -32,8 +32,8 @@ public class AliyunAcrApi {
 
     public void createRepo(String repoName) {
         StaticCredentialProvider provider = StaticCredentialProvider.create(Credential.builder()
-                .accessKeyId(crConfig.getAliyunConf().getAccessKey())
-                .accessKeySecret(crConfig.getAliyunConf().getSecretKey())
+                .accessKeyId(crConfig.getAliyun().getAccessKey())
+                .accessKeySecret(crConfig.getAliyun().getSecretKey())
                 .build());
 
         // Configure the Client
@@ -46,8 +46,8 @@ public class AliyunAcrApi {
 
         CreateRepositoryRequest request = CreateRepositoryRequest.builder()
                 .repoName(repoName)
-                .repoNamespaceName(crConfig.getAliyunConf().getNamespace())
-                .regionId(crConfig.getAliyunConf().getRegion())
+                .repoNamespaceName(crConfig.getAliyun().getNamespace())
+                .regionId(crConfig.getAliyun().getRegion())
                 .repoType("PRIVATE").build();
 
         try {

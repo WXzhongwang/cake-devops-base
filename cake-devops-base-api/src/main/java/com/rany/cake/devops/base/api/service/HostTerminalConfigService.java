@@ -23,7 +23,7 @@ public interface HostTerminalConfigService {
      * @param userId 用户
      * @return 访问配置
      */
-    TerminalAccessDTO getAccessConfig(String hostId, String userId);
+    TerminalAccessDTO getAccessConfig(String hostId, String userId, String ip);
 
     /**
      * 获取终端配置

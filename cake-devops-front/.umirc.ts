@@ -33,70 +33,73 @@ export default defineConfig({
   routes: [
     { path: "/", redirect: "/apps" },
     { path: "/apps", component: "app/app-list", name: "应用中心" },
-    { path: "/app/info/:id", component: "app/app-detail" },
-    { path: "/app/deploy/:id", component: "app/deploy" },
-    { path: "/host/detail/:id", component: "ops/host-detail" },
-    { path: "/host/alarm/history/:id", component: "ops/host-alarm-history" },
+    { path: "/apps/app/info/:id", component: "app/app-detail" },
+    { path: "/apps/app/deploy/:id", component: "app/deploy" },
+    { path: "/apps/host/detail/:id", component: "ops/host-detail" },
     {
-      path: "/ops",
+      path: "/apps/host/alarm/history/:id",
+      component: "ops/host-alarm-history",
+    },
+    {
+      path: "/apps/ops",
       routes: [
         {
-          path: "/ops/cluster",
+          path: "/apps/ops/cluster",
           component: "ops/cluster-list",
           name: "集群管理",
         },
         {
-          path: "/ops/host",
+          path: "/apps/ops/host",
           component: "ops/host-list",
           name: "主机管理",
         },
         {
-          path: "/ops/server-key",
+          path: "/apps/ops/server-key",
           component: "ops/server-key",
           name: "主机秘钥管理",
         },
         {
-          path: "/ops/server-proxy",
+          path: "/apps/ops/server-proxy",
           component: "ops/server-proxy",
           name: "主机代理管理",
         },
         {
-          path: "/ops/server-env",
+          path: "/apps/ops/server-env",
           component: "ops/server-env",
           name: "主机环境变量",
         },
         {
-          path: "/ops/server-monitor",
+          path: "/apps/ops/server-monitor",
           component: "ops/server-monitor",
           name: "主机监控",
         },
         {
-          path: "/ops/sftp-manage/:id",
+          path: "/apps/ops/sftp-manage/:id",
           component: "ops/sftp-manage",
           layout: false,
         },
       ],
     },
     {
-      path: "/system",
+      path: "/apps/system",
       routes: [
         {
-          path: "/system/webhook-config",
+          path: "/apps/system/webhook-config",
           component: "system/webhook-config",
           name: "Webhook配置",
         },
         {
-          path: "/system/alarm-group",
+          path: "/apps/system/alarm-group",
           component: "system/alarm-group",
           name: "告警组",
         },
         {
-          path: "/system/script-template",
+          path: "/apps/system/script-template",
           component: "system/script-template",
           name: "脚本管理",
         },
         {
-          path: "/system/system-log",
+          path: "/apps/system/system-log",
           component: "system/system-log",
           name: "系统日志",
         },
@@ -107,10 +110,26 @@ export default defineConfig({
   dva: {},
   proxy: {
     "/api": {
-      target: "http://localhost:8300",
+      target: "http://127.0.0.1:8300",
       changeOrigin: true,
-      ws: true,
       pathRewrite: { "^/api": "/api" },
+      logLevel: "debug",
+      onError(err, req, res) {
+        console.error("Proxy error:", err);
+      },
+    },
+    "/api/keep-alive": {
+      target: "http://127.0.0.1:8300", // 后端服务器地址
+      ws: true,
+      changeOrigin: true,
+      pathRewrite: { "^/api/keep-alive": "/api/keep-alive" },
+      secure: false,
+      logLevel: "debug",
+      onProxyReqWs: (proxyReq, req, socket, options, head) => {
+        // 添加一些WebSocket相关的请求头
+        proxyReq.setHeader("Connection", "upgrade");
+        proxyReq.setHeader("Upgrade", "websocket");
+      },
     },
   },
   mock: false,

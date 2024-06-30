@@ -5,7 +5,6 @@ import com.rany.cake.devops.base.util.ResultCode;
 import com.rany.cake.devops.base.util.annotation.IgnoreCheck;
 import com.rany.cake.toolkit.lang.constant.StandardContentType;
 import com.rany.cake.toolkit.lang.wrapper.HttpWrapper;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -32,9 +31,9 @@ public class ExposeApiHeaderInterceptor implements HandlerInterceptor {
     private String accessSecret;
 
     @Override
-    public boolean preHandle(@NotNull HttpServletRequest request,
-                             @NotNull HttpServletResponse response,
-                             @NotNull Object handler) throws IOException {
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Object handler) throws IOException {
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }

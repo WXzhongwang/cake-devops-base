@@ -13,10 +13,9 @@ import com.rany.cake.devops.base.util.enums.ApprovalStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 @Service
-@ShenyuService("/approval/**")
+// @ShenyuService("/approval/**")
 @Slf4j
 @AllArgsConstructor
 public class ApprovalRemoteService implements ApprovalService {

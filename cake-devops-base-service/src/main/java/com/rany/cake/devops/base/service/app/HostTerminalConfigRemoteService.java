@@ -21,16 +21,18 @@ import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.HostTerminalConfigAdapter;
 import com.rany.cake.devops.base.service.adapter.HostTerminalLogAdapter;
 import com.rany.cake.devops.base.service.base.Constants;
+import com.rany.cake.devops.base.service.base.UserHolder;
+import com.rany.cake.devops.base.service.ws.PassportService;
 import com.rany.cake.devops.base.util.Const;
 import com.rany.cake.devops.base.util.KeyConst;
 import com.rany.cake.devops.base.util.terminal.TerminalConst;
+import com.rany.cake.dingtalk.sdk.beans.SsoUser;
 import com.rany.cake.toolkit.lang.id.UUIds;
 import com.rany.cake.toolkit.lang.utils.Strings;
 import com.rany.cake.toolkit.net.remote.TerminalType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
@@ -39,7 +41,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@ShenyuService("/host/terminal/**")
+//@ShenyuService("/host/terminal/**")
 @Slf4j
 @AllArgsConstructor
 public class HostTerminalConfigRemoteService implements HostTerminalConfigService {
@@ -54,12 +56,13 @@ public class HostTerminalConfigRemoteService implements HostTerminalConfigServic
     private HostTerminalLogAdapter hostTerminalLogAdapter;
     @Resource
     private HostTerminalConfigRepository hostTerminalConfigRepository;
-
     @Resource
     private HostDomainService hostDomainService;
+    @Resource
+    private PassportService passportService;
 
     @Override
-    public TerminalAccessDTO getAccessConfig(String hostId, String userId) {
+    public TerminalAccessDTO getAccessConfig(String hostId, String userId, String ip) {
         // 获取机器信息
         Host machine = hostDomainService.getHost(new HostId(hostId));
         String token = UUIds.random32();
@@ -68,11 +71,11 @@ public class HostTerminalConfigRemoteService implements HostTerminalConfigServic
         // 设置数据
         TerminalAccessDTO access = new TerminalAccessDTO();
         access.setId(config.getId());
+        access.setHostId(hostId);
         access.setAccessToken(token);
-        access.setHost(machine.getServerAddr());
+        access.setServerAddr(machine.getServerAddr());
         access.setPort(machine.getPort());
         access.setHostName(machine.getHostName());
-        access.setHost(hostId);
         access.setUsername(machine.getUsername());
         access.setTerminalType(config.getTerminalType());
         access.setBackgroundColor(config.getBackgroundColor());
@@ -85,7 +88,10 @@ public class HostTerminalConfigRemoteService implements HostTerminalConfigServic
         redisTemplate.opsForValue().set(cacheKey, userId + "_" + hostId,
                 KeyConst.TERMINAL_ACCESS_TOKEN_EXPIRE, TimeUnit.SECONDS);
         log.info("用户获取terminal uid: {} hostId: {} token: {}", userId, hostId, token);
-        // 设置日志参数
+
+        SsoUser ssoUser = UserHolder.get();
+        String terminalToken = passportService.getTerminalToken(ssoUser, ip);
+        access.setTerminalToken(terminalToken);
         return access;
     }
 

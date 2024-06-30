@@ -1,34 +1,36 @@
 server:
   port: 8300
+  tomcat:
+    connection-timeout: 18000000
 
 cms:
   env: test
   oss:
     endpoint: https://rany-ops.oss-cn-hangzhou.aliyuncs.com
   page:
-    version: 1.0.10
+    version: 1.0.14
     path: cake-devops-base/${cms.page.version}/index.html
   site:
     name: cake-devops-base
 
-shenyu:
-  register:
-    enabled: false
-    registerType: http #zookeeper #etcd #nacos #consul
-    serverLists: http://localhost:9095 #localhost:2181 #http://localhost:2379 #localhost:8848
-    props:
-      username: admin
-      password: Shenyu123456???
-  client:
-    dubbo:
-      props:
-        contextPath: /devops
-        appName: cake-ops-service
+#shenyu:
+#  register:
+#    enabled: false
+#    registerType: http #zookeeper #etcd #nacos #consul
+#    serverLists: http://localhost:9095 #localhost:2181 #http://localhost:2379 #localhost:8848
+#    props:
+#      username: admin
+#      password: Shenyu123456???
+#  client:
+#    dubbo:
+#      props:
+#        contextPath: /devops
+#        appName: cake-ops-service
 
 dubbo:
   application:
-    id: cake-ops-service
-    name: cake-ops-service
+    id: cake-devops-service
+    name: cake-devops-service
   protocol:
     name: dubbo
     port: -1
@@ -86,7 +88,7 @@ spring:
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;
 
   application:
-    name: cake-ops-service
+    name: cake-devops-service
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -111,20 +113,20 @@ mybatis:
   type-aliases-package: com.rany.cake.devops.base.infra, com.rany.cake.devops.base.domain
 
 
-ssh:
-  shell:
-    enable: false
-    version: 2.0.0
-    display-banner: on
-    host: 0.0.0.0
-    port: 2222
-    shared-history: off
-    history-directory: ${home}/opscloud-data/ssh-server/history-log/
-    host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
-    prompt:
-      # white|cyan
-      color: cyan
-      text: 'ssh-server>'
+#ssh:
+#  shell:
+#    enable: false
+#    version: 2.0.0
+#    display-banner: on
+#    host: 0.0.0.0
+#    port: 2222
+#    shared-history: off
+#    history-directory: ${home}/opscloud-data/ssh-server/history-log/
+#    host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
+#    prompt:
+#      # white|cyan
+#      color: cyan
+#      text: 'ssh-server>'
 
 devops:
   biz-config:
@@ -167,9 +169,12 @@ devops:
       region:
       accessKey:
       secretKey:
-#logging:
-#  level:
-#    org.jline: debug
+
+logging:
+  level:
+    org.springframework: trace
+    com.rany: trace
+
 
 
 easy:
@@ -180,7 +185,7 @@ easy:
       sso-server: http://127.0.0.1:8765/
       login-url: http://127.0.0.1:8765/sso/loginPage
       logout-url: /sso/logout
-      ignore-urls: /sso/loginPage,/sso/login,/oauth/login,/cake/expose-api/**
+      ignore-urls: /sso/loginPage,/sso/login,/oauth/login,/cake/expose-api/**,/api/keep-alive/**, /api/ws/**
       ignore-resources: .js, .css, .jpg, .png, .ico, .html
       ajax-failure-response:
         content-type: application/json

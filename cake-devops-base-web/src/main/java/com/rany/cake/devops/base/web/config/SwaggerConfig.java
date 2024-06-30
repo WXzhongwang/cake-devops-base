@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.web.config;
 
-import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
-import com.rany.cake.toolkit.lang.constant.Const;
+import com.rany.cake.devops.base.util.Const;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -12,7 +11,6 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * swagger 配置
@@ -24,8 +22,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @since 2022/7/8 10:13
  */
 @Configuration
-@EnableSwagger2
-@EnableKnife4j
+//@EnableSwagger2
+//@EnableKnife4j
 @Profile({"dev"})
 public class SwaggerConfig {
     @Bean

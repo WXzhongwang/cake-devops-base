@@ -17,7 +17,6 @@ import com.rany.cake.devops.base.service.utils.HostGroupTreeUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ import java.util.List;
  * @email 18668485565163.com
  */
 @Service
-@ShenyuService("/host-group/**")
+//@ShenyuService("/host-group/**")
 @Slf4j
 @AllArgsConstructor
 public class HostGroupRemoteService implements HostGroupService {

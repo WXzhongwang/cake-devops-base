@@ -25,7 +25,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2021/6/27 11:25
  */
-@Component
+@Component("fileTransferNotifyHandler")
 @Slf4j
 public class FileTransferNotifyHandler implements WebSocketHandler {
 
@@ -81,7 +81,7 @@ public class FileTransferNotifyHandler implements WebSocketHandler {
             return;
         }
         // 获取认证用户
-        UserDTO user = passportService.getUserByToken(authToken, null);
+        UserDTO user = passportService.getUserByTerminalToken(authToken, null);
         if (user == null) {
             log.info("sftp-Notify 认证失败-未查询到用户 id: {}, authToken: {}", id, authToken);
             WebSockets.close(session, WsCloseCode.INCORRECT_TOKEN);

@@ -14,7 +14,7 @@ import lombok.Data;
 @SuppressWarnings("ALL")
 public class TerminalAccessDTO extends DTO {
     private Long id;
-    private String host;
+    private String serverAddr;
     private Integer port;
     private String hostName;
     private String hostId;
@@ -25,6 +25,7 @@ public class TerminalAccessDTO extends DTO {
     private Integer fontSize;
     private String fontFamily;
     private String accessToken;
+    private String terminalToken;
     private Integer enableWebLink;
 
 }

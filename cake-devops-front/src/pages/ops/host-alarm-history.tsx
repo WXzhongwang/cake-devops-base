@@ -151,6 +151,7 @@ const AlarmPage: React.FC<AlarmListProps> = ({
                     style={{ width: 120 }}
                   />
                 </Form.Item>
+
                 <Form.Item name="maxValue">
                   <InputNumber
                     placeholder="最大报警值"

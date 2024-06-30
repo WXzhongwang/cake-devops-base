@@ -27,11 +27,11 @@
  */
 package com.rany.cake.devops.base.service.terminal;
 
-import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.rany.cake.devops.base.service.utils.JSONUtil;
 import com.rany.cake.devops.base.service.utils.SessionOutputUtil;
 import com.rany.cake.devops.base.service.utils.SleepUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.websocket.Session;
 import java.io.IOException;

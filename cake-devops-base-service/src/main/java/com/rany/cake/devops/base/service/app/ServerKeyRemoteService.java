@@ -17,7 +17,6 @@ import com.rany.cake.devops.base.service.adapter.ServerKeyDataAdapter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-@ShenyuService("/server-key/**")
+//@ShenyuService("/server-key/**")
 @AllArgsConstructor
 public class ServerKeyRemoteService implements ServerKeyService {
     private final SnowflakeIdWorker snowflakeIdWorker;

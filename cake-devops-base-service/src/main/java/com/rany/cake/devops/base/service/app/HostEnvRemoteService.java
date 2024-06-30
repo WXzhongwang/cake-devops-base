@@ -21,7 +21,6 @@ import com.rany.cake.toolkit.lang.utils.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@ShenyuService("/host-env/**")
+//@ShenyuService("/host-env/**")
 @Slf4j
 @AllArgsConstructor
 public class HostEnvRemoteService implements HostEnvService {

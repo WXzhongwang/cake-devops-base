@@ -35,7 +35,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@ShenyuService("/release/**")
+//@ShenyuService("/release/**")
 @Slf4j
 @AllArgsConstructor
 public class ReleaseRemoteService implements ReleaseService {

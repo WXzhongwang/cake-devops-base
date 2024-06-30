@@ -18,7 +18,6 @@ import com.rany.cake.devops.base.service.adapter.NamespaceDataAdapter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ import java.util.List;
  * @email 18668485565163.com
  */
 @Service
-@ShenyuService("/namespace/**")
+//@ShenyuService("/namespace/**")
 @Slf4j
 @AllArgsConstructor
 public class NamespaceRemoteService implements NamespaceService {

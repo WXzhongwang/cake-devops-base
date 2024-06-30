@@ -124,7 +124,7 @@ public class TerminalWatcherHandler implements WebSocketHandler {
         // 检查参数
         String userId = (String) session.getAttributes().get(WebSockets.UID);
         // 获取登陆用户
-        UserDTO userDTO = passportService.getUserByToken(loginToken, null);
+        UserDTO userDTO = passportService.getUserByTerminalToken(loginToken, null);
         if (userDTO == null || !userId.equals(userDTO.getUserId())) {
             WebSockets.close(session, WsCloseCode.IDENTITY_MISMATCH);
             return;

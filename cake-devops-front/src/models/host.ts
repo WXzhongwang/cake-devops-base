@@ -29,6 +29,23 @@ export interface HostTerminalConfig {
   enableWebLink: number;
 }
 
+export interface AccessTokenRes {
+  id: number;
+  hostId: string;
+  terminalType: number;
+  backgroundColor: string;
+  fontColor: string;
+  fontSize: number;
+  fontFamily: string;
+  enableWebLink: number;
+
+  accessToken: string;
+  terminalToken: string;
+  hostName: string;
+  host: string;
+  port: number;
+}
+
 export interface CreateServerKeyPayload {
   displayName: string;
   accountType: number;

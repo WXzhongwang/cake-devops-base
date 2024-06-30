@@ -34,7 +34,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.dubbo.config.annotation.Service;
-import org.apache.shenyu.client.apache.dubbo.annotation.ShenyuService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ import java.util.stream.Collectors;
  * @email 18668485565163.com
  */
 @Service
-@ShenyuService("/host/**")
+//@ShenyuService("/host/**")
 @Slf4j
 @AllArgsConstructor
 public class HostRemoteService implements HostService {
