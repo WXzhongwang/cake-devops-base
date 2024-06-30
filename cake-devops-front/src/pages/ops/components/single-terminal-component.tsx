@@ -8,8 +8,10 @@ import { WebLinksAddon } from "xterm-addon-web-links";
 import { debounce } from "lodash";
 import { AccessTokenRes, HostModel, HostTerminalConfig } from "@/models/host";
 import "./single-terminal-component.less";
-import { Modal, Space, Tag } from "antd";
+import { Button, Form, Input, Modal, Select, Space, Switch, Tag } from "antd";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
+import { SettingOutlined } from "@ant-design/icons";
+import { SketchPicker } from "react-color";
 
 interface TerminalComponentProps {
   wsUrl: string;
@@ -37,13 +39,14 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
   const [connectionStatus, setConnectionStatus] = useState<string>(
     TERMINAL_STATUS.NOT_CONNECT.label
   );
-
   const terminalRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const [term, setTerm] = useState<Terminal | null>(null);
   const [accessConfig, setAccessConfig] = useState<AccessTokenRes | null>(null);
-  const [terminalConfig, setTerminalConfig] =
-    useState<HostTerminalConfig | null>(null);
+  const [terminalConfig, setTerminalConfig] = useState<
+    HostTerminalConfig | undefined
+  >(undefined);
+  const [supportPy, setSupportPy] = useState<string[]>([]);
   const [fitAddon, setFitAddon] = useState<FitAddon | null>(null);
   const [visibleRightMenu, setVisibleRightMenu] = useState(false);
   const [rightMenuPosition, setRightMenuPosition] = useState({ x: 0, y: 0 });
@@ -51,18 +54,13 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
     TERMINAL_STATUS.NOT_CONNECT.value
   );
   const [clipboardContent, setClipboardContent] = useState<string>("");
-
-  const defaultOptions: ITerminalOptions = {
-    cursorStyle: "bar",
-    cursorBlink: true,
-    fastScrollModifier: "shift",
-    fontSize: 14,
-    fontFamily: "courier-new, courier, monospace",
-    theme: {
-      foreground: "#FFFFFF",
-      background: "#212529",
-    },
-  };
+  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+  const [fontColorModalVisible, setFontColorModalVisible] = useState(false);
+  const [backgroundColorModalVisible, setBackgroundColorModalVisible] =
+    useState(false);
+  const [form] = Form.useForm();
+  const [fontColor, setFontColor] = useState<string>("#FFFFFF");
+  const [backgroundColor, setBackgroundColor] = useState<string>("#212529");
 
   const onStart = (_event: DraggableEvent, uiData: DraggableData) => {
     const { clientWidth, clientHeight } = window.document.documentElement;
@@ -82,6 +80,17 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
     setConnectionStatus(label);
   };
 
+  const openSettingsModal = () => {
+    setSettingsModalVisible(true);
+  };
+
+  const handleSettingsSubmit = (values: any) => {
+    setTerminalConfig(values);
+    setFontColor(values.fontColor);
+    setBackgroundColor(values.backgroundColor);
+    setSettingsModalVisible(false);
+  };
+
   useEffect(() => {
     if (modalHost?.hostId) {
       dispatch({
@@ -91,6 +100,9 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
         },
         callback: (res: HostTerminalConfig) => {
           setTerminalConfig(res);
+          form.setFieldsValue(res);
+          setFontColor(res.fontColor || "#FFFFFF");
+          setBackgroundColor(res.backgroundColor || "#212529");
         },
       });
       dispatch({
@@ -107,7 +119,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
       type: "host/getSupportedPty",
       payload: {},
       callback: (res: string[]) => {
-        console.log(res);
+        setSupportPy(res);
       },
     });
   }, [dispatch, modalHost]);
@@ -117,7 +129,13 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
       return;
     }
 
-    const term = new Terminal(defaultOptions);
+    const term = new Terminal({
+      ...defaultOptions,
+      theme: {
+        foreground: fontColor,
+        background: backgroundColor,
+      },
+    });
     const fitAddon = new FitAddon();
     const searchAddon = new SearchAddon();
     const webLinksAddon = new WebLinksAddon();
@@ -251,18 +269,19 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
         term.focus();
         break;
       case "copy":
-        document.execCommand("copy");
+        if (clipboardContent) {
+          navigator.clipboard.writeText(term.getSelection());
+        }
         term.focus();
         break;
       case "paste":
         if (clipboardContent) {
           term.paste(clipboardContent);
-          term.focus();
         }
+        term.focus();
         break;
       case "clear":
         term.clear();
-        term.clearSelection();
         term.focus();
         break;
       case "toTop":
@@ -274,7 +293,10 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
         term.focus();
         break;
       case "openSearch":
-        // Implement search functionality
+        if (term.hasSearchAddon) {
+          term.getSearchAddon()?.find("");
+        }
+        term.focus();
         break;
       default:
         break;
@@ -282,131 +304,221 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
   };
 
   return (
-    <Modal
-      style={{ top: 20 }}
-      width="80vw" // 调整宽度
-      title={
-        <Space
-          style={{
-            width: "100%",
-            cursor: "move",
-          }}
-          onMouseOver={() => {
-            if (disabled) {
-              setDisabled(false);
-            }
-          }}
-          onMouseOut={() => {
-            setDisabled(true);
-          }}
-          onFocus={() => {}}
-          onBlur={() => {}}
-        >
-          <span>主机终端</span>
-          <span style={{ fontSize: 12 }}>
-            {modalHost?.username + "@" + modalHost?.serverAddr}
-          </span>
-          {connectionStatus === TERMINAL_STATUS.DISCONNECTED.label && (
-            <>
-              <Tag color="gold">已断开</Tag>
-            </>
-          )}
-          {connectionStatus === TERMINAL_STATUS.CONNECTED.label && (
-            <>
-              <Tag color="#87d068">#已连接</Tag>
-            </>
-          )}
-          {connectionStatus === TERMINAL_STATUS.ERROR.label && (
-            <>
-              <Tag color="#f50">连接错误</Tag>
-            </>
-          )}
-        </Space>
-      }
-      destroyOnClose
-      open={open}
-      footer={null}
-      keyboard
-      mask
-      maskClosable={false}
-      onCancel={closeTerminal}
-      modalRender={(modal) => (
-        <Draggable
-          disabled={disabled}
-          bounds={bounds}
-          nodeRef={draggleRef}
-          onStart={(event, uiData) => onStart(event, uiData)}
-        >
-          <div ref={draggleRef}>{modal}</div>
-        </Draggable>
-      )}
-      bodyStyle={{ height: "70vh", overflowY: "auto" }} // 设置模态窗内容区域的样式
-    >
-      <div
-        className="terminal-body"
+    <>
+      <Modal
         style={{
-          height: "100%",
-          background: defaultOptions.theme?.background,
+          top: 20,
         }}
-        onContextMenu={handleRightClick}
-      >
-        <div ref={terminalRef} className="terminal" />
-        {visibleRightMenu && (
-          <div
-            className="right-menu"
-            style={{ top: rightMenuPosition.y, left: rightMenuPosition.x }}
-            onClick={(e) => e.stopPropagation()}
+        width="80vw"
+        title={
+          <Space
+            style={{
+              width: "100%",
+              cursor: "move",
+            }}
+            onMouseOver={() => {
+              if (disabled) {
+                setDisabled(false);
+              }
+            }}
+            onMouseOut={() => {
+              setDisabled(true);
+            }}
+            onFocus={() => {}}
+            onBlur={() => {}}
           >
-            <div
-              className="right-menu-item"
-              onClick={() => handleMenuClick("selectAll")}
-            >
-              全选
-            </div>
-            <div
-              className={`right-menu-item ${
-                clipboardContent ? "" : "disabled"
-              }`}
-              onClick={() => handleMenuClick("copy")}
-            >
-              复制
-            </div>
-            <div
-              className={`right-menu-item ${
-                clipboardContent ? "" : "disabled"
-              }`}
-              onClick={() => handleMenuClick("paste")}
-            >
-              粘贴
-            </div>
-            <div
-              className="right-menu-item"
-              onClick={() => handleMenuClick("clear")}
-            >
-              清除
-            </div>
-            <div
-              className="right-menu-item"
-              onClick={() => handleMenuClick("toTop")}
-            >
-              到顶部
-            </div>
-            <div
-              className="right-menu-item"
-              onClick={() => handleMenuClick("toBottom")}
-            >
-              到底部
-            </div>
-            <div
-              className="right-menu-item"
-              onClick={() => handleMenuClick("openSearch")}
-            >
-              搜索
-            </div>
-          </div>
+            <span>主机终端</span>
+            <span style={{ fontSize: 12 }}>
+              {modalHost?.username + "@" + modalHost?.serverAddr}
+            </span>
+            {connectionStatus === TERMINAL_STATUS.DISCONNECTED.label && (
+              <>
+                <Tag color="gold">已断开</Tag>
+              </>
+            )}
+            {connectionStatus === TERMINAL_STATUS.CONNECTED.label && (
+              <>
+                <Tag color="#87d068">#已连接</Tag>
+              </>
+            )}
+            {connectionStatus === TERMINAL_STATUS.ERROR.label && (
+              <>
+                <Tag color="#f50">连接错误</Tag>
+              </>
+            )}
+            <Button
+              icon={<SettingOutlined />}
+              onClick={openSettingsModal}
+            ></Button>
+          </Space>
+        }
+        destroyOnClose
+        open={open}
+        footer={null}
+        keyboard
+        mask
+        maskClosable={false}
+        onCancel={closeTerminal}
+        modalRender={(modal) => (
+          <Draggable
+            disabled={disabled}
+            bounds={bounds}
+            nodeRef={draggleRef}
+            onStart={(event, uiData) => onStart(event, uiData)}
+          >
+            <div ref={draggleRef}>{modal}</div>
+          </Draggable>
         )}
-      </div>
-    </Modal>
+        bodyStyle={{ height: "70vh", overflowY: "auto" }}
+      >
+        <div
+          className="terminal-body"
+          style={{
+            height: "100%",
+            background: defaultOptions.theme?.background,
+          }}
+          onContextMenu={handleRightClick}
+        >
+          <div ref={terminalRef} className="terminal" />
+          {visibleRightMenu && (
+            <div
+              className="right-menu"
+              style={{ top: rightMenuPosition.y, left: rightMenuPosition.x }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div
+                className="right-menu-item"
+                onClick={() => handleMenuClick("selectAll")}
+              >
+                全选
+              </div>
+              <div
+                className={`right-menu-item ${
+                  clipboardContent ? "" : "disabled"
+                }`}
+                onClick={() => handleMenuClick("copy")}
+              >
+                复制
+              </div>
+              <div
+                className={`right-menu-item ${
+                  clipboardContent ? "" : "disabled"
+                }`}
+                onClick={() => handleMenuClick("paste")}
+              >
+                粘贴
+              </div>
+              <div
+                className="right-menu-item"
+                onClick={() => handleMenuClick("clear")}
+              >
+                清除
+              </div>
+              <div
+                className="right-menu-item"
+                onClick={() => handleMenuClick("toTop")}
+              >
+                到顶部
+              </div>
+              <div
+                className="right-menu-item"
+                onClick={() => handleMenuClick("toBottom")}
+              >
+                到底部
+              </div>
+              <div
+                className="right-menu-item"
+                onClick={() => handleMenuClick("openSearch")}
+              >
+                搜索
+              </div>
+            </div>
+          )}
+        </div>
+      </Modal>
+      <Modal
+        title="终端设置"
+        open={settingsModalVisible}
+        onCancel={() => setSettingsModalVisible(false)}
+        footer={null}
+      >
+        <Form
+          layout="vertical"
+          size="small"
+          form={form}
+          initialValues={terminalConfig}
+          onFinish={handleSettingsSubmit}
+        >
+          <Form.Item label="终端类型" name="terminalType">
+            <Select>
+              {supportPy.map((type) => (
+                <Select.Option key={type} value={type}>
+                  {type}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="字体大小" name="fontSize">
+            <Select>
+              {Array.from({ length: 15 }, (_, i) => i + 10).map((size) => (
+                <Select.Option key={size} value={size}>
+                  {size}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="字体" name="fontFamily">
+            <Input />
+          </Form.Item>
+          <Form.Item label="字体颜色" name="fontColor">
+            <Input
+              value={fontColor}
+              readOnly
+              onClick={() => setFontColorModalVisible(true)}
+              style={{ backgroundColor: fontColor, cursor: "pointer" }}
+            />
+          </Form.Item>
+          <Form.Item label="背景颜色" name="backgroundColor">
+            <Input
+              value={backgroundColor}
+              readOnly
+              onClick={() => setBackgroundColorModalVisible(true)}
+              style={{ backgroundColor: backgroundColor, cursor: "pointer" }}
+            />
+          </Form.Item>
+          <Form.Item label="是否启用webLink" name="enableWebLink">
+            <Switch />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              保存
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="选择字体颜色"
+        open={fontColorModalVisible}
+        onCancel={() => setFontColorModalVisible(false)}
+        footer={null}
+      >
+        <SketchPicker
+          color={fontColor}
+          onChangeComplete={(color) => setFontColor(color.hex)}
+        />
+      </Modal>
+      <Modal
+        title="选择背景颜色"
+        open={backgroundColorModalVisible}
+        onCancel={() => setBackgroundColorModalVisible(false)}
+        footer={null}
+      >
+        <SketchPicker
+          color={backgroundColor}
+          onChangeComplete={(color) => setBackgroundColor(color.hex)}
+        />
+      </Modal>
+    </>
   );
 };
 
@@ -458,5 +570,17 @@ export const TERMINAL_CLIENT_OPERATOR = {
   },
   CLEAR: {
     value: "6",
+  },
+};
+
+export const defaultOptions: ITerminalOptions = {
+  cursorStyle: "bar",
+  cursorBlink: true,
+  fastScrollModifier: "shift",
+  fontSize: 14,
+  fontFamily: "courier-new, courier, monospace",
+  theme: {
+    foreground: "#FFFFFF",
+    background: "#212529",
   },
 };
