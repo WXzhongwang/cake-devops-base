@@ -27,7 +27,9 @@ import {
 import { ProxyModel } from "@/models/proxy";
 import CreateHostForm from "./components/create-host-form";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import TerminalComponent from "./components/single-terminal-component";
+import TerminalComponent, {
+  TERMINAL_STATUS,
+} from "./components/single-terminal-component";
 
 const { confirm } = Modal;
 
@@ -51,6 +53,8 @@ const HostPage: React.FC<HostListProps> = ({
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false); // 控制抽屉显示状态
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // 获取主机的 WebSocket 地址，你需要根据实际数据结构获取正确的地址
   const wsUrl = `ws://${window.location.host}/api/keep-alive/machine/terminal/`;
   const watchWsUrl = `ws://${window.location.host}/api/keep-alive/watcher/terminal/`;
@@ -58,17 +62,8 @@ const HostPage: React.FC<HostListProps> = ({
   const sftpWsUrl = `ws://${window.location.host}/api/keep-alive/sftp/notify/`;
 
   // 对话框部分
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [disabled, setDisabled] = useState(true);
-  const [bounds, setBounds] = useState({
-    left: 0,
-    top: 0,
-    bottom: 0,
-    right: 0,
-  });
-  const draggleRef = useRef<HTMLDivElement>(null);
-  const [modalHost, setModalHost] = useState<HostModel | null>(null);
 
+  const [modalHost, setModalHost] = useState<HostModel | null>(null);
   const [filters, setFilters] = useState({
     name: "",
     hostName: "",
@@ -135,18 +130,9 @@ const HostPage: React.FC<HostListProps> = ({
     setIsModalOpen(true);
   };
 
-  const onStart = (_event: DraggableEvent, uiData: DraggableData) => {
-    const { clientWidth, clientHeight } = window.document.documentElement;
-    const targetRect = draggleRef.current?.getBoundingClientRect();
-    if (!targetRect) {
-      return;
-    }
-    setBounds({
-      left: -targetRect.left + uiData.x,
-      right: clientWidth - (targetRect.right - uiData.x),
-      top: -targetRect.top + uiData.y,
-      bottom: clientHeight - (targetRect.bottom - uiData.y),
-    });
+  const closeTerminal = () => {
+    setModalHost(null);
+    setIsModalOpen(false);
   };
 
   const handleCopy = (hostId: string) => {
@@ -453,55 +439,12 @@ const HostPage: React.FC<HostListProps> = ({
         </Col>
       </Row>
 
-      <Modal
-        style={{ top: 20 }}
-        width={1200}
-        title={
-          <div
-            style={{
-              width: "100%",
-              cursor: "move",
-            }}
-            onMouseOver={() => {
-              if (disabled) {
-                setDisabled(false);
-              }
-            }}
-            onMouseOut={() => {
-              setDisabled(true);
-            }}
-            onFocus={() => {}}
-            onBlur={() => {}}
-          >
-            主机终端
-            <span style={{ fontSize: 12 }}>
-              {modalHost?.username + "@" + modalHost?.serverAddr}
-            </span>
-          </div>
-        }
-        destroyOnClose
+      <TerminalComponent
+        wsUrl={wsUrl}
         open={isModalOpen}
-        footer={null}
-        keyboard
-        mask
-        maskClosable={false}
-        onCancel={() => {
-          setIsModalOpen(false);
-          setModalHost(null);
-        }}
-        modalRender={(modal) => (
-          <Draggable
-            disabled={disabled}
-            bounds={bounds}
-            nodeRef={draggleRef}
-            onStart={(event, uiData) => onStart(event, uiData)}
-          >
-            <div ref={draggleRef}>{modal}</div>
-          </Draggable>
-        )}
-      >
-        <TerminalComponent wsUrl={wsUrl} modalHost={modalHost} />
-      </Modal>
+        modalHost={modalHost}
+        closeTerminal={closeTerminal}
+      ></TerminalComponent>
     </PageContainer>
   );
 };

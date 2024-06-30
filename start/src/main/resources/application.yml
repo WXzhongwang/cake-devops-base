@@ -170,10 +170,10 @@ devops:
       accessKey:
       secretKey:
 
-logging:
-  level:
-    org.springframework: trace
-    com.rany: trace
+#logging:
+#  level:
+#    org.springframework: trace
+#    com.rany: trace
 
 
 

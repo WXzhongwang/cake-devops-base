@@ -8,38 +8,78 @@ import { WebLinksAddon } from "xterm-addon-web-links";
 import { debounce } from "lodash";
 import { AccessTokenRes, HostModel, HostTerminalConfig } from "@/models/host";
 import "./single-terminal-component.less";
+import { Modal, Space, Tag } from "antd";
+import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
 interface TerminalComponentProps {
   wsUrl: string;
   modalHost: HostModel | null;
   dispatch: Dispatch;
+  open: boolean;
+  closeTerminal: () => void;
 }
 
 const TerminalComponent: React.FC<TerminalComponentProps> = ({
   wsUrl,
   modalHost,
+  open,
+  closeTerminal,
   dispatch,
 }) => {
+  const [disabled, setDisabled] = useState(true);
+  const [bounds, setBounds] = useState({
+    left: 0,
+    top: 0,
+    bottom: 0,
+    right: 0,
+  });
+  const draggleRef = useRef<HTMLDivElement>(null);
+  const [connectionStatus, setConnectionStatus] = useState<string>(
+    TERMINAL_STATUS.NOT_CONNECT.label
+  );
+
   const terminalRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const [term, setTerm] = useState<Terminal | null>(null);
-  const [visibleRightMenu, setVisibleRightMenu] = useState(false);
-  //   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [accessConfig, setAccessConfig] = useState<AccessTokenRes | null>(null);
   const [terminalConfig, setTerminalConfig] =
     useState<HostTerminalConfig | null>(null);
+  const [fitAddon, setFitAddon] = useState<FitAddon | null>(null);
+  const [visibleRightMenu, setVisibleRightMenu] = useState(false);
+  const [rightMenuPosition, setRightMenuPosition] = useState({ x: 0, y: 0 });
+  const [connStatus, setConnStatus] = useState<number>(
+    TERMINAL_STATUS.NOT_CONNECT.value
+  );
+  const [clipboardContent, setClipboardContent] = useState<string>("");
 
   const defaultOptions: ITerminalOptions = {
     cursorStyle: "bar",
     cursorBlink: true,
     fastScrollModifier: "shift",
     fontSize: 14,
-    //    rendererType: "canvas",
     fontFamily: "courier-new, courier, monospace",
     theme: {
       foreground: "#FFFFFF",
       background: "#212529",
     },
+  };
+
+  const onStart = (_event: DraggableEvent, uiData: DraggableData) => {
+    const { clientWidth, clientHeight } = window.document.documentElement;
+    const targetRect = draggleRef.current?.getBoundingClientRect();
+    if (!targetRect) {
+      return;
+    }
+    setBounds({
+      left: -targetRect.left + uiData.x,
+      right: clientWidth - (targetRect.right - uiData.x),
+      top: -targetRect.top + uiData.y,
+      bottom: clientHeight - (targetRect.bottom - uiData.y),
+    });
+  };
+
+  const updateConnStatus = (label: string) => {
+    setConnectionStatus(label);
   };
 
   useEffect(() => {
@@ -73,8 +113,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
   }, [dispatch, modalHost]);
 
   useEffect(() => {
-    if (!accessToken) {
-      // console.error("Access Token is not available.");
+    if (!accessConfig?.accessToken) {
       return;
     }
 
@@ -89,10 +128,11 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
 
     if (terminalRef.current) {
       term.open(terminalRef.current);
-      fitAddon.fit();
+      fitAddon.fit(); // 初始适应容器大小
     }
 
     setTerm(term);
+    setFitAddon(fitAddon);
 
     const fullUrl = `${wsUrl}${accessConfig?.accessToken}`;
     console.log("fullUrl", fullUrl);
@@ -100,7 +140,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
     socketRef.current = socket;
 
     socket.onopen = () => {
-      const body = `1|${term.cols}|${term.rows}|${accessConfig?.terminalToken}`;
+      const body = `${TERMINAL_CLIENT_OPERATOR.CONNECT.value}|${term.cols}|${term.rows}|${accessConfig?.terminalToken}`;
       console.log(body);
       socket.send(body);
     };
@@ -109,17 +149,20 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
       const msg = event.data;
       const code = msg.substring(0, 1);
       const len = msg.length;
-      debugger;
+      console.log(msg);
       switch (code) {
         case "0":
           term.write(msg.substring(2, len));
           break;
         case "1":
-          // handle connection
+          setConnStatus(TERMINAL_STATUS.CONNECTED.value);
+          updateConnStatus(TERMINAL_STATUS.CONNECTED.label);
+          setInterval(() => {
+            socket.send(TERMINAL_CLIENT_OPERATOR.PING.value); // send ping
+          }, 15000);
           break;
         case "2":
-          // handle ping
-          socket.send("PONG");
+          socket.send(TERMINAL_CLIENT_OPERATOR.PONG.value);
           break;
         default:
           break;
@@ -127,26 +170,42 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
     };
 
     socket.onerror = (event) => {
-      console.error("WebSocket error observed:", event); // 打印详细的错误信息到控制台
+      console.error("WebSocket error observed:", event);
       term.write("\r\n\x1b[91mfailed to establish connection\x1b[0m");
+      setConnStatus(TERMINAL_STATUS.ERROR.value);
+      updateConnStatus(TERMINAL_STATUS.ERROR.label);
     };
 
     socket.onclose = (event) => {
       term.write(`\r\n\x1b[91m${event.reason}\x1b[0m`);
-      term.options.cursorBlink = false; // 修改为设置 options 属性
+      term.options.cursorBlink = false;
+      setConnStatus(TERMINAL_STATUS.DISCONNECTED.value);
+      updateConnStatus(TERMINAL_STATUS.DISCONNECTED.label);
     };
+
+    term.onResize((cols, rows) => {
+      if (connStatus !== TERMINAL_STATUS.CONNECTED.value) {
+        return;
+      }
+      const body = `${TERMINAL_CLIENT_OPERATOR.RESIZE.value}|${cols}|${rows}`;
+      socket.send(body);
+    });
 
     term.onData((data) => {
       if (socketRef.current) {
-        socketRef.current.send(data);
+        const body = `${TERMINAL_CLIENT_OPERATOR.KEY.value}|${data}`;
+        console.log("enter data", body);
+        socketRef.current.send(body);
       }
     });
 
     const resizeHandler = debounce(() => {
-      fitAddon.fit();
-      if (socketRef.current) {
-        const { cols, rows } = term;
-        socketRef.current.send(`2|${cols}|${rows}`);
+      if (fitAddon) {
+        fitAddon.fit();
+        if (socketRef.current) {
+          const { cols, rows } = term;
+          socketRef.current.send(`2|${cols}|${rows}`);
+        }
       }
     }, 100);
 
@@ -159,12 +218,28 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
         socketRef.current.close();
       }
     };
-  }, [accessToken]);
+  }, [accessConfig]);
+
+  useEffect(() => {
+    const handleGlobalClick = () => {
+      setVisibleRightMenu(false);
+    };
+
+    document.addEventListener("click", handleGlobalClick);
+
+    return () => {
+      document.removeEventListener("click", handleGlobalClick);
+    };
+  }, []);
 
   const handleRightClick = (event: React.MouseEvent) => {
     event.preventDefault();
-    console.log("右键点击");
+    setRightMenuPosition({ x: event.clientX, y: event.clientY });
     setVisibleRightMenu(true);
+
+    navigator.clipboard.readText().then((clipText) => {
+      setClipboardContent(clipText);
+    });
   };
 
   const handleMenuClick = (key: string) => {
@@ -180,10 +255,10 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
         term.focus();
         break;
       case "paste":
-        navigator.clipboard.readText().then((clipText) => {
-          term.paste(clipText);
+        if (clipboardContent) {
+          term.paste(clipboardContent);
           term.focus();
-        });
+        }
         break;
       case "clear":
         term.clear();
@@ -206,103 +281,182 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({
     }
   };
 
-  //  console.log(`ws://localhost:8300/api/ws/ccc/ccc/ccc`);
-  // const socket = new WebSocket(`ws://127.0.0.1:4100/api/ws`);
-  // const socket = new WebSocket(`/api/ws`);
-  // // const socket = new WebSocket(`ws://${window.location.host}/api/ws`);
-  // // 修改为你的 WebSocket 服务器地址
-
-  // socket.onopen = () => {
-  //   console.log("WebSocket is open now.");
-  //   socket.send("Hello Server!");
-  //   // 定期发送ping消息
-  //   setInterval(() => {
-  //     if (socket.readyState === WebSocket.OPEN) {
-  //       socket.send("ping");
-  //     }
-  //   }, 30000); // 每30秒发送一次ping
-  // };
-
-  // socket.onmessage = (event) => {
-  //   const content = "Message from server: " + event.data;
-  //   console.log(content);
-  //   // 处理服务器的pong响应
-  //   if (event.data === "pong") {
-  //     console.log("Received pong");
-  //   }
-  // };
-
-  // socket.onerror = (error) => {
-  //   const textContent = "WebSocket error: " + JSON.stringify(error);
-  //   console.log(textContent);
-  // };
-
-  // socket.onclose = (event) => {
-  //   const textContent = "WebSocket connection closed: " + event.reason;
-  //   console.log(textContent);
-  // };
-
   return (
-    <div
-      className="terminal-body"
-      style={{
-        height: "100%",
-        background: defaultOptions.theme?.background,
-      }}
-      onContextMenu={handleRightClick}
-    >
-      <div ref={terminalRef} className="terminal" />
-      {visibleRightMenu && (
-        <div className="right-menu">
-          <div
-            className="right-menu-item"
-            onClick={() => handleMenuClick("selectAll")}
-          >
-            全选
-          </div>
-          <div
-            className="right-menu-item"
-            onClick={() => handleMenuClick("copy")}
-          >
-            复制
-          </div>
-          <div
-            className="right-menu-item"
-            onClick={() => handleMenuClick("paste")}
-          >
-            粘贴
-          </div>
-          <div
-            className="right-menu-item"
-            onClick={() => handleMenuClick("clear")}
-          >
-            清除
-          </div>
-          <div
-            className="right-menu-item"
-            onClick={() => handleMenuClick("toTop")}
-          >
-            到顶部
-          </div>
-          <div
-            className="right-menu-item"
-            onClick={() => handleMenuClick("toBottom")}
-          >
-            到底部
-          </div>
-          <div
-            className="right-menu-item"
-            onClick={() => handleMenuClick("openSearch")}
-          >
-            搜索
-          </div>
-        </div>
+    <Modal
+      style={{ top: 20 }}
+      width="80vw" // 调整宽度
+      title={
+        <Space
+          style={{
+            width: "100%",
+            cursor: "move",
+          }}
+          onMouseOver={() => {
+            if (disabled) {
+              setDisabled(false);
+            }
+          }}
+          onMouseOut={() => {
+            setDisabled(true);
+          }}
+          onFocus={() => {}}
+          onBlur={() => {}}
+        >
+          <span>主机终端</span>
+          <span style={{ fontSize: 12 }}>
+            {modalHost?.username + "@" + modalHost?.serverAddr}
+          </span>
+          {connectionStatus === TERMINAL_STATUS.DISCONNECTED.label && (
+            <>
+              <Tag color="gold">已断开</Tag>
+            </>
+          )}
+          {connectionStatus === TERMINAL_STATUS.CONNECTED.label && (
+            <>
+              <Tag color="#87d068">#已连接</Tag>
+            </>
+          )}
+          {connectionStatus === TERMINAL_STATUS.ERROR.label && (
+            <>
+              <Tag color="#f50">连接错误</Tag>
+            </>
+          )}
+        </Space>
+      }
+      destroyOnClose
+      open={open}
+      footer={null}
+      keyboard
+      mask
+      maskClosable={false}
+      onCancel={closeTerminal}
+      modalRender={(modal) => (
+        <Draggable
+          disabled={disabled}
+          bounds={bounds}
+          nodeRef={draggleRef}
+          onStart={(event, uiData) => onStart(event, uiData)}
+        >
+          <div ref={draggleRef}>{modal}</div>
+        </Draggable>
       )}
-    </div>
-    // <div id="messages">Waiting for messages...</div>
+      bodyStyle={{ height: "70vh", overflowY: "auto" }} // 设置模态窗内容区域的样式
+    >
+      <div
+        className="terminal-body"
+        style={{
+          height: "100%",
+          background: defaultOptions.theme?.background,
+        }}
+        onContextMenu={handleRightClick}
+      >
+        <div ref={terminalRef} className="terminal" />
+        {visibleRightMenu && (
+          <div
+            className="right-menu"
+            style={{ top: rightMenuPosition.y, left: rightMenuPosition.x }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="right-menu-item"
+              onClick={() => handleMenuClick("selectAll")}
+            >
+              全选
+            </div>
+            <div
+              className={`right-menu-item ${
+                clipboardContent ? "" : "disabled"
+              }`}
+              onClick={() => handleMenuClick("copy")}
+            >
+              复制
+            </div>
+            <div
+              className={`right-menu-item ${
+                clipboardContent ? "" : "disabled"
+              }`}
+              onClick={() => handleMenuClick("paste")}
+            >
+              粘贴
+            </div>
+            <div
+              className="right-menu-item"
+              onClick={() => handleMenuClick("clear")}
+            >
+              清除
+            </div>
+            <div
+              className="right-menu-item"
+              onClick={() => handleMenuClick("toTop")}
+            >
+              到顶部
+            </div>
+            <div
+              className="right-menu-item"
+              onClick={() => handleMenuClick("toBottom")}
+            >
+              到底部
+            </div>
+            <div
+              className="right-menu-item"
+              onClick={() => handleMenuClick("openSearch")}
+            >
+              搜索
+            </div>
+          </div>
+        )}
+      </div>
+    </Modal>
   );
 };
 
 export default connect(({ host }: { host: any }) => ({
   host,
 }))(TerminalComponent);
+
+export const TERMINAL_STATUS = {
+  NOT_CONNECT: {
+    value: 0,
+    label: "未连接",
+    color: "#FFD43B",
+  },
+  CONNECTED: {
+    value: 20,
+    label: "已连接",
+    color: "#4DABF7",
+  },
+  DISCONNECTED: {
+    value: 30,
+    label: "已断开",
+    color: "#ADB5BD",
+  },
+  ERROR: {
+    value: 40,
+    label: "错误",
+    color: "#E03131",
+  },
+};
+
+export const TERMINAL_CLIENT_OPERATOR = {
+  KEY: {
+    value: "0",
+  },
+  CONNECT: {
+    value: "1",
+  },
+  PING: {
+    value: "2",
+  },
+  PONG: {
+    value: "3",
+  },
+  RESIZE: {
+    value: "4",
+  },
+  COMMAND: {
+    value: "5",
+  },
+  CLEAR: {
+    value: "6",
+  },
+};
