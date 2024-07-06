@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 public class WebSideMessageDTO extends DTO {
+    private Long id;
     private Byte messageClassify;
     private Integer messageType;
     private Byte readStatus;

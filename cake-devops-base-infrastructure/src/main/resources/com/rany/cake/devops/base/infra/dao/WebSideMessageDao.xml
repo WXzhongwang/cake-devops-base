@@ -26,10 +26,11 @@
         send_message
     </sql>
 
-    <select id="getUnreadCount" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long">
+    <select id="getUnreadCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
         select count(1)
         from web_side_message
         where is_deleted = '0'
+          and read_status = 1
           and to_user_id = #{userId}
     </select>
 
@@ -61,7 +62,7 @@
 
     <update id="readMessage">
         update web_side_message
-        set read_status = 1
+        set read_status = 2
         where is_deleted = '0'
         <if test="idList != null and idList.size() > 0">
             and id in
@@ -74,7 +75,7 @@
     <update id="deleteAllRead">
         update web_side_message
         set is_deleted = '1'
-        where read_status = 1
+        where read_status = 2
           and to_user_id = #{userId}
     </update>
 
@@ -97,12 +98,13 @@
             parameterType="com.rany.cake.devops.base.domain.repository.param.WebSideMessagePageQueryParam">
         select
         <include refid="Base_Column_List"/>
-        ,
-        <include refid="Blob_Column_List"/>
         from web_side_message
         where to_user_id = #{userId}
         <if test="readStatus != null">
             and read_status = #{readStatus}
+        </if>
+        <if test="maxId != null">
+            and id > #{maxId}
         </if>
         order by gmt_create desc
     </select>

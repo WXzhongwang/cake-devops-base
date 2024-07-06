@@ -10,6 +10,7 @@ import com.rany.cake.devops.base.api.query.message.WebSideMessagePageQuery;
 import com.rany.cake.devops.base.api.service.WebSideMessageService;
 import com.rany.cake.dingtalk.sdk.beans.SsoUser;
 import com.rany.cake.dingtalk.sdk.utils.SsoUtil;
+import com.rany.cake.dingtalk.starter.annotation.CurrentUser;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -43,7 +44,7 @@ public class WebSideMessageController {
      *
      * @return effect
      */
-    @GetMapping("/set-all-count")
+    @GetMapping("/set-all-read")
     public PojoResult<Integer> setAllRead(HttpServletRequest request) {
         SsoUser currentUser = SsoUtil.getCurrentUser(request);
         Long userId = Long.valueOf(currentUser.getUserId());
@@ -91,7 +92,9 @@ public class WebSideMessageController {
      * @return 站内信列表
      */
     @PostMapping("/query")
-    public PageResult<WebSideMessageDTO> queryWebSideMessage(@RequestBody WebSideMessagePageQuery query) {
+    public PageResult<WebSideMessageDTO> queryWebSideMessage(@RequestBody WebSideMessagePageQuery query,
+                                                             @CurrentUser SsoUser ssoUser) {
+        query.setUserId(Long.valueOf(ssoUser.getUserId()));
         return PageResult.succeed(webSideMessageService.queryWebSideMessage(query));
     }
 

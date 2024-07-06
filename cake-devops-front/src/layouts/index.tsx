@@ -28,6 +28,7 @@ import defaultProps from "./_default";
 import { API } from "typings";
 import { ProConfigProvider, ProCard } from "@ant-design/pro-components";
 import { UserRoleMenuDTO } from "@/models/user";
+import Inbox from "./index-box";
 interface LayoutProps {
   dispatch: Dispatch;
   isLogin: boolean;
@@ -97,6 +98,10 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
                       label: "退出登录",
                       onClick: async () => {
                         const res = await logout();
+                        if (res.success) {
+                          // dispatch({ type: 'user/logout' });
+                          history.push("/apps");
+                        }
                       },
                     },
                   ],
@@ -110,9 +115,10 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
         actionsRender={(props) => {
           if (props.isMobile) return [];
           return [
-            <InfoCircleFilled key="InfoCircleFilled" />,
-            <QuestionCircleFilled key="QuestionCircleFilled" />,
-            <GithubFilled key="GithubFilled" />,
+            // <InfoCircleFilled key="InfoCircleFilled" />,
+            // <QuestionCircleFilled key="QuestionCircleFilled" />,
+            // <GithubFilled key="GithubFilled" />,
+            <Inbox key="Inbox" />,
           ];
         }}
         menuFooterRender={(props) => {
