@@ -130,7 +130,7 @@ const AppDetail: React.FC<AppDetailProps> = ({
 
   const handleDeploy = () => {
     // 示例：跳转到详情页，使用 history.push
-    history.push(`/app/deploy/${id}`);
+    history.push(`/apps/app/deploy/${id}`);
   };
 
   console.log("clusters", clusterList);

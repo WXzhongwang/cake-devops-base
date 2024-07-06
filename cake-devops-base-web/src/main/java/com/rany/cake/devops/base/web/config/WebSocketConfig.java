@@ -43,9 +43,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(testMessageHandler, "/api/ws")
-                .addInterceptors(testMessageInterceptor)
-                .setAllowedOrigins("*");
+//        registry.addHandler(testMessageHandler, "/api/ws")
+//                .addInterceptors(testMessageInterceptor)
+//                .setAllowedOrigins("*");
 
         registry.addHandler(terminalMessageHandler, "/api/keep-alive/machine/terminal/{token}")
                 .addInterceptors(terminalAccessInterceptor)

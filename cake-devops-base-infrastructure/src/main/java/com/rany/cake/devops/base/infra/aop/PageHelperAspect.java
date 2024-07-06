@@ -44,7 +44,7 @@ public class PageHelperAspect {
         pageNumber = param.getPageNo();
         pageSize = param.getPageSize();
         try {
-            log.info("PageHelper分页参数pageNum=>{},pageSize=>{}", pageNumber, pageSize);
+            log.info("PageHelper分页参数，pageNum:{}，pageSize:{}", pageNumber, pageSize);
             if (pageNumber != null && pageNumber > 0 && pageSize != null && pageSize > 0) {
                 PageHelper.startPage(pageNumber, pageSize, true);
             }
