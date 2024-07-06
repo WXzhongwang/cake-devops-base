@@ -27,15 +27,15 @@ public class PageHelperAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         String name = method.getName();
-        log.info("===方法进入分页aop,方法名称为=>{},参数==>{}", name, JSON.toJSONString(args));
+        log.info("方法进入分页aop，方法名称为: {}，参数: {}", name, JSON.toJSONString(args));
         if (null == args || args.length == 0) {
-            log.info("{}方法无参数", name);
+            log.info("{} 方法无参数", name);
             return;
         }
         Object arg = args[0];
 
         if (!(arg instanceof BasePageParam)) {
-            log.info("{}分页方法参数必须是BasePageParam或BasePageQuery的子类", name);
+            log.info("{} 分页方法参数必须是BasePageParam的子类", name);
             return;
         }
         Integer pageNumber = null;
@@ -44,7 +44,7 @@ public class PageHelperAspect {
         pageNumber = param.getPageNo();
         pageSize = param.getPageSize();
         try {
-            log.info("PageHelper分页参数，pageNum:{}，pageSize:{}", pageNumber, pageSize);
+            log.info("PageHelper分页参数，pageNum: {}，pageSize: {}", pageNumber, pageSize);
             if (pageNumber != null && pageNumber > 0 && pageSize != null && pageSize > 0) {
                 PageHelper.startPage(pageNumber, pageSize, true);
             }
