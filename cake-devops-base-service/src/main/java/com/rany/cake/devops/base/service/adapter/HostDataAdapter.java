@@ -36,13 +36,6 @@ public interface HostDataAdapter extends BaseConvertor<Host, HostDTO> {
     @InheritConfiguration(name = "sourceToTarget")
     List<HostDTO> sourceToTarget(List<Host> hosts);
 
-
-//    @Mapping(source = "hostGroupId.hostGroupId", target = "hostGroupId")
-//    HostGroupDTO convertToTarget(HostGroup hostGroup);
-//
-//    @InheritConfiguration(name = "sourceToTarget")
-//    List<HostGroupDTO> convertToTarget(List<HostGroup> hostGroups);
-
     HostPageQueryParam convertParam(HostPageQuery hostPageQuery);
 
     /**
@@ -57,13 +50,6 @@ public interface HostDataAdapter extends BaseConvertor<Host, HostDTO> {
 
     @InheritConfiguration(name = "targetToSource")
     List<Host> targetToSource(List<HostDTO> hostDTO);
-
-//
-//    @Mapping(target = "hostGroupId.hostGroupId", source = "hostGroupId")
-//    HostGroup revertToTarget(HostGroupDTO hostGroup);
-//
-//    @InheritConfiguration(name = "sourceToTarget")
-//    List<HostGroup> revertToTarget(List<HostGroupDTO> hostGroups);
 
 
     @Mapping(source = "hostId.hostId", target = "hostId")

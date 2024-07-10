@@ -3,14 +3,25 @@ package com.rany.cake.devops.base.service.plugins.ci;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.rany.cake.devops.base.domain.aggregate.Host;
+import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
+import com.rany.cake.devops.base.util.Const;
+import com.rany.cake.devops.base.util.SchedulerPools;
+import com.rany.cake.toolkit.lang.constant.Letters;
+import com.rany.cake.toolkit.lang.utils.Strings;
+import com.rany.cake.toolkit.net.remote.channel.SessionStore;
+import com.rany.cake.toolkit.net.remote.channel.ShellExecutor;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -49,9 +60,38 @@ public class WorkSpacePlugin extends BasePlugin {
         log.info("workspace directory: " + workspace);
         context.getArgMap().put(RunningConstant.WORKSPACE_HOME, workspace);
 
+        Host deployHost = hostDomainService.getHost(new HostId(context.getHostId()));
+        context.setHost(deployHost);
+        try (SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost)) {
+            ShellExecutor executor = sessionStore.getShellExecutor();
+            executor.connect();
+            executor.scheduler(SchedulerPools.TERMINAL_SCHEDULER);
+            executor.streamHandler(inputStream -> {
+                byte[] bs = new byte[Const.BUFFER_KB_4];
+                BufferedInputStream in = new BufferedInputStream(inputStream, Const.BUFFER_KB_4);
+                int read;
+                try {
+                    while ((read = in.read(bs)) != -1) {
+                        // 响应
+                        try (ByteArrayOutputStream o = new ByteArrayOutputStream()) {
+                            o.write(bs, 0, read);
+                            log.info(o.toString());
+                        }
+                    }
+                } catch (IOException ex) {
+                    log.error("terminal 读取流失败", ex);
+                }
+            });
+
+
+            executor.write(Strings.bytes("mkdir -p " + workspace));
+            executor.write(new byte[]{Letters.LF});
+        }
+
         JSch jsch = new JSch();
         Session session = null;
         try {
+            log.info("connect: {}, {}, {}", user, host, port);
             session = jsch.getSession(user, host, port);
             session.setPassword(password);
 
@@ -84,4 +124,5 @@ public class WorkSpacePlugin extends BasePlugin {
         }
         return true;
     }
+
 }

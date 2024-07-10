@@ -15,9 +15,17 @@ public class Machine extends DTO {
     private String hostName;
     private String serverAddr;
     private Integer port;
+    /**
+     * 1. 基础账号密码认证
+     * 2. 秘钥认证
+     */
+    private Integer authType;
+    /**
+     * 登录账号名
+     */
     private String username;
-    private String pkey;
-    private String desc;
+    private String pwd;
+    private String description;
     private String verified;
     private String status;
 

@@ -1,10 +1,7 @@
 package com.rany.cake.devops.base.service.context;
 
 import com.alibaba.fastjson.JSON;
-import com.rany.cake.devops.base.domain.aggregate.App;
-import com.rany.cake.devops.base.domain.aggregate.Cluster;
-import com.rany.cake.devops.base.domain.aggregate.Namespace;
-import com.rany.cake.devops.base.domain.aggregate.Release;
+import com.rany.cake.devops.base.domain.aggregate.*;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.util.enums.ReleaseStatus;
 import lombok.Data;
@@ -22,6 +19,12 @@ import java.util.*;
  */
 @Data
 public class DeployContext implements Serializable {
+
+    /**
+     * 打包机
+     */
+    private String hostId;
+    private Host host;
 
     private App app;
 
