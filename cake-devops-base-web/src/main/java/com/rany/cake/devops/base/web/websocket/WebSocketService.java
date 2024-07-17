@@ -23,8 +23,6 @@ public class WebSocketService {
                 for (WebSocketServer server : servers) {
                     server.sendMessage(logMessage);
                 }
-            } else {
-                log.warn("客户端已退出");
             }
         } catch (IOException e) {
             log.error("向客户端发送消息时出现异常，异常原因:{}", e.getMessage(), e);
