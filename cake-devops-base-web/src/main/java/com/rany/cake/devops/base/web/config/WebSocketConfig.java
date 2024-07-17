@@ -14,11 +14,8 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import javax.annotation.Resource;
-
 @Configuration
 @EnableWebSocket
-// @AutoConfigureAfter(value = WebMvcConfig.class)
 public class WebSocketConfig implements WebSocketConfigurer {
     @Autowired
     private TerminalAccessInterceptor terminalAccessInterceptor;
@@ -36,17 +33,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private FileTransferNotifyHandler fileTransferNotifyHandler;
     @Autowired
     private TailFileHandler tailFileHandler;
-    @Resource
-    private TestMessageHandler testMessageHandler;
-    @Resource
-    private TestMessageInterceptor testMessageInterceptor;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-//        registry.addHandler(testMessageHandler, "/api/ws")
-//                .addInterceptors(testMessageInterceptor)
-//                .setAllowedOrigins("*");
-
         registry.addHandler(terminalMessageHandler, "/api/keep-alive/machine/terminal/{token}")
                 .addInterceptors(terminalAccessInterceptor)
                 .setAllowedOrigins("*");
@@ -60,6 +49,4 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .addInterceptors(fileTransferNotifyInterceptor)
                 .setAllowedOrigins("*");
     }
-
-
 }

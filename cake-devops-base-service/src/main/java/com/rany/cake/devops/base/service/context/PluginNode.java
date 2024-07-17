@@ -60,7 +60,7 @@ public class PluginNode implements Plugin {
     public boolean execute(DeployContext context) {
         log.info("{}开始执行", this.name);
         context.increment();
-        DeployContext.Node node = context.getProgress().getSteps().get(context.current() - 1);
+        DeployContext.Node node = context.getProgress().getSteps().get(context.current());
         node.setStartDate(new Date());
         context.setCurrentPluginName(this.name);
         context.getPluginNames().add(this.name);

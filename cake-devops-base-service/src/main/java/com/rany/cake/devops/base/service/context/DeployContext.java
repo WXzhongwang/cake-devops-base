@@ -24,8 +24,14 @@ public class DeployContext implements Serializable {
      * 打包机
      */
     private String hostId;
+    /**
+     * 打包机完整信息
+     */
     private Host host;
 
+    /**
+     * 应用信息
+     */
     private App app;
 
     /**
@@ -95,7 +101,7 @@ public class DeployContext implements Serializable {
     public DeployContext(String pipeKey) {
         this.progress = new Progress();
         this.progress.setPipeKey(pipeKey);
-        this.progress.setCurrent(0);
+        this.progress.setCurrent(-1);
         this.progress.setSteps(new LinkedList<>());
     }
 
