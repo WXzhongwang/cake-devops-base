@@ -1,6 +1,8 @@
 package com.rany.cake.devops.base.service.context;
 
 
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import com.rany.cake.devops.base.CakeDevopsBaseApplication;
 import com.rany.cake.devops.base.domain.aggregate.*;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
@@ -16,12 +18,8 @@ import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.ReleaseCenter;
 import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
-import com.rany.cake.devops.base.util.Const;
-import com.rany.cake.devops.base.util.SchedulerPools;
-import com.rany.cake.toolkit.lang.constant.Letters;
-import com.rany.cake.toolkit.lang.utils.Strings;
+import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
-import com.rany.cake.toolkit.net.remote.channel.ShellExecutor;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -34,12 +32,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * TODO
@@ -101,30 +95,13 @@ public class DefaultDeployPipelineTest {
 
         Host deployHost = hostDomainService.getHost(new HostId("936499355525984256"));
         try (SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost)) {
-            ShellExecutor executor = sessionStore.getShellExecutor();
-            executor.connect();
-            executor.scheduler(SchedulerPools.TERMINAL_SCHEDULER);
-            executor.streamHandler(inputStream -> {
-                byte[] bs = new byte[Const.BUFFER_KB_4];
-                BufferedInputStream in = new BufferedInputStream(inputStream, Const.BUFFER_KB_4);
-                int read;
-                try {
-                    while ((read = in.read(bs)) != -1) {
-                        // 响应
-                        try (ByteArrayOutputStream o = new ByteArrayOutputStream()) {
-                            o.write(bs, 0, read);
-                            log.info(o.toString());
-                        }
-                    }
-                } catch (IOException ex) {
-                    log.error("terminal 读取流失败", ex);
-                }
-            });
+            Session session = sessionStore.getSession();
+            if (!JSCHTool.remoteExecute(session, "mkdir -p " + workspace)) {
+                log.error("创建工作目录失败");
+            }
 
-
-            executor.write(Strings.bytes("ls -la"));
-            executor.write(new byte[]{Letters.LF});
+        } catch (JSchException e) {
+            throw new RuntimeException(e);
         }
-        new CountDownLatch(1).await();
     }
 }

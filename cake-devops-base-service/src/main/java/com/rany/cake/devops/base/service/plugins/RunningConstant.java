@@ -1,16 +1,8 @@
 package com.rany.cake.devops.base.service.plugins;
 
 public class RunningConstant {
-
-    /**
-     * 打包机器IP
-     */
-    public static final String BUILDER_IP = "BUILDER_IP";
-    public static final String BUILDER_PORT = "BUILDER_PORT";
-    public static final String BUILDER_REMOTE_USER = "BUILDER_REMOTE_USER";
-    public static final String BUILDER_REMOTE_PWD = "BUILDER_REMOTE_PASSWORD";
     public static final String WORKSPACE_HOME = "WORKSPACE_HOME";
-    
+
     /**
      * 通过调用curl接口判断封网情况
      */

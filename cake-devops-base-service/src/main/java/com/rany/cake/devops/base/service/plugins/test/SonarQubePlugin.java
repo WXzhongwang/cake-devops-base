@@ -1,13 +1,14 @@
 package com.rany.cake.devops.base.service.plugins.test;
 
-import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
+import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,29 +34,15 @@ public class SonarQubePlugin extends BasePlugin {
         context.putArg(RunningConstant.SONAR_LOGIN, "admin");
         context.putArg(RunningConstant.SONAR_PWD, "123456789");
 
-        String host = (String) context.getArgMap().get(RunningConstant.BUILDER_IP);
-        Integer port = (Integer) context.getArgMap().get(RunningConstant.BUILDER_PORT);
-        String user = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_USER);
-        String password = (String) context.getArgMap().get(RunningConstant.BUILDER_REMOTE_PWD);
         String webHook = context.getApp().getWebhook();
         String repo = context.getApp().getCodeRepository().getRepo();
 
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("workspace directory: " + workspace);
 
-        JSch jsch = new JSch();
-        Session session = null;
-        try {
-            session = jsch.getSession(user, host, port);
-            session.setPassword(password);
-
-            // 关闭 StrictHostKeyChecking，避免 UnknownHostKey 导致连接失败
-            java.util.Properties config = new java.util.Properties();
-            config.put("StrictHostKeyChecking", "no");
-            session.setConfig(config);
-
-            // 连接到服务器
-            session.connect();
+        Host deployHost = context.getHost();
+        try (SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost)) {
+            Session session = sessionStore.getSession();
             //JSCHTool.remoteExecute(session, "cd " + workspace);
 //            sonar_scan "$1" "$2"
 //            local repo_url=$1
@@ -68,10 +55,6 @@ public class SonarQubePlugin extends BasePlugin {
         } catch (JSchException e) {
             log.error("SonarQubePlugin error", e);
             return false;
-        } finally {
-            if (session != null) {
-                session.disconnect();
-            }
         }
         return true;
     }
