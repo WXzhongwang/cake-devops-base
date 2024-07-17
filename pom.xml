@@ -67,7 +67,6 @@
         <module>cake-devops-base-domain</module>
         <module>cake-devops-base-service</module>
         <module>cake-devops-base-web</module>
-        <module>cake-devops-base-ssh</module>
         <module>start</module>
         <module>cake-devops-base-util</module>
         <module>cake-devops-base-plugins</module>
