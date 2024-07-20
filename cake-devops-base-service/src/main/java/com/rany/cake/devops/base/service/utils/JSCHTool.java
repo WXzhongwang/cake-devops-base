@@ -22,37 +22,59 @@ public class JSCHTool {
         try {
             channel = (ChannelExec) session.openChannel("exec");
             channel.setCommand(command);
-            InputStream input = channel.getInputStream();
+            // InputStream input = channel.getInputStream();
             channel.connect();
-            try {
-                BufferedReader inputReader = new BufferedReader(new InputStreamReader(input));
-                String inputLine = null;
-                while ((inputLine = inputReader.readLine()) != null) {
-                    log.info("{}", inputLine);
-                }
-            } finally {
-                if (input != null) {
-                    try {
-                        input.close();
-                    } catch (Exception e) {
-                        log.error("JSch inputStream close error:", e);
-                    }
-                }
-            }
+//            try {
+//                BufferedReader inputReader = new BufferedReader(new InputStreamReader(input));
+//                String inputLine = null;
+//                while ((inputLine = inputReader.readLine()) != null) {
+//                    log.info("{}", inputLine);
+//                }
+//            } finally {
+//                if (input != null) {
+//                    try {
+//                        input.close();
+//                    } catch (Exception e) {
+//                        log.error("JSch inputStream close error:", e);
+//                    }
+//                }
+//            }
+//
+//            // 获取远程 Shell 的退出状态
+//            int exitStatus = channel.getExitStatus();
+//
+//            // 根据退出状态判断是否执行成功
+//            if (exitStatus == 0) {
+//                log.info("Shell command executed successfully");
+//                executionSuccess = true;
+//            } else {
+//                log.error("Shell command execution failed with exit status: {}", exitStatus);
+//            }
+            try (InputStream input = channel.getInputStream();
+                 BufferedReader inputReader = new BufferedReader(new InputStreamReader(input))) {
 
-            // 获取远程 Shell 的退出状态
-            int exitStatus = channel.getExitStatus();
+                String line;
+                while ((line = inputReader.readLine()) != null) {
+                    log.info("Output: {}", line);
+                }
 
-            // 根据退出状态判断是否执行成功
-            if (exitStatus == 0) {
-                log.info("Shell command executed successfully");
-                executionSuccess = true;
-            } else {
-                log.error("Shell command execution failed with exit status: {}", exitStatus);
+                // 等待命令执行完毕
+                while (!channel.isClosed()) {
+                    Thread.sleep(100); // 等待100毫秒
+                }
+
+                int exitStatus = channel.getExitStatus();
+                log.info("Command exited with status: {}", exitStatus);
+                return exitStatus == 0;
+            } catch (IOException | InterruptedException e) {
+                log.error("Error executing command: {}", command, e);
+                // throw new RemoteExecutionException("Failed to execute command", e);
             }
-        } catch (IOException e) {
-            log.error("IOException occur:", e);
-        } finally {
+        }
+//        catch (IOException e) {
+//            log.error("IOException occur:", e);
+//        }
+        finally {
             if (channel != null) {
                 try {
                     channel.disconnect();
@@ -64,4 +86,5 @@ public class JSCHTool {
 
         return executionSuccess;
     }
+
 }

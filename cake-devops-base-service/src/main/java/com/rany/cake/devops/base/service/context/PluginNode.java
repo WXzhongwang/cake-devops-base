@@ -64,6 +64,8 @@ public class PluginNode implements Plugin {
         node.setStartDate(new Date());
         context.setCurrentPluginName(this.name);
         context.getPluginNames().add(this.name);
+        node.setDescription(NodeStatus.EXECUTING.name());
+        observer.updateProgress(context);
         if (!plugin.execute(context) && stopWhenFailure()) {
             log.info("{}，执行结束", this.name);
             node.setEndDate(new Date());

@@ -1,5 +1,7 @@
 package com.rany.cake.devops.base.service.plugins.ci;
 
+import com.github.rholder.retry.RetryException;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.rany.cake.devops.base.domain.aggregate.Host;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 工作空间创建
@@ -50,20 +53,35 @@ public class WorkSpacePlugin extends BasePlugin {
         context.setHost(deployHost);
         try (SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost)) {
             Session session = sessionStore.getSession();
-            if (!JSCHTool.remoteExecute(session, "mkdir -p " + workspace)) {
-                log.error("创建工作目录失败");
+            try {
+                RETRYER.call(() -> {
+                    if (!JSCHTool.remoteExecute(session, "mkdir -p " + workspace)) {
+                        log.error("创建工作目录失败");
+                        return false;
+                    }
+                    return true;
+                });
+                RETRYER.call(() -> {
+                    if (!JSCHTool.remoteExecute(session, "cd " + workspace + ";" +
+                            " curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.2/java-build-source.tar.gz; " +
+                            " tar -zxvf java-build-source.tar.gz;" +
+                            " chmod +x *.sh;")) {
+                        log.error("脚本下载失败");
+                        return false;
+                    }
+                    return true;
+                });
+            } catch (UncheckedExecutionException | ExecutionException | RetryException e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof JSchException) {
+                    log.error("JSchException during retry attempt", cause);
+                    log.error("WorkSpacePlugin error", e);
+                    return false;
+                } else {
+                    log.error("Unexpected error during retry attempt", cause);
+                }
                 return false;
             }
-            if (!JSCHTool.remoteExecute(session, "cd " + workspace + ";" +
-                    " curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.2/java-build-source.tar.gz; " +
-                    " tar -zxvf java-build-source.tar.gz;" +
-                    " chmod +x *.sh;")) {
-                log.error("脚本下载失败");
-                return false;
-            }
-        } catch (JSchException e) {
-            log.error("WorkSpacePlugin error", e);
-            return false;
         }
         return true;
     }

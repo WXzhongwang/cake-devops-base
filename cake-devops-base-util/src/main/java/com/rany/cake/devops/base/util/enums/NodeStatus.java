@@ -14,6 +14,12 @@ public enum NodeStatus {
      * 待执行
      */
     AWAIT_EXECUTE,
+
+    /**
+     * 执行中
+     */
+    EXECUTING,
+
     /**
      * 已执行
      */
