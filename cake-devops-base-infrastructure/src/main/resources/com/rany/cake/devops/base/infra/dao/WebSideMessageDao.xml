@@ -12,18 +12,12 @@
         <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
         <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
         <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
-    </resultMap>
-    <resultMap id="ResultMapWithBLOBs" type="com.rany.cake.devops.base.infra.po.WebSideMessagePO"
-               extends="BaseResultMap">
-        <result column="send_message" property="sendMessage" jdbcType="LONGVARCHAR"/>
+        <result column="send_message" property="sendMessage" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
         id
         , message_classify, message_type, read_status, to_user_id, to_user_name, rel_id,
-        is_deleted, gmt_create, gmt_modified
-    </sql>
-    <sql id="Blob_Column_List">
-        send_message
+        is_deleted, gmt_create, gmt_modified, send_message
     </sql>
 
     <select id="getUnreadCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
@@ -94,10 +88,10 @@
 
 
     <select id="queryWebSideMessage"
-            resultMap="ResultMapWithBLOBs"
+            resultMap="BaseResultMap"
             parameterType="com.rany.cake.devops.base.domain.repository.param.WebSideMessagePageQueryParam">
         select
-        <include refid="Base_Column_List"/>
+        *
         from web_side_message
         where to_user_id = #{userId}
         <if test="readStatus != null">
