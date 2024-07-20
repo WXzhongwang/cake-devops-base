@@ -404,6 +404,8 @@ const DeployPage: React.FC<ReleasePageProps> = ({
                   description={
                     step.description === "AWAIT_EXECUTE" ? (
                       <div>待执行</div>
+                    ) : step.description === "EXECUTING" ? (
+                      <div>执行中</div>
                     ) : step.description === "EXECUTED" ? (
                       <div>
                         已执行

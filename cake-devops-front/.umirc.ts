@@ -118,6 +118,19 @@ export default defineConfig({
         console.error("Proxy error:", err);
       },
     },
+    "/api/ws": {
+      target: "http://127.0.0.1:8300", // 后端服务器地址
+      ws: true,
+      changeOrigin: true,
+      pathRewrite: { "^/api/ws": "/api/ws" },
+      secure: false,
+      logLevel: "debug",
+      onProxyReqWs: (proxyReq, req, socket, options, head) => {
+        // 添加一些WebSocket相关的请求头
+        proxyReq.setHeader("Connection", "upgrade");
+        proxyReq.setHeader("Upgrade", "websocket");
+      },
+    },
     "/api/keep-alive": {
       target: "http://127.0.0.1:8300", // 后端服务器地址
       ws: true,

@@ -30,12 +30,13 @@ const IndexBox: React.FC<IndexBoxProps> = ({ dispatch }) => {
       type: "webSideMessage/fetchMessages",
       payload: {
         maxId: maxId,
-        page: 1,
+        pageNo: 1,
         pageSize: 20,
         readStatus: 1,
       },
-      callback: (res: WebSideMessageDTO[]) => {
-        setWebSideMessages(Array.isArray(res) ? res : []);
+      callback: (res: any) => {
+        const messages = res.items;
+        setWebSideMessages(Array.isArray(messages) ? messages : []);
       },
     });
   };

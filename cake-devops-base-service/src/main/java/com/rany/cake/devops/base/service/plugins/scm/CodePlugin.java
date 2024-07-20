@@ -1,5 +1,7 @@
 package com.rany.cake.devops.base.service.plugins.scm;
 
+import com.github.rholder.retry.RetryException;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.rany.cake.devops.base.domain.aggregate.Host;
@@ -10,6 +12,8 @@ import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * 拉取代码插件
@@ -47,13 +51,25 @@ public class CodePlugin extends BasePlugin {
             //    local folder_name=$3
             //    local webhook_url=$4
             String executeCommand = String.format(" sh checkout.sh '%s' %s '%s'", repo, branch, webHook);
-            if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
-                log.error("代码拉取失败");
+            try {
+                RETRYER.call(() -> {
+                    if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
+                        log.error("代码拉取失败");
+                        return false;
+                    }
+                    return true;
+                });
+            } catch (UncheckedExecutionException | ExecutionException | RetryException e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof JSchException) {
+                    log.error("JSchException during retry attempt", cause);
+                    log.error("CodePlugin error", e);
+                    return false;
+                } else {
+                    log.error("Unexpected error during retry attempt", cause);
+                }
                 return false;
             }
-        } catch (JSchException e) {
-            log.error("CodePlugin error", e);
-            return false;
         }
         return true;
     }
