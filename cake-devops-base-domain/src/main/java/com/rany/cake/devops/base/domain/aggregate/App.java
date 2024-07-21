@@ -116,11 +116,13 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
         this.developMode = developMode;
     }
 
-    public void sava() {
+    public void sava(String user) {
         this.gmtCreate = DateUtil.date();
         this.gmtModified = DateUtil.date();
         this.status = CommonStatusEnum.ENABLE.getValue();
         this.isDeleted = DeleteStatusEnum.NO.getValue();
+        this.creator = user;
+        this.modifier = user;
     }
 
 

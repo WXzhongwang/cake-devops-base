@@ -42,7 +42,7 @@
                          develop_mode, owner, health_check,
                          status, is_deleted, gmt_create,
                          gmt_modified, department_abbreviation,
-                         department, webhook)
+                         department, webhook, creator, modifier)
         values (#{appId.appId},
                 #{appName.name,jdbcType=VARCHAR},
                 #{description,jdbcType=VARCHAR},
@@ -58,7 +58,9 @@
                 #{gmtModified,jdbcType=TIMESTAMP},
                 #{businessOwnership.departmentAbbreviation,jdbcType=VARCHAR},
                 #{businessOwnership.department,jdbcType=VARCHAR},
-                #{webhook})
+                #{webhook},
+                #{creator},
+                #{modifier})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.App">

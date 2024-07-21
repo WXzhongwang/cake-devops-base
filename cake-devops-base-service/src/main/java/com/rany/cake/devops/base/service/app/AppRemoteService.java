@@ -120,11 +120,8 @@ public class AppRemoteService implements AppService {
                         Maps.uniqueIndex(createAppCommand.getAppMembers(), AppMemberDTO::getAccountId);
 
         for (Map.Entry<Long, AccountDTO> entry : accountMap.entrySet()) {
-            AppMember member = appMemberDomainService.findByAccountId(String.valueOf(entry.getKey()));
-            if (member == null) {
-                member = new AppMember(new MemberId(String.valueOf(snowflakeIdWorker.nextId())), app.getAppId(), String.valueOf(entry.getKey()));
-                member.init(createAppCommand.getUser());
-            }
+            AppMember member = new AppMember(new MemberId(String.valueOf(snowflakeIdWorker.nextId())), app.getAppId(), String.valueOf(entry.getKey()));
+            member.init(createAppCommand.getUser());
             // 如果是owner
             if (createAppCommand.getOwner().equals(String.valueOf(entry.getKey()))) {
                 member.authorize(AppRoleEnum.OWNER.name());
@@ -137,7 +134,7 @@ public class AppRemoteService implements AppService {
             appMembers.add(member);
         }
 
-        app.sava();
+        app.sava(createAppCommand.getUser());
         appDomainService.save(app);
         return app.getAppId().getAppId();
     }
@@ -187,6 +184,7 @@ public class AppRemoteService implements AppService {
                 resourceStrategyDTO.getMemory(),
                 resourceStrategyDTO.getMaxCpu(),
                 resourceStrategyDTO.getMaxMemory()));
+        appEnv.sava(createAppEnvCommand.getUser());
         appDomainService.createEnv(appEnv);
         return appEnv.getId();
     }

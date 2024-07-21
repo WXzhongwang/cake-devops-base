@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.domain.entity;
 
+import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseEntity;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
@@ -77,6 +78,16 @@ public class AppEnv extends BaseEntity<String> {
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.deployStatus = EnvDeployStatusEnum.NORMAL.getValue();
     }
+
+    public void sava(String user) {
+        this.gmtCreate = DateUtil.date();
+        this.gmtModified = DateUtil.date();
+        this.status = CommonStatusEnum.ENABLE.getValue();
+        this.isDeleted = DeleteStatusEnum.NO.getValue();
+        this.creator = user;
+        this.modifier = user;
+    }
+
 
     public void deploy(String progress) {
         this.deployStatus = EnvDeployStatusEnum.DEPLOYING.getValue();

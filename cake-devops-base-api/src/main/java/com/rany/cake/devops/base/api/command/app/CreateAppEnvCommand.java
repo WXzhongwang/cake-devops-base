@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.api.command.app;
 
-import com.rany.cake.devops.base.api.common.base.DTO;
+import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CreateAppEnvCommand extends DTO {
+public class CreateAppEnvCommand extends BaseCommand {
     private String appId;
     private AppEnvDTO env;
 }
