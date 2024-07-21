@@ -58,7 +58,7 @@
                 #{gmtModified,jdbcType=TIMESTAMP},
                 #{businessOwnership.departmentAbbreviation,jdbcType=VARCHAR},
                 #{businessOwnership.department,jdbcType=VARCHAR},
-                #{webHook})
+                #{webhook})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.App">
@@ -79,7 +79,7 @@
             department              = #{businessOwnership.department,jdbcType=VARCHAR},
             creator                 = #{creator,jdbcType=VARCHAR},
             modifier                = #{modifier,jdbcType=VARCHAR},
-            webhook                 = #{webHook}
+            webhook                 = #{webhook}
         where app_id = #{appId.appId}
     </update>
 

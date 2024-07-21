@@ -47,12 +47,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.dubbo.config.annotation.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -87,16 +85,23 @@ public class AppRemoteService implements AppService {
                 EnumUtils.getEnum(CodeLanguageEnum.class, createAppCommand.getLanguage()),
                 EnumUtils.getEnum(DevelopMode.class, createAppCommand.getDevelopMode()));
 
-        app.setBusinessOwnership(new BusinessOwnership(createAppCommand.getDepartmentAbbreviation(),
-                createAppCommand.getDepartment()));
+        List<DepartmentConfig.Department> departments = departmentConfig.getDepartments();
+        Optional<DepartmentConfig.Department> department = departments.stream().filter(p -> Objects.equals(p.getValue(), createAppCommand.getDepartment())).findFirst();
+        if (!department.isPresent()) {
+            throw new BusinessException(DevOpsErrorMessage.DEP_NOT_FOUND);
+        }
+        DepartmentConfig.Department departmentValue = department.get();
+        app.setBusinessOwnership(new BusinessOwnership(departmentValue.getAbbr(),
+                departmentValue.getValue()));
         app.setHealthCheck(createAppCommand.getHealthCheck());
 
         Set<String> accountIds = Sets.newHashSet(createAppCommand.getOwner());
-        if (CollectionUtils.isNotEmpty(createAppCommand.getAppMembers())) {
-            accountIds.addAll(createAppCommand.getAppMembers().stream().map(AppMemberDTO::getAccountId).collect(Collectors.toSet()));
-        }
+//        if (CollectionUtils.isNotEmpty(createAppCommand.getAppMembers())) {
+//            accountIds.addAll(createAppCommand.getAppMembers().stream().map(AppMemberDTO::getAccountId).collect(Collectors.toSet()));
+//        }
+        List<Long> accountIdLongs = accountIds.stream().map(NumberUtils::toLong).collect(Collectors.toList());
         AccountQuery accountQuery = new AccountQuery();
-        // accountQuery.setAccountIds(new ArrayList<>(accountIds));
+        accountQuery.setAccountIds(accountIdLongs);
         accountQuery.setTenantId(tenantConfig.getTenantId());
         ListResult<AccountDTO> accounts = accountFacade.findAccounts(accountQuery);
         if (accounts == null || CollectionUtils.isEmpty(accounts.getContent())) {
@@ -106,8 +111,14 @@ public class AppRemoteService implements AppService {
 
         List<AccountDTO> content = accounts.getContent();
         Map<Long, AccountDTO> accountMap = Maps.uniqueIndex(content, AccountDTO::getId);
-        Map<String, AppMemberDTO> accountRoleMap = Maps.uniqueIndex(createAppCommand.getAppMembers(), AppMemberDTO::getAccountId);
         ArrayList<AppMember> appMembers = new ArrayList<>();
+        app.setAppMembers(appMembers);
+
+
+        Map<String, AppMemberDTO> accountRoleMap =
+                CollectionUtils.isEmpty(createAppCommand.getAppMembers()) ? Maps.newHashMap() :
+                        Maps.uniqueIndex(createAppCommand.getAppMembers(), AppMemberDTO::getAccountId);
+
         for (Map.Entry<Long, AccountDTO> entry : accountMap.entrySet()) {
             AppMember member = appMemberDomainService.findByAccountId(String.valueOf(entry.getKey()));
             if (member == null) {
@@ -124,8 +135,8 @@ public class AppRemoteService implements AppService {
                 }
             }
             appMembers.add(member);
-            app.setAppMembers(appMembers);
         }
+
         app.sava();
         appDomainService.save(app);
         return app.getAppId().getAppId();
