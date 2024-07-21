@@ -86,6 +86,13 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
           </Select>
         </Form.Item>
         <Form.Item
+          name="description"
+          label="应用描述"
+          rules={[{ required: true, message: "请输入应用描述" }]}
+        >
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item
           name="repo"
           label="仓库地址"
           rules={[{ required: true, message: "请输入仓库地址" }]}
@@ -105,9 +112,9 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
           rules={[{ required: true, message: "请选择开发模式" }]}
         >
           <Select placeholder="请选择开发模式">
-            <Option value="Freedom">自由模式</Option>
-            <Option value="GitFlow">标准模式</Option>
-            <Option value="Branch">分支模式</Option>
+            <Option value="FREEDOM">自由模式</Option>
+            <Option value="FLOW">标准模式</Option>
+            <Option value="BRANCH">分支模式</Option>
             {/* 其他开发模式选项 */}
           </Select>
         </Form.Item>

@@ -371,7 +371,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     >
       <Space size="middle" direction="vertical" style={{ width: "100%" }}>
         <Card
-          title="发布流水线"
+          title={"发布流水线[" + appDetail?.appName + "]"}
           extra={
             <div>
               {parsedProgress?.pipeKey && (

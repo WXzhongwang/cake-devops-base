@@ -135,7 +135,54 @@ const CreateEnvDrawer: React.FC<CreateEnvDrawerProps> = ({
         >
           <Input type="number" placeholder="请输入副本数" />
         </Form.Item>
-        {/* 其他表单项根据需要添加 */}
+        <Form.Item
+          name="cpu"
+          label="cpu资源"
+          rules={[{ required: true, message: "请输入cpu资源(1C)" }]}
+        >
+          <Input type="text" placeholder="请输入cpu资源" />
+        </Form.Item>
+        <Form.Item
+          name="maxCpu"
+          label="最大cpu资源"
+          rules={[{ required: true, message: "请输入最大cpu资源(1C)" }]}
+        >
+          <Input type="text" placeholder="请输入最大cpu资源" />
+        </Form.Item>
+        <Form.Item
+          name="memory"
+          label="内存资源"
+          rules={[{ required: true, message: "请输入内存资源(500M)" }]}
+        >
+          <Input type="text" placeholder="请输入cpu资源" />
+        </Form.Item>
+        <Form.Item
+          name="maxMemory"
+          label="最大内存资源"
+          rules={[{ required: true, message: "请输入最大内存资源(500M)" }]}
+        >
+          <Input type="text" placeholder="请输入最大内存资源" />
+        </Form.Item>
+        <Form.Item
+          label="是否需要发布审批"
+          name="needApproval"
+          rules={[{ required: true, message: "请选择是否需要发布审批" }]}
+        >
+          <Radio.Group>
+            <Radio value="false">否</Radio>
+            <Radio value="true">是</Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          label="是否自动扩容"
+          name="autoScaling"
+          rules={[{ required: true, message: "请选择是否需要发布审批" }]}
+        >
+          <Radio.Group>
+            <Radio value="false">否</Radio>
+            <Radio value="true">是</Radio>
+          </Radio.Group>
+        </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
             提交
