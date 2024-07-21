@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.domain.base;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,5 +31,17 @@ public class CrConfig {
         private String secretKey;
     }
 
+    public String getNameSpace() {
+        if (StringUtils.equals(channel, "aliyun")) {
+            return aliyun.getNamespace();
+        }
+        return String.valueOf(harbor.getDefaultProjectId());
+    }
 
+    public String getShellName() {
+        if (StringUtils.equals(channel, "aliyun")) {
+            return "push_aliyun.sh";
+        }
+        return "push_harbor.sh";
+    }
 }

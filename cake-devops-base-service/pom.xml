@@ -129,11 +129,12 @@
             <groupId>com.aliyun</groupId>
             <artifactId>alibabacloud-cr20181201</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.jline</groupId>
             <artifactId>jline</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>com.github.rholder</groupId>
             <artifactId>guava-retrying</artifactId>

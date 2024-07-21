@@ -159,16 +159,18 @@ devops:
   package:
     balancer: random
   cr:
-    channel: harbor # 支持harbor或者阿里云acr
+    channel: aliyun # 支持harbor或者阿里云acr
     harbor:
       harborUrl:
       harborUser:
       harborPassword:
+      default-project-id:
     aliyun:
       instanceId:
-      region:
+      region: cn-hangzhou
       accessKey:
       secretKey:
+      namespace: cake-devops-base
 
 #logging:
 #  level:

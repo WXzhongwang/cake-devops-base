@@ -51,7 +51,9 @@ public class PushAcrPlugin extends BasePlugin {
 //            local version=$4
 //            local webhook_url=$5
             // String executeCommand = String.join(" ", "sh", "push_aliyun.sh", repo, appName, appName, releaseVersion, webHook);
-            String executeCommand = String.format(" sh push_aliyun.sh '%s' %s %s %s '%s'", repo, appName, appName, releaseVersion, webHook);
+            String executeCommand = String.format(" sh %s '%s' %s %s %s '%s'",
+                    crConfig.getShellName(),
+                    repo, crConfig.getNameSpace(), appName, releaseVersion, webHook);
             if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
                 log.error("推送阿里云失败");
                 return false;

@@ -48,6 +48,7 @@ public class AliyunAcrApi {
                 .repoName(repoName)
                 .repoNamespaceName(crConfig.getAliyun().getNamespace())
                 .regionId(crConfig.getAliyun().getRegion())
+                .instanceId(crConfig.getAliyun().getInstanceId())
                 .repoType("PRIVATE").build();
 
         try {
@@ -59,4 +60,5 @@ public class AliyunAcrApi {
         // Finally, close the client
         client.close();
     }
+
 }

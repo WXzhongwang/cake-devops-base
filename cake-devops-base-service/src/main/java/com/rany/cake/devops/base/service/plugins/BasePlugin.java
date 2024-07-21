@@ -4,6 +4,7 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import com.rany.cake.devops.base.domain.base.CrConfig;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.context.Plugin;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
@@ -26,6 +27,8 @@ public abstract class BasePlugin implements Plugin {
     protected HostDomainService hostDomainService;
     @Resource
     protected HostConnectionService hostConnectionService;
+    @Resource
+    protected CrConfig crConfig;
 
     protected static final Logger log = LoggerFactory.getLogger("RabbitMq");
 
@@ -37,5 +40,5 @@ public abstract class BasePlugin implements Plugin {
             .withWaitStrategy(WaitStrategies.fixedWait(5, TimeUnit.SECONDS))
             .withStopStrategy(StopStrategies.stopAfterAttempt(3))
             .build();
-    
+
 }
