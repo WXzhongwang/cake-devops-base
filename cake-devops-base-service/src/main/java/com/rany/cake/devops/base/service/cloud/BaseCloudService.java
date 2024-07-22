@@ -2,14 +2,14 @@ package com.rany.cake.devops.base.service.cloud;
 
 import com.rany.cake.devops.base.service.context.DeployContext;
 import io.kubernetes.client.openapi.ApiClient;
-import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.Config;
-import io.kubernetes.client.util.KubeConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * TODO
@@ -40,20 +40,26 @@ public abstract class BaseCloudService {
     protected void build() {
         try {
             //this.apiClient = ClientBuilder.cluster().build();
-            // 指定 kubeconfig 文件路径
-            String kubeConfigPath = "/Users/yuanjinxiu/.kube/config";
+//            // 指定 kubeconfig 文件路径
+//            String kubeConfigPath = "/Users/yuanjinxiu/.kube/config";
+//
+//            // 从 kubeconfig 文件中加载配置
+//            KubeConfig kubeConfig = KubeConfig.loadKubeConfig(new FileReader(kubeConfigPath));
+//            this.apiClient = ClientBuilder.kubeconfig(kubeConfig)
+//                    .setVerifyingSsl(false)
+//                    .build();
 
-            // 从 kubeconfig 文件中加载配置
-            KubeConfig kubeConfig = KubeConfig.loadKubeConfig(new FileReader(kubeConfigPath));
 
-            this.apiClient = ClientBuilder.kubeconfig(kubeConfig)
-                    .setVerifyingSsl(false)
-                    //.setCertificateAuthority()
-                    //.setBasePath("http://kubernetes.docker.internal:6443")
-                    .build();
-//            this.apiClient = Config.fromConfig(new InputStreamReader(Files.newInputStream(Paths.get("/Users/yuanjinxiu/.kube/config"))))
-//                    .setBasePath("https://kubernetes.docker.internal:6443")
-//                    .setVerifyingSsl(false);
+//            this.apiClient = ClientBuilder.kubeconfig(kubeConfig)
+//                    .setVerifyingSsl(false)
+//                    //.setCertificateAuthority()
+//                    //.setBasePath("http://kubernetes.docker.internal:6443")
+//                    .build();
+            this.apiClient = Config.fromConfig(new InputStreamReader(Files.newInputStream(Paths.get("/Users/yuanjinxiu/.kube/config"))))
+                    .setBasePath("https://kubernetes.docker.internal:6443")
+                    .setVerifyingSsl(false);
+
+//            this.apiClient = Config.defaultClient();
         } catch (IOException e) {
             log.error("构建K8s-Client异常", e);
             throw new RuntimeException("构建K8s-Client异常");
