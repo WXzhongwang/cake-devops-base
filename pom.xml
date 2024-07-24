@@ -51,6 +51,7 @@
         <console-table-builder.version>1.2</console-table-builder.version>
         <kubernetes-client.verison>16.0.2</kubernetes-client.verison>
         <gitlab-api.verison>4.19.0</gitlab-api.verison>
+        <!--        <github-api.verison>octokit-java</github-api.verison>-->
 
 
         <cake-cms.version>1.0.3</cake-cms.version>
@@ -353,6 +354,11 @@
                 <artifactId>gitlab4j-api</artifactId>
                 <version>${gitlab-api.verison}</version>
             </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>com.github octokit-java</groupId>-->
+            <!--                <artifactId>octokit-java</artifactId>-->
+            <!--                <version>${github-api.verison}</version>-->
+            <!--            </dependency>-->
 
         </dependencies>
     </dependencyManagement>

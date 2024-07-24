@@ -21,7 +21,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class CodeRepository extends BaseValueObject {
 
+    /**
+     * 仓库地址
+     */
     private String repo;
 
+    /**
+     * 默认分支
+     */
     private String defaultBranch;
 }
