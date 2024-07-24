@@ -20,6 +20,7 @@ import com.rany.cake.devops.base.service.plugins.image.PushHarborPlugin;
 import com.rany.cake.devops.base.service.plugins.machine.MachineSelectorPlugin;
 import com.rany.cake.devops.base.service.plugins.scm.CheckOutPlugin;
 import com.rany.cake.devops.base.service.plugins.scm.CodePlugin;
+import com.rany.cake.devops.base.service.plugins.scm.RebaseMasterPlugin;
 import com.rany.cake.devops.base.service.plugins.test.SonarQubePlugin;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -45,6 +46,8 @@ public class ReleaseCenter {
     private SonarQubePlugin sonarQubePlugin;
     @Resource
     private CheckOutPlugin checkOutPlugin;
+    @Resource
+    private RebaseMasterPlugin rebaseMasterPlugin;
     @Resource
     private CodePlugin codePlugin;
     @Resource

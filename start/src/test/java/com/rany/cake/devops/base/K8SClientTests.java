@@ -19,11 +19,13 @@ import com.rany.cake.devops.base.service.cloud.K8sCloudService;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.util.enums.ClusterTypeEnum;
+import io.kubernetes.client.openapi.models.V1Namespace;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 public class K8SClientTests extends BaseTests {
@@ -58,17 +60,18 @@ public class K8SClientTests extends BaseTests {
         Assert.assertTrue(connected);
     }
 
-
     @Test
-    public void testCreateNamespace() {
-        BaseCloudService cloudService = cloudFactory.build(ClusterTypeEnum.K8S, "https://kubernetes.docker.internal:6443", "");
-        Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
-
-        DeployContext context = new DeployContext(new String("12345"));
-        context.setNamespace(namespace);
-        boolean nameSpace = cloudService.createNameSpace(context);
-        Assert.assertTrue(nameSpace);
+    public void testListNameSpace() {
+        BaseCloudService cloudService = new K8sCloudService("https://kubernetes.docker.internal:6443", "");
+        //BaseCloudService cloudService = new K8sCloudService(null, "");
+        List<V1Namespace> v1Namespaces = cloudService.listNamespaces(new DeployContext(null));
+        Assert.assertFalse(v1Namespaces.isEmpty());
     }
+
+
+
+
+
 
     @Test
     public void testCreateDeployment() {

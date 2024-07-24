@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.service.cloud;
 
 import com.rany.cake.devops.base.service.context.DeployContext;
 import io.kubernetes.client.openapi.ApiClient;
+import io.kubernetes.client.openapi.models.V1Namespace;
 import io.kubernetes.client.util.Config;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * TODO
@@ -55,11 +57,11 @@ public abstract class BaseCloudService {
 //                    //.setCertificateAuthority()
 //                    //.setBasePath("http://kubernetes.docker.internal:6443")
 //                    .build();
-            this.apiClient = Config.fromConfig(new InputStreamReader(Files.newInputStream(Paths.get("/Users/yuanjinxiu/.kube/config"))))
-                    .setBasePath("https://kubernetes.docker.internal:6443")
-                    .setVerifyingSsl(false);
+//            this.apiClient = Config.fromConfig(new InputStreamReader(Files.newInputStream(Paths.get("/Users/yuanjinxiu/.kube/config"))))
+//                    .setBasePath("https://kubernetes.docker.internal:6443")
+//                    .setVerifyingSsl(false);
 
-//            this.apiClient = Config.defaultClient();
+            this.apiClient = Config.defaultClient();
         } catch (IOException e) {
             log.error("构建K8s-Client异常", e);
             throw new RuntimeException("构建K8s-Client异常");
@@ -155,4 +157,8 @@ public abstract class BaseCloudService {
     public abstract boolean deleteIngress(DeployContext context);
 
     public abstract boolean createNameSpace(DeployContext context);
+
+    public abstract List<V1Namespace> listNamespaces(DeployContext context);
+
+    public abstract V1Namespace getNamespace(DeployContext context);
 }
