@@ -119,6 +119,30 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
           </Select>
         </Form.Item>
         <Form.Item
+          name="codePlatform"
+          label="仓库地址"
+          rules={[{ required: true, message: "代码托管平台" }]}
+        >
+          <Select placeholder="代码托管平台">
+            <Option value="GITHUB">GITHUB</Option>
+            <Option value="GITLAB">GITLAB</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="connectionString"
+          label="连接地址"
+          rules={[{ required: true, message: "连接地址" }]}
+        >
+          <Input placeholder="请输入连接地址" />
+        </Form.Item>
+        <Form.Item
+          name="token"
+          label="连接凭证"
+          rules={[{ required: true, message: "连接凭证" }]}
+        >
+          <Input.TextArea placeholder="请输入连接凭证" />
+        </Form.Item>
+        <Form.Item
           name="language"
           label="开发语言"
           rules={[{ required: true, message: "请选择开发语言" }]}
