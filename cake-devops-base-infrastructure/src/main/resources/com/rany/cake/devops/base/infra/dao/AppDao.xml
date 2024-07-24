@@ -19,6 +19,9 @@
         <result column="department_abbreviation" property="departmentAbbreviation" jdbcType="VARCHAR"/>
         <result column="department" property="department" jdbcType="VARCHAR"/>
         <result column="webhook" property="webhook" jdbcType="VARCHAR"/>
+        <result column="code_platform" property="codePlatform" jdbcType="VARCHAR"/>
+        <result column="connection_string" property="connectionString" jdbcType="VARCHAR"/>
+        <result column="token" property="token" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
         id
@@ -26,7 +29,8 @@
           app_id
         , app_name, description, repo, default_branch, language, develop_mode, owner, health_check,
     status, is_deleted, gmt_create, gmt_modified, department_abbreviation, department,
-    creator, modifier, webhook
+    creator, modifier, webhook, code_platform, connection_string, token
+
     </sql>
 
     <select id="selectByAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -42,7 +46,8 @@
                          develop_mode, owner, health_check,
                          status, is_deleted, gmt_create,
                          gmt_modified, department_abbreviation,
-                         department, webhook, creator, modifier)
+                         department, webhook, creator, modifier,
+                         code_platform, connection_string, token)
         values (#{appId.appId},
                 #{appName.name,jdbcType=VARCHAR},
                 #{description,jdbcType=VARCHAR},
@@ -60,7 +65,10 @@
                 #{businessOwnership.department,jdbcType=VARCHAR},
                 #{webhook},
                 #{creator},
-                #{modifier})
+                #{modifier},
+                #{codeRepository.codePlatform},
+                #{codeRepository.connectionString},
+                #{codeRepository.token})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.App">
@@ -81,7 +89,9 @@
             department              = #{businessOwnership.department,jdbcType=VARCHAR},
             creator                 = #{creator,jdbcType=VARCHAR},
             modifier                = #{modifier,jdbcType=VARCHAR},
-            webhook                 = #{webhook}
+            webhook                 = #{webhook},
+            code_platform           = #{codeRepository.codePlatform},
+            connection_string       = #{codeRepository.connectionString} token = #{codeRepository.token}
         where app_id = #{appId.appId}
     </update>
 

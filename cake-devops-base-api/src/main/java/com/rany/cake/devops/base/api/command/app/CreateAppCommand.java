@@ -22,6 +22,9 @@ public class CreateAppCommand extends BaseCommand {
     private String description;
     private String repo;
     private String defaultBranch;
+    private String codePlatform;
+    private String connectionString;
+    private String token;
     private String language;
     private String developMode;
     private String owner;

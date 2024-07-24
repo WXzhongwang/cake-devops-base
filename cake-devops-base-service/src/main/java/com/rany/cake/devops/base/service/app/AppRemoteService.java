@@ -81,7 +81,8 @@ public class AppRemoteService implements AppService {
                 new AppName(createAppCommand.getAppName()),
                 createAppCommand.getOwner(),
                 createAppCommand.getDescription(),
-                new CodeRepository(createAppCommand.getRepo(), createAppCommand.getDefaultBranch()),
+                new CodeRepository(createAppCommand.getRepo(), createAppCommand.getDefaultBranch(),
+                        createAppCommand.getCodePlatform(), createAppCommand.getConnectionString(), createAppCommand.getToken()),
                 EnumUtils.getEnum(CodeLanguageEnum.class, createAppCommand.getLanguage()),
                 EnumUtils.getEnum(DevelopMode.class, createAppCommand.getDevelopMode()));
 
