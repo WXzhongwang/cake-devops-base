@@ -52,8 +52,7 @@ public class CheckOutPlugin extends BasePlugin {
         }
         String serialNum = redisSerialNumberGenerator.generateSerialNumber(appName);
         String newReleaseBranchName = RepoUrlUtils.generateReleaseBranchName(serialNum);
-        Boolean success = codeService.createBranch(codeRepository.getRepo(),
-                RepoUrlUtils.generateReleaseBranchName(newReleaseBranchName), ref);
+        Boolean success = codeService.createBranch(codeRepository.getRepo(), newReleaseBranchName, ref);
         if (BooleanUtils.isNotTrue(success)) {
             log.error("Create new branch failed, {}", newReleaseBranchName);
             return false;
