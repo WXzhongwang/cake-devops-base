@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.domain.valueobject;
 
 import com.cake.framework.common.base.BaseValueObject;
+import com.rany.cake.devops.base.util.enums.CodePlatformEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,4 +31,18 @@ public class CodeRepository extends BaseValueObject {
      * 默认分支
      */
     private String defaultBranch;
+
+
+    /**
+     * 代码平台
+     */
+    private CodePlatformEnum codePlatform;
+    /**
+     * 连接字符串
+     */
+    private String conectionString;
+    /**
+     * token
+     */
+    private String token;
 }
