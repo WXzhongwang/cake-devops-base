@@ -22,6 +22,7 @@ import com.rany.cake.devops.base.domain.base.AppConfig;
 import com.rany.cake.devops.base.domain.base.DepartmentConfig;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.events.AppEnvCreateEvent;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
@@ -49,6 +50,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.dubbo.config.annotation.Service;
+import org.springframework.context.ApplicationContext;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -74,6 +76,7 @@ public class AppRemoteService implements AppService {
     private final ClusterDomainService clusterDomainService;
     private final AppDataAdapter appDataAdapter;
     private final DepartmentConfig departmentConfig;
+    private final ApplicationContext applicationContext;
 
     @Override
     public String createApp(CreateAppCommand createAppCommand) {
@@ -187,6 +190,7 @@ public class AppRemoteService implements AppService {
                 resourceStrategyDTO.getMaxMemory()));
         appEnv.sava(createAppEnvCommand.getUser());
         appDomainService.createEnv(appEnv);
+        applicationContext.publishEvent(new AppEnvCreateEvent(appEnv.getAppId(), appEnv.getId()));
         return appEnv.getId();
     }
 

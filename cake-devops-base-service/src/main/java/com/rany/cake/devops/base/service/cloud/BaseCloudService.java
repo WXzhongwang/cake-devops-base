@@ -8,9 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -161,4 +158,6 @@ public abstract class BaseCloudService {
     public abstract List<V1Namespace> listNamespaces(DeployContext context);
 
     public abstract V1Namespace getNamespace(DeployContext context);
+
+    public abstract V1Namespace getNamespace(String name);
 }

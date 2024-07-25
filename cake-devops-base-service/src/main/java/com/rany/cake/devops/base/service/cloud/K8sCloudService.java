@@ -345,7 +345,7 @@ public class K8sCloudService extends BaseCloudService {
 
 
     @Override
-    public List<V1Namespace> listNamespaces(DeployContext context)  {
+    public List<V1Namespace> listNamespaces(DeployContext context) {
         try {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             List<V1Namespace> items = coreV1Api.listNamespace(null, null, null, null, null, null, null, null, null, null)
@@ -358,7 +358,7 @@ public class K8sCloudService extends BaseCloudService {
     }
 
     @Override
-    public V1Namespace getNamespace(DeployContext context)  {
+    public V1Namespace getNamespace(DeployContext context) {
         try {
             String namespaceName = context.getNamespace().getName().getName();
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
@@ -368,6 +368,18 @@ public class K8sCloudService extends BaseCloudService {
         }
         return null;
     }
+
+    @Override
+    public V1Namespace getNamespace(String namespaceName) {
+        try {
+            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+            return coreV1Api.readNamespace(namespaceName, null);
+        } catch (ApiException e) {
+            log.error("Failed to delete Namespace: " + e.getResponseBody(), e);
+        }
+        return null;
+    }
+
 
     private V1Deployment createBasicDeployment(DeployContext context) {
         AppName appName = context.getApp().getAppName();

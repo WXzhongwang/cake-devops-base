@@ -105,6 +105,8 @@ public class DeployContext implements Serializable {
         this.progress.setSteps(new LinkedList<>());
     }
 
+    public DeployContext() {
+    }
 
     /**
      * 进度监控
