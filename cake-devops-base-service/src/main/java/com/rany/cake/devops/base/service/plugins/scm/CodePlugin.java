@@ -37,6 +37,7 @@ public class CodePlugin extends BasePlugin {
         String webHook = context.getApp().getWebhook();
         String repo = context.getApp().getCodeRepository().getRepo();
         String branch = context.getRelease().getReleaseBranch();
+        String checkoutBranch = context.getCheckoutBranch();
 
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("workspace directory: " + workspace);
@@ -50,7 +51,7 @@ public class CodePlugin extends BasePlugin {
             //    local branch_name=$2
             //    local folder_name=$3
             //    local webhook_url=$4
-            String executeCommand = String.format(" sh checkout.sh '%s' %s '%s'", repo, branch, webHook);
+            String executeCommand = String.format(" sh checkout.sh '%s' %s '%s'", repo, checkoutBranch, webHook);
             try {
                 RETRYER.call(() -> {
                     if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {

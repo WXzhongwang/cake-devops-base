@@ -6,14 +6,14 @@ import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.type.NamespaceName;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.K8sCloudService;
+import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import com.rany.cake.devops.base.service.context.DeployContext;
-import com.rany.cake.devops.base.util.enums.ClusterTypeEnum;
 import io.kubernetes.client.openapi.models.V1Namespace;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
+
 
 /**
  * ClientTest
@@ -42,5 +42,14 @@ public class ClientTest {
         // context.setNamespace(new Namespace(new NamespaceId("12345"), new NamespaceName("cake-devops"), new ClusterId("1L")));
         List<V1Namespace> v1Namespaces = cloudService.listNamespaces(context);
         Assert.assertFalse(v1Namespaces.isEmpty());
+    }
+
+    @Test
+    public void testExtract() {
+        String repoUrl = "https://github.com/WXzhongwang/cake-ops.git";
+        String[] result = RepoUrlUtils.extractRepoInfo(repoUrl);
+        if (result.length == 0) {
+            System.out.println("Invalid GitHub URL");
+        }
     }
 }

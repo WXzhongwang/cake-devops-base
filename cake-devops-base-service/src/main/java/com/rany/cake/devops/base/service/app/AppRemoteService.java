@@ -190,7 +190,7 @@ public class AppRemoteService implements AppService {
                 resourceStrategyDTO.getMaxMemory()));
         appEnv.sava(createAppEnvCommand.getUser());
         appDomainService.createEnv(appEnv);
-        applicationContext.publishEvent(new AppEnvCreateEvent(appEnv.getAppId(), appEnv.getId()));
+        applicationContext.publishEvent(new AppEnvCreateEvent(appEnv.getAppId(), appEnv.getEnvId()));
         return appEnv.getId();
     }
 

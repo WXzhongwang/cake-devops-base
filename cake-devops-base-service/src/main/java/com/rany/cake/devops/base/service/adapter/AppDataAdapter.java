@@ -6,9 +6,9 @@ import com.rany.cake.devops.base.api.dto.ResourceStrategyDTO;
 import com.rany.cake.devops.base.api.query.app.AppPageQuery;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
-import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -37,6 +37,9 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
     @Mapping(source = "appName.name", target = "appName")
     @Mapping(source = "codeRepository.repo", target = "repo")
     @Mapping(source = "codeRepository.defaultBranch", target = "defaultBranch")
+    @Mapping(source = "codeRepository.connectionString", target = "connectionString")
+    @Mapping(source = "codeRepository.token", target = "token")
+    @Mapping(source = "codeRepository.codePlatform", target = "codePlatform")
     @Mapping(source = "businessOwnership.departmentAbbreviation", target = "departmentAbbreviation")
     @Mapping(source = "businessOwnership.department", target = "department")
     @Mapping(source = "language", target = "language")
@@ -79,6 +82,9 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
     @Mapping(target = "appName.name", source = "appName")
     @Mapping(target = "codeRepository.repo", source = "repo")
     @Mapping(target = "codeRepository.defaultBranch", source = "defaultBranch")
+    @Mapping(target = "codeRepository.connectionString", source = "connectionString")
+    @Mapping(target = "codeRepository.token", source = "token")
+    @Mapping(target = "codeRepository.codePlatform", source = "codePlatform")
     @Mapping(target = "businessOwnership.departmentAbbreviation", source = "departmentAbbreviation")
     @Mapping(target = "businessOwnership.department", source = "department")
     @Mapping(target = "language", source = "language")

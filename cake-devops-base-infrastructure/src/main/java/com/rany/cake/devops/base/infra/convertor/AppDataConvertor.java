@@ -27,6 +27,9 @@ public interface AppDataConvertor extends BaseConvertor<App, AppPO> {
     @Mapping(source = "appName.name", target = "appName")
     @Mapping(source = "codeRepository.repo", target = "repo")
     @Mapping(source = "codeRepository.defaultBranch", target = "defaultBranch")
+    @Mapping(source = "codeRepository.connectionString", target = "connectionString")
+    @Mapping(source = "codeRepository.token", target = "token")
+    @Mapping(source = "codeRepository.codePlatform", target = "codePlatform")
     @Mapping(source = "businessOwnership.departmentAbbreviation", target = "departmentAbbreviation")
     @Mapping(source = "businessOwnership.department", target = "department")
     @Override
@@ -44,6 +47,9 @@ public interface AppDataConvertor extends BaseConvertor<App, AppPO> {
     @Mapping(target = "appName.name", source = "appName")
     @Mapping(target = "codeRepository.repo", source = "repo")
     @Mapping(target = "codeRepository.defaultBranch", source = "defaultBranch")
+    @Mapping(target = "codeRepository.token", source = "token")
+    @Mapping(target = "codeRepository.connectionString", source = "connectionString")
+    @Mapping(target = "codeRepository.codePlatform", source = "codePlatform")
     @Mapping(target = "businessOwnership.departmentAbbreviation", source = "departmentAbbreviation")
     @Mapping(target = "businessOwnership.department", source = "department")
     App targetToSource(AppPO appPO);

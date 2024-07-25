@@ -9,7 +9,6 @@ import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
-import com.rany.cake.devops.base.util.enums.CodePlatformEnum;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -44,8 +43,8 @@ public class CheckOutPlugin extends BasePlugin {
         Release release = context.getRelease();
         String ref = StringUtils.isNotEmpty(release.getReleaseBranch()) ? release.getReleaseBranch() : release.getReleaseCommitId();
         log.info("Current code repo:{}, default branch:{}", codeRepository.getRepo(), codeRepository.getDefaultBranch());
-        BaseCodeService codeService = codeFactory.build(CodePlatformEnum.GITLAB, "127.0.0.0:12345", "tokexxxx");
-        String[] repos = RepoUrlUtils.extractNamespaceAndProject(codeRepository.getRepo());
+        BaseCodeService codeService = codeFactory.build(codeRepository.of(), codeRepository.getConnectionString(), codeRepository.getToken());
+        String[] repos = RepoUrlUtils.extractRepoInfo(codeRepository.getRepo());
         if (repos == null) {
             log.error("Current code repo extract error");
             return false;
@@ -57,6 +56,7 @@ public class CheckOutPlugin extends BasePlugin {
             log.error("Create new branch failed, {}", newReleaseBranchName);
             return false;
         }
+        context.setCheckoutBranch(newReleaseBranchName);
         return success;
     }
 }

@@ -15,6 +15,7 @@ import com.rany.cake.devops.base.service.plugins.approval.DeploymentForbiddenPlu
 import com.rany.cake.devops.base.service.plugins.ci.BuildImagePlugin;
 import com.rany.cake.devops.base.service.plugins.ci.MavenBuildPlugin;
 import com.rany.cake.devops.base.service.plugins.ci.WorkSpacePlugin;
+import com.rany.cake.devops.base.service.plugins.deploy.KubernetesDeployPlugin;
 import com.rany.cake.devops.base.service.plugins.image.PushAcrPlugin;
 import com.rany.cake.devops.base.service.plugins.image.PushHarborPlugin;
 import com.rany.cake.devops.base.service.plugins.machine.MachineSelectorPlugin;
@@ -59,6 +60,8 @@ public class ReleaseCenter {
     @Resource
     private PushHarborPlugin pushHarborPlugin;
     @Resource
+    private KubernetesDeployPlugin kubernetesDeployPlugin;
+    @Resource
     @Qualifier(ThreadPoolTaskConfiguration.TaskPools.CORE)
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @Resource
@@ -82,13 +85,15 @@ public class ReleaseCenter {
         pipeline.addLast(machineSelectorPlugin);
         pipeline.addLast(workSpacePlugin);
 
-        // pipeline.addLast(checkOutPlugin);
+        pipeline.addLast(checkOutPlugin);
 
         pipeline.addLast(codePlugin);
         pipeline.addLast(mavenBuildPlugin);
         pipeline.addLast(sonarQubePlugin);
         pipeline.addLast(buildImagePlugin);
         pipeline.addLast(pushAcrPlugin);
+        pipeline.addLast(kubernetesDeployPlugin);
+        pipeline.addLast(rebaseMasterPlugin);
         // pipeline.addLast(pushHarborPlugin);
         // threadPoolTaskExecutor.execute(pipeline::start);
         pipeline.start();

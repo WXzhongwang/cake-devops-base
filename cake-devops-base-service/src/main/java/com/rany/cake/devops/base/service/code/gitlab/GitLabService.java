@@ -68,7 +68,7 @@ public class GitLabService {
 
     public Project getProject(String repoUrl) {
         // 通过项目路径获取项目信息
-        String[] namespaceAndProject = RepoUrlUtils.extractNamespaceAndProject(repoUrl);
+        String[] namespaceAndProject = RepoUrlUtils.extractRepoInfo(repoUrl);
         if (namespaceAndProject == null) {
             return null;
         }

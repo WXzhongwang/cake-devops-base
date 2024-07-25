@@ -29,4 +29,13 @@ public class AppDTO extends DTO {
     private String modifier;
     private List<AppEnvDTO> appEnvList;
     private String webhook;
+    /**
+     * 连接字符串
+     */
+    private String connectionString;
+    /**
+     * 凭证token
+     */
+    private String token;
+    private String codePlatform;
 }
