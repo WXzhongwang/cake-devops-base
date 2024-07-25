@@ -32,7 +32,11 @@ public class KubernetesDeployPlugin extends BasePlugin {
             log.error("命名空间未找到：{}", namespace.getName());
             return false;
         }
-        boolean deployment = cloudService.createDeployment(context);
+        boolean success = cloudService.createDeployment(context);
+        if (success) {
+            log.info("部署成功");
+            return true;
+        }
         return false;
     }
 }
