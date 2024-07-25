@@ -37,7 +37,7 @@ public class CodeRepository extends BaseValueObject {
     /**
      * 连接字符串
      */
-    private String conectionString;
+    private String connectionString;
     /**
      * 凭证token
      */
