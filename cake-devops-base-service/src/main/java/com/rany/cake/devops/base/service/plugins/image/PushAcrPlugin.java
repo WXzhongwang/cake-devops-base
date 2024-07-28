@@ -58,6 +58,9 @@ public class PushAcrPlugin extends BasePlugin {
                 log.error("推送阿里云失败");
                 return false;
             }
+            String imageName = String.format("%s/%s:%s",
+                    crConfig.getNameSpace(), appName, releaseVersion);
+            context.setDeploymentImage(imageName);
         } catch (JSchException e) {
             log.error("DeliveryPlugin error", e);
             return false;
