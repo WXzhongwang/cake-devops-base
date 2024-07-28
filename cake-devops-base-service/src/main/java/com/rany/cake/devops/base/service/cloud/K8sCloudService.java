@@ -404,11 +404,11 @@ public class K8sCloudService extends BaseCloudService {
         }
         // 设置资源
         Map<String, Quantity> request = new HashMap<>();
-        request.put("cpu", new Quantity(resourceStrategy.getCpu()));
-        request.put("memory", new Quantity(resourceStrategy.getMemory()));
+        request.put("cpu", ResourceConverter.convertCpuToMilliCores(resourceStrategy.getCpu()));
+        request.put("memory", ResourceConverter.convertMemory(resourceStrategy.getMemory()));
         Map<String, Quantity> limit = new HashMap<>();
-        limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
-        limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
+        limit.put("cpu", ResourceConverter.convertCpuToMilliCores(resourceStrategy.getMaxCpu()));
+        limit.put("memory", ResourceConverter.convertMemory(resourceStrategy.getMaxMemory()));
         V1ResourceRequirements requirements = new V1ResourceRequirements()
                 .limits(request)
                 .requests(limit);
