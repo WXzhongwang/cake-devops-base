@@ -30,7 +30,7 @@ public class ClientTest {
 
         BaseCloudService cloudService = new K8sCloudService("https://kubernetes.docker.internal:6443", "");
         DeployContext context = new DeployContext(new String("12345"));
-        context.setNamespace(new Namespace(new NamespaceId("12345"), new NamespaceName("cake-devops"), new ClusterId("1L")));
+        context.setNamespace(new Namespace(new NamespaceId("12345"), new NamespaceName("cake-devops-base"), new ClusterId("1L")));
         boolean nameSpace = cloudService.createNameSpace(context);
         Assert.assertTrue(nameSpace);
     }

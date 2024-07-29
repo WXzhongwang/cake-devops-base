@@ -4,6 +4,7 @@ import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
 import com.rany.cake.devops.base.service.context.DeployContext;
+import com.rany.cake.toolkit.lang.utils.Lists;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.custom.Quantity;
 import io.kubernetes.client.openapi.ApiException;
@@ -388,7 +389,7 @@ public class K8sCloudService extends BaseCloudService {
         List<VolumeMount> volumeMounts = context.getApp().getVolumeMounts();
         String envName = context.getAppEnv().getEnvName();
         ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
-        String configMapName = String.format("%s-%s", appName, envName);
+        String configMapName = String.format("%s-%s", appName.getName(), envName);
         // 配置configMap
         List<V1EnvVar> configMapValues = new ArrayList<>();
         if (configMap != null && !configMap.isEmpty()) {
@@ -404,30 +405,33 @@ public class K8sCloudService extends BaseCloudService {
         }
         // 设置资源
         Map<String, Quantity> request = new HashMap<>();
-        request.put("cpu", ResourceConverter.convertCpuToMilliCores(resourceStrategy.getCpu()));
-        request.put("memory", ResourceConverter.convertMemory(resourceStrategy.getMemory()));
+        request.put("cpu", new Quantity(resourceStrategy.getCpu()));
+        request.put("memory", new Quantity(resourceStrategy.getMemory()));
         Map<String, Quantity> limit = new HashMap<>();
-        limit.put("cpu", ResourceConverter.convertCpuToMilliCores(resourceStrategy.getMaxCpu()));
-        limit.put("memory", ResourceConverter.convertMemory(resourceStrategy.getMaxMemory()));
+        limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
+        limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
         V1ResourceRequirements requirements = new V1ResourceRequirements()
                 .limits(request)
                 .requests(limit);
 
         List<V1Volume> dataVolumes = new ArrayList<>();
         List<V1VolumeMount> dataMounts = new ArrayList<>();
-        for (VolumeMount volumeMount : volumeMounts) {
-            // 创建 Volume 对象
-            V1Volume volume = new V1Volume()
-                    .name(volumeMount.getName())
-                    .hostPath(new V1HostPathVolumeSource().path(volumeMount.getPath()));
-            dataVolumes.add(volume);
+        if (volumeMounts != null && !volumeMounts.isEmpty()) {
+            for (VolumeMount volumeMount : volumeMounts) {
+                // 创建 Volume 对象
+                V1Volume volume = new V1Volume()
+                        .name(volumeMount.getName())
+                        .hostPath(new V1HostPathVolumeSource().path(volumeMount.getPath()));
+                dataVolumes.add(volume);
 
-            // 创建 VolumeMount 挂载对象
-            V1VolumeMount mount = new V1VolumeMount()
-                    .name(volumeMount.getName())
-                    .mountPath(volumeMount.getMountPath());
-            dataMounts.add(mount);
+                // 创建 VolumeMount 挂载对象
+                V1VolumeMount mount = new V1VolumeMount()
+                        .name(volumeMount.getName())
+                        .mountPath(volumeMount.getMountPath());
+                dataMounts.add(mount);
+            }
         }
+
 
         // 创建一个简单的 Deployment 对象
         return new V1Deployment()
@@ -439,6 +443,9 @@ public class K8sCloudService extends BaseCloudService {
                                 .metadata(new V1ObjectMeta().labels(Collections.singletonMap("app", appName.getName())))
                                 // 创建一个新的 Pod 规格对象 (V1PodSpec)，该对象包含了定义 Pod 的各种配置信息，如容器、卷挂载、标签选择器等。
                                 .spec(new V1PodSpec()
+                                        .imagePullSecrets(Lists.of(
+                                                new V1LocalObjectReference().name("image-pull-secret")
+                                        ))
                                         .containers(Collections.singletonList(
                                                 new V1Container()
                                                         .name(appName.getName())

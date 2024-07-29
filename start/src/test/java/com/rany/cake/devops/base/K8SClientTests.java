@@ -69,10 +69,6 @@ public class K8SClientTests extends BaseTests {
     }
 
 
-
-
-
-
     @Test
     public void testCreateDeployment() {
         BaseCloudService cloudService = cloudFactory.build(ClusterTypeEnum.K8S, "https://kubernetes.docker.internal:6443", "");
@@ -92,7 +88,13 @@ public class K8SClientTests extends BaseTests {
         context.setApp(app);
         context.setRelease(release);
         context.setCluster(cluster);
-        
+        context.setAppEnv(appEnv);
+        context.setDeploymentName(app.getAppName().getName());
+        context.setServiceName(app.getAppName().getName() + "-svc");
+        context.setServicePort(8080);
+        context.setContainerPort(7001);
+        context.setIngressName(app.getAppName().getName());
+        context.setDeploymentImage("registry.cn-hangzhou.aliyuncs.com/cake-devops-base/cake-devops-base:R202407172325120010");
         boolean deployment = cloudService.createDeployment(context);
         Assert.assertTrue(deployment);
     }

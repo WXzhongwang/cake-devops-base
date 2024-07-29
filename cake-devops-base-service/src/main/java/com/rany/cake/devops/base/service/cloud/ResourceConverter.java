@@ -2,7 +2,14 @@ package com.rany.cake.devops.base.service.cloud;
 
 import io.kubernetes.client.custom.Quantity;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ResourceConverter {
+
+    private static  final   Pattern pattern = Pattern.compile("(\\d+)([A-Za-z])");
 
     /**
      * 将CPU核数字符串转换为Quantity对象，单位为毫核。
@@ -12,7 +19,7 @@ public class ResourceConverter {
      */
     public static Quantity convertCpuToMilliCores(String cpuStr) {
         // 移除"C"单位
-        String cpuValueStr = cpuStr.replace("C", "");
+        String cpuValueStr = cpuStr.replace("C", "").replace("c", "");
 
         // 将字符串转换为浮点数
         double cpuValue = Double.parseDouble(cpuValueStr);
@@ -31,32 +38,52 @@ public class ResourceConverter {
      * @return 对应的Quantity对象。
      */
     public static Quantity convertMemory(String memoryStr) {
-        // 检查并转换单位
-        String[] parts = memoryStr.split("(\\d+)(\\D+)");
-        if (parts.length != 3) {
+
+        Matcher matcher = pattern.matcher(memoryStr);
+
+        if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid memory format: " + memoryStr);
         }
-        String numberPart = parts[1];
-        String unitPart = parts[2];
 
-        // 根据不同的单位进行转换
-        switch (unitPart.toUpperCase()) {
+
+        String numberPart = matcher.group(1);
+        String unitPart = matcher.group(2).toUpperCase();
+        BigDecimal number = new BigDecimal(numberPart);
+        BigDecimal result = number;
+
+        switch (unitPart) {
             case "B":
-                return new Quantity(numberPart);
+                break;
             case "KB":
-                return new Quantity(Long.parseLong(numberPart) * 1024 + "");
+                result = result.multiply(BigDecimal.valueOf(1000));
+                break;
+            case "M": // 添加对"M"的支持，等同于"MB"
             case "MB":
-                return new Quantity(Long.parseLong(numberPart) * 1024 * 1024 + "");
+                result = result.multiply(BigDecimal.valueOf(1000 * 1000));
+                break;
             case "GB":
-                return new Quantity(Long.parseLong(numberPart) * 1024 * 1024 * 1024 + "");
+                result = result.multiply(BigDecimal.valueOf(1000 * 1000 * 1000));
+                break;
             case "TB":
-                return new Quantity(Long.parseLong(numberPart) * 1024 * 1024 * 1024 * 1024 + "");
+                result = result.multiply(BigDecimal.valueOf(1000 * 1000 * 1000 * 1000));
+                break;
             case "PB":
-                return new Quantity(Long.parseLong(numberPart) * 1024L * 1024 * 1024 * 1024 * 1024 + "");
+                result = result.multiply(BigDecimal.valueOf(1000 * 1000 * 1000 * 1000 * 1000));
+                break;
             case "EB":
-                return new Quantity(Long.parseLong(numberPart) * 1024L * 1024 * 1024 * 1024 * 1024 * 1024 + "");
+                result = result.multiply(BigDecimal.valueOf(1000 * 1000 * 1000 * 1000 * 1000 * 1000));
+                break;
+            // ... 其他二进制前缀的处理保持不变 ...
+
             default:
                 throw new IllegalArgumentException("Unsupported memory unit: " + unitPart);
         }
+        // 将转换后的数值转换为BigInteger
+        BigInteger bigIntResult = result.toBigIntegerExact();
+        // 将BigInteger转换为字符串
+        String strResult = bigIntResult.toString();
+
+        // 创建Quantity对象时，传递数值字符串
+        return new Quantity(strResult);
     }
 }
