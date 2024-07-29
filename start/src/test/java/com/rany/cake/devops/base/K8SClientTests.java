@@ -94,7 +94,7 @@ public class K8SClientTests extends BaseTests {
         context.setServicePort(8080);
         context.setContainerPort(8300);
         context.setIngressName(app.getAppName().getName());
-        context.setDeploymentImage("registry.cn-hangzhou.aliyuncs.com/cake-devops-base/cake-devops-base:R202407292031050013");
+        context.setDeploymentImage("registry.cn-hangzhou.aliyuncs.com/cake-devops-base/cake-devops-base:R202407292146090014");
         boolean deployment = cloudService.createDeployment(context);
         Assert.assertTrue(deployment);
     }
