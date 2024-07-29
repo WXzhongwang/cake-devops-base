@@ -11,6 +11,7 @@ import com.rany.cake.devops.base.service.plugins.RunningConstant;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutionException;
@@ -37,7 +38,7 @@ public class CodePlugin extends BasePlugin {
         String webHook = context.getApp().getWebhook();
         String repo = context.getApp().getCodeRepository().getRepo();
         String branch = context.getRelease().getReleaseBranch();
-        String checkoutBranch = context.getCheckoutBranch();
+        String checkoutBranch = StringUtils.isNotEmpty(context.getCheckoutBranch()) ? context.getCheckoutBranch() : branch;
 
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("workspace directory: " + workspace);

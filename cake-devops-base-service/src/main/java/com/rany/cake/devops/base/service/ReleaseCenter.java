@@ -81,11 +81,11 @@ public class ReleaseCenter {
 
         DeployPipeline pipeline = new DefaultDeployPipeline(deployContext, progressUpdater);
         pipeline.addLast(approvalPlugin);
-        pipeline.addLast(deploymentForbiddenPlugin);
+        // pipeline.addLast(deploymentForbiddenPlugin);
         pipeline.addLast(machineSelectorPlugin);
         pipeline.addLast(workSpacePlugin);
 
-        pipeline.addLast(checkOutPlugin);
+        // pipeline.addLast(checkOutPlugin);
 
         pipeline.addLast(codePlugin);
         pipeline.addLast(mavenBuildPlugin);

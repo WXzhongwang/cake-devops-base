@@ -58,4 +58,9 @@ public class SonarQubePlugin extends BasePlugin {
         }
         return true;
     }
+
+    @Override
+    public boolean stopWhenFailure() {
+        return false;
+    }
 }

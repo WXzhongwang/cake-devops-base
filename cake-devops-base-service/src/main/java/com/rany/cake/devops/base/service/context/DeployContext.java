@@ -38,6 +38,9 @@ public class DeployContext implements Serializable {
      * 基于发布单拉起发布pipeline
      */
     private Release release;
+    /**
+     * 检出分支
+     */
     private String checkoutBranch;
     /**
      * 发布集群
