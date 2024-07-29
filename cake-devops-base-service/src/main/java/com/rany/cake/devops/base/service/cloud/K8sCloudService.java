@@ -70,7 +70,7 @@ public class K8sCloudService extends BaseCloudService {
             log.info("Deployment created successfully.");
             return true;
         } catch (ApiException e) {
-            log.error("Failed to create Deployment.", e);
+            log.error("Failed to create Deployment. {}", e.getResponseBody(), e);
             return false;
         }
     }
@@ -411,8 +411,8 @@ public class K8sCloudService extends BaseCloudService {
         limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
         limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
         V1ResourceRequirements requirements = new V1ResourceRequirements()
-                .limits(request)
-                .requests(limit);
+                .limits(limit)
+                .requests(request);
 
         List<V1Volume> dataVolumes = new ArrayList<>();
         List<V1VolumeMount> dataMounts = new ArrayList<>();
