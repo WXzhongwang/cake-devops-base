@@ -461,7 +461,7 @@ public class K8sCloudService extends BaseCloudService {
                                                                                 .path(healthCheck)
                                                                                 // 替换为你的健康检查路径
                                                                                 .port(new IntOrString(context.getContainerPort())))
-                                                                        .initialDelaySeconds(3)  // 初始延迟
+                                                                        .initialDelaySeconds(120)  // 初始延迟
                                                                         .periodSeconds(3)  // 探测周期
                                                                         .timeoutSeconds(1)  // 超时时间
                                                                         .successThreshold(1)  // 成功阈值
