@@ -7,4 +7,4 @@ VOLUME /tmp
 ADD /start/target/cake-devops-service.jar cake-devops-service.jar
 
 #docker运行命令
-ENTRYPOINT ["java","-Dspring.profiles.active=test","-jar","/cake-devops-service.jar"]
+ENTRYPOINT ["java","-Dspring.profiles.active=dev","-jar","/cake-devops-service.jar"]
