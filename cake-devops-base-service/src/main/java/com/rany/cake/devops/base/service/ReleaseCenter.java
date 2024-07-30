@@ -24,6 +24,8 @@ import com.rany.cake.devops.base.service.plugins.scm.CheckOutPlugin;
 import com.rany.cake.devops.base.service.plugins.scm.CodePlugin;
 import com.rany.cake.devops.base.service.plugins.scm.RebaseMasterPlugin;
 import com.rany.cake.devops.base.service.plugins.test.SonarQubePlugin;
+import com.rany.cake.devops.base.util.enums.AppEnvEnum;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -80,7 +82,7 @@ public class ReleaseCenter {
         deployContext.setCluster(cluster);
         deployContext.setNamespace(namespace);
         deployContext.setDeploymentName(app.getAppName().getName());
-        deployContext.setServiceName(app.getAppName().getName() + "-svc");
+        deployContext.setServiceName(app.getAppName().getName() + KubernetesConstants.DEFAULT_SERVICE_SUFFIX);
         deployContext.setServicePort(KubernetesConstants.DEFAULT_SERVICE_PORT);
         deployContext.setContainerPort(KubernetesConstants.DEFAULT_WEB_SERVICE_PORT);
         deployContext.setIngressName(app.getAppName().getName());
@@ -100,10 +102,13 @@ public class ReleaseCenter {
         pipeline.addLast(buildImagePlugin);
         pipeline.addLast(pushAcrPlugin);
         pipeline.addLast(kubernetesDeployPlugin);
-        pipeline.addLast(rebaseMasterPlugin);
+        if (StringUtils.equals(appEnv.getEnv().name(), AppEnvEnum.PROD.name())) {
+            // 仅线上环境存在rebase阶段
+            pipeline.addLast(rebaseMasterPlugin);
+        }
         // pipeline.addLast(pushHarborPlugin);
-        // threadPoolTaskExecutor.execute(pipeline::start);
-        pipeline.start();
+        threadPoolTaskExecutor.execute(pipeline::start);
+        // pipeline.start();
         return Boolean.TRUE;
     }
 }
