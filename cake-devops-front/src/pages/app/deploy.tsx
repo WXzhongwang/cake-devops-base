@@ -22,6 +22,7 @@ import {
   Typography,
   Modal,
   Descriptions,
+  Collapse,
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
 import { AppEnv, AppInfo } from "@/models/app";
@@ -32,6 +33,7 @@ import { TableRowSelection } from "antd/lib/table/interface";
 import DeployLogDrawer from "./components/deploy-log-drawer";
 
 const { Paragraph } = Typography;
+const { Panel } = Collapse;
 
 // 在组件中定义 getReleaseStatusText 函数
 const getReleaseStatusText = (status: string) => {
@@ -307,6 +309,8 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     setSelectedRow(null);
   };
 
+  const handleAddConfig = () => {};
+
   const handleCreateReleaseDrawer = () => {
     setDrawerVisible(!drawerVisible);
   };
@@ -371,7 +375,9 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     >
       <Space size="middle" direction="vertical" style={{ width: "100%" }}>
         <Card
-          title={"发布流水线[" + appDetail?.appName + "]"}
+          title={
+            "发布流水线[" + appEnv?.envName + "(" + appEnv?.env + ")" + "]"
+          }
           extra={
             <div>
               {parsedProgress?.pipeKey && (
@@ -421,28 +427,51 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             </Steps>
           )}
         </Card>
-        <Card>
-          {appEnv?.configMap.length > 0 && (
-            <Table
-              title={() => "ConfigMap 配置信息"}
-              columns={[
-                {
-                  title: "Key 键",
-                  dataIndex: "key",
-                  key: "key",
-                },
-                {
-                  title: "Value 值",
-                  dataIndex: "value",
-                  key: "value",
-                },
-              ]}
-              dataSource={appEnv?.configMap}
-              rowKey="key"
-              pagination={false}
-            />
-          )}
-        </Card>
+
+        <Collapse defaultActiveKey={[]}>
+          <Panel
+            header={"配置项[" + appEnv?.envName + "(" + appEnv?.env + ")" + "]"}
+            key="1"
+            extra={
+              <Button
+                key="release"
+                onClick={handleAddConfig}
+                // disabled={deployDisabled || !selectedRow}
+              >
+                新增配置项
+              </Button>
+            }
+          >
+            {appEnv?.configMap && Object.keys(appEnv.configMap).length > 0 ? (
+              <Table
+                title={() => "ConfigMap 配置信息"}
+                columns={[
+                  {
+                    title: "Key 键",
+                    dataIndex: "key",
+                    key: "key",
+                  },
+                  {
+                    title: "Value 值",
+                    dataIndex: "value",
+                    key: "value",
+                  },
+                ]}
+                dataSource={Object.entries(appEnv.configMap).map(
+                  ([key, value]) => ({
+                    key,
+                    value,
+                  })
+                )}
+                rowKey="key"
+                pagination={false}
+              />
+            ) : (
+              <p>暂无配置项</p>
+            )}
+          </Panel>
+        </Collapse>
+
         <Card
           title="发布单"
           extra={

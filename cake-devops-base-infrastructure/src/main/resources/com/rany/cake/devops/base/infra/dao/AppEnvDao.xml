@@ -87,7 +87,6 @@
 
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
-
         update app_env
         <set>
             <if test="clusterId != null">
@@ -102,13 +101,13 @@
             </if>
             <if test="configMap != null">
                 config_map =
-                #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler}
+                #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
             </if>
             <if test="envName != null">
                 env_name = #{envName,jdbcType=VARCHAR},
             </if>
             <if test="env != null">
-                env = #{env,jdbcType=VARCHAR},
+                env = #{env},
             </if>
             <if test="resourceStrategy.replicas != null">
                 replicas = #{resourceStrategy.replicas},
