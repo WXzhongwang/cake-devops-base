@@ -182,7 +182,12 @@ public class AppRemoteService implements AppService {
         }
         List<AppEnv> appEnvList = app.getAppEnvList();
         List<String> appEnvNames = appEnvList.stream().map(AppEnv::getEnvName).collect(Collectors.toList());
+        List<String> envNames = appEnvList.stream().map(AppEnv::getEnv).map(AppEnvEnum::name).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(appEnvNames) && appEnvNames.contains(env.getEnvName())) {
+            throw new DevOpsException(DevOpsErrorMessage.ENV_DUPLICATED);
+        }
+        // 同一环境只能有一个
+        if (CollectionUtils.isNotEmpty(envNames) && envNames.contains(env.getEnv())) {
             throw new DevOpsException(DevOpsErrorMessage.ENV_DUPLICATED);
         }
         AppEnvEnum appEnvEnum = EnumUtils.getEnum(AppEnvEnum.class, env.getEnv());

@@ -5,6 +5,7 @@ import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
+import com.rany.cake.devops.base.api.command.app.ModifyAppEnvConfigMapCommand;
 import com.rany.cake.devops.base.api.command.member.AddAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
@@ -52,6 +53,12 @@ public class AppController {
     public PojoResult<String> createAppEnv(@RequestBody CreateAppEnvCommand createAppEnvCommand) {
         return PojoResult.succeed(appService.createAppEnv(createAppEnvCommand));
     }
+
+    @PostMapping("/modify-config-map")
+    public PojoResult<Boolean> modifyAppEnvConfigMap(@RequestBody ModifyAppEnvConfigMapCommand modifyAppEnvConfigMapCommand) {
+        return PojoResult.succeed(appService.modifyAppEnvConfigMap(modifyAppEnvConfigMapCommand));
+    }
+
 
     @PostMapping("/get-app-env")
     public PojoResult<AppEnvDTO> getAppEnv(@RequestBody AppEnvBasicQuery appEnvBasicQuery) {
