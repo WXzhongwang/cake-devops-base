@@ -16,6 +16,7 @@ import com.rany.cake.devops.base.service.ReleaseCenter;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.CloudFactory;
 import com.rany.cake.devops.base.service.cloud.K8sCloudService;
+import com.rany.cake.devops.base.service.cloud.KubernetesConstants;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.util.enums.ClusterTypeEnum;
@@ -25,6 +26,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -97,6 +99,85 @@ public class K8SClientTests extends BaseTests {
         context.setDeploymentImage("registry.cn-hangzhou.aliyuncs.com/cake-devops-base/cake-devops-base:R202407292146090014");
         boolean deployment = cloudService.createDeployment(context);
         Assert.assertTrue(deployment);
+    }
+
+
+    @Test
+    public void testService() {
+        BaseCloudService cloudService = cloudFactory.build(ClusterTypeEnum.K8S, "https://kubernetes.docker.internal:6443", "");
+        boolean connected = cloudService.testConnection(new DeployContext(null));
+        Assert.assertTrue(connected);
+
+
+        Release release = releaseRepository.find(new ReleaseId("906359016366682112"));
+        App app = appRepository.find(release.getAppId());
+        AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
+        Cluster cluster = clusterRepository.find(appEnv.getClusterId());
+        Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
+
+
+        DeployContext context = new DeployContext(new String("12345"));
+        context.setNamespace(namespace);
+        context.setApp(app);
+        context.setRelease(release);
+        context.setCluster(cluster);
+        context.setAppEnv(appEnv);
+
+        context.setDeploymentName(app.getAppName().getName());
+        context.setServiceName(app.getAppName().getName() + "-svc");
+        context.setServicePort(KubernetesConstants.DEFAULT_SERVICE_PORT);
+        context.setContainerPort(KubernetesConstants.DEFAULT_WEB_SERVICE_PORT);
+        context.setIngressName(app.getAppName().getName());
+
+        context.setDeploymentImage("registry.cn-hangzhou.aliyuncs.com/cake-devops-base/cake-devops-base:R202407292146090014");
+        boolean deployment = cloudService.createService(context);
+        Assert.assertTrue(deployment);
+    }
+
+
+    @Test
+    public void testCreateConfigMap() {
+        BaseCloudService cloudService = cloudFactory.build(ClusterTypeEnum.K8S, "https://kubernetes.docker.internal:6443", "");
+        boolean connected = cloudService.testConnection(new DeployContext(null));
+        Assert.assertTrue(connected);
+
+
+        Release release = releaseRepository.find(new ReleaseId("906359016366682112"));
+        App app = appRepository.find(release.getAppId());
+        AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
+        Cluster cluster = clusterRepository.find(appEnv.getClusterId());
+        Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
+
+
+        DeployContext context = new DeployContext(new String("12345"));
+        context.setNamespace(namespace);
+        context.setApp(app);
+        context.setRelease(release);
+        context.setCluster(cluster);
+        context.setAppEnv(appEnv);
+
+        context.setDeploymentName(app.getAppName().getName());
+        context.setServiceName(app.getAppName().getName() + "-svc");
+        context.setServicePort(KubernetesConstants.DEFAULT_SERVICE_PORT);
+        context.setContainerPort(KubernetesConstants.DEFAULT_WEB_SERVICE_PORT);
+        context.setIngressName(app.getAppName().getName());
+
+
+        HashMap<String, String> configMap = new HashMap<>();
+        configMap.put("a", "123");
+        configMap.put("b", "234");
+        configMap.put("c", "345");
+        configMap.put("d", "456");
+        context.setConfigMap(configMap);
+        boolean configMapCreated = cloudService.createConfigMap(context);
+        Assert.assertTrue(configMapCreated);
+
+        configMap.put("a", "234");
+        configMap.put("b", "345");
+        configMap.put("c", "567");
+        configMap.put("d", "789");
+        boolean configMapUpdated = cloudService.updateConfigMap(context);
+        Assert.assertTrue(configMapUpdated);
     }
 }
 

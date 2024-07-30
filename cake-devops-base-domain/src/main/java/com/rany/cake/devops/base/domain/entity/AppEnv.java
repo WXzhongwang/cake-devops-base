@@ -35,8 +35,16 @@ public class AppEnv extends BaseEntity<String> {
     private String envName;
     private AppEnvEnum env;
     private List<String> domains;
+    /**
+     * maven自定义编译脚本
+     * maven clean package -Ptest -U -DskipTests
+     */
+    private String customBuildScript;
 
     private Map<String, String> configMap;
+    private String deploymentName;
+    private String serviceName;
+    private String ingressName;
     /**
      * 环境资源策略
      */

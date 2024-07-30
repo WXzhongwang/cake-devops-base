@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * maven 构建
  *
  * @author zhongshengwang
- * @description TODO
+ * @description maven 构建
  * @date 2023/1/20 19:41
  * @email 18668485565163.com
  */
@@ -32,6 +32,12 @@ public class MavenBuildPlugin extends BasePlugin {
     public boolean execute(DeployContext context) {
         String webHook = context.getApp().getWebhook();
         String repo = context.getApp().getCodeRepository().getRepo();
+        /**
+         * maven自定义编译脚本
+         * update app_env set custom_build_script = 'mvn clean package -Ptest -U -DskipTests'
+         * maven clean package -Ptest -U -DskipTests
+         * */
+        String customBuildScript = context.getAppEnv().getCustomBuildScript();
 
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("workspace directory: " + workspace);
@@ -43,7 +49,7 @@ public class MavenBuildPlugin extends BasePlugin {
 //            local repo_url=$1
 //            local webhook_url=$2
             //String executeCommand = String.join(" ", "sh", "maven_build.sh", repo, webHook);
-            String executeCommand = String.format(" sh maven_build.sh '%s' '%s'", repo, webHook);
+            String executeCommand = String.format(" sh maven_build.sh '%s' '%s' '%s'", repo, webHook, customBuildScript);
             if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
                 log.error("maven编译打包失败");
                 return false;

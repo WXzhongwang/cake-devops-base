@@ -5,6 +5,7 @@ import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
 import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.service.cloud.KubernetesConstants;
 import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.context.DefaultDeployPipeline;
 import com.rany.cake.devops.base.service.context.DeployContext;
@@ -78,6 +79,12 @@ public class ReleaseCenter {
         deployContext.setAppEnv(appEnv);
         deployContext.setCluster(cluster);
         deployContext.setNamespace(namespace);
+        deployContext.setDeploymentName(app.getAppName().getName());
+        deployContext.setServiceName(app.getAppName().getName() + "-svc");
+        deployContext.setServicePort(KubernetesConstants.DEFAULT_SERVICE_PORT);
+        deployContext.setContainerPort(KubernetesConstants.DEFAULT_WEB_SERVICE_PORT);
+        deployContext.setIngressName(app.getAppName().getName());
+
 
         DeployPipeline pipeline = new DefaultDeployPipeline(deployContext, progressUpdater);
         pipeline.addLast(approvalPlugin);

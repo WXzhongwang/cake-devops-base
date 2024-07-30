@@ -24,13 +24,22 @@
         <result column="env_id" jdbcType="VARCHAR" property="envId"/>
         <result column="deploy_status" jdbcType="VARCHAR" property="deployStatus"/>
         <result column="progress" jdbcType="VARCHAR" property="progress"/>
+        <result column="custom_build_script" jdbcType="VARCHAR" property="customBuildScript"/>
+        <result column="deployment_name" jdbcType="VARCHAR" property="deploymentName"/>
+        <result column="service_name" jdbcType="VARCHAR" property="serviceName"/>
+        <result column="ingress_name" jdbcType="VARCHAR" property="ingressName"/>
+        <result column="config_map" property="configMap" jdbcType="VARCHAR"
+                typeHandler="com.rany.cake.devops.base.infra.handler.MapPairTypeHandler"/>
+        <!--        <result column="domains" property="domains" jdbcType="VARCHAR"-->
+        <!--                typeHandler="com.cake.framework.mybatis.handler.ListStringTypeHandler"/>-->
     </resultMap>
 
     <sql id="Base_Column_List">
         id
         , env_id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
-    auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
-    modifier, deploy_status, progress
+        auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
+        modifier, deploy_status, progress, custom_build_script, deployment_name, service_name, ingress_name,
+        config_map
     </sql>
     <select id="selectByAppId" resultMap="BaseResultMap">
 
@@ -50,24 +59,29 @@
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
         insert into app_env (env_id,
-                             cluster_id, app_id,
-                             domains, env_name, env,
-                             replicas, cpu, memory,
-                             max_cpu, max_memory,
-                             auto_scaling, need_approval, status,
-                             is_deleted, gmt_create, gmt_modified,
-                             creator, modifier, deploy_status, progress)
+        cluster_id, app_id,
+        domains, env_name, env,
+        replicas, cpu, memory,
+        max_cpu, max_memory,
+        auto_scaling, need_approval, status,
+        is_deleted, gmt_create, gmt_modified,
+        creator, modifier, deploy_status, progress,
+        custom_build_script, deployment_name, service_name, ingress_name,config_map
+        )
         values (#{envId},
-                #{clusterId.clusterId},
-                #{appId.appId},
-                #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
-                #{envName,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR},
-                #{resourceStrategy.replicas,jdbcType=INTEGER}, #{resourceStrategy.cpu}, #{resourceStrategy.memory},
-                #{resourceStrategy.maxCpu}, #{resourceStrategy.maxMemory},
-                #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
-                #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
-                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
-                #{deployStatus}, #{progress})
+        #{clusterId.clusterId},
+        #{appId.appId},
+        #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
+        #{envName,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR},
+        #{resourceStrategy.replicas,jdbcType=INTEGER}, #{resourceStrategy.cpu}, #{resourceStrategy.memory},
+        #{resourceStrategy.maxCpu}, #{resourceStrategy.maxMemory},
+        #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
+        #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+        #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+        #{deployStatus}, #{progress},
+        #{customBuildScript}, #{deploymentName}, #{serviceName}, #{ingressName},
+        #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler}
+        )
     </insert>
 
 
@@ -84,6 +98,10 @@
             <if test="domains != null">
                 domains =
                 #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
+            </if>
+            <if test="configMap != null">
+                config_map =
+                #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler}
             </if>
             <if test="envName != null">
                 env_name = #{envName,jdbcType=VARCHAR},
@@ -135,6 +153,18 @@
             </if>
             <if test="progress != null">
                 progress = #{progress},
+            </if>
+            <if test="customBuildScript != null">
+                custom_build_script = #{customBuildScript},
+            </if>
+            <if test="deploymentName != null">
+                deployment_name = #{deploymentName},
+            </if>
+            <if test="serviceName != null">
+                service_name = #{serviceName},
+            </if>
+            <if test="ingressName != null">
+                ingress_name = #{ingressName},
             </if>
         </set>
         where env_id = #{envId}

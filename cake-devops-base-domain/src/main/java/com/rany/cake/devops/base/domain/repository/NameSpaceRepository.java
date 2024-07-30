@@ -19,5 +19,7 @@ public interface NameSpaceRepository extends Repository<Namespace, NamespaceId> 
 
     int update(Namespace namespace);
 
+    Namespace findByCluster(String clusterId, String namespace);
+
     List<Namespace> listNamespace(ClusterId clusterId);
 }

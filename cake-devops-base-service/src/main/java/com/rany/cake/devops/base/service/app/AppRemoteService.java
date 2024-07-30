@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
+import com.rany.cake.devops.base.api.command.app.ModifyAppEnvConfigMapCommand;
 import com.rany.cake.devops.base.api.dto.*;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
@@ -36,6 +37,9 @@ import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.AppDataAdapter;
+import com.rany.cake.devops.base.service.cloud.BaseCloudService;
+import com.rany.cake.devops.base.service.cloud.CloudFactory;
+import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.util.enums.AppEnvEnum;
 import com.rany.cake.devops.base.util.enums.AppRoleEnum;
 import com.rany.cake.devops.base.util.enums.CodeLanguageEnum;
@@ -52,6 +56,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,6 +82,8 @@ public class AppRemoteService implements AppService {
     private final AppDataAdapter appDataAdapter;
     private final DepartmentConfig departmentConfig;
     private final ApplicationContext applicationContext;
+    @Resource
+    private CloudFactory cloudFactory;
 
     @Override
     public String createApp(CreateAppCommand createAppCommand) {
@@ -188,10 +195,33 @@ public class AppRemoteService implements AppService {
                 resourceStrategyDTO.getMemory(),
                 resourceStrategyDTO.getMaxCpu(),
                 resourceStrategyDTO.getMaxMemory()));
+
         appEnv.sava(createAppEnvCommand.getUser());
         appDomainService.createEnv(appEnv);
         applicationContext.publishEvent(new AppEnvCreateEvent(appEnv.getAppId(), appEnv.getEnvId()));
         return appEnv.getId();
+    }
+
+    @Override
+    public Boolean modifyAppEnvConfigMap(ModifyAppEnvConfigMapCommand modifyAppEnvConfigMapCommand) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(modifyAppEnvConfigMapCommand.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        context.setApp(app);
+        context.setCluster(cluster);
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+        appEnv.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
+        context.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
+        Boolean updated = cloudService.createOrUpdateConfigMap(context);
+        if (updated) {
+            appDomainService.updateAppEnv(appEnv);
+        }
+        return updated;
     }
 
     @Override

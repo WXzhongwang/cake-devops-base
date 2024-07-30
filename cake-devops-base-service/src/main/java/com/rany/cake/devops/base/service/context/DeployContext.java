@@ -80,6 +80,12 @@ public class DeployContext implements Serializable {
      * 实际部署物镜像地址
      */
     private String deploymentImage;
+
+    /**
+     * 预计要更新的configMap键值对
+     */
+    private Map<String, String> configMap;
+
     /**
      * 当前插件名
      */

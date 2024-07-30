@@ -23,6 +23,7 @@ import com.rany.cake.devops.base.domain.repository.*;
 import com.rany.cake.devops.base.domain.repository.param.ReleasePageQueryParam;
 import com.rany.cake.devops.base.domain.service.ApprovalDomainService;
 import com.rany.cake.devops.base.domain.service.ReleaseDomainService;
+import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.ReleaseCenter;
 import com.rany.cake.devops.base.service.adapter.ApprovalDataAdapter;
@@ -120,7 +121,8 @@ public class ReleaseRemoteService implements ReleaseService {
         App app = appRepository.find(release.getAppId());
         AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
         Cluster cluster = clusterRepository.find(appEnv.getClusterId());
-        Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
 
         if (Objects.nonNull(release.getApprovalId())) {
             Approval approval = approvalRepository.find(release.getApprovalId());

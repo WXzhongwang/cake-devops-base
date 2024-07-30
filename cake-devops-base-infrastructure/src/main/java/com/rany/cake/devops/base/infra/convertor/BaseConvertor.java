@@ -1,5 +1,7 @@
 package com.rany.cake.devops.base.infra.convertor;
 
+import com.alibaba.fastjson.JSON;
+import com.rany.cake.toolkit.lang.utils.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.InheritInverseConfiguration;
@@ -8,6 +10,7 @@ import org.mapstruct.MapperConfig;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,5 +89,19 @@ public interface BaseConvertor<SOURCE, TARGET> {
             return Arrays.stream(split).collect(Collectors.toList());
         }
         return Collections.emptyList();
+    }
+
+    default String convertMapToString(Map<String, String> items) {
+        if (items != null && !items.isEmpty()) {
+            return JSON.toJSONString(items);
+        }
+        return null;
+    }
+
+    default Map<String, String> convertStringToMap(String mapValue) {
+        if (StringUtils.isNotBlank(mapValue)) {
+            return JSON.parseObject(mapValue, Map.class);
+        }
+        return Maps.newMap();
     }
 }

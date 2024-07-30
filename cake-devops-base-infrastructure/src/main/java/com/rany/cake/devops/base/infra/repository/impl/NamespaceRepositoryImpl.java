@@ -55,7 +55,14 @@ public class NamespaceRepositoryImpl implements NameSpaceRepository {
     }
 
     @Override
+    public Namespace findByCluster(String clusterId, String namespace) {
+        NamespacePO namespacePO = namespaceDao.findByCluster(clusterId, namespace);
+        return namespaceDataConvertor.targetToSource(namespacePO);
+    }
+
+    @Override
     public List<Namespace> listNamespace(ClusterId clusterId) {
-        return namespaceDao.listNamespace(clusterId.getClusterId());
+        List<NamespacePO> namespacePOS = namespaceDao.listNamespace(clusterId.getClusterId());
+        return namespaceDataConvertor.targetToSource(namespacePOS);
     }
 }

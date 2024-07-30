@@ -13,6 +13,7 @@ import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.apis.NetworkingV1Api;
 import io.kubernetes.client.openapi.models.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -71,6 +72,33 @@ public class K8sCloudService extends BaseCloudService {
             return true;
         } catch (ApiException e) {
             log.error("Failed to create Deployment. {}", e.getResponseBody(), e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean createOrUpdateDeployment(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        String deploymentName = context.getDeploymentName();
+        // 假设这里有获取Deployment名称的方法
+        // 创建 Deployment
+        V1Deployment deployment = createBasicDeployment(context);
+        try {
+            AppsV1Api apiInstance = new AppsV1Api(apiClient);
+            // 环境内已经设置过deploymentName
+            boolean existingDeployment = StringUtils.isNoneBlank(context.getAppEnv().getDeploymentName());
+            if (existingDeployment) {
+                // 如果存在，则更新
+                apiInstance.replaceNamespacedDeployment(deploymentName, namespace, deployment, null, null, null, null);
+                log.info("Deployment {} updated successfully.", deploymentName);
+            } else {
+                // 如果不存在，则创建
+                apiInstance.createNamespacedDeployment(namespace, deployment, null, null, null, null);
+                log.info("Deployment {} created successfully.", deploymentName);
+            }
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to create or update Deployment {}. {}", deploymentName, e.getResponseBody(), e);
             return false;
         }
     }
@@ -178,6 +206,45 @@ public class K8sCloudService extends BaseCloudService {
         }
     }
 
+
+    @Override
+    public boolean createOrUpdateService(DeployContext context) {
+        AppName appName = context.getApp().getAppName();
+        String namespace = context.getNamespace().getName().getName();
+        String serviceName = context.getServiceName();
+
+        try {
+            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+            // 构建 Service 对象
+            V1Service service = new V1Service()
+                    .metadata(new V1ObjectMeta().name(serviceName))
+                    .spec(new V1ServiceSpec()
+                            .selector(Collections.singletonMap("app", appName.getName()))
+                            .ports(Collections.singletonList(
+                                    new V1ServicePort().port(context.getServicePort())
+                                            .targetPort(new IntOrString(context.getContainerPort()))
+                            ))
+                            .type("ClusterIP"));
+
+            // 尝试获取现有的 Service
+            // 环境内已经设置过serviceName
+            boolean existingService = StringUtils.isNoneBlank(context.getAppEnv().getServiceName());
+            if (existingService) {
+                // 如果存在，则更新 Service
+                coreV1Api.replaceNamespacedService(serviceName, namespace, service, null, null, null, null);
+                log.info("Service {} updated successfully.", serviceName);
+            } else {
+                // 如果不存在，则创建 Service
+                coreV1Api.createNamespacedService(namespace, service, null, null, null, null);
+                log.info("Service {} created successfully.", serviceName);
+            }
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to create or update Service {}.", serviceName, e);
+            return false;
+        }
+    }
+
     @Override
     public boolean updateService(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
@@ -223,9 +290,9 @@ public class K8sCloudService extends BaseCloudService {
     public boolean createConfigMap(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
         AppName appName = context.getApp().getAppName();
-        String envName = context.getAppEnv().getEnvName();
-        String configMapName = String.format("%s-%s", appName, envName);
-        Map<String, String> configMapPair = context.getAppEnv().getConfigMap();
+        String envName = context.getAppEnv().getEnv().name().toLowerCase();
+        String configMapName = String.format("%s-%s", appName.getName(), envName);
+        Map<String, String> configMapPair = context.getConfigMap();
         try {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             // 创建 ConfigMap 对象
@@ -233,7 +300,8 @@ public class K8sCloudService extends BaseCloudService {
                     .apiVersion("v1")
                     .kind("ConfigMap")
                     .metadata(new V1ObjectMeta().name(configMapName))
-                    .data(configMapPair);   // 添加需要的键值对
+                    .data(configMapPair);
+            // 添加需要的键值对
             // 创建 ConfigMap
             coreV1Api.createNamespacedConfigMap(namespace, configMap,
                     null, null, null, null);
@@ -245,13 +313,54 @@ public class K8sCloudService extends BaseCloudService {
         }
     }
 
+
+    @Override
+    public boolean createOrUpdateConfigMap(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        AppName appName = context.getApp().getAppName();
+        String envName = context.getAppEnv().getEnv().name().toLowerCase();
+        String configMapName = String.format("%s-%s", appName.getName(), envName);
+        Map<String, String> configMapData = context.getAppEnv().getConfigMap();
+        Map<String, String> updateConfigMapData = context.getConfigMap();
+
+        try {
+            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+            V1ConfigMap configMap = new V1ConfigMap()
+                    .apiVersion("v1")
+                    .kind("ConfigMap")
+                    .metadata(new V1ObjectMeta().name(configMapName))
+                    .data(updateConfigMapData);
+
+            // 尝试获取现有的 ConfigMap
+            if (configMapData != null) {
+                // 如果存在，则更新 ConfigMap
+                // 检查数据是否已经相同，避免不必要的更新
+                if (!configMapData.equals(updateConfigMapData)) {
+                    coreV1Api.replaceNamespacedConfigMap(configMapName, namespace, configMap, null, null, null, null);
+                    log.info("ConfigMap {} updated successfully.", configMapName);
+                } else {
+                    log.info("ConfigMap {} already up-to-date.", configMapName);
+                }
+            } else {
+                // 如果不存在，则创建 ConfigMap
+                coreV1Api.createNamespacedConfigMap(namespace, configMap, null, null, null, null);
+                log.info("ConfigMap {} created successfully.", configMapName);
+            }
+            return true;
+        } catch (ApiException e) {
+            // 处理其他类型的错误
+            log.error("Error while creating or updating ConfigMap {}: {}", configMapName, e.getResponseBody(), e);
+            return false;
+        }
+    }
+
     @Override
     public boolean updateConfigMap(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
         AppName appName = context.getApp().getAppName();
-        String envName = context.getAppEnv().getEnvName();
-        String configMapName = String.format("%s-%s", appName, envName);
-        Map<String, String> configMapPair = context.getAppEnv().getConfigMap();
+        String envName = context.getAppEnv().getEnv().name().toLowerCase();
+        String configMapName = String.format("%s-%s", appName.getName(), envName);
+        Map<String, String> configMapPair = context.getConfigMap();
         try {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             // 获取要更新的 ConfigMap
@@ -310,6 +419,57 @@ public class K8sCloudService extends BaseCloudService {
             return false;
         }
     }
+
+    @Override
+    public boolean createOrUpdateIngress(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        List<String> domains = context.getAppEnv().getDomains();
+        List<V1IngressRule> rules = new ArrayList<>();
+        for (String domain : domains) {
+            V1IngressRule rule = new V1IngressRule()
+                    .host(domain)
+                    .http(new V1HTTPIngressRuleValue()
+                            .addPathsItem(
+                                    new V1HTTPIngressPath()
+                                            .backend(
+                                                    new V1IngressBackend()
+                                                            .service(
+                                                                    new V1IngressServiceBackend()
+                                                                            .name(context.getServiceName())
+                                                                            .port(new V1ServiceBackendPort()
+                                                                                    .number(context.getServicePort())))
+                                            ).path("/")
+                            )
+                    );
+            rules.add(rule);
+        }
+
+        try {
+            NetworkingV1Api networkingV1Api = new NetworkingV1Api(apiClient);
+            V1Ingress ingress = new V1Ingress()
+                    .apiVersion("networking.k8s.io/v1")
+                    .kind("Ingress")
+                    .metadata(new V1ObjectMeta().name(context.getIngressName()))
+                    .spec(new V1IngressSpec().rules(rules));
+
+            // 检查现有的 Ingress 是否存在
+            boolean existingIngress = StringUtils.isNoneBlank(context.getAppEnv().getServiceName());
+            if (existingIngress) {
+                // 如果存在，则更新
+                networkingV1Api.replaceNamespacedIngress(context.getIngressName(), namespace, ingress, null, null, null, null);
+                log.info("Ingress {} updated successfully.", context.getIngressName());
+            } else {
+                // 如果不存在，则创建
+                networkingV1Api.createNamespacedIngress(namespace, ingress, null, null, null, null);
+                log.info("Ingress {} created successfully.", context.getIngressName());
+            }
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to create or update Ingress: {}", context.getIngressName(), e);
+            return false;
+        }
+    }
+
 
     @Override
     public boolean deleteIngress(DeployContext context) {
@@ -388,14 +548,16 @@ public class K8sCloudService extends BaseCloudService {
         Map<String, String> configMap = context.getAppEnv().getConfigMap();
         List<VolumeMount> volumeMounts = context.getApp().getVolumeMounts();
         String envName = context.getAppEnv().getEnvName();
+        String envId = context.getAppEnv().getEnvId();
         ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
-        String configMapName = String.format("%s-%s", appName.getName(), envName);
+        String configMapName = String.format("%s-%s", appName.getName(), envId);
         // 配置configMap
         List<V1EnvVar> configMapValues = new ArrayList<>();
         if (configMap != null && !configMap.isEmpty()) {
             for (Map.Entry<String, String> entry : configMap.entrySet()) {
                 V1EnvVar envVar = new V1EnvVar()
-                        .name(entry.getKey()) // 环境变量名称
+                        .name(entry.getKey())
+                        // 环境变量名称
                         .valueFrom(new V1EnvVarSource()
                                 .configMapKeyRef(new V1ConfigMapKeySelector()
                                         .name(configMapName)
@@ -461,11 +623,16 @@ public class K8sCloudService extends BaseCloudService {
                                                                                 .path(healthCheck)
                                                                                 // 替换为你的健康检查路径
                                                                                 .port(new IntOrString(context.getContainerPort())))
-                                                                        .initialDelaySeconds(120)  // 初始延迟
-                                                                        .periodSeconds(3)  // 探测周期
-                                                                        .timeoutSeconds(1)  // 超时时间
-                                                                        .successThreshold(1)  // 成功阈值
-                                                                        .failureThreshold(3)  // 失败阈值
+                                                                        .initialDelaySeconds(120)
+                                                                        // 初始延迟
+                                                                        .periodSeconds(3)
+                                                                        // 探测周期
+                                                                        .timeoutSeconds(1)
+                                                                        // 超时时间
+                                                                        .successThreshold(1)
+                                                                        // 成功阈值
+                                                                        .failureThreshold(3)
+                                                                // 失败阈值
                                                         )
                                                         .volumeMounts(dataMounts)
                                         )).volumes(dataVolumes)

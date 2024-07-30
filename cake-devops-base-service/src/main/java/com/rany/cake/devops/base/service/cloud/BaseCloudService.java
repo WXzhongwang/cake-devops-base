@@ -92,6 +92,14 @@ public abstract class BaseCloudService {
     public abstract boolean createDeployment(DeployContext context);
 
     /**
+     * createOrUpdateDeployment
+     *
+     * @param context 上下文信息
+     * @return 是否成功
+     */
+    public abstract boolean createOrUpdateDeployment(DeployContext context);
+
+    /**
      * 扩缩容
      *
      * @param context 上下文信息
@@ -116,6 +124,13 @@ public abstract class BaseCloudService {
      */
     public abstract boolean createService(DeployContext context);
 
+    /**
+     * createOrUpdateService
+     *
+     * @param context 上下文信息
+     * @return 是否成功
+     */
+    public abstract boolean createOrUpdateService(DeployContext context);
 
     /**
      * updateService
@@ -142,6 +157,14 @@ public abstract class BaseCloudService {
     public abstract boolean createConfigMap(DeployContext context);
 
     /**
+     * 创建或更新configMap
+     *
+     * @param context 上下文信息
+     * @return 是否成功
+     */
+    public abstract boolean createOrUpdateConfigMap(DeployContext context);
+
+    /**
      * 更新configMap
      *
      * @param context 上下文信息
@@ -150,6 +173,8 @@ public abstract class BaseCloudService {
     public abstract boolean updateConfigMap(DeployContext context);
 
     public abstract boolean createIngress(DeployContext context);
+
+    public abstract boolean createOrUpdateIngress(DeployContext context);
 
     public abstract boolean deleteIngress(DeployContext context);
 

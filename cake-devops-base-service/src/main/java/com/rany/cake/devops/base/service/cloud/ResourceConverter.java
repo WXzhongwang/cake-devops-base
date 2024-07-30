@@ -7,9 +7,12 @@ import java.math.BigInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ResourceConverter {
+/**
+ * @author zhongshengwang
+ */
+public final class ResourceConverter {
 
-    private static  final   Pattern pattern = Pattern.compile("(\\d+)([A-Za-z])");
+    private static  final Pattern PATTERN = Pattern.compile("(\\d+)([A-Za-z])");
 
     /**
      * 将CPU核数字符串转换为Quantity对象，单位为毫核。
@@ -39,7 +42,7 @@ public class ResourceConverter {
      */
     public static Quantity convertMemory(String memoryStr) {
 
-        Matcher matcher = pattern.matcher(memoryStr);
+        Matcher matcher = PATTERN.matcher(memoryStr);
 
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid memory format: " + memoryStr);
@@ -57,7 +60,7 @@ public class ResourceConverter {
             case "KB":
                 result = result.multiply(BigDecimal.valueOf(1000));
                 break;
-            case "M": // 添加对"M"的支持，等同于"MB"
+            case "M":
             case "MB":
                 result = result.multiply(BigDecimal.valueOf(1000 * 1000));
                 break;
@@ -65,13 +68,13 @@ public class ResourceConverter {
                 result = result.multiply(BigDecimal.valueOf(1000 * 1000 * 1000));
                 break;
             case "TB":
-                result = result.multiply(BigDecimal.valueOf(1000 * 1000 * 1000 * 1000));
+                result = result.multiply(BigDecimal.valueOf(1000L * 1000 * 1000 * 1000));
                 break;
             case "PB":
-                result = result.multiply(BigDecimal.valueOf(1000 * 1000 * 1000 * 1000 * 1000));
+                result = result.multiply(BigDecimal.valueOf(1000L * 1000 * 1000 * 1000 * 1000));
                 break;
             case "EB":
-                result = result.multiply(BigDecimal.valueOf(1000 * 1000 * 1000 * 1000 * 1000 * 1000));
+                result = result.multiply(BigDecimal.valueOf(1000L * 1000 * 1000 * 1000 * 1000 * 1000));
                 break;
             // ... 其他二进制前缀的处理保持不变 ...
 

@@ -34,13 +34,15 @@ public interface NamespaceDao {
      */
     int update(Namespace namespace);
 
+    NamespacePO findByCluster(@Param("clusterId") String clusterId, @Param("namespace") String namespace);
+
     /**
      * 查看集群命名空间
      *
      * @param clusterId 集群ID
      * @return 命名空间列表
      */
-    List<Namespace> listNamespace(@Param("clusterId") String clusterId);
+    List<NamespacePO> listNamespace(@Param("clusterId") String clusterId);
 
     NamespacePO selectByNamespaceId(@Param("namespaceId") String namespaceId);
 
