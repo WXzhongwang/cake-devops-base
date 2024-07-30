@@ -421,6 +421,28 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             </Steps>
           )}
         </Card>
+        <Card>
+          {appEnv?.configMap.length > 0 && (
+            <Table
+              title={() => "ConfigMap 配置信息"}
+              columns={[
+                {
+                  title: "Key 键",
+                  dataIndex: "key",
+                  key: "key",
+                },
+                {
+                  title: "Value 值",
+                  dataIndex: "value",
+                  key: "value",
+                },
+              ]}
+              dataSource={appEnv?.configMap}
+              rowKey="key"
+              pagination={false}
+            />
+          )}
+        </Card>
         <Card
           title="发布单"
           extra={
