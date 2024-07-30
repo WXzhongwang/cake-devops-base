@@ -63,7 +63,7 @@ public class WorkSpacePlugin extends BasePlugin {
                 });
                 RETRYER.call(() -> {
                     if (!JSCHTool.remoteExecute(session, "cd " + workspace + ";" +
-                            " curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.2/java-build-source.tar.gz; " +
+                            " curl -JLO https://github.com/WXzhongwang/cake-devops-base/releases/download/beta-v0.0.3/java-build-source.tar.gz; " +
                             " tar -zxvf java-build-source.tar.gz;" +
                             " chmod +x *.sh;")) {
                         log.error("脚本下载失败");
