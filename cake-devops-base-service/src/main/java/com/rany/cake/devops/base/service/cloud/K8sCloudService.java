@@ -525,7 +525,7 @@ public class K8sCloudService extends BaseCloudService {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             return coreV1Api.readNamespace(namespaceName, null);
         } catch (ApiException e) {
-            log.error("Failed to delete Namespace: " + e.getResponseBody(), e);
+            log.error("Failed to get Namespace: " + e.getResponseBody(), e);
         }
         return null;
     }

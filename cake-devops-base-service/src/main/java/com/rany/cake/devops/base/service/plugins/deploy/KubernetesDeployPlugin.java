@@ -37,7 +37,7 @@ public class KubernetesDeployPlugin extends BasePlugin {
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
         V1Namespace deployNamespace = cloudService.getNamespace(context);
         if (deployNamespace == null) {
-            log.error("命名空间未找到：{}", namespace.getName());
+            log.error("命名空间未找到：{}", namespace.getName().getName());
             return false;
         }
         boolean deploymentCreated = cloudService.createOrUpdateDeployment(context);
