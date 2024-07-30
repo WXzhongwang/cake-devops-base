@@ -37,7 +37,7 @@ public abstract class BasePlugin implements Plugin {
      */
     protected static final Retryer<Boolean> RETRYER = RetryerBuilder.<Boolean>newBuilder()
             .retryIfResult(result -> !result)
-            .withWaitStrategy(WaitStrategies.fixedWait(5, TimeUnit.SECONDS))
+            .withWaitStrategy(WaitStrategies.fixedWait(1, TimeUnit.SECONDS))
             .withStopStrategy(StopStrategies.stopAfterAttempt(3))
             .build();
 
