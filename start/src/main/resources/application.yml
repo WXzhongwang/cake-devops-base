@@ -171,6 +171,7 @@ devops:
       accessKey:
       secretKey:
       namespace: cake-devops-base
+      host: registry.cn-hangzhou.aliyuncs.com
 
 #logging:
 #  level:

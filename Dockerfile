@@ -22,5 +22,5 @@ ENV JAVA_OPTS="-Xms512m -Xmx1024m \
 
 
 
-#docker运行命令
-ENTRYPOINT ["java", "${JAVA_OPTS}", "-Dspring.profiles.active=dev", "-jar", "/cake-devops-service.jar"]
+# docker运行命令
+ENTRYPOINT ["java", "$JAVA_OPTS", "-Dspring.profiles.active=dev", "-jar", "/cake-devops-service.jar"]

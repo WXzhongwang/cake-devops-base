@@ -10,6 +10,7 @@ import com.rany.cake.devops.base.service.plugins.RunningConstant;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
+import org.apache.commons.net.imap.IMAP;
 import org.springframework.stereotype.Component;
 
 /**
@@ -58,8 +59,9 @@ public class PushAcrPlugin extends BasePlugin {
                 log.error("推送阿里云失败");
                 return false;
             }
-            String imageName = String.format("%s/%s:%s",
-                    crConfig.getNameSpace(), appName, releaseVersion);
+            String imageName = String.format("%s/%s/%s:%s",
+                    crConfig.getHost(), crConfig.getNameSpace(), appName, releaseVersion);
+            log.info("完整镜像地址，{}", imageName);
             context.setDeploymentImage(imageName);
         } catch (JSchException e) {
             log.error("DeliveryPlugin error", e);

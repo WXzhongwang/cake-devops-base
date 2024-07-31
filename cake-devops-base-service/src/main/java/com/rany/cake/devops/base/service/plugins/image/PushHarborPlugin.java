@@ -56,9 +56,9 @@ public class PushHarborPlugin extends BasePlugin {
                 log.error("推送harbor失败");
                 return false;
             }
-            String imageName = String.format("%s/%s:%s",
-                    crConfig.getNameSpace(), appName, releaseVersion);
-            context.setDeploymentImage(imageName);
+            String imageName = String.format("%s/%s/%s:%s",
+                    crConfig.getHost(), crConfig.getNameSpace(), appName, releaseVersion);
+            log.info("完整镜像地址，{}", imageName);
         } catch (JSchException e) {
             log.error("PushHarborPlugin error", e);
             return false;

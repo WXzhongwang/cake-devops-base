@@ -29,6 +29,14 @@ public class CrConfig {
         private String namespace;
         private String accessKey;
         private String secretKey;
+        private String host;
+    }
+
+    public String getHost() {
+        if (StringUtils.equals(channel, "aliyun")) {
+            return aliyun.getHost();
+        }
+        return harbor.getHarborUrl();
     }
 
     public String getNameSpace() {
