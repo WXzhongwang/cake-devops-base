@@ -8,7 +8,7 @@ else
 fi
 
 # 定义日志文件
-LOGFILE=/var/log/app/app.log
+LOGFILE=/app/server_std_out.log
 
 # 定义 Java 主类和 jar 文件路径
 MAIN_CLASS=com.example.CakeDevopsServiceApplication
