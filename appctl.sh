@@ -11,7 +11,7 @@ fi
 LOGFILE=/app/server_std_out.log
 
 # 定义 Java 主类和 jar 文件路径
-MAIN_CLASS=com.example.CakeDevopsServiceApplication
+MAIN_CLASS=com.rany.cake.devops.base.CakeDevopsBaseApplication
 JAR_FILE=/app/cake-devops-service.jar
 
 # 定义 JVM 选项
