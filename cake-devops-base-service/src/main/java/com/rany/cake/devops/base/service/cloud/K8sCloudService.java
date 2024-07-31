@@ -453,7 +453,7 @@ public class K8sCloudService extends BaseCloudService {
                     .spec(new V1IngressSpec().rules(rules));
 
             // 检查现有的 Ingress 是否存在
-            boolean existingIngress = StringUtils.isNoneBlank(context.getAppEnv().getServiceName());
+            boolean existingIngress = StringUtils.isNoneBlank(context.getAppEnv().getIngressName());
             if (existingIngress) {
                 // 如果存在，则更新
                 networkingV1Api.replaceNamespacedIngress(context.getIngressName(), namespace, ingress, null, null, null, null);
