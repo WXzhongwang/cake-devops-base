@@ -12,6 +12,7 @@ function build_image {
     local project=$2
     local version=$3
     local webhook_url=$4
+    local env=$5
 
     repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
     folder_name="$(pwd)/$repo_name"
@@ -21,7 +22,7 @@ function build_image {
     cd "$folder_name"
 
     # 生成镜像
-    $DOCKER_HOME build -t "$project:$version" .
+    $DOCKER_HOME build --build-arg ENV="$env" -t "$project:$version" .
 
     # 判断镜像生成是否成功
     # shellcheck disable=SC2181
@@ -33,4 +34,4 @@ function build_image {
     echo "【BuildImage】镜像构建成功..."
 }
 
-build_image "$1" "$2" "$3" "$4"
+build_image "$1" "$2" "$3" "$4" "$5"
