@@ -3,8 +3,8 @@ FROM openjdk:8-jdk-alpine
 ARG ENV=dev
 # 设置 spring.profiles.active 环境变量
 ENV SPRING_PROFILES_ACTIVE=${ENV}
-# 环境变量
-ENV APP_NAME=cake-devops-base
+
+APP_NAME=cake-devops-base
 
 RUN apk add --no-cache bash && \
     mkdir -p /home/admin/$APP_NAME && \
@@ -19,7 +19,7 @@ VOLUME /tmp
 
 
 
-ADD /start/target/cake-devops-service.jar /home/admin/$APP_NAME/cake-devops-service.jar
+ADD /start/target/cake-devops-service.jar /home/admin/cake-devops-base/cake-devops-service.jar
 
 # 设置 ENTRYPOINT
-ENTRYPOINT ["/home/admin/appctl.sh", "$APP_NAME", "start"]
+ENTRYPOINT ["/home/admin/appctl.sh", "cake-devops-base", "start"]
