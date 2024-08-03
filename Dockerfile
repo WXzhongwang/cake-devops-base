@@ -17,9 +17,7 @@ RUN chmod +x /home/admin/appctl.sh
 # 挂载目录
 VOLUME /tmp
 
-
-
 ADD /start/target/cake-devops-service.jar /home/admin/cake-devops-base/cake-devops-service.jar
 
 # 设置 ENTRYPOINT
-ENTRYPOINT ["/home/admin/appctl.sh", "cake-devops-base", "start"]
+ENTRYPOINT ["/home/admin/appctl.sh", "cake-devops-base", "start", "${SPRING_PROFILES_ACTIVE}"]

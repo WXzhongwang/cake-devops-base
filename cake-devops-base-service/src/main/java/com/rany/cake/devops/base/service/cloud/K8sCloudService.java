@@ -3,7 +3,6 @@ package com.rany.cake.devops.base.service.cloud;
 import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
-import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.toolkit.lang.utils.Lists;
 import io.kubernetes.client.custom.IntOrString;
@@ -226,7 +225,7 @@ public class K8sCloudService extends BaseCloudService {
                 V1Service existingService = coreV1Api.readNamespacedService(serviceName, namespace, null);
                 String currentResourceVersion = Objects.requireNonNull(existingService.getMetadata()).getResourceVersion();
                 resourceVersion = incrementVersion(currentResourceVersion);
-                hasService  = true;
+                hasService = true;
             } catch (Exception ex) {
                 log.warn("Service not found.", ex);
             }
@@ -583,6 +582,13 @@ public class K8sCloudService extends BaseCloudService {
                 configMapValues.add(envVar);
             }
         }
+
+        // 添加 SPRING_PROFILES_ACTIVE 环境变量
+        V1EnvVar springProfilesActiveEnv = new V1EnvVar()
+                .name("SPRING_PROFILES_ACTIVE")
+                .value(context.getAppEnv().getEnv().name().toLowerCase());  // 直接设置环境变量的值
+        configMapValues.add(springProfilesActiveEnv);
+
         // 设置资源
         Map<String, Quantity> request = new HashMap<>();
         request.put("cpu", new Quantity(resourceStrategy.getCpu()));

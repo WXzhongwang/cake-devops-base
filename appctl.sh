@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # 检查命令行参数
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 {start|stop|restart}" >&2
+if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+    echo "Usage: $0 {start|stop|restart} [spring_profiles_active]" >&2
     exit 2 # bad usage
 fi
 
 # 操作
 APP_NAME=$1
 ACTION=$2
-ENV=$3
+SPRING_PROFILES_ACTIVE=${3:-dev}
 
 echo "APP_NAME: ${APP_NAME}"
 echo "ACTION: ${ACTION}"
-echo "ENV: ${ENV}"
+echo "Spring Profiles Active: ${SPRING_PROFILES_ACTIVE}"
 
 # 检查是否运行在容器内
 IN_DOCKER=$(command -v docker &> /dev/null && echo true || echo false)
@@ -49,7 +49,7 @@ JAVA_OPTS=(
 #SPRING_PROFILES_ACTIVE="${ENV:-dev}"
 
 # 定义启动命令
-START_CMD="java ${JAVA_OPTS[*]} -Dspring.profiles.active=$ENV -jar $JAR_FILE"
+START_CMD="java ${JAVA_OPTS[*]} -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
 
 echo "开始启动: $START_CMD"
 
