@@ -52,7 +52,7 @@ public class BuildImagePlugin extends BasePlugin {
             String executeCommand = String.format(" sh build_image.sh '%s' %s %s '%s' '%s'", repo, appName, releaseNo, webHook, envFlag);
             if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " +
                     executeCommand)) {
-                log.error("镜像构架失败");
+                log.error("镜像构建失败");
                 return false;
             }
         } catch (JSchException e) {

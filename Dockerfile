@@ -4,7 +4,7 @@ ARG ENV=dev
 # 设置 spring.profiles.active 环境变量
 ENV SPRING_PROFILES_ACTIVE=${ENV}
 
-APP_NAME=cake-devops-base
+ENV APP_NAME=cake-devops-base
 
 RUN apk add --no-cache bash && \
     mkdir -p /home/admin/$APP_NAME && \

@@ -60,29 +60,29 @@
 
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
         insert into app_env (env_id,
-        cluster_id, app_id,
-        domains, env_name, env,
-        replicas, cpu, memory,
-        max_cpu, max_memory,
-        auto_scaling, need_approval, status,
-        is_deleted, gmt_create, gmt_modified,
-        creator, modifier, deploy_status, progress,
-        custom_build_script, deployment_name, service_name, ingress_name,config_map
-        )
+                             cluster_id, app_id,
+                             status,
+                             domains, env_name, env,
+                             replicas, cpu, memory,
+                             max_cpu, max_memory,
+                             auto_scaling, need_approval, status,
+                             is_deleted, gmt_create, gmt_modified,
+                             creator, modifier, deploy_status, progress,
+                             custom_build_script, deployment_name, service_name, ingress_name, config_map)
         values (#{envId},
-        #{clusterId.clusterId},
-        #{appId.appId},
-        #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
-        #{envName,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR},
-        #{resourceStrategy.replicas,jdbcType=INTEGER}, #{resourceStrategy.cpu}, #{resourceStrategy.memory},
-        #{resourceStrategy.maxCpu}, #{resourceStrategy.maxMemory},
-        #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
-        #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
-        #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
-        #{deployStatus}, #{progress},
-        #{customBuildScript}, #{deploymentName}, #{serviceName}, #{ingressName},
-        #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler}
-        )
+                #{clusterId.clusterId},
+                #{appId.appId},
+                #{status},
+                #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
+                #{envName,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR},
+                #{resourceStrategy.replicas,jdbcType=INTEGER}, #{resourceStrategy.cpu}, #{resourceStrategy.memory},
+                #{resourceStrategy.maxCpu}, #{resourceStrategy.maxMemory},
+                #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
+                #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+                #{deployStatus}, #{progress},
+                #{customBuildScript}, #{deploymentName}, #{serviceName}, #{ingressName},
+                #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler})
     </insert>
 
 
