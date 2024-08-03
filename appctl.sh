@@ -49,6 +49,8 @@ SPRING_PROFILES_ACTIVE="${ENV:-dev}"
 # 定义启动命令
 START_CMD="java ${JAVA_OPTS[*]} -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
 
+echo "开始启动: $START_CMD"
+
 # 检查应用是否正在运行
 is_running() {
     if [[ $IN_DOCKER == true ]]; then
