@@ -9,9 +9,11 @@ fi
 # 操作
 APP_NAME=$1
 ACTION=$2
+ENV=$3
 
-echo "${APP_NAME}"
-echo "${ACTION}"
+echo "APP_NAME: ${APP_NAME}"
+echo "ACTION: ${ACTION}"
+echo "ENV: ${ENV}"
 
 # 检查是否运行在容器内
 IN_DOCKER=$(command -v docker &> /dev/null && echo true || echo false)
@@ -44,10 +46,10 @@ JAVA_OPTS=(
 )
 
 # 定义 Spring profiles active
-SPRING_PROFILES_ACTIVE="${ENV:-dev}"
+#SPRING_PROFILES_ACTIVE="${ENV:-dev}"
 
 # 定义启动命令
-START_CMD="java ${JAVA_OPTS[*]} -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
+START_CMD="java ${JAVA_OPTS[*]} -Dspring.profiles.active=$ENV -jar $JAR_FILE"
 
 echo "开始启动: $START_CMD"
 

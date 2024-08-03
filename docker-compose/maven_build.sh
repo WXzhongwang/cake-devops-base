@@ -26,7 +26,8 @@ function mvn_build {
     # 安全替换mvn命令
     # 安全替换mvn命令
     safe_custom_script="${custom_script//mvn/$MAVEN_HOME_363}"
-
+    # 输出完整指令
+    echo "执行指令: $safe_custom_script"
 
 
     # 执行构建

@@ -22,7 +22,18 @@ function build_image {
     cd "$folder_name"
 
     # 生成镜像
-    $DOCKER_HOME build --build-arg ENV="$env" -t "$project:$version" .
+    echo "【BuildImage】开始构建镜像..."
+    # 输出下环境
+    echo "当前环境为：$env"
+    if [ "$env" = "dev" ]; then
+        # 输出下完整指令
+        echo "docker build -t $project:$version ."
+        $DOCKER_HOME build -t "$project:$version" .
+    else
+        # 输出下完整指令
+        echo "docker build --build-arg ENV=$env -t $project:$version ."
+        $DOCKER_HOME build --build-arg ENV="$env" -t "$project:$version" .
+    fi
 
     # 判断镜像生成是否成功
     # shellcheck disable=SC2181
