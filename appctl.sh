@@ -1,69 +1,83 @@
 #!/bin/bash
 
 # 检查是否运行在容器内
-if [[ "$(type -t docker)" == "function" ]]; then
-    IN_DOCKER=true
-else
-    IN_DOCKER=false
-fi
+IN_DOCKER=$(command -v docker &> /dev/null && echo true || echo false)
 
 # 定义日志文件
-LOGFILE=/app/server_std_out.log
+LOGFILE="/home/admin/${APP_NAME}/server_std_out.log"
+DEPLOY_LOG="/home/admin/${APP_NAME}/deploy.log"
 
 # 定义 Java 主类和 jar 文件路径
-MAIN_CLASS=com.rany.cake.devops.base.CakeDevopsBaseApplication
-JAR_FILE=/app/cake-devops-service.jar
+MAIN_CLASS="com.rany.cake.devops.base.CakeDevopsBaseApplication"
+JAR_FILE="/home/admin/${APP_NAME}/cake-devops-service.jar"
 
 # 定义 JVM 选项
-JAVA_OPTS="-Xms512m -Xmx1024m \
-            -Xloggc:/home/admin/gc.log \
-            -XX:+PrintGCDetails \
-            -XX:+PrintGCDateStamps \
-            -XX:+PrintGCTimeStamps \
-            -XX:+PrintGCCause \
-            -XX:+PrintGCApplicationStoppedTime \
-            -XX:+UseGCLogFileRotation \
-            -XX:NumberOfGCLogFiles=10 \
-            -XX:GCLogFileSize=100M"
+JAVA_OPTS=(
+    "-Xms512m -Xmx1024m"
+    "-Xloggc:/home/admin/gc.log"
+    "-XX:+PrintGCDetails"
+    "-XX:+PrintGCDateStamps"
+    "-XX:+PrintGCTimeStamps"
+    "-XX:+PrintGCCause"
+    "-XX:+PrintGCApplicationStoppedTime"
+    "-XX:+UseGCLogFileRotation"
+    "-XX:NumberOfGCLogFiles=10"
+    "-XX:GCLogFileSize=100M"
+)
 
 # 定义 Spring profiles active
-SPRING_PROFILES_ACTIVE=${ENV:-dev}
+SPRING_PROFILES_ACTIVE="${ENV:-dev}"
 
 # 定义启动命令
-START_CMD="java $JAVA_OPTS -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
+START_CMD="java ${JAVA_OPTS[*]} -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
 
 # 检查应用是否正在运行
 is_running() {
-    if $IN_DOCKER; then
+    local pipe_status=()
+    if [[ $IN_DOCKER == true ]]; then
         pgrep -f "$MAIN_CLASS"
+        pipe_status=($?)
     else
-        ps aux | grep "[j]ava.*$MAIN_CLASS"
+        ps aux | grep -P "[j]ava.*$MAIN_CLASS" | grep -v grep
+        pipe_status=($?)
+    fi
+    check_first_pipe_exit_code "${pipe_status[@]}"
+}
+
+# 检查管道中第一个命令的退出状态
+check_first_pipe_exit_code() {
+    if [[ $1 -ne 0 ]]; then
+        echo "Error in pipeline, first command failed with status $1"
+        exit $1
     fi
 }
 
 # 启动应用
 start_app() {
-    echo "Starting application..."
-    if is_running; then
-        echo "Application is already running."
+    echo "Starting application..." | tee -a "$DEPLOY_LOG"
+    if is_running | grep -q .; then
+        echo "Application is already running." | tee -a "$DEPLOY_LOG"
     else
-        exec $START_CMD >> $LOGFILE 2>&1 &
-        echo "Application started."
+      # 使用nohup来让Java应用在后台运行，并使用tee同时输出到控制台和日志文件
+      nohup $START_CMD | tee -a "$LOGFILE" &
+      echo "Application started." | tee -a "$DEPLOY_LOG"
+      # 输出应用PID到另一个文件，方便后续操作
+      echo $! > /home/admin/${APP_NAME}/app.pid
     fi
 }
 
 # 停止应用
 stop_app() {
-    echo "Stopping application..."
-    if is_running; then
-        if $IN_DOCKER; then
+    echo "Stopping application..." | tee -a "$DEPLOY_LOG"
+    if is_running | grep -q .; then
+        if [[ $IN_DOCKER == true ]]; then
             pkill -f "$MAIN_CLASS"
         else
-            killall -q java
+            ps aux | grep -P "[j]ava.*$MAIN_CLASS" | awk '{print $2}' | xargs kill
         fi
-        echo "Application stopped."
+        echo "Application stopped." | tee -a "$DEPLOY_LOG"
     else
-        echo "Application is not running."
+        echo "Application is not running." | tee -a "$DEPLOY_LOG"
     fi
 }
 
@@ -73,8 +87,19 @@ restart_app() {
     start_app
 }
 
+# 检查命令行参数
+if [ $# -lt 1 ]; then
+    usage
+    exit 2 # bad usage
+fi
+
+# 脚本名称
+PROGRAM_NAME=$0
+# 操作
+ACTION=$1
+
 # 执行启动命令
-case "$1" in
+case "$ACTION" in
     start)
         start_app
         ;;
@@ -85,7 +110,7 @@ case "$1" in
         restart_app
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart}"
+        echo "Usage: $0 {start|stop|restart}" >&2
         exit 1
         ;;
 esac

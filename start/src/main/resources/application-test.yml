@@ -12,7 +12,7 @@ spring:
   profiles:
     active: test
   redis:
-    url: redis://host.docker.internal:6379
+    url: redis://redis.default.svc.cluster.local:6379
   datasource:
     druid:
       url: jdbc:mysql://mysql.default.svc.cluster.local:3306/cake_devops?allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false

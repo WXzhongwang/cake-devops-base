@@ -14,5 +14,5 @@ public final class KubernetesConstants {
 
     public static final Integer DEFAULT_SERVICE_PORT = 80;
     public static final String DEFAULT_SERVICE_SUFFIX = "-svc";
-    public static final Integer DEFAULT_WEB_SERVICE_PORT = 7001;
+    public static final Integer DEFAULT_WEB_SERVICE_PORT = 8300;
 }
