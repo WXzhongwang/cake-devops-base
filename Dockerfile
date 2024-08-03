@@ -11,8 +11,8 @@ RUN apk add --no-cache bash && \
     mkdir -p /home/admin/$APP_NAME/logs
 
 # 添加 appctl.sh 脚本
-ADD appctl.sh /home/admin/$APP_NAME/appctl.sh
-RUN chmod +x /home/admin/$APP_NAME/appctl.sh
+ADD appctl.sh /home/admin/appctl.sh
+RUN chmod +x /home/admin/appctl.sh
 
 # 挂载目录
 VOLUME /tmp
@@ -22,4 +22,4 @@ VOLUME /tmp
 ADD /start/target/cake-devops-service.jar /home/admin/$APP_NAME/cake-devops-service.jar
 
 # 设置 ENTRYPOINT
-ENTRYPOINT ["/home/admin/$APP_NAME/appctl.sh", "$APP_NAME", "start"]
+ENTRYPOINT ["/home/admin/appctl.sh", "$APP_NAME", "start"]

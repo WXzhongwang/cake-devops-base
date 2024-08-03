@@ -439,6 +439,7 @@ public class K8sCloudService extends BaseCloudService {
                                                                             .port(new V1ServiceBackendPort()
                                                                                     .number(context.getServicePort())))
                                             ).path("/")
+                                            .pathType("Prefix")
                             )
                     );
             rules.add(rule);
