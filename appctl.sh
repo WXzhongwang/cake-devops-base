@@ -68,7 +68,7 @@ start_app() {
     else
         # 使用nohup来让Java应用在后台运行
         # 注意：这里不再重定向到日志文件，而是直接启动应用
-        nohup $START_CMD &
+        exec $START_CMD
         echo "Application started." | tee -a "$DEPLOY_LOG"
         # 输出应用PID到另一个文件，方便后续操作
         echo $! > /home/admin/${APP_NAME}/app.pid

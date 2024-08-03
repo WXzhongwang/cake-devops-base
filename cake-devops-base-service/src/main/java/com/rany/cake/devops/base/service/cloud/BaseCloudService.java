@@ -198,18 +198,17 @@ public abstract class BaseCloudService {
             return "";
         }
         // 检查版本号格式
-        if (!version.startsWith("v") || version.length() <= 1) {
+        if (version.length() <= 1) {
             throw new IllegalArgumentException("Invalid version format: " + version);
         }
 
         // 提取数字部分并转换为 BigInteger
-        String numberPart = version.substring(1);
-        BigInteger number = new BigInteger(numberPart);
+        BigInteger number = new BigInteger(version);
 
         // 将数字加1
         BigInteger incrementedNumber = number.add(BigInteger.ONE);
 
         // 构建新的版本号
-        return "v" + incrementedNumber.toString();
+        return incrementedNumber.toString();
     }
 }
