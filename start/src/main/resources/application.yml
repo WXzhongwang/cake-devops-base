@@ -13,20 +13,6 @@ cms:
   site:
     name: cake-devops-base
 
-#shenyu:
-#  register:
-#    enabled: false
-#    registerType: http #zookeeper #etcd #nacos #consul
-#    serverLists: http://localhost:9095 #localhost:2181 #http://localhost:2379 #localhost:8848
-#    props:
-#      username: admin
-#      password: Shenyu123456???
-#  client:
-#    dubbo:
-#      props:
-#        contextPath: /devops
-#        appName: cake-ops-service
-
 dubbo:
   application:
     id: cake-devops-service
@@ -111,22 +97,6 @@ warn:
 mybatis:
   mapper-locations: classpath:com/rany/cake/devops/base/infra/mapper/*.xml, classpath:com/rany/cake/devops/base/infra/dao/*.xml
   type-aliases-package: com.rany.cake.devops.base.infra, com.rany.cake.devops.base.domain
-
-
-#ssh:
-#  shell:
-#    enable: false
-#    version: 2.0.0
-#    display-banner: on
-#    host: 0.0.0.0
-#    port: 2222
-#    shared-history: off
-#    history-directory: ${home}/opscloud-data/ssh-server/history-log/
-#    host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
-#    prompt:
-#      # white|cyan
-#      color: cyan
-#      text: 'ssh-server>'
 
 devops:
   biz-config:
