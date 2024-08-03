@@ -1,5 +1,19 @@
 #!/bin/bash
 
+
+# 检查命令行参数
+if [ $# -lt 1 ]; then
+    usage
+    exit 2 # bad usage
+fi
+
+# 脚本名称
+PROGRAM_NAME=$0
+# 操作
+APP_NAME=$1
+# 操作
+ACTION=$2
+
 # 检查是否运行在容器内
 IN_DOCKER=$(command -v docker &> /dev/null && echo true || echo false)
 
@@ -87,16 +101,6 @@ restart_app() {
     start_app
 }
 
-# 检查命令行参数
-if [ $# -lt 1 ]; then
-    usage
-    exit 2 # bad usage
-fi
-
-# 脚本名称
-PROGRAM_NAME=$0
-# 操作
-ACTION=$1
 
 # 执行启动命令
 case "$ACTION" in

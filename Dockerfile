@@ -22,4 +22,4 @@ VOLUME /tmp
 ADD /start/target/cake-devops-service.jar /home/admin/$APP_NAME/cake-devops-service.jar
 
 # 设置 ENTRYPOINT
-ENTRYPOINT ["/home/admin/$APP_NAME/appctl.sh", "start"]
+ENTRYPOINT ["/home/admin/$APP_NAME/appctl.sh", "$APP_NAME", "start"]
