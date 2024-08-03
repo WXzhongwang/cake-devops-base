@@ -13,6 +13,7 @@ public final class KubernetesConstants {
     }
 
     public static final Integer DEFAULT_SERVICE_PORT = 80;
+    public static final String DEFAULT_SERVICE_RESOURCE_VERSION = "v1";
     public static final String DEFAULT_SERVICE_SUFFIX = "-svc";
     public static final Integer DEFAULT_WEB_SERVICE_PORT = 8300;
 }

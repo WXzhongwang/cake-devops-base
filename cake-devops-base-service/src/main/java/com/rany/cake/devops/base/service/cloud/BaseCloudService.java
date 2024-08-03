@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -185,4 +186,30 @@ public abstract class BaseCloudService {
     public abstract V1Namespace getNamespace(DeployContext context);
 
     public abstract V1Namespace getNamespace(String name);
+
+    /**
+     * 将给定的版本号加1。
+     *
+     * @param version 当前版本号，格式为 "vX"，其中 X 是数字。
+     * @return 加1后的版本号。
+     */
+    protected String incrementVersion(String version) {
+        if (version == null) {
+            return "";
+        }
+        // 检查版本号格式
+        if (!version.startsWith("v") || version.length() <= 1) {
+            throw new IllegalArgumentException("Invalid version format: " + version);
+        }
+
+        // 提取数字部分并转换为 BigInteger
+        String numberPart = version.substring(1);
+        BigInteger number = new BigInteger(numberPart);
+
+        // 将数字加1
+        BigInteger incrementedNumber = number.add(BigInteger.ONE);
+
+        // 构建新的版本号
+        return "v" + incrementedNumber.toString();
+    }
 }

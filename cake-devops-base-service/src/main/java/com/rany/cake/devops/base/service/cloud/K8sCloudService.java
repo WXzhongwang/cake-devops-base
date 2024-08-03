@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.service.cloud;
 import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
+import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.toolkit.lang.utils.Lists;
 import io.kubernetes.client.custom.IntOrString;
@@ -215,9 +216,26 @@ public class K8sCloudService extends BaseCloudService {
 
         try {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+            // 环境内已经设置过serviceName
+            boolean hasService = false;
+            String resourceVersion = KubernetesConstants.DEFAULT_SERVICE_RESOURCE_VERSION;
+
+
+            try {
+                // 尝试获取现有的 Service
+                V1Service existingService = coreV1Api.readNamespacedService(serviceName, namespace, null);
+                String currentResourceVersion = Objects.requireNonNull(existingService.getMetadata()).getResourceVersion();
+                resourceVersion = incrementVersion(currentResourceVersion);
+                hasService  = true;
+            } catch (Exception ex) {
+                log.warn("Service not found.", ex);
+            }
+
             // 构建 Service 对象
             V1Service service = new V1Service()
-                    .metadata(new V1ObjectMeta().name(serviceName))
+                    .metadata(new V1ObjectMeta()
+                            .name(serviceName)
+                            .resourceVersion(resourceVersion)) // 添加 resourceVersion
                     .spec(new V1ServiceSpec()
                             .selector(Collections.singletonMap("app", appName.getName()))
                             .ports(Collections.singletonList(
@@ -226,14 +244,13 @@ public class K8sCloudService extends BaseCloudService {
                             ))
                             .type("ClusterIP"));
 
-            // 尝试获取现有的 Service
-            // 环境内已经设置过serviceName
-            boolean existingService = StringUtils.isNoneBlank(context.getAppEnv().getServiceName());
-            if (existingService) {
+
+            if (hasService) {
                 // 如果存在，则更新 Service
                 coreV1Api.replaceNamespacedService(serviceName, namespace, service, null, null, null, null);
                 log.info("Service {} updated successfully.", serviceName);
             } else {
+
                 // 如果不存在，则创建 Service
                 coreV1Api.createNamespacedService(namespace, service, null, null, null, null);
                 log.info("Service {} created successfully.", serviceName);

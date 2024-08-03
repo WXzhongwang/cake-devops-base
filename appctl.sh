@@ -7,12 +7,13 @@ if [ $# -lt 1 ]; then
     exit 2 # bad usage
 fi
 
-# 脚本名称
-PROGRAM_NAME=$0
 # 操作
 APP_NAME=$1
 # 操作
 ACTION=$2
+
+echo "${APP_NAME}"
+echo "${ACTION}"
 
 # 检查是否运行在容器内
 IN_DOCKER=$(command -v docker &> /dev/null && echo true || echo false)
@@ -52,7 +53,7 @@ is_running() {
         pgrep -f "$MAIN_CLASS"
         pipe_status=($?)
     else
-        ps aux | grep -P "[j]ava.*$MAIN_CLASS" | grep -v grep
+        ps aux | grep "[j]ava.*$MAIN_CLASS" | grep -v grep
         pipe_status=($?)
     fi
     check_first_pipe_exit_code "${pipe_status[@]}"
@@ -87,7 +88,7 @@ stop_app() {
         if [[ $IN_DOCKER == true ]]; then
             pkill -f "$MAIN_CLASS"
         else
-            ps aux | grep -P "[j]ava.*$MAIN_CLASS" | awk '{print $2}' | xargs kill
+            ps aux | grep "[j]ava.*$MAIN_CLASS" | awk '{print $2}' | xargs kill
         fi
         echo "Application stopped." | tee -a "$DEPLOY_LOG"
     else
