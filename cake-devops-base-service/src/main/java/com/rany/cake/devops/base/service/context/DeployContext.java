@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.rany.cake.devops.base.domain.aggregate.*;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.util.enums.ReleaseStatus;
+import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,6 +20,8 @@ import java.util.*;
  */
 @Data
 public class DeployContext implements Serializable {
+
+    private SessionStore sessionStore;
 
     /**
      * 打包机

@@ -4,10 +4,13 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.base.CrConfig;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
+import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.context.Plugin;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
+import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,4 +44,14 @@ public abstract class BasePlugin implements Plugin {
             .withStopStrategy(StopStrategies.stopAfterAttempt(3))
             .build();
 
+
+    protected SessionStore getCurrentSessionStore(DeployContext context) {
+        if (context.getSessionStore() != null) {
+            return context.getSessionStore();
+        }
+        Host deployHost = context.getHost();
+        SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost);
+        context.setSessionStore(sessionStore);
+        return sessionStore;
+    }
 }

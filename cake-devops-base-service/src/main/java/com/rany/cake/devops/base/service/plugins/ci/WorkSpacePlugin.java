@@ -51,37 +51,37 @@ public class WorkSpacePlugin extends BasePlugin {
 
         Host deployHost = hostDomainService.getHost(new HostId(context.getHostId()));
         context.setHost(deployHost);
-        try (SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost)) {
+        
+        try {
+            SessionStore sessionStore = getCurrentSessionStore(context);
             Session session = sessionStore.getSession();
-            try {
-                RETRYER.call(() -> {
-                    if (!JSCHTool.remoteExecute(session, "mkdir -p " + workspace)) {
-                        log.error("创建工作目录失败");
-                        return false;
-                    }
-                    return true;
-                });
-                RETRYER.call(() -> {
-                    if (!JSCHTool.remoteExecute(session, "cd " + workspace + ";" +
-                            " curl -JLO https://rany-ops.oss-cn-hangzhou.aliyuncs.com/ci/0.0.6/java-build-source.tar.gz; " +
-                            " tar -zxvf java-build-source.tar.gz;" +
-                            " chmod +x *.sh;")) {
-                        log.error("脚本下载失败");
-                        return false;
-                    }
-                    return true;
-                });
-            } catch (UncheckedExecutionException | ExecutionException | RetryException e) {
-                Throwable cause = e.getCause();
-                if (cause instanceof JSchException) {
-                    log.error("JSchException during retry attempt", cause);
-                    log.error("WorkSpacePlugin error", e);
+            RETRYER.call(() -> {
+                if (!JSCHTool.remoteExecute(session, "mkdir -p " + workspace)) {
+                    log.error("创建工作目录失败");
                     return false;
-                } else {
-                    log.error("Unexpected error during retry attempt", cause);
                 }
+                return true;
+            });
+            RETRYER.call(() -> {
+                if (!JSCHTool.remoteExecute(session, "cd " + workspace + ";" +
+                        " curl -JLO https://rany-ops.oss-cn-hangzhou.aliyuncs.com/ci/0.0.6/java-build-source.tar.gz; " +
+                        " tar -zxvf java-build-source.tar.gz;" +
+                        " chmod +x *.sh;")) {
+                    log.error("脚本下载失败");
+                    return false;
+                }
+                return true;
+            });
+        } catch (UncheckedExecutionException | ExecutionException | RetryException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof JSchException) {
+                log.error("JSchException during retry attempt", cause);
+                log.error("WorkSpacePlugin error", e);
                 return false;
+            } else {
+                log.error("Unexpected error during retry attempt", cause);
             }
+            return false;
         }
         return true;
     }

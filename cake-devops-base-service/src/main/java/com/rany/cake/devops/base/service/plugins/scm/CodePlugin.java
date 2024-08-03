@@ -4,7 +4,6 @@ import com.github.rholder.retry.RetryException;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
@@ -42,36 +41,34 @@ public class CodePlugin extends BasePlugin {
 
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("workspace directory: " + workspace);
-
-        Host deployHost = context.getHost();
-        try (SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost)) {
-            Session session = sessionStore.getSession();
-            // JSCHTool.remoteExecute(session, "cd " + workspace);
-            //    checkout "$1" "$2" "$3" "$4"
-            //    local repo_url=$1
-            //    local branch_name=$2
-            //    local folder_name=$3
-            //    local webhook_url=$4
-            String executeCommand = String.format(" sh checkout.sh '%s' %s '%s'", repo, checkoutBranch, webHook);
-            try {
-                RETRYER.call(() -> {
-                    if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
-                        log.error("代码拉取失败");
-                        return false;
-                    }
-                    return true;
-                });
-            } catch (UncheckedExecutionException | ExecutionException | RetryException e) {
-                Throwable cause = e.getCause();
-                if (cause instanceof JSchException) {
-                    log.error("JSchException during retry attempt", cause);
-                    log.error("CodePlugin error", e);
+        
+        SessionStore sessionStore = getCurrentSessionStore(context);
+        Session session = sessionStore.getSession();
+        // JSCHTool.remoteExecute(session, "cd " + workspace);
+        //    checkout "$1" "$2" "$3" "$4"
+        //    local repo_url=$1
+        //    local branch_name=$2
+        //    local folder_name=$3
+        //    local webhook_url=$4
+        String executeCommand = String.format(" sh checkout.sh '%s' %s '%s'", repo, checkoutBranch, webHook);
+        try {
+            RETRYER.call(() -> {
+                if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
+                    log.error("代码拉取失败");
                     return false;
-                } else {
-                    log.error("Unexpected error during retry attempt", cause);
                 }
+                return true;
+            });
+        } catch (UncheckedExecutionException | ExecutionException | RetryException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof JSchException) {
+                log.error("JSchException during retry attempt", cause);
+                log.error("CodePlugin error", e);
                 return false;
+            } else {
+                log.error("Unexpected error during retry attempt", cause);
             }
+            return false;
         }
         return true;
     }

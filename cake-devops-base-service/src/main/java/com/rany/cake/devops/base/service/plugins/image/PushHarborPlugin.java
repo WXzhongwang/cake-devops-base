@@ -3,7 +3,6 @@ package com.rany.cake.devops.base.service.plugins.image;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
@@ -39,8 +38,8 @@ public class PushHarborPlugin extends BasePlugin {
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("workspace directory: " + workspace);
 
-        Host deployHost = context.getHost();
-        try (SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost)) {
+        try {
+            SessionStore sessionStore = getCurrentSessionStore(context);
             Session session = sessionStore.getSession();
 
             // JSCHTool.remoteExecute(session, "cd " + workspace);

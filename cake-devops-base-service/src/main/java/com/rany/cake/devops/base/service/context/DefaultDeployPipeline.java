@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.service.context;
 import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.util.enums.NodeStatus;
+import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -75,6 +76,10 @@ public class DefaultDeployPipeline implements DeployPipeline {
     @Override
     public void shutdown() {
         log.info("pipeline系统结束运行");
+        if (deployContext != null && deployContext.getSessionStore() != null) {
+            SessionStore sessionStore = deployContext.getSessionStore();
+            sessionStore.close();
+        }
     }
 
     @Override

@@ -3,14 +3,12 @@ package com.rany.cake.devops.base.service.plugins.image;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.RunningConstant;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
-import org.apache.commons.net.imap.IMAP;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,10 +38,10 @@ public class PushAcrPlugin extends BasePlugin {
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("workspace directory: " + workspace);
 
-        Host deployHost = context.getHost();
-        try (SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost)) {
-            Session session = sessionStore.getSession();
 
+        try {
+            SessionStore sessionStore = getCurrentSessionStore(context);
+            Session session = sessionStore.getSession();
             // JSCHTool.remoteExecute(session, "cd " + workspace);
             // push_aliyun_image "$1" "$2" "$3" "$4" "$5"
 //            local repo_url=$1
