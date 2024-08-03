@@ -16,3 +16,28 @@ spring:
   datasource:
     druid:
       url: jdbc:mysql://mysql.default.svc.cluster.local:3306/cake_devops?allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+
+
+
+devops:
+  redisson:
+    address: redis.default.svc.cluster.local:6379
+    type: STANDALONE
+    enabled: true
+
+easy:
+  sso:
+    client:
+      enable: true
+      client-type: web
+      sso-server: http://127.0.0.1:8765/
+      login-url: http://127.0.0.1:8765/sso/loginPage
+      logout-url: /sso/logout
+      ignore-urls: /sso/loginPage,/sso/login,/oauth/login,/cake/expose-api/**,/api/keep-alive/**, /api/ws/**
+      ignore-resources: .js, .css, .jpg, .png, .ico, .html
+      ajax-failure-response:
+        content-type: application/json
+        code: 401
+        msg: 用户未登录
+    redis:
+      address: redis://redis.default.svc.cluster.local:6379
