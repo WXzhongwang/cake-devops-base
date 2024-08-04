@@ -64,7 +64,7 @@
         <deliveryMode>NON_PERSISTENT</deliveryMode>
     </appender>
 
-    <springProfile name="dev">
+    <springProfile name="dev,test,pre,prod">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
