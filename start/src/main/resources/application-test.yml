@@ -1,13 +1,3 @@
-dubbo:
-  config-center:
-    address: zookeeper://redis.default.svc.cluster.local:2181
-  registry:
-    address: zookeeper://redis.default.svc.cluster.local:2181
-    timeout: 30000
-  metadata-report:
-    address: zookeeper://redis.default.svc.cluster.local:2181
-    timeout: 30000
-
 cms:
   env: test
   oss:
@@ -17,6 +7,16 @@ cms:
     path: cake-devops-base/${cms.page.version}/index.html
   site:
     name: cake-devops-base
+
+dubbo:
+  config-center:
+    address: zookeeper://redis.default.svc.cluster.local:2181
+  registry:
+    address: zookeeper://redis.default.svc.cluster.local:2181
+    timeout: 30000
+  metadata-report:
+    address: zookeeper://redis.default.svc.cluster.local:2181
+    timeout: 30000
 
 spring:
   redis:
