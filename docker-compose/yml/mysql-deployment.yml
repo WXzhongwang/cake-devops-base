@@ -1,4 +1,3 @@
-# mysql-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,17 +20,7 @@ spec:
               value: "Zsw131400."
           ports:
             - containerPort: 3306
-          volumeMounts:
-            - name: mysql-persistent-storage
-              mountPath: /var/lib/mysql
-      volumes:
-        - name: mysql-persistent-storage
-          persistentVolumeClaim:
-            claimName: mysql-pvc
-
 ---
-
-# mysql-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -43,17 +32,3 @@ spec:
     - protocol: TCP
       port: 3306
       targetPort: 3306
-
----
-
-# mysql-pvc.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi

@@ -40,12 +40,12 @@ function build_image {
     echo "当前环境为：$env"
     if [ "$env" = "dev" ]; then
         # 输出下完整指令
-        echo "docker build -t  -f $dockerfile $project:$version ."
-        $DOCKER_HOME build -t -f $dockerfile "$project:$version" .
+        echo "docker build -f $dockerfile -t $project:$version ."
+        $DOCKER_HOME build -f $dockerfile -t "$project:$version" .
     else
         # 输出下完整指令
-        echo "docker build --build-arg ENV=$env -t -f $dockerfile $project:$version ."
-        $DOCKER_HOME build --build-arg ENV="$env" -t -f $dockerfile "$project:$version" .
+        echo "docker build --build-arg ENV=$env -f $dockerfile -t $project:$version ."
+        $DOCKER_HOME build --build-arg ENV="$env" -f $dockerfile -t "$project:$version" .
     fi
 
     # 判断镜像生成是否成功

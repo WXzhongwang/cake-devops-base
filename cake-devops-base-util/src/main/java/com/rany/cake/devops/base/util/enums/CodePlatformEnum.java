@@ -15,6 +15,7 @@ public enum CodePlatformEnum {
 
     GITHUB(1, "GITHUB"),
     GITLAB(2, "GITLAB"),
+    CODE_UP(3, "CODE_UP"),
     ;
 
     private final Integer code;

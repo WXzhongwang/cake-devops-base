@@ -24,6 +24,9 @@ public class CodeFactory {
         if (codePlatform == CodePlatformEnum.GITHUB) {
             return new GitHubCodeService(connectString, token);
         }
+//        if (codePlatform == CodePlatformEnum.CODE_UP) {
+//            return new CodeUpCodeService(connectString, token);
+//        }
         throw new DevOpsException(DevOpsErrorMessage.OPS_CONNECTED_ERROR);
     }
 }

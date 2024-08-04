@@ -64,7 +64,7 @@ public class WorkSpacePlugin extends BasePlugin {
             });
             RETRYER.call(() -> {
                 if (!JSCHTool.remoteExecute(session, "cd " + workspace + ";" +
-                        " curl -JLO https://rany-ops.oss-cn-hangzhou.aliyuncs.com/ci/0.0.7/java-build-source.tar.gz; " +
+                        " curl -JLO https://rany-ops.oss-cn-hangzhou.aliyuncs.com/ci/0.0.8/java-build-source.tar.gz; " +
                         " tar -zxvf java-build-source.tar.gz;" +
                         " chmod +x *.sh;")) {
                     log.error("脚本下载失败");

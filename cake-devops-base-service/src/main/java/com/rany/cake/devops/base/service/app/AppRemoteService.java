@@ -95,7 +95,7 @@ public class AppRemoteService implements AppService {
                         createAppCommand.getCodePlatform(), createAppCommand.getConnectionString(), createAppCommand.getToken()),
                 EnumUtils.getEnum(CodeLanguageEnum.class, createAppCommand.getLanguage()),
                 EnumUtils.getEnum(DevelopMode.class, createAppCommand.getDevelopMode()));
-
+        app.setWebhook(createAppCommand.getWebhook());
         List<DepartmentConfig.Department> departments = departmentConfig.getDepartments();
         Optional<DepartmentConfig.Department> department = departments.stream().filter(p -> Objects.equals(p.getValue(), createAppCommand.getDepartment())).findFirst();
         if (!department.isPresent()) {
@@ -195,6 +195,7 @@ public class AppRemoteService implements AppService {
         appEnv.setDomains(env.getDomains());
         appEnv.setAutoScaling(env.getAutoScaling());
         appEnv.setNeedApproval(env.getNeedApproval());
+        appEnv.setCustomBuildScript(env.getCustomBuildScript());
         ResourceStrategyDTO resourceStrategyDTO = env.getResourceStrategy();
         appEnv.setResourceStrategy(new ResourceStrategy(resourceStrategyDTO.getReplicas(), resourceStrategyDTO.getCpu(),
                 resourceStrategyDTO.getMemory(),
