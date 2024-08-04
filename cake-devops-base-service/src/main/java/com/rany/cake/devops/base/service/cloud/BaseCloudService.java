@@ -126,14 +126,6 @@ public abstract class BaseCloudService {
     public abstract boolean createService(DeployContext context);
 
     /**
-     * createOrUpdateService
-     *
-     * @param context 上下文信息
-     * @return 是否成功
-     */
-    public abstract boolean createOrUpdateService(DeployContext context);
-
-    /**
      * updateService
      *
      * @param context 上下文信息

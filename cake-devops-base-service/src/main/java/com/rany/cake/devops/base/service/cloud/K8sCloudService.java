@@ -47,10 +47,10 @@ public class K8sCloudService extends BaseCloudService {
             }
             // 打印 Pod 信息
             for (V1Pod pod : podList.getItems()) {
-                System.out.println("Pod Name: " + Objects.requireNonNull(pod.getMetadata()).getName());
-                System.out.println("Namespace: " + pod.getMetadata().getNamespace());
-                System.out.println("Status: " + Objects.requireNonNull(pod.getStatus()).getPhase());
-                System.out.println("--------------------------------");
+                log.info("Pod Name: " + Objects.requireNonNull(pod.getMetadata()).getName());
+                log.info("Namespace: " + pod.getMetadata().getNamespace());
+                log.info("Status: " + Objects.requireNonNull(pod.getStatus()).getPhase());
+                log.info("--------------------------------");
             }
             return !podList.getItems().isEmpty();
         } catch (ApiException e) {
@@ -182,8 +182,26 @@ public class K8sCloudService extends BaseCloudService {
     public boolean createService(DeployContext context) {
         AppName appName = context.getApp().getAppName();
         String namespace = context.getNamespace().getName().getName();
+        String serviceName = context.getServiceName();
+
+
+        CoreV1Api coreV1Api = new CoreV1Api(apiClient);
         try {
-            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+            if (StringUtils.isNotEmpty(serviceName)) {
+                // 尝试获取现有的 Service
+                V1Service existingService = coreV1Api.readNamespacedService(serviceName, namespace, null);
+                if (existingService != null) {
+                    log.warn("Service exist. {}", serviceName);
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            log.warn("Service not found.", ex);
+        }
+
+        try {
+
+
             V1Service service = new V1Service()
                     .metadata(new V1ObjectMeta().name(context.getServiceName()))
                     .spec(new V1ServiceSpec()
@@ -202,61 +220,6 @@ public class K8sCloudService extends BaseCloudService {
             return true;
         } catch (ApiException e) {
             log.error("Failed to create Service.", e);
-            return false;
-        }
-    }
-
-
-    @Override
-    public boolean createOrUpdateService(DeployContext context) {
-        AppName appName = context.getApp().getAppName();
-        String namespace = context.getNamespace().getName().getName();
-        String serviceName = context.getServiceName();
-
-        try {
-            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
-            // 环境内已经设置过serviceName
-            boolean hasService = false;
-            String resourceVersion = KubernetesConstants.DEFAULT_SERVICE_RESOURCE_VERSION;
-
-
-            try {
-                // 尝试获取现有的 Service
-                V1Service existingService = coreV1Api.readNamespacedService(serviceName, namespace, null);
-                String currentResourceVersion = Objects.requireNonNull(existingService.getMetadata()).getResourceVersion();
-                resourceVersion = incrementVersion(currentResourceVersion);
-                hasService = true;
-            } catch (Exception ex) {
-                log.warn("Service not found.", ex);
-            }
-
-            // 构建 Service 对象
-            V1Service service = new V1Service()
-                    .metadata(new V1ObjectMeta()
-                            .name(serviceName)
-                            .resourceVersion(resourceVersion)) // 添加 resourceVersion
-                    .spec(new V1ServiceSpec()
-                            .selector(Collections.singletonMap("app", appName.getName()))
-                            .ports(Collections.singletonList(
-                                    new V1ServicePort().port(context.getServicePort())
-                                            .targetPort(new IntOrString(context.getContainerPort()))
-                            ))
-                            .type("ClusterIP"));
-
-
-            if (hasService) {
-                // 如果存在，则更新 Service
-                coreV1Api.replaceNamespacedService(serviceName, namespace, service, null, null, null, null);
-                log.info("Service {} updated successfully.", serviceName);
-            } else {
-
-                // 如果不存在，则创建 Service
-                coreV1Api.createNamespacedService(namespace, service, null, null, null, null);
-                log.info("Service {} created successfully.", serviceName);
-            }
-            return true;
-        } catch (ApiException e) {
-            log.error("Failed to create or update Service {}.", serviceName, e);
             return false;
         }
     }

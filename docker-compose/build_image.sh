@@ -21,18 +21,31 @@ function build_image {
     # shellcheck disable=SC2164
     cd "$folder_name"
 
+    # 根据环境选择 Dockerfile_test
+    local dockerfile="APP-META/Dockerfile"
+    if [ "$env" != "dev" ]; then
+        dockerfile="APP-META/Dockerfile_$env"
+    fi
+
+    # 检查 Dockerfile_test 是否存在
+    if [ ! -f "$dockerfile" ] || [ ! -r "$dockerfile" ]; then
+        echo "错误: Dockerfile '$dockerfile' 不存在或不可读。"
+        send_notification "Dockerfile '$dockerfile' 不存在或不可读" "error" "$repo_name" "$webhook_url"
+        exit 1
+    fi
+
     # 生成镜像
     echo "【BuildImage】开始构建镜像..."
     # 输出下环境
     echo "当前环境为：$env"
     if [ "$env" = "dev" ]; then
         # 输出下完整指令
-        echo "docker build -t $project:$version ."
-        $DOCKER_HOME build -t "$project:$version" .
+        echo "docker build -t  -f $dockerfile $project:$version ."
+        $DOCKER_HOME build -t -f $dockerfile "$project:$version" .
     else
         # 输出下完整指令
-        echo "docker build --build-arg ENV=$env -t $project:$version ."
-        $DOCKER_HOME build --build-arg ENV="$env" -t "$project:$version" .
+        echo "docker build --build-arg ENV=$env -t -f $dockerfile $project:$version ."
+        $DOCKER_HOME build --build-arg ENV="$env" -t -f $dockerfile "$project:$version" .
     fi
 
     # 判断镜像生成是否成功

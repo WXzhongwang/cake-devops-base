@@ -48,7 +48,7 @@ public class KubernetesDeployPlugin extends BasePlugin {
         appEnv.setDeploymentName(context.getDeploymentName());
         appRepository.updateAppEnv(appEnv);
 
-        boolean serviceCreated = cloudService.createOrUpdateService(context);
+        boolean serviceCreated = cloudService.createService(context);
         if (!serviceCreated) {
             log.error("创建Service失败");
             return false;
