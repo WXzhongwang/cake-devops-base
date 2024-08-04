@@ -98,7 +98,7 @@ public class ReleaseCenter {
 
         pipeline.addLast(codePlugin);
         pipeline.addLast(mavenBuildPlugin);
-        pipeline.addLast(sonarQubePlugin);
+        // pipeline.addLast(sonarQubePlugin);
         pipeline.addLast(buildImagePlugin);
         pipeline.addLast(pushAcrPlugin);
         pipeline.addLast(kubernetesDeployPlugin);
