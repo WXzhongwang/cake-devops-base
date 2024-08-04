@@ -61,7 +61,6 @@
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
         insert into app_env (env_id,
                              cluster_id, app_id,
-                             status,
                              domains, env_name, env,
                              replicas, cpu, memory,
                              max_cpu, max_memory,
@@ -72,7 +71,6 @@
         values (#{envId},
                 #{clusterId.clusterId},
                 #{appId.appId},
-                #{status},
                 #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
                 #{envName,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR},
                 #{resourceStrategy.replicas,jdbcType=INTEGER}, #{resourceStrategy.cpu}, #{resourceStrategy.memory},
