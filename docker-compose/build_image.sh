@@ -18,8 +18,10 @@ function build_image {
     folder_name="$(pwd)/$repo_name"
 
     # 进入代码目录
-    # shellcheck disable=SC2164
-    cd "$folder_name"
+    cd "$folder_name" || { echo "Error: Directory $folder_name does not exist."; exit 1; }
+
+    # 输出当前所在路径
+    echo "Current directory: $(pwd)"
 
     # 根据环境选择 Dockerfile_test
     local dockerfile="APP-META/Dockerfile"

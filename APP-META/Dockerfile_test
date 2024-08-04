@@ -9,7 +9,7 @@ RUN apk add --no-cache bash && \
     mkdir -p /home/admin/$APP_NAME/logs
 
 # 添加 appctl.sh 脚本
-ADD appctl.sh /home/admin/appctl.sh
+ADD /APP-META/appctl.sh /home/admin/appctl.sh
 RUN chmod +x /home/admin/appctl.sh
 
 # 挂载目录
