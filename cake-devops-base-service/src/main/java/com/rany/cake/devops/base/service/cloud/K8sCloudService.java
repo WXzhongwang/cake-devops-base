@@ -552,16 +552,6 @@ public class K8sCloudService extends BaseCloudService {
                 .value(context.getAppEnv().getEnv().name().toLowerCase());  // 直接设置环境变量的值
         configMapValues.add(springProfilesActiveEnv);
 
-        // 设置资源
-        Map<String, Quantity> request = new HashMap<>();
-        request.put("cpu", new Quantity(resourceStrategy.getCpu()));
-        request.put("memory", new Quantity(resourceStrategy.getMemory()));
-        Map<String, Quantity> limit = new HashMap<>();
-        limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
-        limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
-        V1ResourceRequirements requirements = new V1ResourceRequirements()
-                .limits(limit)
-                .requests(request);
 
         List<V1Volume> dataVolumes = new ArrayList<>();
         List<V1VolumeMount> dataMounts = new ArrayList<>();
@@ -583,6 +573,47 @@ public class K8sCloudService extends BaseCloudService {
 
 
         // 创建一个简单的 Deployment 对象
+        V1Container container = new V1Container()
+                .name(appName.getName())
+                .image(context.getDeploymentImage())
+                .env(configMapValues)
+                // .resources(requirements)
+                .ports(Collections.singletonList(new V1ContainerPort().containerPort(context.getContainerPort())))
+                // 存活性探针（Liveness Probe）
+                // 存活性探针用于确定容器是否存活。如果存活性探针失败，Kubernetes 将尝试重新启动容器。
+                .livenessProbe(
+                        new V1Probe()
+                                .httpGet(new V1HTTPGetAction()
+                                        .path(healthCheck)
+                                        // 替换为你的健康检查路径
+                                        .port(new IntOrString(context.getContainerPort())))
+                                .initialDelaySeconds(120)
+                                // 初始延迟
+                                .periodSeconds(3)
+                                // 探测周期
+                                .timeoutSeconds(1)
+                                // 超时时间
+                                .successThreshold(1)
+                                // 成功阈值
+                                .failureThreshold(3)
+                        // 失败阈值
+                )
+                .volumeMounts(dataMounts);
+
+        // 设置资源
+        if (!StringUtils.isAllBlank(resourceStrategy.getCpu(), resourceStrategy.getMemory(), resourceStrategy.getMaxCpu(), resourceStrategy.getMaxMemory())) {
+            Map<String, Quantity> request = new HashMap<>();
+            request.put("cpu", new Quantity(resourceStrategy.getCpu()));
+            request.put("memory", new Quantity(resourceStrategy.getMemory()));
+            Map<String, Quantity> limit = new HashMap<>();
+            limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
+            limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
+            V1ResourceRequirements requirements = new V1ResourceRequirements()
+                    .limits(limit)
+                    .requests(request);
+            container.resources(requirements);
+        }
+
         return new V1Deployment()
                 .metadata(new V1ObjectMeta().name(context.getDeploymentName()))
                 .spec(new V1DeploymentSpec()
@@ -595,34 +626,7 @@ public class K8sCloudService extends BaseCloudService {
                                         .imagePullSecrets(Lists.of(
                                                 new V1LocalObjectReference().name("image-pull-secret")
                                         ))
-                                        .containers(Collections.singletonList(
-                                                new V1Container()
-                                                        .name(appName.getName())
-                                                        .image(context.getDeploymentImage())
-                                                        .env(configMapValues)
-                                                        .resources(requirements)
-                                                        .ports(Collections.singletonList(new V1ContainerPort().containerPort(context.getContainerPort())))
-                                                        // 存活性探针（Liveness Probe）
-                                                        // 存活性探针用于确定容器是否存活。如果存活性探针失败，Kubernetes 将尝试重新启动容器。
-                                                        .livenessProbe(
-                                                                new V1Probe()
-                                                                        .httpGet(new V1HTTPGetAction()
-                                                                                .path(healthCheck)
-                                                                                // 替换为你的健康检查路径
-                                                                                .port(new IntOrString(context.getContainerPort())))
-                                                                        .initialDelaySeconds(120)
-                                                                        // 初始延迟
-                                                                        .periodSeconds(3)
-                                                                        // 探测周期
-                                                                        .timeoutSeconds(1)
-                                                                        // 超时时间
-                                                                        .successThreshold(1)
-                                                                        // 成功阈值
-                                                                        .failureThreshold(3)
-                                                                // 失败阈值
-                                                        )
-                                                        .volumeMounts(dataMounts)
-                                        )).volumes(dataVolumes)
+                                        .containers(Collections.singletonList(container)).volumes(dataVolumes)
                                 )
                         )
                 );

@@ -57,6 +57,13 @@ const CreateEnvDrawer: React.FC<CreateEnvDrawerProps> = ({
           </Select>
         </Form.Item>
         <Form.Item
+          name="customBuildScript"
+          label="自定义构建脚本"
+          rules={[{ required: true, message: "自定义构建脚本" }]}
+        >
+          <Input.TextArea placeholder="自定义构建脚本（mvn clean package -Ptest -U -DskipTest）" />
+        </Form.Item>
+        <Form.Item
           name="clusterId"
           label="选择集群"
           rules={[{ required: true, message: "请选择集群" }]}
@@ -145,7 +152,7 @@ const CreateEnvDrawer: React.FC<CreateEnvDrawerProps> = ({
         <Form.Item
           name="maxCpu"
           label="最大cpu资源"
-          rules={[{ required: true, message: "请输入最大cpu资源(1C)" }]}
+          rules={[{ required: true, message: "请输入最大cpu资源" }]}
         >
           <Input type="text" placeholder="请输入最大cpu资源" />
         </Form.Item>
