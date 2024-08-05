@@ -16,8 +16,11 @@
 - [x] **Docker**: 容器技术、虚拟化 https://www.docker.com/
 - [x] **Docker Compose**: docker工具 https://github.com/docker/compose
 - [x] **kubernetes**: 容器集群管理系统 http://docs.kubernetes.org.cn/
+- [x] **kubernetes on Docker Desktop**: Kubernetes On Docker Desktop
 - [x] **AliYun ACR容器镜像服务**: 容器镜像服务(镜像加速中心)https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
 - [x] **websocket+rabbitmq**: 日志推送
+- [x] **dingtalk**: 基于钉钉扫码登录实现的sso
+- [x] **OSS**: 基于cms-client实现的前端代码推送和部署（灰度&资源托管&CDN加速）
 
 ## 远景
 
