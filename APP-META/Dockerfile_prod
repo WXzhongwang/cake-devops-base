@@ -1,6 +1,7 @@
 FROM openjdk:8-jdk-alpine
 # 定义构建参数 ENV
-ARG ENV=prod
+ARG ENV=production
+
 ENV APP_NAME=cake-devops-base
 
 RUN apk add --no-cache bash && \
@@ -8,7 +9,7 @@ RUN apk add --no-cache bash && \
     mkdir -p /home/admin/$APP_NAME/logs
 
 # 添加 appctl.sh 脚本
-ADD cake-devops-base-api/appctl.sh /home/admin/appctl.sh
+ADD /APP-META/appctl.sh /home/admin/appctl.sh
 RUN chmod +x /home/admin/appctl.sh
 
 # 挂载目录
