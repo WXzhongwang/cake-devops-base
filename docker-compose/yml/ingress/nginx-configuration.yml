@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configuration
+  namespace: ingress-nginx
+data:
+  use-proxy-protocol: "true"
+  proxy-connect-timeout: "1000"
+  proxy-read-timeout: "1000"
+  send-file-max-chunks: "2"
