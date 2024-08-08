@@ -192,6 +192,20 @@ public class K8sCloudService extends BaseCloudService {
                 V1Service existingService = coreV1Api.readNamespacedService(serviceName, namespace, null);
                 if (existingService != null) {
                     log.warn("Service exist. {}", serviceName);
+
+                    V1Service service = new V1Service()
+                            .metadata(new V1ObjectMeta().name(context.getServiceName()))
+                            .spec(new V1ServiceSpec()
+                                    .selector(Collections.singletonMap("app", appName.getName()))
+                                    .ports(Collections.singletonList(
+                                            new V1ServicePort().port(context.getServicePort())
+                                                    .targetPort(new IntOrString(context.getContainerPort()))
+                                    ))
+                                    .type("NodePort"));
+                    // 在这里执行更新 Service 的逻辑，可以修改 Service 的 selector、ports 等属性
+                    coreV1Api.replaceNamespacedService(context.getServiceName(), namespace, service, null, null, null, null);
+                    log.info("Service updated successfully.");
+
                     return true;
                 }
             }
@@ -210,7 +224,7 @@ public class K8sCloudService extends BaseCloudService {
                                     new V1ServicePort().port(context.getServicePort())
                                             .targetPort(new IntOrString(context.getContainerPort()))
                             ))
-                            .type("ClusterIP"));
+                            .type("NodePort"));
             // context.getServicePort() 获取了服务的端口号。这个端口是 Service 对外提供服务的端口，即客户端通过这个端口访问服务。
             // .targetPort(new IntOrString(context.getContainerPort()))：设置了目标端口，即 Service 转发到 Pod 内容器的端口。context.getContainerPort() 获取了容器的端口号。这个端口是 Pod 内部容器提供服务的端口。
             // 服务的类型:ClusterIP，表示服务只能在集群内部访问。其他可能的类型包括 NodePort、LoadBalancer 等。
@@ -399,7 +413,7 @@ public class K8sCloudService extends BaseCloudService {
                 .rules(rules)
                 .defaultBackend(defaultBackend);
         // 添加这一行来指定默认后端
-        
+
         try {
             NetworkingV1Api networkingV1Api = new NetworkingV1Api(apiClient);
             // 创建 Ingress 对象

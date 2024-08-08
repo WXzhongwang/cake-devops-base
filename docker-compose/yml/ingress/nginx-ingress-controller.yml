@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-ingress-controller
+  namespace: default
   labels:
     app: nginx-ingress
 spec:
@@ -18,6 +19,15 @@ spec:
       containers:
         - name: nginx-ingress-controller
           image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.26.1
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           args:
             - /nginx-ingress-controller
             - --configmap=$(POD_NAMESPACE)/nginx-configuration
@@ -30,6 +40,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-ingress-controller
+  namespace: default
   labels:
     app: nginx-ingress
 spec:
