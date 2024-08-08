@@ -380,6 +380,26 @@ public class K8sCloudService extends BaseCloudService {
                     );
             rules.add(http);
         }
+
+        // 添加 defaultBackend 配置
+        V1IngressBackend defaultBackend = new V1IngressBackend()
+                .service(new V1IngressServiceBackend()
+                        .name(KubernetesConstants.DEFAULT_BACKEND_SERVICE)
+                        // 假设您有一个方法或变量来提供默认服务名
+                        .port(new V1ServiceBackendPort().number(KubernetesConstants.DEFAULT_BACKEND_SERVICE_PORT)));
+        // 同样假设默认服务端口的提供方式
+
+        // 确保至少有规则或defaultBackend
+        if (rules.isEmpty()) {
+            log.warn("No domain rules provided, using default backend.");
+            return true;
+        }
+
+        V1IngressSpec ingressSpec = new V1IngressSpec()
+                .rules(rules)
+                .defaultBackend(defaultBackend);
+        // 添加这一行来指定默认后端
+        
         try {
             NetworkingV1Api networkingV1Api = new NetworkingV1Api(apiClient);
             // 创建 Ingress 对象
@@ -387,7 +407,7 @@ public class K8sCloudService extends BaseCloudService {
                     .apiVersion("networking.k8s.io/v1")
                     .kind("Ingress")
                     .metadata(new V1ObjectMeta().name(context.getIngressName()))
-                    .spec(new V1IngressSpec().rules(rules));
+                    .spec(ingressSpec);
 
             // 调用 Kubernetes API 创建 Ingress
             networkingV1Api.createNamespacedIngress(namespace, ingress, null, null, null, null);
@@ -424,13 +444,33 @@ public class K8sCloudService extends BaseCloudService {
             rules.add(rule);
         }
 
+
+        // 添加 defaultBackend 配置
+        V1IngressBackend defaultBackend = new V1IngressBackend()
+                .service(new V1IngressServiceBackend()
+                        .name(KubernetesConstants.DEFAULT_BACKEND_SERVICE)
+                        // 假设您有一个方法或变量来提供默认服务名
+                        .port(new V1ServiceBackendPort().number(KubernetesConstants.DEFAULT_BACKEND_SERVICE_PORT)));
+        // 同样假设默认服务端口的提供方式
+
+        // 确保至少有规则或defaultBackend
+        if (rules.isEmpty()) {
+            log.warn("No domain rules provided, using default backend.");
+            return true;
+        }
+
+        V1IngressSpec ingressSpec = new V1IngressSpec()
+                .rules(rules)
+                .defaultBackend(defaultBackend);
+        // 添加这一行来指定默认后端
+
         try {
             NetworkingV1Api networkingV1Api = new NetworkingV1Api(apiClient);
             V1Ingress ingress = new V1Ingress()
                     .apiVersion("networking.k8s.io/v1")
                     .kind("Ingress")
                     .metadata(new V1ObjectMeta().name(context.getIngressName()))
-                    .spec(new V1IngressSpec().rules(rules));
+                    .spec(ingressSpec);
 
             // 检查现有的 Ingress 是否存在
             boolean existingIngress = StringUtils.isNoneBlank(context.getAppEnv().getIngressName());
