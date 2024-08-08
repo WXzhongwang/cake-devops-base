@@ -5,6 +5,7 @@ metadata:
   labels:
     app: nginx-ingress
 spec:
+  serviceAccountName: ingress-controller
   replicas: 1
   selector:
     matchLabels:
