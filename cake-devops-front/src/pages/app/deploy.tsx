@@ -304,6 +304,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       payload: { releaseId: selectedRow.releaseId },
       callback: () => {
         message.success("开始发布");
+        pageRelease();
       },
     });
     // 清空选择
