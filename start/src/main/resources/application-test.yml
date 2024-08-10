@@ -25,7 +25,7 @@ spring:
     druid:
       url: jdbc:mysql://mysql.default.svc.cluster.local:3306/cake_devops?allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false
   rabbitmq:
-    addresses: 127.0.0.1:5672
+    addresses: rabbitmq.default.svc.cluster.local:5672
     username: guest
     password: guest
     connection-timeout: 5000
