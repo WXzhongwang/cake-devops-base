@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
     <property name="APP_NAME" value="cake-devops-base"/>
-    <property name="log.path" value="/home/admin/${APP_NAME}/logs"/>
+    <property name="log.path" value="${logging.file.path:/home/admin/${APP_NAME}/logs}"/>
     <property name="ENCODING" value="UTF-8"/>
 
     <springProperty scope="context" name="rabbitmq-address" source="spring.rabbitmq.addresses"

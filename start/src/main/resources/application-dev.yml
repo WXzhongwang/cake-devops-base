@@ -2,6 +2,9 @@ server:
   port: 8300
   tomcat:
     connection-timeout: 18000000
+logging:
+  file:
+    path: /Users/yuanjinxiu/cake-devops-base/logs
 
 cms:
   env: test
