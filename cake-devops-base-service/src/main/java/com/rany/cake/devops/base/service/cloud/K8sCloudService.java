@@ -581,7 +581,6 @@ public class K8sCloudService extends BaseCloudService {
         String healthCheck = context.getApp().getHealthCheck();
         Map<String, String> configMap = context.getAppEnv().getConfigMap();
         List<VolumeMount> volumeMounts = context.getApp().getVolumeMounts();
-        String envName = context.getAppEnv().getEnvName();
         String envId = context.getAppEnv().getEnvId();
         ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
         String configMapName = String.format("%s-%s", appName.getName(), envId);

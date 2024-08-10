@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # 检查命令行参数
 if [ $# -lt 2 ] || [ $# -gt 3 ]; then
     echo "Usage: $0 {start|stop|restart} [spring_profiles_active]" >&2
@@ -45,9 +47,6 @@ JAVA_OPTS=(
     "-XX:GCLogFileSize=100M"
 )
 
-# 定义 Spring profiles active
-#SPRING_PROFILES_ACTIVE="${ENV:-dev}"
-
 # 定义启动命令
 START_CMD="java ${JAVA_OPTS[*]} -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
 
@@ -59,7 +58,7 @@ is_running() {
         pgrep -f "$MAIN_CLASS" > /dev/null
         return $?
     else
-        ps aux | grep "[j]ava.*$MAIN_CLASS" | grep -v grep > /dev/null
+        ps aux | grep -q "[j]ava.*$MAIN_CLASS"
         return $?
     fi
 }
@@ -73,9 +72,7 @@ start_app() {
         # 使用nohup来让Java应用在后台运行
         # 注意：这里不再重定向到日志文件，而是直接启动应用
         exec $START_CMD
-        echo "Application started." | tee -a "$DEPLOY_LOG"
-        # 输出应用PID到另一个文件，方便后续操作
-        echo $! > /home/admin/${APP_NAME}/app.pid
+        echo "Application started with PID $$." | tee -a "$DEPLOY_LOG"
     fi
 }
 
