@@ -3,6 +3,11 @@ server:
   tomcat:
     connection-timeout: 18000000
 
+logging:
+  file:
+    path: /home/admin/${APP_NAME}/logs
+
+
 dubbo:
   application:
     id: cake-devops-service
