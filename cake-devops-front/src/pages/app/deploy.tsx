@@ -31,6 +31,7 @@ import moment from "moment";
 import dayjs from "dayjs";
 import { TableRowSelection } from "antd/lib/table/interface";
 import DeployLogDrawer from "./components/deploy-log-drawer";
+import app from "mock/app";
 
 const { Paragraph } = Typography;
 const { Panel } = Collapse;
@@ -376,7 +377,13 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       <Space size="middle" direction="vertical" style={{ width: "100%" }}>
         <Card
           title={
-            "发布流水线[" + appEnv?.envName + "(" + appEnv?.env + ")" + "]"
+            appDetail?.appName +
+            ": [" +
+            appEnv?.envName +
+            "(" +
+            appEnv?.env +
+            ")" +
+            "]"
           }
           extra={
             <div>

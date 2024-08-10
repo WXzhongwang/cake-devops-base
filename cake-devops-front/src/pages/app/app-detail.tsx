@@ -220,14 +220,14 @@ const AppDetail: React.FC<AppDetailProps> = ({
               <Card
                 title={appEnv.envName}
                 key={appEnv.envId}
-                extra={<a href="#">详情</a>}
+                // extra={<a href="#">详情</a>}
                 style={{ width: 300, marginBottom: "16px" }}
               >
                 <p>环境: {appEnv.env}</p>
                 <p>
                   环境状态:{" "}
-                  <Tag color={appEnv.status === "1" ? "success" : "error"}>
-                    {appEnv.status === "1" ? "已启用" : "已停用"}
+                  <Tag color={appEnv.status === "0" ? "success" : "error"}>
+                    {appEnv.status === "0" ? "已启用" : "已停用"}
                   </Tag>
                 </p>
                 <div style={{ marginTop: "16px" }}>
