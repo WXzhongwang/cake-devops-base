@@ -10,12 +10,12 @@ cms:
 
 dubbo:
   config-center:
-    address: zookeeper://redis.default.svc.cluster.local:2181
+    address: zookeeper://redis.default.svc.cluster.local:6379
   registry:
-    address: zookeeper://redis.default.svc.cluster.local:2181
+    address: zookeeper://redis.default.svc.cluster.local:6379
     timeout: 30000
   metadata-report:
-    address: zookeeper://redis.default.svc.cluster.local:2181
+    address: zookeeper://redis.default.svc.cluster.local:6379
     timeout: 30000
 
 spring:
