@@ -201,7 +201,8 @@ public class K8sCloudService extends BaseCloudService {
                                             new V1ServicePort().port(context.getServicePort())
                                                     .targetPort(new IntOrString(context.getContainerPort()))
                                     ))
-                                    .type("ClusterIP"));
+                                    .type("LoadBalancer"));
+//                                    .type("ClusterIP"));
                     // 在这里执行更新 Service 的逻辑，可以修改 Service 的 selector、ports 等属性
                     coreV1Api.replaceNamespacedService(context.getServiceName(), namespace, service, null, null, null, null);
                     log.info("Service updated successfully.");
@@ -224,7 +225,8 @@ public class K8sCloudService extends BaseCloudService {
                                     new V1ServicePort().port(context.getServicePort())
                                             .targetPort(new IntOrString(context.getContainerPort()))
                             ))
-                            .type("ClusterIP"));
+                            .type("LoadBalancer"));
+            //.type("ClusterIP"));
             // context.getServicePort() 获取了服务的端口号。这个端口是 Service 对外提供服务的端口，即客户端通过这个端口访问服务。
             // .targetPort(new IntOrString(context.getContainerPort()))：设置了目标端口，即 Service 转发到 Pod 内容器的端口。context.getContainerPort() 获取了容器的端口号。这个端口是 Pod 内部容器提供服务的端口。
             // 服务的类型:ClusterIP，表示服务只能在集群内部访问。其他可能的类型包括 NodePort、LoadBalancer 等。
