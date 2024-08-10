@@ -5,7 +5,7 @@ server:
 
 logging:
   file:
-    path: /home/admin/${APP_NAME}/logs
+    path: /home/admin/cake-devops-base/logs
 
 
 dubbo:

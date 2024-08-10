@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
     <property name="APP_NAME" value="cake-devops-base"/>
-    <property name="log.path" value="${logging.file.path}"/>
+    <!--    <property name="log.path" value="${logging.file.path}"/>-->
     <property name="ENCODING" value="UTF-8"/>
-
+    <springProperty scope="context" name="log.path" source="logging.file.path"
+                    defaultValue="/home/admin/cake-devops/logs"/>
+    
     <springProperty scope="context" name="rabbitmq-address" source="spring.rabbitmq.addresses"
                     defaultValue="127.0.0.1:5672"/>
     <springProperty scope="context" name="rabbitmq-username" source="spring.rabbitmq.username" defaultValue="guest"/>
