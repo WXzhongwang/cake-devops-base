@@ -42,8 +42,8 @@ easy:
     client:
       enable: true
       client-type: web
-      sso-server: http://127.0.0.1:8765/
-      login-url: http://127.0.0.1:8765/sso/loginPage
+      sso-server: http://test.sso.rany.com/
+      login-url: http://test.sso.rany.com/sso/loginPage
       logout-url: /sso/logout
       ignore-urls: /ok,/sso/loginPage,/sso/login,/oauth/login,/cake/expose-api/**,/api/keep-alive/**, /api/ws/**
       ignore-resources: .js, .css, .jpg, .png, .ico, .html
