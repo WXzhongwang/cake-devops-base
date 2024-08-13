@@ -56,6 +56,20 @@ export async function getAppDetail(id: number) {
   return request(`/api/devops/app/get?id=${id}`);
 }
 
+export async function modifyAppEnvConfigMap(data: any) {
+  return request(`/api/devops/app/modify-config-map`, {
+    method: "POST",
+    data,
+  });
+}
+
+export async function modifyAppEnvVars(data: any) {
+  return request(`/api/devops/app/modify-env-vars`, {
+    method: "POST",
+    data,
+  });
+}
+
 export async function getAppEnv(data: any) {
   return request(`/api/devops/app/get-app-env`, {
     method: "POST",

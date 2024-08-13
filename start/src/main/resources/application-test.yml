@@ -44,6 +44,7 @@ easy:
       client-type: web
       sso-server: http://test.sso.rany.com/
       login-url: http://test.sso.rany.com/sso/loginPage
+      sso-callback-url: http://test.sso.rany.com/sso/code
       logout-url: /sso/logout
       ignore-urls: /ok,/sso/loginPage,/sso/login,/oauth/login,/cake/expose-api/**,/api/keep-alive/**, /api/ws/**
       ignore-resources: .js, .css, .jpg, .png, .ico, .html

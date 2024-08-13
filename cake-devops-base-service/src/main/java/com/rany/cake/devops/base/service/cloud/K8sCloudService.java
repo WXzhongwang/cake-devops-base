@@ -153,7 +153,6 @@ public class K8sCloudService extends BaseCloudService {
         return true;
     }
 
-
     @Override
     public boolean deleteDeployment(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
@@ -309,7 +308,6 @@ public class K8sCloudService extends BaseCloudService {
         }
     }
 
-
     @Override
     public boolean createOrUpdateConfigMap(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
@@ -380,7 +378,8 @@ public class K8sCloudService extends BaseCloudService {
         List<V1IngressRule> rules = new ArrayList<>();
         for (String domain : domains) {
             V1IngressRule http = new V1IngressRule()
-                    .host(domain)  // 替换为你的域名
+                    .host(domain)
+                    // 替换为你的域名
                     .http(new V1HTTPIngressRuleValue()
                             .addPathsItem(
                                     new V1HTTPIngressPath()
@@ -579,34 +578,92 @@ public class K8sCloudService extends BaseCloudService {
     }
 
 
+    public boolean updateDeploymentResources(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        String deploymentName = context.getDeploymentName();
+        ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
+
+        try {
+            AppsV1Api apiInstance = new AppsV1Api(apiClient);
+            // 获取现有的 Deployment
+            V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
+
+            // 更新容器的资源配置
+            V1Container container = existingDeployment.getSpec().getTemplate().getSpec().getContainers().get(0);
+
+            Map<String, Quantity> request = new HashMap<>();
+            request.put("cpu", new Quantity(resourceStrategy.getCpu()));
+            request.put("memory", new Quantity(resourceStrategy.getMemory()));
+
+            Map<String, Quantity> limit = new HashMap<>();
+            limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
+            limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
+
+            V1ResourceRequirements requirements = new V1ResourceRequirements()
+                    .limits(limit)
+                    .requests(request);
+
+            container.setResources(requirements);
+
+            // 提交更新后的 Deployment
+            apiInstance.replaceNamespacedDeployment(deploymentName, namespace, existingDeployment, null, null, null, null);
+            log.info("Deployment {} resources updated successfully.", deploymentName);
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to update Deployment {} resources. {}", deploymentName, e.getResponseBody(), e);
+            return false;
+        }
+    }
+
+    public boolean updateDeploymentEnvVars(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        String deploymentName = context.getDeploymentName();
+        Map<String, String> envVars = context.getAppEnv().getEnvVars();
+        try {
+            AppsV1Api apiInstance = new AppsV1Api(apiClient);
+            // 获取现有的 Deployment
+            V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
+            // 更新容器的环境变量配置
+            V1Container container = existingDeployment.getSpec().getTemplate().getSpec().getContainers().get(0);
+            // 清空现有的环境变量
+            container.setEnv(new ArrayList<>());
+
+            // 根据 envVars 设置新的环境变量
+            for (Map.Entry<String, String> entry : envVars.entrySet()) {
+                V1EnvVar envVar = new V1EnvVar()
+                        .name(entry.getKey())
+                        .value(entry.getValue());
+                container.addEnvItem(envVar);
+            }
+
+            // 提交更新后的 Deployment
+            apiInstance.replaceNamespacedDeployment(deploymentName, namespace, existingDeployment, null, null, null, null);
+            log.info("Deployment {} environment variables updated successfully.", deploymentName);
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to update Deployment {} environment variables. {}", deploymentName, e.getResponseBody(), e);
+            return false;
+        }
+    }
+
+
     private V1Deployment createBasicDeployment(DeployContext context) {
         AppName appName = context.getApp().getAppName();
         String healthCheck = context.getApp().getHealthCheck();
-        Map<String, String> configMap = context.getAppEnv().getConfigMap();
+        Map<String, String> envVars = context.getAppEnv().getEnvVars();
         List<VolumeMount> volumeMounts = context.getApp().getVolumeMounts();
-        String envId = context.getAppEnv().getEnvId();
         ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
-        String configMapName = String.format("%s-%s", appName.getName(), envId);
         // 配置configMap
         List<V1EnvVar> configMapValues = new ArrayList<>();
-        if (configMap != null && !configMap.isEmpty()) {
-            for (Map.Entry<String, String> entry : configMap.entrySet()) {
+        if (envVars != null && !envVars.isEmpty()) {
+            for (Map.Entry<String, String> entry : envVars.entrySet()) {
                 V1EnvVar envVar = new V1EnvVar()
                         .name(entry.getKey())
                         // 环境变量名称
-                        .valueFrom(new V1EnvVarSource()
-                                .configMapKeyRef(new V1ConfigMapKeySelector()
-                                        .name(configMapName)
-                                        .key(entry.getKey())));
+                        .value(entry.getKey());
                 configMapValues.add(envVar);
             }
         }
-
-        // 添加 SPRING_PROFILES_ACTIVE 环境变量
-        V1EnvVar springProfilesActiveEnv = new V1EnvVar()
-                .name("SPRING_PROFILES_ACTIVE")
-                .value(context.getAppEnv().getEnv().name().toLowerCase());  // 直接设置环境变量的值
-        configMapValues.add(springProfilesActiveEnv);
 
 
         List<V1Volume> dataVolumes = new ArrayList<>();
@@ -633,7 +690,6 @@ public class K8sCloudService extends BaseCloudService {
                 .name(appName.getName())
                 .image(context.getDeploymentImage())
                 .env(configMapValues)
-                // .resources(requirements)
                 .ports(Collections.singletonList(new V1ContainerPort().containerPort(context.getContainerPort())))
                 // 存活性探针（Liveness Probe）
                 // 存活性探针用于确定容器是否存活。如果存活性探针失败，Kubernetes 将尝试重新启动容器。

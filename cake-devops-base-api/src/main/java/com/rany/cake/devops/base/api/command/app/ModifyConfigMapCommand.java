@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ModifyAppEnvConfigMapCommand extends BaseCommand {
+public class ModifyConfigMapCommand extends BaseCommand {
     private String envId;
     private Map<String, String> configMap;
 }

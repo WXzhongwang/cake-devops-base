@@ -30,8 +30,8 @@
         <result column="ingress_name" jdbcType="VARCHAR" property="ingressName"/>
         <result column="config_map" property="configMap" jdbcType="VARCHAR"
                 typeHandler="com.rany.cake.devops.base.infra.handler.MapPairTypeHandler"/>
-        <!--        <result column="domains" property="domains" jdbcType="VARCHAR"-->
-        <!--                typeHandler="com.cake.framework.mybatis.handler.ListStringTypeHandler"/>-->
+        <result column="env_vars" property="envVars" jdbcType="VARCHAR"
+                typeHandler="com.rany.cake.devops.base.infra.handler.MapPairTypeHandler"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -39,7 +39,7 @@
         , env_id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
         auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
         modifier, deploy_status, progress, custom_build_script, deployment_name, service_name, ingress_name,
-        config_map
+        config_map, env_vars
     </sql>
     <select id="selectByAppId" resultMap="BaseResultMap">
 
@@ -67,7 +67,8 @@
                              auto_scaling, need_approval, status,
                              is_deleted, gmt_create, gmt_modified,
                              creator, modifier, deploy_status, progress,
-                             custom_build_script, deployment_name, service_name, ingress_name, config_map)
+                             custom_build_script, deployment_name, service_name, ingress_name, config_map,
+                             env_vars)
         values (#{envId},
                 #{clusterId.clusterId},
                 #{appId.appId},
@@ -80,7 +81,8 @@
                 #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
                 #{deployStatus}, #{progress},
                 #{customBuildScript}, #{deploymentName}, #{serviceName}, #{ingressName},
-                #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler})
+                #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
+                #{envVars,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler})
     </insert>
 
 
@@ -100,6 +102,10 @@
             <if test="configMap != null">
                 config_map =
                 #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
+            </if>
+            <if test="envVars != null">
+                env_vars =
+                #{envVars,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
             </if>
             <if test="envName != null">
                 env_name = #{envName,jdbcType=VARCHAR},

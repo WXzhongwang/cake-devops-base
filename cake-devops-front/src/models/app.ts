@@ -27,6 +27,16 @@ export interface CreateAppEnvPayload {
   env: AppEnv;
 }
 
+export interface ModifyAppEnvVarsPayload {
+  envId: string;
+  envVars: Record<string, string> | null;
+}
+
+export interface ModifyAppEnvConfigMapPayload {
+  envId: string;
+  configMap: Record<string, string> | null;
+}
+
 export interface QueryAppPayload {
   appName: string;
   language: string;
@@ -90,6 +100,7 @@ export interface AppEnv {
   domains: string[];
   resourceStrategy: ResourceStrategyDTO;
   configMap: Record<string, string> | null;
+  envVars: Record<string, string> | null;
   autoScaling: boolean;
   needApproval: boolean;
   status: string | null;
@@ -134,6 +145,16 @@ interface CreateAppAction extends BaseAction {
 interface CreateAppEnvAction extends BaseAction {
   type: "app/createAppEnv";
   payload: CreateAppEnvPayload;
+}
+
+interface ModifyAppEnvVarsAction extends BaseAction {
+  type: "app/modifyAppEnvVars";
+  payload: ModifyAppEnvVarsPayload;
+}
+
+interface ModifyAppEnvConfigMapAction extends BaseAction {
+  type: "app/modifyAppEnvConfigMap";
+  payload: ModifyAppEnvConfigMapPayload;
 }
 
 interface GetAppEnvAction extends BaseAction {
@@ -187,6 +208,8 @@ export interface AppModelType {
     deleteMember: Effect;
     addMember: Effect;
     getAppEnv: Effect;
+    modifyAppEnvVars: Effect;
+    modifyAppEnvConfigMap: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
@@ -279,6 +302,36 @@ const AppModel: AppModelType = {
     *createAppEnv({ payload, callback }: CreateAppEnvAction, { call, put }) {
       const response = yield call(appService.createAppEnv, payload);
       // yield put({ type: "getAppDetail" });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *modifyAppEnvVars(
+      { payload, callback }: ModifyAppEnvVarsAction,
+      { call, put }
+    ) {
+      const response = yield call(appService.modifyAppEnvVars, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *modifyAppEnvConfigMap(
+      { payload, callback }: ModifyAppEnvConfigMapAction,
+      { call, put }
+    ) {
+      const response = yield call(appService.modifyAppEnvConfigMap, payload);
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {

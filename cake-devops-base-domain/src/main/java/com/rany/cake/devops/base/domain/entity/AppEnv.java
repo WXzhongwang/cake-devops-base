@@ -41,7 +41,14 @@ public class AppEnv extends BaseEntity<String> {
      */
     private String customBuildScript;
 
+    /**
+     * configMap
+     */
     private Map<String, String> configMap;
+    /**
+     * 环境变量注入
+     */
+    private Map<String, String> envVars;
     private String deploymentName;
     private String serviceName;
     private String ingressName;

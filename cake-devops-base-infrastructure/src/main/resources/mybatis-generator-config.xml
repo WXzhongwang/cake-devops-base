@@ -63,6 +63,13 @@
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
+
+        <table schema="cake_devops" tableName="deploy_history"
+               domainObjectName="DeployHistoryPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+
         <table schema="cake_devops" tableName="host" domainObjectName="HostPO" enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false">

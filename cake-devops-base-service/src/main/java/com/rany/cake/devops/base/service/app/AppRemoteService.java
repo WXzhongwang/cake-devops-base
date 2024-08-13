@@ -7,7 +7,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
 import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
-import com.rany.cake.devops.base.api.command.app.ModifyAppEnvConfigMapCommand;
+import com.rany.cake.devops.base.api.command.app.ModifyConfigMapCommand;
+import com.rany.cake.devops.base.api.command.app.ModifyEnvVarsCommand;
 import com.rany.cake.devops.base.api.dto.*;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
@@ -209,7 +210,7 @@ public class AppRemoteService implements AppService {
     }
 
     @Override
-    public Boolean modifyAppEnvConfigMap(ModifyAppEnvConfigMapCommand modifyAppEnvConfigMapCommand) {
+    public Boolean modifyAppEnvVars(ModifyConfigMapCommand modifyAppEnvConfigMapCommand) {
         DeployContext context = new DeployContext();
         AppEnv appEnv = appDomainService.getAppEnv(modifyAppEnvConfigMapCommand.getEnvId());
         context.setAppEnv(appEnv);
@@ -224,6 +225,28 @@ public class AppRemoteService implements AppService {
         appEnv.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
         context.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
         Boolean updated = cloudService.createOrUpdateConfigMap(context);
+        if (updated) {
+            appDomainService.updateAppEnv(appEnv);
+        }
+        return updated;
+    }
+
+    @Override
+    public Boolean modifyAppEnvVars(ModifyEnvVarsCommand modifyEnvVarsCommand) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(modifyEnvVarsCommand.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        context.setApp(app);
+        context.setCluster(cluster);
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+        appEnv.setEnvVars(modifyEnvVarsCommand.getEnvVars());
+        context.setConfigMap(modifyEnvVarsCommand.getEnvVars());
+        Boolean updated = cloudService.updateDeploymentEnvVars(context);
         if (updated) {
             appDomainService.updateAppEnv(appEnv);
         }

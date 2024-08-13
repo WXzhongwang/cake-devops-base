@@ -1,31 +1,10 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: rabbitmq
-  labels:
-    app: rabbitmq
+  name: rabbitmq-pvc
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: rabbitmq
-  template:
-    metadata:
-      labels:
-        app: rabbitmq
-    spec:
-      containers:
-        - name: rabbitmq
-          image: "rabbitmq:3-management"
-          ports:
-            - name: http
-              containerPort: 15672
-            - name: amqp
-              containerPort: 5672
-          volumeMounts:
-            - name: rabbitmq-storage
-              mountPath: /var/lib/rabbitmq
-      volumes:
-        - name: rabbitmq-storage
-          persistentVolumeClaim:
-            claimName: rabbitmq-pvc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

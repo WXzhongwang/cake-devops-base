@@ -436,17 +436,13 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           )}
         </Card>
 
-        <Collapse defaultActiveKey={[]}>
+        <Collapse defaultActiveKey={[1]}>
           <Panel
-            header={"配置项[" + appEnv?.envName + "(" + appEnv?.env + ")" + "]"}
+            header={"配置项"}
             key="1"
             extra={
-              <Button
-                key="release"
-                onClick={handleAddConfig}
-                // disabled={deployDisabled || !selectedRow}
-              >
-                新增配置项
+              <Button key="configMap" onClick={handleAddConfig}>
+                修改配置项
               </Button>
             }
           >
@@ -466,6 +462,47 @@ const DeployPage: React.FC<ReleasePageProps> = ({
                   },
                 ]}
                 dataSource={Object.entries(appEnv.configMap).map(
+                  ([key, value]) => ({
+                    key,
+                    value,
+                  })
+                )}
+                rowKey="key"
+                pagination={false}
+              />
+            ) : (
+              <p>暂无配置项</p>
+            )}
+          </Panel>
+          <Panel
+            header={"环境变量"}
+            key="2"
+            extra={
+              <Button
+                key="env"
+                onClick={handleAddConfig}
+                // disabled={deployDisabled || !selectedRow}
+              >
+                修改环境变量
+              </Button>
+            }
+          >
+            {appEnv?.envVars && Object.keys(appEnv.envVars).length > 0 ? (
+              <Table
+                title={() => "环境变量配置"}
+                columns={[
+                  {
+                    title: "Key 键",
+                    dataIndex: "key",
+                    key: "key",
+                  },
+                  {
+                    title: "Value 值",
+                    dataIndex: "value",
+                    key: "value",
+                  },
+                ]}
+                dataSource={Object.entries(appEnv.envVars).map(
                   ([key, value]) => ({
                     key,
                     value,
