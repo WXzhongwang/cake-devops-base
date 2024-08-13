@@ -111,6 +111,15 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
   const [form] = Form.useForm();
 
+  // 配置项数据
+  // 配置项数据
+  const [configMapData, setConfigMapData] = useState<
+    { key: string; value: string; editable?: boolean }[]
+  >([]);
+  const [envVarsData, setEnvVarsData] = useState<
+    { key: string; value: string; editable?: boolean }[]
+  >([]);
+
   const columns = [
     {
       title: "发布单号",
@@ -193,6 +202,104 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     },
   ];
 
+  // 行编辑状态切换
+  const toggleEditRow = (index: number, type: "config" | "env") => {
+    if (type === "config") {
+      const newData = [...configMapData];
+      newData[index].editable = !newData[index].editable;
+      setConfigMapData(newData);
+    } else {
+      const newData = [...envVarsData];
+      newData[index].editable = !newData[index].editable;
+      setEnvVarsData(newData);
+    }
+  };
+
+  // 保存编辑
+  const saveRow = (index: number, type: "config" | "env") => {
+    toggleEditRow(index, type); // 切换回不可编辑状态
+  };
+  // 添加新行
+  const addNewRow = (type: "config" | "env") => {
+    const newRow = { key: "", value: "", editable: true };
+    if (type === "config") {
+      setConfigMapData([...configMapData, newRow]);
+    } else {
+      setEnvVarsData([...envVarsData, newRow]);
+    }
+  };
+
+  // 删除行
+  const deleteRow = (index: number, type: "config" | "env") => {
+    if (type === "config") {
+      const newData = [...configMapData];
+      newData.splice(index, 1);
+      setConfigMapData(newData);
+    } else {
+      const newData = [...envVarsData];
+      newData.splice(index, 1);
+      setEnvVarsData(newData);
+    }
+  };
+
+  // 修改行内容
+  const updateRow = (
+    index: number,
+    key: string,
+    value: string,
+    type: "config" | "env"
+  ) => {
+    if (type === "config") {
+      const newData = [...configMapData];
+      newData[index] = { ...newData[index], key, value };
+      setConfigMapData(newData);
+    } else {
+      const newData = [...envVarsData];
+      newData[index] = { ...newData[index], key, value };
+      setEnvVarsData(newData);
+    }
+  };
+
+  const configColumns = (type: "config" | "env") => [
+    {
+      title: "Key 键",
+      dataIndex: "key",
+      render: (text: string, record: any, index: number) => (
+        <Input
+          value={text}
+          disabled={!record.editable}
+          onChange={(e) => updateRow(index, e.target.value, record.value, type)}
+        />
+      ),
+    },
+    {
+      title: "Value 值",
+      dataIndex: "value",
+      render: (text: string, record: any, index: number) => (
+        <Input
+          value={text}
+          disabled={!record.editable}
+          onChange={(e) => updateRow(index, record.key, e.target.value, type)}
+        />
+      ),
+    },
+    {
+      title: "操作",
+      width: 200, // 设置固定宽度
+      render: (_: any, __: any, index: number) => (
+        <Space>
+          {configMapData[index].editable ? (
+            <>
+              <Button onClick={() => saveRow(index, type)}>保存</Button>
+              <Button onClick={() => deleteRow(index, type)}>删除</Button>
+            </>
+          ) : (
+            <Button onClick={() => toggleEditRow(index, type)}>编辑</Button>
+          )}
+        </Space>
+      ),
+    },
+  ];
   // 处理关闭按钮的点击事件
   const handleConfirmClose = (record: ReleaseRecord) => {
     // 弹出二次确认框
@@ -260,7 +367,26 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     pageRelease();
   }, [pageRelease]);
 
-  console.log("appEnv", appEnv);
+  useEffect(() => {
+    if (appEnv) {
+      const configMap = appEnv.configMap || {};
+      const envVars = appEnv.envVars || {};
+      setConfigMapData(
+        Object.entries(configMap).map(([key, value]) => ({
+          key,
+          value,
+          editable: false,
+        }))
+      );
+      setEnvVarsData(
+        Object.entries(envVars).map(([key, value]) => ({
+          key,
+          value,
+          editable: false,
+        }))
+      );
+    }
+  }, [appEnv]);
 
   useEffect(() => {
     // 在appDetail更新时，如果selectedEnvironment为undefined，则设置默认值
@@ -311,8 +437,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     setSelectedRow(null);
   };
 
-  const handleAddConfig = () => {};
-
   const handleCreateReleaseDrawer = () => {
     setDrawerVisible(!drawerVisible);
   };
@@ -340,6 +464,54 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       },
     });
     setDrawerVisible(false);
+  };
+
+  const submitConfig = () => {
+    // 提交配置项数据
+    if (configMapData.some((item) => !item.key || !item.value)) {
+      message.warning("配置项不能为空");
+      return;
+    }
+    // 将 configMapData 转换为对象
+    const configMap = configMapData.reduce(
+      (acc, { key, value }) => {
+        if (key) acc[key] = value;
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
+    dispatch({
+      type: "app/modifyAppEnvConfigMap",
+      payload: {
+        envId: selectedEnvironment,
+        configMap: configMap,
+      },
+    });
+  };
+
+  const submitEnvVars = () => {
+    // 提交环境变量数据
+    if (envVarsData.some((item) => !item.key || !item.value)) {
+      message.warning("环境变量不能为空");
+      return;
+    }
+    // 将 configMapData 转换为对象
+    const envVars = envVarsData.reduce(
+      (acc, { key, value }) => {
+        if (key) acc[key] = value;
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
+    dispatch({
+      type: "app/modifyAppEnvVars",
+      payload: {
+        envId: selectedEnvironment,
+        envVars: envVars,
+      },
+    });
   };
 
   // 新增 handleViewLogs 方法
@@ -436,84 +608,38 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           )}
         </Card>
 
-        <Collapse defaultActiveKey={[1]}>
-          <Panel
-            header={"配置项"}
-            key="1"
-            extra={
-              <Button key="configMap" onClick={handleAddConfig}>
-                修改配置项
+        <Collapse defaultActiveKey={[]}>
+          <Panel header={"配置项"} key="1">
+            <Table
+              columns={configColumns("config")}
+              dataSource={configMapData}
+              pagination={false}
+              rowKey="key"
+              size="small" // 使表格更小巧
+              style={{ marginBottom: 16 }} // 添加表格底部间距
+            />
+            <Space style={{ marginBottom: 16 }}>
+              <Button onClick={() => addNewRow("config")}>添加配置项</Button>
+              <Button type="primary" onClick={submitConfig}>
+                提交配置
               </Button>
-            }
-          >
-            {appEnv?.configMap && Object.keys(appEnv.configMap).length > 0 ? (
-              <Table
-                title={() => "ConfigMap 配置信息"}
-                columns={[
-                  {
-                    title: "Key 键",
-                    dataIndex: "key",
-                    key: "key",
-                  },
-                  {
-                    title: "Value 值",
-                    dataIndex: "value",
-                    key: "value",
-                  },
-                ]}
-                dataSource={Object.entries(appEnv.configMap).map(
-                  ([key, value]) => ({
-                    key,
-                    value,
-                  })
-                )}
-                rowKey="key"
-                pagination={false}
-              />
-            ) : (
-              <p>暂无配置项</p>
-            )}
+            </Space>
           </Panel>
-          <Panel
-            header={"环境变量"}
-            key="2"
-            extra={
-              <Button
-                key="env"
-                onClick={handleAddConfig}
-                // disabled={deployDisabled || !selectedRow}
-              >
-                修改环境变量
+          <Panel header={"环境变量"} key="2">
+            <Table
+              columns={configColumns("env")}
+              dataSource={envVarsData}
+              pagination={false}
+              rowKey="key"
+              size="small" // 使表格更小巧
+              style={{ marginBottom: 16 }} // 添加表格底部间距
+            />
+            <Space style={{ marginBottom: 16 }}>
+              <Button onClick={() => addNewRow("env")}>添加环境变量</Button>
+              <Button type="primary" onClick={submitEnvVars}>
+                提交环境变量
               </Button>
-            }
-          >
-            {appEnv?.envVars && Object.keys(appEnv.envVars).length > 0 ? (
-              <Table
-                title={() => "环境变量配置"}
-                columns={[
-                  {
-                    title: "Key 键",
-                    dataIndex: "key",
-                    key: "key",
-                  },
-                  {
-                    title: "Value 值",
-                    dataIndex: "value",
-                    key: "value",
-                  },
-                ]}
-                dataSource={Object.entries(appEnv.envVars).map(
-                  ([key, value]) => ({
-                    key,
-                    value,
-                  })
-                )}
-                rowKey="key"
-                pagination={false}
-              />
-            ) : (
-              <p>暂无配置项</p>
-            )}
+            </Space>
           </Panel>
         </Collapse>
 

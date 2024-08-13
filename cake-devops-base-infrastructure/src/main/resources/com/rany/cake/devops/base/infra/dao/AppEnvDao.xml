@@ -29,9 +29,9 @@
         <result column="service_name" jdbcType="VARCHAR" property="serviceName"/>
         <result column="ingress_name" jdbcType="VARCHAR" property="ingressName"/>
         <result column="config_map" property="configMap" jdbcType="VARCHAR"
-                typeHandler="com.rany.cake.devops.base.infra.handler.MapPairTypeHandler"/>
+        />
         <result column="env_vars" property="envVars" jdbcType="VARCHAR"
-                typeHandler="com.rany.cake.devops.base.infra.handler.MapPairTypeHandler"/>
+        />
     </resultMap>
 
     <sql id="Base_Column_List">
