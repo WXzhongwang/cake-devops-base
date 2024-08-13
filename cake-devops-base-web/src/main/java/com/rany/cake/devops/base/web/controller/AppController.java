@@ -57,7 +57,7 @@ public class AppController {
 
     @PostMapping("/modify-config-map")
     public PojoResult<Boolean> modifyAppEnvConfigMap(@RequestBody ModifyConfigMapCommand modifyAppEnvConfigMapCommand) {
-        return PojoResult.succeed(appService.modifyAppEnvVars(modifyAppEnvConfigMapCommand));
+        return PojoResult.succeed(appService.modifyAppConfigMap(modifyAppEnvConfigMapCommand));
     }
 
     @PostMapping("/modify-env-vars")

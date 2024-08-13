@@ -65,7 +65,7 @@ public interface AppService {
      * @param modifyAppEnvConfigMapCommand 修改configMap
      * @return 是否成功
      */
-    Boolean modifyAppEnvVars(ModifyConfigMapCommand modifyAppEnvConfigMapCommand);
+    Boolean modifyAppConfigMap(ModifyConfigMapCommand modifyAppEnvConfigMapCommand);
 
     /**
      * 修改环境变量

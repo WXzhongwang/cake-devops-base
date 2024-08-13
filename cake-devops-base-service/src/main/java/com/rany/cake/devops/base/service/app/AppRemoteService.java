@@ -210,7 +210,7 @@ public class AppRemoteService implements AppService {
     }
 
     @Override
-    public Boolean modifyAppEnvVars(ModifyConfigMapCommand modifyAppEnvConfigMapCommand) {
+    public Boolean modifyAppConfigMap(ModifyConfigMapCommand modifyAppEnvConfigMapCommand) {
         DeployContext context = new DeployContext();
         AppEnv appEnv = appDomainService.getAppEnv(modifyAppEnvConfigMapCommand.getEnvId());
         context.setAppEnv(appEnv);
