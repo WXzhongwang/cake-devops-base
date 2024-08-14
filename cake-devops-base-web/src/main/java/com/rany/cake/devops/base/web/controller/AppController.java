@@ -3,10 +3,7 @@ package com.rany.cake.devops.base.web.controller;
 import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.PageResult;
 import com.cake.framework.common.response.PojoResult;
-import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
-import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
-import com.rany.cake.devops.base.api.command.app.ModifyConfigMapCommand;
-import com.rany.cake.devops.base.api.command.app.ModifyEnvVarsCommand;
+import com.rany.cake.devops.base.api.command.app.*;
 import com.rany.cake.devops.base.api.command.member.AddAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
@@ -63,6 +60,16 @@ public class AppController {
     @PostMapping("/modify-env-vars")
     public PojoResult<Boolean> modifyAppEnvVars(@RequestBody ModifyEnvVarsCommand modifyEnvVarsCommand) {
         return PojoResult.succeed(appService.modifyAppEnvVars(modifyEnvVarsCommand));
+    }
+
+    @PostMapping("/modify-env-domains")
+    public PojoResult<Boolean> modifyAppEnvDomains(@RequestBody ModifyAppEnvDomainCommand modifyAppEnvDomainCommand) {
+        return PojoResult.succeed(appService.modifyAppEnvDomains(modifyAppEnvDomainCommand));
+    }
+
+    @PostMapping("/modify-env-sources")
+    public PojoResult<Boolean> modifyAppEnvSource(@RequestBody ModifyEnvResourceCommand modifyEnvResourceCommand) {
+        return PojoResult.succeed(appService.modifyAppEnvResource(modifyEnvResourceCommand));
     }
 
 

@@ -48,21 +48,21 @@ public class KubernetesDeployPlugin extends BasePlugin {
         appEnv.setDeploymentName(context.getDeploymentName());
         appRepository.updateAppEnv(appEnv);
 
-        boolean serviceCreated = cloudService.createService(context);
-        if (!serviceCreated) {
-            log.error("创建Service失败");
-            return false;
-        }
-        appEnv.setServiceName(context.getServiceName());
-        appRepository.updateAppEnv(appEnv);
+//        boolean serviceCreated = cloudService.createService(context);
+//        if (!serviceCreated) {
+//            log.error("创建Service失败");
+//            return false;
+//        }
+//        appEnv.setServiceName(context.getServiceName());
+//        appRepository.updateAppEnv(appEnv);
 
-        boolean ingressCreated = cloudService.createOrUpdateIngress(context);
-        if (!ingressCreated) {
-            log.error("创建Ingress失败");
-            return false;
-        }
-        appEnv.setIngressName(context.getIngressName());
-        appRepository.updateAppEnv(appEnv);
+//        boolean ingressCreated = cloudService.createOrUpdateIngress(context);
+//        if (!ingressCreated) {
+//            log.error("创建Ingress失败");
+//            return false;
+//        }
+//        appEnv.setIngressName(context.getIngressName());
+//        appRepository.updateAppEnv(appEnv);
         return true;
     }
 }

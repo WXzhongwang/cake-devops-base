@@ -153,6 +153,7 @@ public class K8sCloudService extends BaseCloudService {
         return true;
     }
 
+
     @Override
     public boolean deleteDeployment(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
@@ -181,56 +182,30 @@ public class K8sCloudService extends BaseCloudService {
     public boolean createService(DeployContext context) {
         AppName appName = context.getApp().getAppName();
         String namespace = context.getNamespace().getName().getName();
-        String serviceName = context.getServiceName();
-
 
         CoreV1Api coreV1Api = new CoreV1Api(apiClient);
         try {
-            if (StringUtils.isNotEmpty(serviceName)) {
-                // 尝试获取现有的 Service
-                V1Service existingService = coreV1Api.readNamespacedService(serviceName, namespace, null);
-                if (existingService != null) {
-                    log.warn("Service exist. {}", serviceName);
-
-                    V1Service service = new V1Service()
-                            .metadata(new V1ObjectMeta().name(context.getServiceName()))
-                            .spec(new V1ServiceSpec()
-                                    .selector(Collections.singletonMap("app", appName.getName()))
-                                    .ports(Collections.singletonList(
-                                            new V1ServicePort().port(context.getServicePort())
-                                                    .targetPort(new IntOrString(context.getContainerPort()))
-                                    ))
-//                                    .type("LoadBalancer"));
-                                    .type("NodePort"));
-//                                    .type("ClusterIP"));
-                    // 在这里执行更新 Service 的逻辑，可以修改 Service 的 selector、ports 等属性
-                    coreV1Api.replaceNamespacedService(context.getServiceName(), namespace, service, null, null, null, null);
-                    log.info("Service updated successfully.");
-
-                    return true;
-                }
+            V1ServiceSpec app = new V1ServiceSpec()
+                    .selector(Collections.singletonMap("app", appName.getName()))
+                    .type(context.getServiceType());
+            if ("NodePort".equalsIgnoreCase(context.getServiceType())) {
+                app.setPorts(Collections.singletonList(
+                        new V1ServicePort().port(context.getServicePort())
+                                .targetPort(new IntOrString(context.getContainerPort()))
+                                .nodePort(context.getNodePort())
+                                .protocol(context.getServiceProtocal())
+                ));
             }
-        } catch (Exception ex) {
-            log.warn("Service not found.", ex);
-        }
-
-        try {
-
-
+            if ("ClusterIP".equalsIgnoreCase(context.getServiceType())) {
+                app.setPorts(Collections.singletonList(
+                        new V1ServicePort().port(context.getServicePort())
+                                .targetPort(new IntOrString(context.getContainerPort()))
+                                .protocol(context.getServiceProtocal())
+                ));
+            }
             V1Service service = new V1Service()
                     .metadata(new V1ObjectMeta().name(context.getServiceName()))
-                    .spec(new V1ServiceSpec()
-                            .selector(Collections.singletonMap("app", appName.getName()))
-                            .ports(Collections.singletonList(
-                                    new V1ServicePort().port(context.getServicePort())
-                                            .targetPort(new IntOrString(context.getContainerPort()))
-                            ))
-//                            .type("LoadBalancer"));
-                            .type("NodePort"));
-            // context.getServicePort() 获取了服务的端口号。这个端口是 Service 对外提供服务的端口，即客户端通过这个端口访问服务。
-            // .targetPort(new IntOrString(context.getContainerPort()))：设置了目标端口，即 Service 转发到 Pod 内容器的端口。context.getContainerPort() 获取了容器的端口号。这个端口是 Pod 内部容器提供服务的端口。
-            // 服务的类型:ClusterIP，表示服务只能在集群内部访问。其他可能的类型包括 NodePort、LoadBalancer 等。
-            // 服务类型，可以根据需求调整
+                    .spec(app);
             coreV1Api.createNamespacedService(namespace, service, null, null, null, null);
             log.info("Service created successfully.");
             return true;
@@ -264,14 +239,22 @@ public class K8sCloudService extends BaseCloudService {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             // 调用 Kubernetes API 删除 Service
             coreV1Api.deleteNamespacedService(
-                    context.getServiceName(),   // Service 名称
-                    namespace,      // 命名空间
-                    null,                        // 删除选项
-                    null,                        // 删除时的预览
-                    null,                        // 删除策略
-                    null,                        // 处理选项
-                    null,                        // 查询参数
-                    new V1DeleteOptions()        // 删除选项
+                    context.getServiceName(),
+                    // Service 名称
+                    namespace,
+                    // 命名空间
+                    null,
+                    // 删除选项
+                    null,
+                    // 删除时的预览
+                    null,
+                    // 删除策略
+                    null,
+                    // 处理选项
+                    null,
+                    // 查询参数
+                    new V1DeleteOptions()
+                    // 删除选项
             );
             log.info("Service delete successfully.");
             return true;
@@ -307,6 +290,7 @@ public class K8sCloudService extends BaseCloudService {
             return false;
         }
     }
+
 
     @Override
     public boolean createOrUpdateConfigMap(DeployContext context) {
@@ -378,8 +362,7 @@ public class K8sCloudService extends BaseCloudService {
         List<V1IngressRule> rules = new ArrayList<>();
         for (String domain : domains) {
             V1IngressRule http = new V1IngressRule()
-                    .host(domain)
-                    // 替换为你的域名
+                    .host(domain)  // 替换为你的域名
                     .http(new V1HTTPIngressRuleValue()
                             .addPathsItem(
                                     new V1HTTPIngressPath()
@@ -578,92 +561,34 @@ public class K8sCloudService extends BaseCloudService {
     }
 
 
-    public boolean updateDeploymentResources(DeployContext context) {
-        String namespace = context.getNamespace().getName().getName();
-        String deploymentName = context.getDeploymentName();
-        ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
-
-        try {
-            AppsV1Api apiInstance = new AppsV1Api(apiClient);
-            // 获取现有的 Deployment
-            V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
-
-            // 更新容器的资源配置
-            V1Container container = existingDeployment.getSpec().getTemplate().getSpec().getContainers().get(0);
-
-            Map<String, Quantity> request = new HashMap<>();
-            request.put("cpu", new Quantity(resourceStrategy.getCpu()));
-            request.put("memory", new Quantity(resourceStrategy.getMemory()));
-
-            Map<String, Quantity> limit = new HashMap<>();
-            limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
-            limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
-
-            V1ResourceRequirements requirements = new V1ResourceRequirements()
-                    .limits(limit)
-                    .requests(request);
-
-            container.setResources(requirements);
-
-            // 提交更新后的 Deployment
-            apiInstance.replaceNamespacedDeployment(deploymentName, namespace, existingDeployment, null, null, null, null);
-            log.info("Deployment {} resources updated successfully.", deploymentName);
-            return true;
-        } catch (ApiException e) {
-            log.error("Failed to update Deployment {} resources. {}", deploymentName, e.getResponseBody(), e);
-            return false;
-        }
-    }
-
-    public boolean updateDeploymentEnvVars(DeployContext context) {
-        String namespace = context.getNamespace().getName().getName();
-        String deploymentName = context.getDeploymentName();
-        Map<String, String> envVars = context.getAppEnv().getEnvVars();
-        try {
-            AppsV1Api apiInstance = new AppsV1Api(apiClient);
-            // 获取现有的 Deployment
-            V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
-            // 更新容器的环境变量配置
-            V1Container container = existingDeployment.getSpec().getTemplate().getSpec().getContainers().get(0);
-            // 清空现有的环境变量
-            container.setEnv(new ArrayList<>());
-
-            // 根据 envVars 设置新的环境变量
-            for (Map.Entry<String, String> entry : envVars.entrySet()) {
-                V1EnvVar envVar = new V1EnvVar()
-                        .name(entry.getKey())
-                        .value(entry.getValue());
-                container.addEnvItem(envVar);
-            }
-
-            // 提交更新后的 Deployment
-            apiInstance.replaceNamespacedDeployment(deploymentName, namespace, existingDeployment, null, null, null, null);
-            log.info("Deployment {} environment variables updated successfully.", deploymentName);
-            return true;
-        } catch (ApiException e) {
-            log.error("Failed to update Deployment {} environment variables. {}", deploymentName, e.getResponseBody(), e);
-            return false;
-        }
-    }
-
-
     private V1Deployment createBasicDeployment(DeployContext context) {
         AppName appName = context.getApp().getAppName();
         String healthCheck = context.getApp().getHealthCheck();
-        Map<String, String> envVars = context.getAppEnv().getEnvVars();
+        Map<String, String> configMap = context.getAppEnv().getConfigMap();
         List<VolumeMount> volumeMounts = context.getApp().getVolumeMounts();
+        String envId = context.getAppEnv().getEnvId();
         ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
+        String configMapName = String.format("%s-%s", appName.getName(), envId);
         // 配置configMap
         List<V1EnvVar> configMapValues = new ArrayList<>();
-        if (envVars != null && !envVars.isEmpty()) {
-            for (Map.Entry<String, String> entry : envVars.entrySet()) {
+        if (configMap != null && !configMap.isEmpty()) {
+            for (Map.Entry<String, String> entry : configMap.entrySet()) {
                 V1EnvVar envVar = new V1EnvVar()
                         .name(entry.getKey())
                         // 环境变量名称
-                        .value(entry.getKey());
+                        .valueFrom(new V1EnvVarSource()
+                                .configMapKeyRef(new V1ConfigMapKeySelector()
+                                        .name(configMapName)
+                                        .key(entry.getKey())));
                 configMapValues.add(envVar);
             }
         }
+
+        // 添加 SPRING_PROFILES_ACTIVE 环境变量
+        V1EnvVar springProfilesActiveEnv = new V1EnvVar()
+                .name("SPRING_PROFILES_ACTIVE")
+                .value(context.getAppEnv().getEnv().name().toLowerCase());  // 直接设置环境变量的值
+        configMapValues.add(springProfilesActiveEnv);
 
 
         List<V1Volume> dataVolumes = new ArrayList<>();
@@ -690,6 +615,7 @@ public class K8sCloudService extends BaseCloudService {
                 .name(appName.getName())
                 .image(context.getDeploymentImage())
                 .env(configMapValues)
+                // .resources(requirements)
                 .ports(Collections.singletonList(new V1ContainerPort().containerPort(context.getContainerPort())))
                 // 存活性探针（Liveness Probe）
                 // 存活性探针用于确定容器是否存活。如果存活性探针失败，Kubernetes 将尝试重新启动容器。

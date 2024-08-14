@@ -5,10 +5,7 @@ import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
-import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
-import com.rany.cake.devops.base.api.command.app.ModifyConfigMapCommand;
-import com.rany.cake.devops.base.api.command.app.ModifyEnvVarsCommand;
+import com.rany.cake.devops.base.api.command.app.*;
 import com.rany.cake.devops.base.api.dto.*;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
@@ -193,7 +190,7 @@ public class AppRemoteService implements AppService {
         }
         AppEnvEnum appEnvEnum = EnumUtils.getEnum(AppEnvEnum.class, env.getEnv());
         AppEnv appEnv = new AppEnv(String.valueOf(snowflakeIdWorker.nextId()), app.getAppId(), cluster.getClusterId(), env.getEnvName(), appEnvEnum);
-        appEnv.setDomains(env.getDomains());
+        // appEnv.setDomains(env.getDomains());
         appEnv.setAutoScaling(env.getAutoScaling());
         appEnv.setNeedApproval(env.getNeedApproval());
         appEnv.setCustomBuildScript(env.getCustomBuildScript());
@@ -247,6 +244,49 @@ public class AppRemoteService implements AppService {
         appEnv.setEnvVars(modifyEnvVarsCommand.getEnvVars());
         context.setConfigMap(modifyEnvVarsCommand.getEnvVars());
         Boolean updated = cloudService.updateDeploymentEnvVars(context);
+        if (updated) {
+            appDomainService.updateAppEnv(appEnv);
+        }
+        return updated;
+    }
+
+    @Override
+    public Boolean modifyAppEnvResource(ModifyEnvResourceCommand modifyEnvResourceCommand) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(modifyEnvResourceCommand.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        context.setApp(app);
+        context.setCluster(cluster);
+        ResourceStrategy resourceStrategy = appDataAdapter.strategyTargetToSource(modifyEnvResourceCommand.getResourceStrategyDTO());
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+        appEnv.setResourceStrategy(resourceStrategy);
+        Boolean updated = cloudService.updateDeploymentResources(context);
+        if (updated) {
+            appDomainService.updateAppEnv(appEnv);
+        }
+        return updated;
+    }
+
+    @Override
+    public Boolean modifyAppEnvDomains(ModifyAppEnvDomainCommand modifyAppEnvDomainCommand) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(modifyAppEnvDomainCommand.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        context.setApp(app);
+        context.setCluster(cluster);
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+        appEnv.setDomains(modifyAppEnvDomainCommand.getDomains());
+        Boolean updated = cloudService.createOrUpdateIngress(context);
         if (updated) {
             appDomainService.updateAppEnv(appEnv);
         }

@@ -1,10 +1,7 @@
 package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.Page;
-import com.rany.cake.devops.base.api.command.app.CreateAppCommand;
-import com.rany.cake.devops.base.api.command.app.CreateAppEnvCommand;
-import com.rany.cake.devops.base.api.command.app.ModifyConfigMapCommand;
-import com.rany.cake.devops.base.api.command.app.ModifyEnvVarsCommand;
+import com.rany.cake.devops.base.api.command.app.*;
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.DepartmentDTO;
@@ -74,6 +71,22 @@ public interface AppService {
      * @return 是否成功
      */
     Boolean modifyAppEnvVars(ModifyEnvVarsCommand modifyEnvVarsCommand);
+
+    /**
+     * 修改环境资源配置
+     *
+     * @param modifyEnvResourceCommand 修改环境资源配置
+     * @return 是否成功
+     */
+    Boolean modifyAppEnvResource(ModifyEnvResourceCommand modifyEnvResourceCommand);
+
+    /**
+     * 修改环境域名
+     *
+     * @param modifyAppEnvDomainCommand 修改环境域名
+     * @return 是否成功
+     */
+    Boolean modifyAppEnvDomains(ModifyAppEnvDomainCommand modifyAppEnvDomainCommand);
 
 
     /**
