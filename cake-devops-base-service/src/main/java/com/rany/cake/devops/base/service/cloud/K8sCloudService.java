@@ -669,4 +669,74 @@ public class K8sCloudService extends BaseCloudService {
                         )
                 );
     }
+
+    @Override
+    public boolean updateDeploymentResources(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        String deploymentName = context.getDeploymentName();
+        ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
+
+        try {
+            AppsV1Api apiInstance = new AppsV1Api(apiClient);
+            // 获取现有的 Deployment
+            V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
+
+            // 更新容器的资源配置
+            V1Container container = existingDeployment.getSpec().getTemplate().getSpec().getContainers().get(0);
+
+            Map<String, Quantity> request = new HashMap<>();
+            request.put("cpu", new Quantity(resourceStrategy.getCpu()));
+            request.put("memory", new Quantity(resourceStrategy.getMemory()));
+
+            Map<String, Quantity> limit = new HashMap<>();
+            limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
+            limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
+
+            V1ResourceRequirements requirements = new V1ResourceRequirements()
+                    .limits(limit)
+                    .requests(request);
+
+            container.setResources(requirements);
+
+            // 提交更新后的 Deployment
+            apiInstance.replaceNamespacedDeployment(deploymentName, namespace, existingDeployment, null, null, null, null);
+            log.info("Deployment {} resources updated successfully.", deploymentName);
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to update Deployment {} resources. {}", deploymentName, e.getResponseBody(), e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateDeploymentEnvVars(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        String deploymentName = context.getDeploymentName();
+        Map<String, String> envVars = context.getAppEnv().getEnvVars();
+        try {
+            AppsV1Api apiInstance = new AppsV1Api(apiClient);
+            // 获取现有的 Deployment
+            V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
+            // 更新容器的环境变量配置
+            V1Container container = existingDeployment.getSpec().getTemplate().getSpec().getContainers().get(0);
+            // 清空现有的环境变量
+            container.setEnv(new ArrayList<>());
+
+            // 根据 envVars 设置新的环境变量
+            for (Map.Entry<String, String> entry : envVars.entrySet()) {
+                V1EnvVar envVar = new V1EnvVar()
+                        .name(entry.getKey())
+                        .value(entry.getValue());
+                container.addEnvItem(envVar);
+            }
+
+            // 提交更新后的 Deployment
+            apiInstance.replaceNamespacedDeployment(deploymentName, namespace, existingDeployment, null, null, null, null);
+            log.info("Deployment {} environment variables updated successfully.", deploymentName);
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to update Deployment {} environment variables. {}", deploymentName, e.getResponseBody(), e);
+            return false;
+        }
+    }
 }
