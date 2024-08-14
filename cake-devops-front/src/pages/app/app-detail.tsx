@@ -109,7 +109,8 @@ const AppDetail: React.FC<AppDetailProps> = ({
           envName: values.envName,
           needApproval: values.needApproval,
           autoScaling: values.autoScaling,
-          domains: values.domains,
+          // domains: values.domains,
+          domains: [],
           resourceStrategy: {
             replicas: values.replicas,
             cpu: values.cpu,

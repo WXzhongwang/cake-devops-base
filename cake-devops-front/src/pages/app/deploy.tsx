@@ -27,7 +27,7 @@ import {
   Collapse,
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
-import { AppEnv, AppInfo } from "@/models/app";
+import { AppEnv, AppInfo, ResourceStrategyDTO } from "@/models/app";
 import { ReleaseRecord } from "@/models/release";
 import moment from "moment";
 import dayjs from "dayjs";
@@ -116,10 +116,11 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
   const [editableConfigTableForm] = Form.useForm();
   const [editableEnvTableForm] = Form.useForm();
+  const [resourceStrategy, setResourceStrategy] =
+    useState<ResourceStrategyDTO>();
 
   const [form] = Form.useForm();
 
-  // 配置项数据
   // 配置项数据
   const [configMapData, setConfigMapData] = useState<
     { id: string; key: string; value: string; editable?: boolean }[]
@@ -127,13 +128,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   const [envVarsData, setEnvVarsData] = useState<
     { id: string; key: string; value: string; editable?: boolean }[]
   >([]);
-
-  // const configMapDataRef = useRef<
-  //   { key: string; value: string; editable?: boolean }[]
-  // >([]);
-  // const envVarsDataRef = useRef<
-  //   { key: string; value: string; editable?: boolean }[]
-  // >([]);
 
   const columns = [
     {
@@ -566,6 +560,22 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     return null;
   }, [appEnv]);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setResourceStrategy({
+      ...resourceStrategy,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // const handleSubmit = () => {
+  //   onUpdate(values);
+  // };
+
+  const handleUpdate = (values: ResourceStrategyDTO) => {
+    setResourceStrategy(values);
+    // Here you might want to send the updated values to the backend
+  };
+
   return (
     <PageContainer
       title="应用中心"
@@ -646,6 +656,54 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         </Card>
 
         <Collapse defaultActiveKey={[]}>
+          <Panel header={"资源配置"} key="0">
+            <Form layout="horizontal" style={{ marginBottom: 16 }}>
+              <Form.Item label="Replicas">
+                <Input
+                  name="replicas"
+                  type="number"
+                  value={resourceStrategy?.replicas}
+                  onChange={handleChange}
+                />
+              </Form.Item>
+              <Form.Item label="CPU">
+                <Input
+                  name="cpu"
+                  type="text"
+                  value={resourceStrategy?.cpu}
+                  onChange={handleChange}
+                />
+              </Form.Item>
+              <Form.Item label="Memory">
+                <Input
+                  name="memory"
+                  value={resourceStrategy?.memory}
+                  onChange={handleChange}
+                />
+              </Form.Item>
+              <Form.Item label="Max CPU">
+                <Input
+                  name="maxCpu"
+                  type="text"
+                  value={resourceStrategy?.maxCpu}
+                  onChange={handleChange}
+                />
+              </Form.Item>
+              <Form.Item label="Max Memory">
+                <Input
+                  name="maxMemory"
+                  type="text"
+                  value={resourceStrategy?.maxMemory}
+                  onChange={handleChange}
+                />
+              </Form.Item>
+              <Space style={{ marginBottom: 16 }}>
+                <Button type="primary" onClick={submitEnvVars}>
+                  更新资源配置
+                </Button>
+              </Space>
+            </Form>
+          </Panel>
           <Panel header={"配置项"} key="1">
             <Form form={editableConfigTableForm} component={false}>
               <Table

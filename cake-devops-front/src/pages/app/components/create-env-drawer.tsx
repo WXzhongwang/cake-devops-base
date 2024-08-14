@@ -78,7 +78,7 @@ const CreateEnvDrawer: React.FC<CreateEnvDrawerProps> = ({
           </Select>
         </Form.Item>
 
-        <Form.List
+        {/* <Form.List
           name="domains"
           rules={[
             {
@@ -134,7 +134,8 @@ const CreateEnvDrawer: React.FC<CreateEnvDrawerProps> = ({
               </Form.Item>
             </>
           )}
-        </Form.List>
+        </Form.List> */}
+
         <Form.Item
           name="replicas"
           label="副本数"
@@ -145,28 +146,28 @@ const CreateEnvDrawer: React.FC<CreateEnvDrawerProps> = ({
         <Form.Item
           name="cpu"
           label="cpu资源"
-          rules={[{ required: true, message: "请输入cpu资源(1C)" }]}
+          rules={[{ required: false, message: "请输入cpu资源(1C)" }]}
         >
           <Input type="text" placeholder="请输入cpu资源" />
         </Form.Item>
         <Form.Item
           name="maxCpu"
           label="最大cpu资源"
-          rules={[{ required: true, message: "请输入最大cpu资源" }]}
+          rules={[{ required: false, message: "请输入最大cpu资源" }]}
         >
           <Input type="text" placeholder="请输入最大cpu资源" />
         </Form.Item>
         <Form.Item
           name="memory"
           label="内存资源"
-          rules={[{ required: true, message: "请输入内存资源(500M)" }]}
+          rules={[{ required: false, message: "请输入内存资源(500M)" }]}
         >
           <Input type="text" placeholder="请输入cpu资源" />
         </Form.Item>
         <Form.Item
           name="maxMemory"
           label="最大内存资源"
-          rules={[{ required: true, message: "请输入最大内存资源(500M)" }]}
+          rules={[{ required: false, message: "请输入最大内存资源(500M)" }]}
         >
           <Input type="text" placeholder="请输入最大内存资源" />
         </Form.Item>
