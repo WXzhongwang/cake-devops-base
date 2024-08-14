@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.cloud;
 
+import com.alibaba.fastjson.JSON;
 import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
@@ -313,7 +314,7 @@ public class K8sCloudService extends BaseCloudService {
             if (configMapData != null) {
                 // 如果存在，则更新 ConfigMap
                 // 检查数据是否已经相同，避免不必要的更新
-                if (!configMapData.equals(updateConfigMapData)) {
+                if (StringUtils.equals(JSON.toJSONString(configMapData), JSON.toJSONString(updateConfigMapData))) {
                     coreV1Api.replaceNamespacedConfigMap(configMapName, namespace, configMap, null, null, null, null);
                     log.info("ConfigMap {} updated successfully.", configMapName);
                 } else {

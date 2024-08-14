@@ -17,6 +17,7 @@ import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
+import com.rany.cake.devops.base.domain.aggregate.Namespace;
 import com.rany.cake.devops.base.domain.base.AppConfig;
 import com.rany.cake.devops.base.domain.base.DepartmentConfig;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
@@ -25,6 +26,7 @@ import com.rany.cake.devops.base.domain.events.AppEnvCreateEvent;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
+import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
 import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
 import com.rany.cake.devops.base.domain.service.AppMemberDomainService;
@@ -77,6 +79,7 @@ public class AppRemoteService implements AppService {
     private final AppMemberDomainService appMemberDomainService;
     private final AppDomainService appDomainService;
     private final ClusterDomainService clusterDomainService;
+    private final NameSpaceRepository nameSpaceRepository;
     private final AppDataAdapter appDataAdapter;
     private final DepartmentConfig departmentConfig;
     private final ApplicationContext applicationContext;
@@ -215,14 +218,17 @@ public class AppRemoteService implements AppService {
         ClusterId clusterId = appEnv.getClusterId();
         App app = appDomainService.getApp(appId);
         Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
         context.setApp(app);
         context.setCluster(cluster);
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
-        appEnv.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
         context.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
         Boolean updated = cloudService.createOrUpdateConfigMap(context);
         if (updated) {
+            appEnv.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
             appDomainService.updateAppEnv(appEnv);
         }
         return updated;
@@ -237,6 +243,9 @@ public class AppRemoteService implements AppService {
         ClusterId clusterId = appEnv.getClusterId();
         App app = appDomainService.getApp(appId);
         Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
         context.setApp(app);
         context.setCluster(cluster);
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
@@ -259,6 +268,9 @@ public class AppRemoteService implements AppService {
         ClusterId clusterId = appEnv.getClusterId();
         App app = appDomainService.getApp(appId);
         Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
         context.setApp(app);
         context.setCluster(cluster);
         ResourceStrategy resourceStrategy = appDataAdapter.strategyTargetToSource(modifyEnvResourceCommand.getResourceStrategyDTO());
@@ -281,6 +293,9 @@ public class AppRemoteService implements AppService {
         ClusterId clusterId = appEnv.getClusterId();
         App app = appDomainService.getApp(appId);
         Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
         context.setApp(app);
         context.setCluster(cluster);
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),

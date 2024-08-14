@@ -5,6 +5,8 @@ import React, {
   useState,
   useRef,
 } from "react";
+import { nanoid } from "nanoid";
+
 import { PageContainer } from "@ant-design/pro-components";
 import {
   Table,
@@ -88,6 +90,9 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   releases,
   appEnv,
 }) => {
+  const [editingConfigKey, setEditingConfigKey] = useState("");
+  const [editingEnvKey, setEditingEnvKey] = useState("");
+
   const { id } = useParams();
   // 发布单详情抽屉
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -109,16 +114,26 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   // 新增 pipeKey 状态用于传递给查看发布日志的抽屉
   const [pipeKey, setPipeKey] = useState<string>("");
 
+  const [editableConfigTableForm] = Form.useForm();
+  const [editableEnvTableForm] = Form.useForm();
+
   const [form] = Form.useForm();
 
   // 配置项数据
   // 配置项数据
   const [configMapData, setConfigMapData] = useState<
-    { key: string; value: string; editable?: boolean }[]
+    { id: string; key: string; value: string; editable?: boolean }[]
   >([]);
   const [envVarsData, setEnvVarsData] = useState<
-    { key: string; value: string; editable?: boolean }[]
+    { id: string; key: string; value: string; editable?: boolean }[]
   >([]);
+
+  // const configMapDataRef = useRef<
+  //   { key: string; value: string; editable?: boolean }[]
+  // >([]);
+  // const envVarsDataRef = useRef<
+  //   { key: string; value: string; editable?: boolean }[]
+  // >([]);
 
   const columns = [
     {
@@ -202,104 +217,123 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     },
   ];
 
-  // 行编辑状态切换
-  const toggleEditRow = (index: number, type: "config" | "env") => {
-    if (type === "config") {
-      const newData = [...configMapData];
-      newData[index].editable = !newData[index].editable;
-      setConfigMapData(newData);
-    } else {
-      const newData = [...envVarsData];
-      newData[index].editable = !newData[index].editable;
-      setEnvVarsData(newData);
-    }
-  };
-
-  // 保存编辑
-  const saveRow = (index: number, type: "config" | "env") => {
-    toggleEditRow(index, type); // 切换回不可编辑状态
-  };
   // 添加新行
   const addNewRow = (type: "config" | "env") => {
-    const newRow = { key: "", value: "", editable: true };
+    const newRow = { id: nanoid(), key: "", value: "", editable: true };
     if (type === "config") {
+      if (editingConfigKey) {
+        message.warn("请先保存");
+        return;
+      }
+      setEditingConfigKey(newRow.id);
       setConfigMapData([...configMapData, newRow]);
     } else {
+      if (editingEnvKey) {
+        message.warn("请先保存");
+        return;
+      }
+      setEditingEnvKey(newRow.id);
       setEnvVarsData([...envVarsData, newRow]);
     }
   };
 
-  // 删除行
-  const deleteRow = (index: number, type: "config" | "env") => {
-    if (type === "config") {
-      const newData = [...configMapData];
-      newData.splice(index, 1);
-      setConfigMapData(newData);
-    } else {
-      const newData = [...envVarsData];
-      newData.splice(index, 1);
-      setEnvVarsData(newData);
-    }
-  };
-
-  // 修改行内容
-  const updateRow = (
-    index: number,
-    key: string,
-    value: string,
-    type: "config" | "env"
-  ) => {
-    if (type === "config") {
-      const newData = [...configMapData];
-      newData[index] = { ...newData[index], key, value };
-      setConfigMapData(newData);
-    } else {
-      const newData = [...envVarsData];
-      newData[index] = { ...newData[index], key, value };
-      setEnvVarsData(newData);
-    }
-  };
+  const isEditing = (record: any, type: "config" | "env") =>
+    record.id === (type === "config" ? editingConfigKey : editingEnvKey);
 
   const configColumns = (type: "config" | "env") => [
     {
       title: "Key 键",
       dataIndex: "key",
-      render: (text: string, record: any, index: number) => (
-        <Input
-          value={text}
-          disabled={!record.editable}
-          onChange={(e) => updateRow(index, e.target.value, record.value, type)}
-        />
-      ),
+      editable: true,
     },
     {
       title: "Value 值",
       dataIndex: "value",
-      render: (text: string, record: any, index: number) => (
-        <Input
-          value={text}
-          disabled={!record.editable}
-          onChange={(e) => updateRow(index, record.key, e.target.value, type)}
-        />
-      ),
+      editable: true,
     },
     {
       title: "操作",
       width: 200, // 设置固定宽度
-      render: (_: any, __: any, index: number) => (
-        <Space>
-          {configMapData[index].editable ? (
-            <>
-              <Button onClick={() => saveRow(index, type)}>保存</Button>
-              <Button onClick={() => deleteRow(index, type)}>删除</Button>
-            </>
-          ) : (
-            <Button onClick={() => toggleEditRow(index, type)}>编辑</Button>
-          )}
-        </Space>
-      ),
+      render: (_: any, record: any) => {
+        const editable = isEditing(record, type);
+        return editable ? (
+          <span>
+            <Typography.Link
+              style={{ marginInlineEnd: 8 }}
+              onClick={async () => {
+                try {
+                  const row =
+                    type === "config"
+                      ? ((await editableConfigTableForm.validateFields()) as any)
+                      : ((await editableEnvTableForm.validateFields()) as any);
+
+                  const newData =
+                    type === "config" ? [...configMapData] : [...envVarsData];
+                  const index = newData.findIndex(
+                    (item) => item.id === record.id
+                  );
+                  if (index > -1) {
+                    const item = newData[index];
+                    newData.splice(index, 1, {
+                      ...item,
+                      ...row,
+                    });
+                  } else {
+                    newData.push(row);
+                  }
+                  if (type == "config") {
+                    setConfigMapData(newData);
+                    setEditingConfigKey("");
+                    editableConfigTableForm.resetFields();
+                  } else {
+                    setEnvVarsData(newData);
+                    setEditingEnvKey("");
+                    editableEnvTableForm.resetFields();
+                  }
+                } catch (errInfo) {
+                  console.log("Validate Failed:", errInfo);
+                }
+              }}
+            >
+              保存
+            </Typography.Link>
+            {/* <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+              <a>Cancel</a>
+            </Popconfirm> */}
+          </span>
+        ) : (
+          <Typography.Link
+            disabled={
+              type == "config" ? editingConfigKey !== "" : editingEnvKey !== ""
+            }
+            onClick={() => {
+              if (type === "config") {
+                editableConfigTableForm.setFieldsValue({
+                  key: "",
+                  value: "",
+                  ...record,
+                });
+              } else {
+                editableEnvTableForm.setFieldsValue({
+                  key: "",
+                  value: "",
+                  ...record,
+                });
+              }
+              if (type == "config") {
+                setEditingConfigKey(record.id);
+              } else {
+                setEditingEnvKey(record.id);
+              }
+            }}
+          >
+            编辑
+          </Typography.Link>
+        );
+      },
     },
   ];
+
   // 处理关闭按钮的点击事件
   const handleConfirmClose = (record: ReleaseRecord) => {
     // 弹出二次确认框
@@ -373,13 +407,16 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       const envVars = appEnv.envVars || {};
       setConfigMapData(
         Object.entries(configMap).map(([key, value]) => ({
+          id: nanoid(),
           key,
           value,
           editable: false,
         }))
       );
+
       setEnvVarsData(
         Object.entries(envVars).map(([key, value]) => ({
+          id: nanoid(),
           key,
           value,
           editable: false,
@@ -610,14 +647,35 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
         <Collapse defaultActiveKey={[]}>
           <Panel header={"配置项"} key="1">
-            <Table
-              columns={configColumns("config")}
-              dataSource={configMapData}
-              pagination={false}
-              rowKey="key"
-              size="small" // 使表格更小巧
-              style={{ marginBottom: 16 }} // 添加表格底部间距
-            />
+            <Form form={editableConfigTableForm} component={false}>
+              <Table
+                components={{
+                  body: {
+                    cell: EditableCell,
+                  },
+                }}
+                columns={configColumns("config").map((col) => {
+                  if (!col.editable) {
+                    return col;
+                  }
+                  return {
+                    ...col,
+                    onCell: (record: any) => ({
+                      record,
+                      inputType: "text",
+                      dataIndex: col.dataIndex,
+                      title: col.title,
+                      editing: isEditing(record, "config"),
+                    }),
+                  };
+                })}
+                dataSource={configMapData}
+                pagination={false}
+                rowKey="id"
+                size="small" // 使表格更小巧
+                style={{ marginBottom: 16 }} // 添加表格底部间距
+              />
+            </Form>
             <Space style={{ marginBottom: 16 }}>
               <Button onClick={() => addNewRow("config")}>添加配置项</Button>
               <Button type="primary" onClick={submitConfig}>
@@ -626,14 +684,35 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             </Space>
           </Panel>
           <Panel header={"环境变量"} key="2">
-            <Table
-              columns={configColumns("env")}
-              dataSource={envVarsData}
-              pagination={false}
-              rowKey="key"
-              size="small" // 使表格更小巧
-              style={{ marginBottom: 16 }} // 添加表格底部间距
-            />
+            <Form form={editableEnvTableForm} component={false}>
+              <Table
+                components={{
+                  body: {
+                    cell: EditableCell,
+                  },
+                }}
+                columns={configColumns("env").map((col) => {
+                  if (!col.editable) {
+                    return col;
+                  }
+                  return {
+                    ...col,
+                    onCell: (record: any) => ({
+                      record,
+                      inputType: "text",
+                      dataIndex: col.dataIndex,
+                      title: col.title,
+                      editing: isEditing(record, "env"),
+                    }),
+                  };
+                })}
+                dataSource={envVarsData}
+                pagination={false}
+                rowKey="id"
+                size="small" // 使表格更小巧
+                style={{ marginBottom: 16 }} // 添加表格底部间距
+              />
+            </Form>
             <Space style={{ marginBottom: 16 }}>
               <Button onClick={() => addNewRow("env")}>添加环境变量</Button>
               <Button type="primary" onClick={submitEnvVars}>
@@ -853,3 +932,47 @@ export default connect(
     },
   })
 )(DeployPage);
+
+interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+  editing: boolean;
+  dataIndex: string;
+  title: any;
+  inputType: "number" | "text";
+  record: any;
+  index: number;
+}
+
+const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
+  editing,
+  dataIndex,
+  title,
+  inputType,
+  record,
+  index,
+  children,
+  ...restProps
+}) => {
+  const inputNode = <Input />;
+  console.log("editing", editing);
+
+  return (
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={[
+            {
+              required: true,
+              message: `Please Input ${title}!`,
+            },
+          ]}
+        >
+          {inputNode}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
+};
