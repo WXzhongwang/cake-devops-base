@@ -119,6 +119,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   const [editableEnvTableForm] = Form.useForm();
   const [resourceStrategy, setResourceStrategy] =
     useState<ResourceStrategyDTO>();
+  const [domains, setDomains] = useState<string[]>();
 
   const [form] = Form.useForm();
   const [resourceForm] = Form.useForm();
@@ -192,7 +193,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       dataIndex: "releaseStatus",
       key: "releaseStatus",
       render: (text: any, record: ReleaseRecord) => {
-        // const tagColor = record.releaseStatus === "0" ? "success" : "error";
         let statusText = getReleaseStatusText(record.releaseStatus);
         return statusText;
       },
@@ -420,6 +420,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       );
 
       setResourceStrategy(appEnv.resourceStrategy);
+      setDomains(appEnv.domains);
     }
   }, [appEnv]);
 
@@ -597,15 +598,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     >
       <Space size="middle" direction="vertical" style={{ width: "100%" }}>
         <Card
-          title={
-            appDetail?.appName +
-            ": [" +
-            appEnv?.envName +
-            "(" +
-            appEnv?.env +
-            ")" +
-            "]"
-          }
+          title={`${appDetail?.appName}:[${appEnv?.envName}(${appEnv?.env})]`}
           extra={
             <div>
               {parsedProgress?.pipeKey && (
@@ -828,6 +821,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
               </Button>
             </Space>
           </Panel>
+          <Panel header={"域名配置"} key="3"></Panel>
         </Collapse>
 
         <Card
