@@ -32,6 +32,11 @@ export interface ModifyAppEnvVarsPayload {
   envVars: Record<string, string> | null;
 }
 
+export interface ModifyAppResourcesPayload {
+  envId: string;
+  resourceStrategyDTO: ResourceStrategyDTO;
+}
+
 export interface ModifyAppEnvConfigMapPayload {
   envId: string;
   configMap: Record<string, string> | null;
@@ -157,6 +162,11 @@ interface ModifyAppEnvConfigMapAction extends BaseAction {
   payload: ModifyAppEnvConfigMapPayload;
 }
 
+interface ModifyAppResourcesAction extends BaseAction {
+  type: "app/modifyAppResource";
+  payload: ModifyAppResourcesPayload;
+}
+
 interface GetAppEnvAction extends BaseAction {
   type: "app/getAppEnv";
   payload: { envId: string };
@@ -210,6 +220,7 @@ export interface AppModelType {
     getAppEnv: Effect;
     modifyAppEnvVars: Effect;
     modifyAppEnvConfigMap: Effect;
+    modifyAppResources: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
@@ -332,6 +343,21 @@ const AppModel: AppModelType = {
       { call, put }
     ) {
       const response = yield call(appService.modifyAppEnvConfigMap, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *modifyAppResources(
+      { payload, callback }: ModifyAppResourcesAction,
+      { call, put }
+    ) {
+      const response = yield call(appService.modifyAppEnvResource, payload);
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {

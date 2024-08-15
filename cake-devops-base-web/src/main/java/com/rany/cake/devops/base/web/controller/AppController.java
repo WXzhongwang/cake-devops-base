@@ -67,8 +67,8 @@ public class AppController {
         return PojoResult.succeed(appService.modifyAppEnvDomains(modifyAppEnvDomainCommand));
     }
 
-    @PostMapping("/modify-env-sources")
-    public PojoResult<Boolean> modifyAppEnvSource(@RequestBody ModifyEnvResourceCommand modifyEnvResourceCommand) {
+    @PostMapping("/modify-env-resources")
+    public PojoResult<Boolean> modifyAppEnvReSource(@RequestBody ModifyEnvResourceCommand modifyEnvResourceCommand) {
         return PojoResult.succeed(appService.modifyAppEnvResource(modifyEnvResourceCommand));
     }
 

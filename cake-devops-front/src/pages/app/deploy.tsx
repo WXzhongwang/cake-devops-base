@@ -24,6 +24,7 @@ import {
   Typography,
   Modal,
   Descriptions,
+  Divider,
   Collapse,
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
@@ -120,6 +121,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     useState<ResourceStrategyDTO>();
 
   const [form] = Form.useForm();
+  const [resourceForm] = Form.useForm();
 
   // 配置项数据
   const [configMapData, setConfigMapData] = useState<
@@ -416,6 +418,8 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           editable: false,
         }))
       );
+
+      setResourceStrategy(appEnv.resourceStrategy);
     }
   }, [appEnv]);
 
@@ -560,20 +564,17 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     return null;
   }, [appEnv]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setResourceStrategy({
-      ...resourceStrategy,
-      [e.target.name]: e.target.value,
+  const handleSubmit = (values: any) => {
+    resourceForm.validateFields().then((values) => {
+      dispatch({
+        type: "app/modifyAppResources",
+        payload: {
+          envId: selectedEnvironment,
+          resourceStrategyDTO: values,
+        },
+      });
+      resourceForm.resetFields();
     });
-  };
-
-  // const handleSubmit = () => {
-  //   onUpdate(values);
-  // };
-
-  const handleUpdate = (values: ResourceStrategyDTO) => {
-    setResourceStrategy(values);
-    // Here you might want to send the updated values to the backend
   };
 
   return (
@@ -657,48 +658,97 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
         <Collapse defaultActiveKey={[]}>
           <Panel header={"资源配置"} key="0">
-            <Form layout="horizontal" style={{ marginBottom: 16 }}>
-              <Form.Item label="Replicas">
+            <Form
+              form={resourceForm}
+              layout="horizontal"
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 16 }}
+              style={{ maxWidth: 600, marginBottom: 16 }}
+            >
+              <Form.Item label="副本数">
                 <Input
                   name="replicas"
                   type="number"
+                  max={10}
                   value={resourceStrategy?.replicas}
-                  onChange={handleChange}
+                  // onChange={handleChange}
+                  style={{ width: "45%" }}
                 />
               </Form.Item>
+
+              {/* CPU Range */}
               <Form.Item label="CPU">
-                <Input
-                  name="cpu"
-                  type="text"
-                  value={resourceStrategy?.cpu}
-                  onChange={handleChange}
-                />
+                <Input.Group compact>
+                  <Input
+                    style={{ width: "45%" }}
+                    name="cpu"
+                    type="text"
+                    value={resourceStrategy?.cpu}
+                    // onChange={handleChange}
+                    placeholder="最小CPU，毫核"
+                    suffix="M"
+                  />
+                  <span
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      textAlign: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    -
+                  </span>
+                  <Input
+                    style={{ width: "45%" }}
+                    name="maxCpu"
+                    type="text"
+                    value={resourceStrategy?.maxCpu}
+                    // onChange={handleChange}
+                    placeholder="最大CPU，毫核"
+                    suffix="M"
+                  />
+                </Input.Group>
               </Form.Item>
+
+              {/* Memory Range */}
               <Form.Item label="Memory">
-                <Input
-                  name="memory"
-                  value={resourceStrategy?.memory}
-                  onChange={handleChange}
-                />
+                <Input.Group compact>
+                  <Input
+                    style={{ width: "45%" }}
+                    name="memory"
+                    value={resourceStrategy?.memory}
+                    // onChange={handleChange}
+                    placeholder="最小内存"
+                    suffix="M"
+                  />
+                  <span
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      textAlign: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    -
+                  </span>
+                  <Input
+                    style={{ width: "45%" }}
+                    name="maxMemory"
+                    type="text"
+                    value={resourceStrategy?.maxMemory}
+                    // onChange={handleChange}
+                    placeholder="最大内存"
+                    suffix="M"
+                  />
+                </Input.Group>
               </Form.Item>
-              <Form.Item label="Max CPU">
-                <Input
-                  name="maxCpu"
-                  type="text"
-                  value={resourceStrategy?.maxCpu}
-                  onChange={handleChange}
-                />
-              </Form.Item>
-              <Form.Item label="Max Memory">
-                <Input
-                  name="maxMemory"
-                  type="text"
-                  value={resourceStrategy?.maxMemory}
-                  onChange={handleChange}
-                />
-              </Form.Item>
+
               <Space style={{ marginBottom: 16 }}>
-                <Button type="primary" onClick={submitEnvVars}>
+                <Button type="primary" onClick={handleSubmit}>
                   更新资源配置
                 </Button>
               </Space>

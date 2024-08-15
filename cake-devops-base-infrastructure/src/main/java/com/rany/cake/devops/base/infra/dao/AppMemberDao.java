@@ -29,6 +29,15 @@ public interface AppMemberDao {
     /**
      * 查询应用成员
      *
+     * @param accountId 成员ID
+     * @param appId     应用
+     * @return 应用成员
+     */
+    AppMemberPO selectById(@Param("accountId") String accountId, @Param("appId") String appId);
+
+    /**
+     * 查询应用成员
+     *
      * @param param 查询应用成员参数
      * @return
      */

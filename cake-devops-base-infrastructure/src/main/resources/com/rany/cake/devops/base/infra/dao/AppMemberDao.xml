@@ -78,6 +78,15 @@
         and is_deleted = '0'
     </select>
 
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from app_member
+        where account_id = #{accountId}
+        and app_id = #{appId}
+        and is_deleted = '0'
+        limit 1
+    </select>
 
     <select id="selectByAppId" resultMap="BaseResultMap">
         select

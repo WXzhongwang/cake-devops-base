@@ -27,6 +27,8 @@ public interface AppMemberRepository extends Repository<AppMember, MemberId> {
      */
     AppMember findByAccountId(String accountId);
 
+    AppMember findById(String accountId);
+
     /**
      * 查询应用成员
      *

@@ -63,6 +63,15 @@ public class AppMemberRepositoryImpl implements AppMemberRepository {
     }
 
     @Override
+    public AppMember findById(String accountId) {
+        AppMemberPO appMemberPO = appMemberDao.selectByAccountId(accountId);
+        if (appMemberPO == null) {
+            return null;
+        }
+        return appMemberDataConvertor.targetToSource(appMemberPO);
+    }
+
+    @Override
     public List<AppMember> findByAppId(AppMemberPageQueryParam param) {
         List<AppMemberPO> appMemberPOList = appMemberDao.selectByAppId(param);
         return appMemberDataConvertor.targetToSource(appMemberPOList);

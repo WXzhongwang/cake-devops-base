@@ -103,7 +103,7 @@
         <where>
             is_deleted = '0'
             <if test="appName != null and appName != ''">
-                and app_name = #{appName}
+                and app_name like concat("%", #{appName}, "%")
             </if>
             <if test="language != null and language != ''">
                 and language = #{language}

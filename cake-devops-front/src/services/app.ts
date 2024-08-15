@@ -70,6 +70,13 @@ export async function modifyAppEnvVars(data: any) {
   });
 }
 
+export async function modifyAppEnvResource(data: any) {
+  return request(`/api/devops/app/modify-env-resources`, {
+    method: "POST",
+    data,
+  });
+}
+
 export async function getAppEnv(data: any) {
   return request(`/api/devops/app/get-app-env`, {
     method: "POST",

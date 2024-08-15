@@ -19,4 +19,9 @@ public class DeployHistory extends BaseEntity<Long> {
     private String deploymentName;
     private String content;
     private String progress;
+
+    /**
+     * 用于追溯日志
+     */
+    private String pipeKey;
 }
