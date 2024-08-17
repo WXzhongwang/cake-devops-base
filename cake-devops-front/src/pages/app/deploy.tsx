@@ -34,6 +34,8 @@ import moment from "moment";
 import dayjs from "dayjs";
 import { TableRowSelection } from "antd/lib/table/interface";
 import DeployLogDrawer from "./components/deploy-log-drawer";
+import EnvVarConfigPanel from "./components/env-vars-panel";
+import ConfigMapConfigPanel from "./components/config-map-panel";
 import app from "mock/app";
 
 const { Paragraph } = Typography;
@@ -832,6 +834,11 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             </Space>
           </Panel>
           <Panel header={"域名配置"} key="3"></Panel>
+        </Collapse>
+
+        <Collapse defaultActiveKey={[]}>
+          <ConfigMapConfigPanel initialConfigMap={configMapData} panelKey={0} />
+          <EnvVarConfigPanel initialEnvVars={envVarsData} panelKey={1} />
         </Collapse>
 
         <Card
