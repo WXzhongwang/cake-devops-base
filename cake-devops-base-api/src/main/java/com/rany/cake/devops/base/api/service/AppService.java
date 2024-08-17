@@ -5,10 +5,8 @@ import com.rany.cake.devops.base.api.command.app.*;
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.DepartmentDTO;
-import com.rany.cake.devops.base.api.query.app.AppBasicQuery;
-import com.rany.cake.devops.base.api.query.app.AppEnvBasicQuery;
-import com.rany.cake.devops.base.api.query.app.AppEnvQuery;
-import com.rany.cake.devops.base.api.query.app.AppPageQuery;
+import com.rany.cake.devops.base.api.dto.PodDTO;
+import com.rany.cake.devops.base.api.query.app.*;
 
 import java.util.List;
 
@@ -63,6 +61,14 @@ public interface AppService {
      * @return 是否成功
      */
     Boolean modifyAppConfigMap(ModifyConfigMapCommand modifyAppEnvConfigMapCommand);
+
+    /**
+     * 查询应用环境内POD信息
+     *
+     * @param appEnvPodQuery 查询pod
+     * @return pod列表
+     */
+    List<PodDTO> listAppEnvPod(AppEnvPodQuery appEnvPodQuery);
 
     /**
      * 修改环境变量

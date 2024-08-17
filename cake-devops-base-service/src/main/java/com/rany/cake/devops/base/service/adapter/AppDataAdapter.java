@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.service.adapter;
 
 import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
+import com.rany.cake.devops.base.api.dto.PodDTO;
 import com.rany.cake.devops.base.api.dto.ResourceStrategyDTO;
 import com.rany.cake.devops.base.api.query.app.AppPageQuery;
 import com.rany.cake.devops.base.domain.aggregate.App;
@@ -9,7 +10,9 @@ import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
+import com.rany.cake.devops.base.service.cloud.dto.PodInfoDTO;
 import org.mapstruct.InheritConfiguration;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -93,4 +96,10 @@ public interface AppDataAdapter extends BaseConvertor<App, AppDTO> {
 
 
     AppQueryParam convertParam(AppPageQuery appPageQuery);
+
+
+    PodDTO convertPodInfo(PodInfoDTO v1Pod);
+
+    @InheritInverseConfiguration(name = "convertPodInfo")
+    List<PodDTO> convertPodInfo(List<PodInfoDTO> v1Pods);
 }

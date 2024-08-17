@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
+import com.rany.cake.devops.base.service.cloud.dto.PodInfoDTO;
 import com.rany.cake.devops.base.service.context.DeployContext;
+import com.rany.cake.devops.base.service.utils.KubernetesUtils;
 import com.rany.cake.toolkit.lang.utils.Lists;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.custom.Quantity;
@@ -105,6 +107,41 @@ public class K8sCloudService extends BaseCloudService {
     }
 
 
+    /**
+     * 获取与指定 Deployment 关联的所有 Pods。
+     *
+     * @param context 部署上下文
+     * @return Pod 列表
+     */
+    @Override
+    public List<PodInfoDTO> getPodsForDeployment(DeployContext context) {
+        String namespace = context.getNamespace().getName().getName();
+        String deploymentName = context.getDeploymentName();
+        try {
+            CoreV1Api apiInstance = new CoreV1Api(apiClient);
+            // 使用 Deployment 的 selector 来过滤 Pods
+            // 使用 Deployment 的 selector 来过滤 Pods
+            String labelSelector = "app=" + deploymentName; // 使用标准标签
+            V1PodList podList = apiInstance.listNamespacedPod(namespace, null, null, null,
+                    null, labelSelector, null, null, null, null, false);
+            List<V1Pod> items = podList.getItems();
+            List<PodInfoDTO> podInfos = KubernetesUtils.convertPodsToDTOs(items);
+            for (PodInfoDTO podInfo : podInfos) {
+                System.out.println("Name: " + podInfo.getName());
+                System.out.println("Namespace: " + podInfo.getNamespace());
+                System.out.println("Pod IP: " + podInfo.getPodIp());
+                System.out.println("Phase: " + podInfo.getPhase());
+                System.out.println("Node Name: " + podInfo.getNodeName());
+                System.out.println("Start Time: " + podInfo.getStartTime()); // 输出格式化后的时间字符串
+                System.out.println("Is Ready: " + podInfo.isReady());
+            }
+            return podInfos;
+        } catch (ApiException e) {
+            log.error("Failed to list Pods for Deployment {}. {}", deploymentName, e.getResponseBody(), e);
+            return null;
+        }
+    }
+
     @Override
     public boolean scaleDeployment(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
@@ -129,28 +166,6 @@ public class K8sCloudService extends BaseCloudService {
         String namespace = context.getNamespace().getName().getName();
         String deploymentName = context.getDeploymentName();
         AppsV1Api apiInstance = new AppsV1Api(apiClient);
-
-//        try {
-//            // 获取要回滚的 Deployment 的当前版本号
-//            V1Deployment currentDeployment = apiInstance.readNamespacedDeployment(context.getDeploymentName(), namespace, null);
-//            String currentRevision = currentDeployment.getMetadata().getAnnotations().get("deployment.kubernetes.io/revision");
-//
-//            // 创建新的 Deployment 对象，回滚到上一个版本
-//            V1Deployment newDeployment = new V1Deployment()
-//                    .metadata(new V1ObjectMeta().name(deploymentName))
-//                    .spec(new V1DeploymentSpec()
-//                            // 设置其他 Deployment 配置...
-//                            .template(currentDeployment.getSpec().getTemplate())
-//                    );
-//
-//            // 替换现有的 Deployment 对象
-//            apiInstance.replaceNamespacedDeployment(deploymentName, namespace, newDeployment, null, null, null, null);
-//            log.info("Deployment rolled back successfully.");
-//            return true;
-//        } catch (ApiException e) {
-//            log.error("Failed to rollback Deployment.", e);
-//            return false;
-//        }
         return true;
     }
 

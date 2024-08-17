@@ -7,10 +7,7 @@ import com.rany.cake.devops.base.api.command.app.*;
 import com.rany.cake.devops.base.api.command.member.AddAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
-import com.rany.cake.devops.base.api.dto.AppDTO;
-import com.rany.cake.devops.base.api.dto.AppEnvDTO;
-import com.rany.cake.devops.base.api.dto.AppMemberDTO;
-import com.rany.cake.devops.base.api.dto.DepartmentDTO;
+import com.rany.cake.devops.base.api.dto.*;
 import com.rany.cake.devops.base.api.query.app.*;
 import com.rany.cake.devops.base.api.service.AppMemberService;
 import com.rany.cake.devops.base.api.service.AppService;
@@ -72,6 +69,10 @@ public class AppController {
         return PojoResult.succeed(appService.modifyAppEnvResource(modifyEnvResourceCommand));
     }
 
+    @PostMapping("/list-app-pods")
+    public ListResult<PodDTO> listAppPods(@RequestBody AppEnvPodQuery appEnvPodQuery) {
+        return ListResult.succeed(appService.listAppEnvPod(appEnvPodQuery));
+    }
 
     @PostMapping("/get-app-env")
     public PojoResult<AppEnvDTO> getAppEnv(@RequestBody AppEnvBasicQuery appEnvBasicQuery) {

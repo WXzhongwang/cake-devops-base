@@ -28,7 +28,7 @@ import {
   Collapse,
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
-import { AppEnv, AppInfo, ResourceStrategyDTO } from "@/models/app";
+import { AppEnv, AppInfo, PodDTO, ResourceStrategyDTO } from "@/models/app";
 import { ReleaseRecord } from "@/models/release";
 import moment from "moment";
 import dayjs from "dayjs";
@@ -120,6 +120,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   const [resourceStrategy, setResourceStrategy] =
     useState<ResourceStrategyDTO>();
   const [domains, setDomains] = useState<string[]>();
+  const [pods, setPods] = useState<PodDTO[]>();
 
   const [form] = Form.useForm();
   const [resourceForm] = Form.useForm();
@@ -361,6 +362,15 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         type: "app/getAppEnv",
         payload: { envId: selectedEnvironment },
       });
+      dispatch({
+        type: "app/listAppPods",
+        payload: { envId: selectedEnvironment },
+        callback: (res: PodDTO[]) => {
+          console.log("pods", res);
+          setPods(res);
+        },
+      });
+
       dispatch({
         type: "release/pageRelease",
         payload: {

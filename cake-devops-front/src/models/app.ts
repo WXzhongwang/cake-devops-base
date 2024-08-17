@@ -128,6 +128,8 @@ export interface ResourceStrategyDTO {
   maxMemory: string;
 }
 
+export interface PodDTO {}
+
 export interface AppState {
   appList: {
     total: number;
@@ -170,6 +172,11 @@ interface ModifyAppResourcesAction extends BaseAction {
 interface GetAppEnvAction extends BaseAction {
   type: "app/getAppEnv";
   payload: { envId: string };
+}
+
+interface ListAppPodsAction extends BaseAction {
+  type: "app/listAppPods";
+  payload: { envId: string; appId: string };
 }
 
 interface QueryAppAction extends BaseAction {
@@ -221,6 +228,7 @@ export interface AppModelType {
     modifyAppEnvVars: Effect;
     modifyAppEnvConfigMap: Effect;
     modifyAppResources: Effect;
+    listAppPods: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
@@ -377,12 +385,23 @@ const AppModel: AppModelType = {
     },
 
     *getAppEnv({ payload }: GetAppEnvAction, { call, put }) {
-      console.log("payload123", payload);
       const response = yield call(appService.getAppEnv, payload);
       yield put({
         type: "setAppEnv",
         payload: response.content,
       });
+    },
+
+    *listAppPods({ payload, callback }: ListAppPodsAction, { call, put }) {
+      const response = yield call(appService.listAppPods, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *getDepartments({}: QueryDepartmentAction, { call, put }) {

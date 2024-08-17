@@ -9,10 +9,7 @@ import com.rany.cake.devops.base.api.command.app.*;
 import com.rany.cake.devops.base.api.dto.*;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
-import com.rany.cake.devops.base.api.query.app.AppBasicQuery;
-import com.rany.cake.devops.base.api.query.app.AppEnvBasicQuery;
-import com.rany.cake.devops.base.api.query.app.AppEnvQuery;
-import com.rany.cake.devops.base.api.query.app.AppPageQuery;
+import com.rany.cake.devops.base.api.query.app.*;
 import com.rany.cake.devops.base.api.service.AppService;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.AppMember;
@@ -39,6 +36,7 @@ import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.AppDataAdapter;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.CloudFactory;
+import com.rany.cake.devops.base.service.cloud.dto.PodInfoDTO;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.util.enums.AppEnvEnum;
 import com.rany.cake.devops.base.util.enums.AppRoleEnum;
@@ -232,6 +230,27 @@ public class AppRemoteService implements AppService {
             appDomainService.updateAppEnv(appEnv);
         }
         return updated;
+    }
+
+    @Override
+    public List<PodDTO> listAppEnvPod(AppEnvPodQuery appEnvPodQuery) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(appEnvPodQuery.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
+        context.setApp(app);
+        context.setCluster(cluster);
+        context.setDeploymentName(appEnv.getDeploymentName());
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+        List<PodInfoDTO> podList = cloudService.getPodsForDeployment(context);
+        return appDataAdapter.convertPodInfo(podList);
     }
 
     @Override

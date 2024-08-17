@@ -84,6 +84,13 @@ export async function getAppEnv(data: any) {
   });
 }
 
+export async function listAppPods(data: any) {
+  return request(`/api/devops/app/list-app-pods`, {
+    method: "POST",
+    data,
+  });
+}
+
 export async function getDepartments() {
   return request(`/api/devops/app/departments`);
 }

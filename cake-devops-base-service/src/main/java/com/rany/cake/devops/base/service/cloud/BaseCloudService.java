@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.cloud;
 
+import com.rany.cake.devops.base.service.cloud.dto.PodInfoDTO;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.models.V1Namespace;
@@ -11,10 +12,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * TODO
+ * BaseCloudService
  *
  * @author zhongshengwang
- * @description TODO
+ * @description BaseCloudService
  * @date 2023/1/20 19:46
  * @email 18668485565163.com
  */
@@ -98,6 +99,8 @@ public abstract class BaseCloudService {
      * @return 是否成功
      */
     public abstract boolean createOrUpdateDeployment(DeployContext context);
+
+    public abstract List<PodInfoDTO> getPodsForDeployment(DeployContext context);
 
     /**
      * 扩缩容
