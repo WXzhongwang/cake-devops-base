@@ -37,6 +37,7 @@ import DeployLogDrawer from "./components/deploy-log-drawer";
 import EnvVarConfigPanel from "./components/env-vars-panel";
 import ConfigMapConfigPanel from "./components/config-map-panel";
 import app from "mock/app";
+import EnvResourcePanel from "./components/env-resource-panel";
 
 const { Paragraph } = Typography;
 const { Panel } = Collapse;
@@ -93,9 +94,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   releases,
   appEnv,
 }) => {
-  const [editingConfigKey, setEditingConfigKey] = useState("");
-  const [editingEnvKey, setEditingEnvKey] = useState("");
-
   const { id } = useParams();
   // 发布单详情抽屉
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -117,8 +115,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   // 新增 pipeKey 状态用于传递给查看发布日志的抽屉
   const [pipeKey, setPipeKey] = useState<string>("");
 
-  const [editableConfigTableForm] = Form.useForm();
-  const [editableEnvTableForm] = Form.useForm();
   const [resourceStrategy, setResourceStrategy] =
     useState<ResourceStrategyDTO>();
   const [domains, setDomains] = useState<string[]>();
@@ -129,10 +125,10 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
   // 配置项数据
   const [configMapData, setConfigMapData] = useState<
-    { id: string; key: string; value: string; editable?: boolean }[]
+    { id: string; label: string; value: string; editable?: boolean }[]
   >([]);
   const [envVarsData, setEnvVarsData] = useState<
-    { id: string; key: string; value: string; editable?: boolean }[]
+    { id: string; label: string; value: string; editable?: boolean }[]
   >([]);
 
   const columns = [
@@ -213,123 +209,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           )}
         </Space>
       ),
-    },
-  ];
-
-  // 添加新行
-  const addNewRow = (type: "config" | "env") => {
-    const newRow = { id: nanoid(), key: "", value: "", editable: true };
-    if (type === "config") {
-      if (editingConfigKey) {
-        message.warn("请先保存");
-        return;
-      }
-      setEditingConfigKey(newRow.id);
-      setConfigMapData([...configMapData, newRow]);
-    } else {
-      if (editingEnvKey) {
-        message.warn("请先保存");
-        return;
-      }
-      setEditingEnvKey(newRow.id);
-      setEnvVarsData([...envVarsData, newRow]);
-    }
-  };
-
-  const isEditing = (record: any, type: "config" | "env") =>
-    record.id === (type === "config" ? editingConfigKey : editingEnvKey);
-
-  const configColumns = (type: "config" | "env") => [
-    {
-      title: "Key 键",
-      dataIndex: "key",
-      editable: true,
-    },
-    {
-      title: "Value 值",
-      dataIndex: "value",
-      editable: true,
-    },
-    {
-      title: "操作",
-      width: 200, // 设置固定宽度
-      render: (_: any, record: any) => {
-        const editable = isEditing(record, type);
-        return editable ? (
-          <span>
-            <Typography.Link
-              style={{ marginInlineEnd: 8 }}
-              onClick={async () => {
-                try {
-                  const row =
-                    type === "config"
-                      ? ((await editableConfigTableForm.validateFields()) as any)
-                      : ((await editableEnvTableForm.validateFields()) as any);
-
-                  const newData =
-                    type === "config" ? [...configMapData] : [...envVarsData];
-                  const index = newData.findIndex(
-                    (item) => item.id === record.id
-                  );
-                  if (index > -1) {
-                    const item = newData[index];
-                    newData.splice(index, 1, {
-                      ...item,
-                      ...row,
-                    });
-                  } else {
-                    newData.push(row);
-                  }
-                  if (type == "config") {
-                    setConfigMapData(newData);
-                    setEditingConfigKey("");
-                    editableConfigTableForm.resetFields();
-                  } else {
-                    setEnvVarsData(newData);
-                    setEditingEnvKey("");
-                    editableEnvTableForm.resetFields();
-                  }
-                } catch (errInfo) {
-                  console.log("Validate Failed:", errInfo);
-                }
-              }}
-            >
-              保存
-            </Typography.Link>
-            {/* <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-              <a>Cancel</a>
-            </Popconfirm> */}
-          </span>
-        ) : (
-          <Typography.Link
-            disabled={
-              type == "config" ? editingConfigKey !== "" : editingEnvKey !== ""
-            }
-            onClick={() => {
-              if (type === "config") {
-                editableConfigTableForm.setFieldsValue({
-                  key: "",
-                  value: "",
-                  ...record,
-                });
-              } else {
-                editableEnvTableForm.setFieldsValue({
-                  key: "",
-                  value: "",
-                  ...record,
-                });
-              }
-              if (type == "config") {
-                setEditingConfigKey(record.id);
-              } else {
-                setEditingEnvKey(record.id);
-              }
-            }}
-          >
-            编辑
-          </Typography.Link>
-        );
-      },
     },
   ];
 
@@ -414,18 +293,18 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       const configMap = appEnv.configMap || {};
       const envVars = appEnv.envVars || {};
       setConfigMapData(
-        Object.entries(configMap).map(([key, value]) => ({
+        Object.entries(configMap).map(([label, value]) => ({
           id: nanoid(),
-          key,
+          label,
           value,
           editable: false,
         }))
       );
 
       setEnvVarsData(
-        Object.entries(envVars).map(([key, value]) => ({
+        Object.entries(envVars).map(([label, value]) => ({
           id: nanoid(),
-          key,
+          label,
           value,
           editable: false,
         }))
@@ -514,54 +393,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     setDrawerVisible(false);
   };
 
-  const submitConfig = () => {
-    // 提交配置项数据
-    if (configMapData.some((item) => !item.key || !item.value)) {
-      message.warning("配置项不能为空");
-      return;
-    }
-    // 将 configMapData 转换为对象
-    const configMap = configMapData.reduce(
-      (acc, { key, value }) => {
-        if (key) acc[key] = value;
-        return acc;
-      },
-      {} as Record<string, string>
-    );
-
-    dispatch({
-      type: "app/modifyAppEnvConfigMap",
-      payload: {
-        envId: selectedEnvironment,
-        configMap: configMap,
-      },
-    });
-  };
-
-  const submitEnvVars = () => {
-    // 提交环境变量数据
-    if (envVarsData.some((item) => !item.key || !item.value)) {
-      message.warning("环境变量不能为空");
-      return;
-    }
-    // 将 configMapData 转换为对象
-    const envVars = envVarsData.reduce(
-      (acc, { key, value }) => {
-        if (key) acc[key] = value;
-        return acc;
-      },
-      {} as Record<string, string>
-    );
-
-    dispatch({
-      type: "app/modifyAppEnvVars",
-      payload: {
-        envId: selectedEnvironment,
-        envVars: envVars,
-      },
-    });
-  };
-
   // 新增 handleViewLogs 方法
   const handleViewLogs = (pipeKey: string) => {
     console.log("pipeKey", pipeKey);
@@ -576,19 +407,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     }
     return null;
   }, [appEnv]);
-
-  const handleSubmit = (values: any) => {
-    resourceForm.validateFields().then((values) => {
-      dispatch({
-        type: "app/modifyAppResources",
-        payload: {
-          envId: selectedEnvironment,
-          resourceStrategyDTO: values,
-        },
-      });
-      resourceForm.resetFields();
-    });
-  };
 
   return (
     <PageContainer
@@ -662,183 +480,47 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         </Card>
 
         <Collapse defaultActiveKey={[]}>
-          <Panel header={"资源配置"} key="0">
-            <Form
-              form={resourceForm}
-              layout="horizontal"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600, marginBottom: 16 }}
-            >
-              <Form.Item label="副本数">
-                <Input
-                  name="replicas"
-                  type="number"
-                  max={10}
-                  value={resourceStrategy?.replicas}
-                  // onChange={handleChange}
-                  style={{ width: "45%" }}
+          {[
+            {
+              header: "资源配置",
+              key: 0,
+              config: (
+                <EnvResourcePanel
+                  resourceStrategy={resourceStrategy}
+                  selectedEnvironment={selectedEnvironment}
+                ></EnvResourcePanel>
+              ),
+            },
+            {
+              header: "环境变量",
+              key: 1,
+              config: (
+                <EnvVarConfigPanel
+                  initialEnvVars={envVarsData}
+                  selectedEnvironment={selectedEnvironment}
                 />
-              </Form.Item>
-
-              {/* CPU Range */}
-              <Form.Item label="CPU">
-                <Input.Group compact>
-                  <Input
-                    style={{ width: "45%" }}
-                    name="cpu"
-                    type="text"
-                    value={resourceStrategy?.cpu}
-                    // onChange={handleChange}
-                    placeholder="最小CPU，毫核"
-                    suffix="M"
-                  />
-                  <span
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      textAlign: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    -
-                  </span>
-                  <Input
-                    style={{ width: "45%" }}
-                    name="maxCpu"
-                    type="text"
-                    value={resourceStrategy?.maxCpu}
-                    // onChange={handleChange}
-                    placeholder="最大CPU，毫核"
-                    suffix="M"
-                  />
-                </Input.Group>
-              </Form.Item>
-
-              {/* Memory Range */}
-              <Form.Item label="Memory">
-                <Input.Group compact>
-                  <Input
-                    style={{ width: "45%" }}
-                    name="memory"
-                    value={resourceStrategy?.memory}
-                    // onChange={handleChange}
-                    placeholder="最小内存"
-                    suffix="M"
-                  />
-                  <span
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      textAlign: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    -
-                  </span>
-                  <Input
-                    style={{ width: "45%" }}
-                    name="maxMemory"
-                    type="text"
-                    value={resourceStrategy?.maxMemory}
-                    // onChange={handleChange}
-                    placeholder="最大内存"
-                    suffix="M"
-                  />
-                </Input.Group>
-              </Form.Item>
-
-              <Space style={{ marginBottom: 16 }}>
-                <Button type="primary" onClick={handleSubmit}>
-                  更新资源配置
-                </Button>
-              </Space>
-            </Form>
-          </Panel>
-          <Panel header={"配置项"} key="1">
-            <Form form={editableConfigTableForm} component={false}>
-              <Table
-                components={{
-                  body: {
-                    cell: EditableCell,
-                  },
-                }}
-                columns={configColumns("config").map((col) => {
-                  if (!col.editable) {
-                    return col;
-                  }
-                  return {
-                    ...col,
-                    onCell: (record: any) => ({
-                      record,
-                      inputType: "text",
-                      dataIndex: col.dataIndex,
-                      title: col.title,
-                      editing: isEditing(record, "config"),
-                    }),
-                  };
-                })}
-                dataSource={configMapData}
-                pagination={false}
-                rowKey="id"
-                size="small" // 使表格更小巧
-                style={{ marginBottom: 16 }} // 添加表格底部间距
-              />
-            </Form>
-            <Space style={{ marginBottom: 16 }}>
-              <Button onClick={() => addNewRow("config")}>添加配置项</Button>
-              <Button type="primary" onClick={submitConfig}>
-                提交配置
-              </Button>
-            </Space>
-          </Panel>
-          <Panel header={"环境变量"} key="2">
-            <Form form={editableEnvTableForm} component={false}>
-              <Table
-                components={{
-                  body: {
-                    cell: EditableCell,
-                  },
-                }}
-                columns={configColumns("env").map((col) => {
-                  if (!col.editable) {
-                    return col;
-                  }
-                  return {
-                    ...col,
-                    onCell: (record: any) => ({
-                      record,
-                      inputType: "text",
-                      dataIndex: col.dataIndex,
-                      title: col.title,
-                      editing: isEditing(record, "env"),
-                    }),
-                  };
-                })}
-                dataSource={envVarsData}
-                pagination={false}
-                rowKey="id"
-                size="small" // 使表格更小巧
-                style={{ marginBottom: 16 }} // 添加表格底部间距
-              />
-            </Form>
-            <Space style={{ marginBottom: 16 }}>
-              <Button onClick={() => addNewRow("env")}>添加环境变量</Button>
-              <Button type="primary" onClick={submitEnvVars}>
-                提交环境变量
-              </Button>
-            </Space>
-          </Panel>
-          <Panel header={"域名配置"} key="3"></Panel>
-        </Collapse>
-
-        <Collapse defaultActiveKey={[]}>
-          <ConfigMapConfigPanel initialConfigMap={configMapData} panelKey={0} />
-          <EnvVarConfigPanel initialEnvVars={envVarsData} panelKey={1} />
+              ),
+            },
+            {
+              header: "配置项",
+              key: 2,
+              config: (
+                <ConfigMapConfigPanel
+                  initialConfigMap={configMapData}
+                  selectedEnvironment={selectedEnvironment}
+                />
+              ),
+            },
+            {
+              header: "域名配置",
+              key: 3,
+              config: <></>,
+            },
+          ].map((item) => (
+            <Collapse.Panel key={item.key} header={item.header}>
+              {item.config}
+            </Collapse.Panel>
+          ))}
         </Collapse>
 
         <Card
