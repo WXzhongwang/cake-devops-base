@@ -130,7 +130,15 @@ export interface ResourceStrategyDTO {
   maxMemory: string;
 }
 
-export interface PodDTO {}
+export interface PodDTO {
+  name: string;
+  namespace: string;
+  podIp: string;
+  phase: string;
+  nodeName: String;
+  startTime: string;
+  isReady: boolean;
+}
 
 export interface AppState {
   appList: {

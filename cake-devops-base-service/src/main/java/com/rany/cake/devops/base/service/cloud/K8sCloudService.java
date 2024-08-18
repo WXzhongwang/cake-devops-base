@@ -209,14 +209,14 @@ public class K8sCloudService extends BaseCloudService {
                         new V1ServicePort().port(context.getServicePort())
                                 .targetPort(new IntOrString(context.getContainerPort()))
                                 .nodePort(context.getNodePort())
-                                .protocol(context.getServiceProtocal())
+                                .protocol(context.getServiceProtocol())
                 ));
             }
             if ("ClusterIP".equalsIgnoreCase(context.getServiceType())) {
                 app.setPorts(Collections.singletonList(
                         new V1ServicePort().port(context.getServicePort())
                                 .targetPort(new IntOrString(context.getContainerPort()))
-                                .protocol(context.getServiceProtocal())
+                                .protocol(context.getServiceProtocol())
                 ));
             }
             V1Service service = new V1Service()

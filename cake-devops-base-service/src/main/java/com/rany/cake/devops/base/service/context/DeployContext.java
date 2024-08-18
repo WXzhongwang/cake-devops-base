@@ -78,7 +78,7 @@ public class DeployContext implements Serializable {
      * TCP （默认）
      * UDP
      */
-    private String serviceProtocal;
+    private String serviceProtocol;
     /**
      * 默认服务类型ClusterIP、NodePort、LoadBalancer（暂不支持）
      * ClusterIP，表示服务只能在集群内部访问

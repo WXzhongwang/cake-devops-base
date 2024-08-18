@@ -209,6 +209,67 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     },
   ];
 
+  const podColumns = [
+    {
+      title: "POD名称",
+      dataIndex: "name",
+      key: "name",
+      render: (text: any, record: PodDTO) => {
+        return (
+          <Paragraph
+            copyable={{ tooltips: ["点击复制", "复制成功"] }}
+            style={{ display: "inline" }}
+          >
+            {record?.name}
+          </Paragraph>
+        );
+      },
+    },
+    {
+      title: "命名空间",
+      dataIndex: "namespace",
+      key: "namespace",
+    },
+    {
+      title: "podIp",
+      dataIndex: "podIp",
+      key: "podIp",
+    },
+    {
+      title: "阶段",
+      dataIndex: "phase",
+      key: "phase",
+    },
+    {
+      title: "节点名称",
+      dataIndex: "nodeName",
+      key: "nodeName",
+    },
+    {
+      title: "开始时间",
+      dataIndex: "startTime",
+      key: "startTime",
+      render: (text: any, record: PodDTO) => {
+        return (
+          <div>{dayjs(record?.startTime).format("YYYY-MM-DD HH:mm:ss")}</div>
+        );
+      },
+    },
+    {
+      title: "是否就绪",
+      dataIndex: "isReady",
+      key: "isReady",
+      render: (text: any, record: PodDTO) => {
+        return record.isReady ? "是" : "否";
+      },
+    },
+    {
+      title: "操作",
+      key: "action",
+      render: (text: any, record: PodDTO) => <Space size="middle"></Space>,
+    },
+  ];
+
   // 处理关闭按钮的点击事件
   const handleConfirmClose = (record: ReleaseRecord) => {
     // 弹出二次确认框
@@ -476,6 +537,15 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           )}
         </Card>
 
+        <Card title="POD节点">
+          <Table
+            columns={podColumns}
+            dataSource={pods}
+            rowKey={"id"}
+            pagination={false}
+          />
+        </Card>
+
         <Collapse defaultActiveKey={[]}>
           {[
             {
@@ -732,47 +802,3 @@ export default connect(
     },
   })
 )(DeployPage);
-
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: "number" | "text";
-  record: any;
-  index: number;
-}
-
-const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = <Input />;
-  console.log("editing", editing);
-
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
