@@ -292,6 +292,7 @@ public class AppRemoteService implements AppService {
         context.setNamespace(namespace);
         context.setApp(app);
         context.setCluster(cluster);
+        context.setDeploymentName(app.getAppName().getName());
         ResourceStrategy resourceStrategy = appDataAdapter.strategyTargetToSource(modifyEnvResourceCommand.getResourceStrategyDTO());
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());

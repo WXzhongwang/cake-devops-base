@@ -326,10 +326,10 @@ public class K8sCloudService extends BaseCloudService {
                     .data(updateConfigMapData);
 
             // 尝试获取现有的 ConfigMap
-            if (configMapData != null) {
+            if (configMapData != null && !configMapData.isEmpty()) {
                 // 如果存在，则更新 ConfigMap
                 // 检查数据是否已经相同，避免不必要的更新
-                if (StringUtils.equals(JSON.toJSONString(configMapData), JSON.toJSONString(updateConfigMapData))) {
+                if (!StringUtils.equals(JSON.toJSONString(configMapData), JSON.toJSONString(updateConfigMapData))) {
                     coreV1Api.replaceNamespacedConfigMap(configMapName, namespace, configMap, null, null, null, null);
                     log.info("ConfigMap {} updated successfully.", configMapName);
                 } else {
@@ -698,25 +698,35 @@ public class K8sCloudService extends BaseCloudService {
             V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
 
             // 更新容器的资源配置
-            V1Container container = existingDeployment.getSpec().getTemplate().getSpec().getContainers().get(0);
+            List<V1Container> containers = existingDeployment.getSpec().getTemplate().getSpec().getContainers();
+            if (containers != null && !containers.isEmpty()) {
+                V1Container container = containers.get(0);
 
-            Map<String, Quantity> request = new HashMap<>();
-            request.put("cpu", new Quantity(resourceStrategy.getCpu()));
-            request.put("memory", new Quantity(resourceStrategy.getMemory()));
+                V1ResourceRequirements requirements = new V1ResourceRequirements();
+                if (!StringUtils.isAnyBlank(resourceStrategy.getCpu(), resourceStrategy.getMemory())) {
+                    Map<String, Quantity> request = new HashMap<>();
+                    request.put("cpu", new Quantity(resourceStrategy.getCpu()));
+                    request.put("memory", new Quantity(resourceStrategy.getMemory()));
+                    requirements.setRequests(request);
+                }
+                if (!StringUtils.isAnyBlank(resourceStrategy.getMaxCpu(), resourceStrategy.getMaxMemory())) {
+                    Map<String, Quantity> limit = new HashMap<>();
+                    limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
+                    limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
+                    requirements.setLimits(limit);
+                }
 
-            Map<String, Quantity> limit = new HashMap<>();
-            limit.put("cpu", new Quantity(resourceStrategy.getMaxCpu()));
-            limit.put("memory", new Quantity(resourceStrategy.getMaxMemory()));
-
-            V1ResourceRequirements requirements = new V1ResourceRequirements()
-                    .limits(limit)
-                    .requests(request);
-
-            container.setResources(requirements);
+                container.setResources(requirements);
+            }
 
             // 提交更新后的 Deployment
             apiInstance.replaceNamespacedDeployment(deploymentName, namespace, existingDeployment, null, null, null, null);
             log.info("Deployment {} resources updated successfully.", deploymentName);
+
+//            V1Scale scale = new V1Scale()
+//                    .spec(new V1ScaleSpec().replicas(resourceStrategy.getReplicas()));
+//            apiInstance.replaceNamespacedDeploymentScale(context.getDeploymentName(), namespace, scale, null, null, null, null);
+
             return true;
         } catch (ApiException e) {
             log.error("Failed to update Deployment {} resources. {}", deploymentName, e.getResponseBody(), e);

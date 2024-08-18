@@ -231,7 +231,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       key: "namespace",
     },
     {
-      title: "podIp",
+      title: "POD IP",
       dataIndex: "podIp",
       key: "podIp",
     },
@@ -260,7 +260,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       dataIndex: "isReady",
       key: "isReady",
       render: (text: any, record: PodDTO) => {
-        return record.isReady ? "是" : "否";
+        return record.ready ? "是" : "否";
       },
     },
     {
@@ -537,7 +537,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           )}
         </Card>
 
-        <Card title="POD节点">
+        <Card title="Pod节点">
           <Table
             columns={podColumns}
             dataSource={pods}

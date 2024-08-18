@@ -137,7 +137,7 @@ export interface PodDTO {
   phase: string;
   nodeName: String;
   startTime: string;
-  isReady: boolean;
+  ready: boolean;
 }
 
 export interface AppState {
