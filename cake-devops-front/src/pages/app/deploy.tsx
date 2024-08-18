@@ -36,11 +36,10 @@ import { TableRowSelection } from "antd/lib/table/interface";
 import DeployLogDrawer from "./components/deploy-log-drawer";
 import EnvVarConfigPanel from "./components/env-vars-panel";
 import ConfigMapConfigPanel from "./components/config-map-panel";
-import app from "mock/app";
 import EnvResourcePanel from "./components/env-resource-panel";
+import DomainHostConfigPanel from "./components/domain-host-config-panel";
 
 const { Paragraph } = Typography;
-const { Panel } = Collapse;
 
 // 在组件中定义 getReleaseStatusText 函数
 const getReleaseStatusText = (status: string) => {
@@ -86,7 +85,7 @@ interface ReleasePageProps {
     total: number;
     list: ReleaseRecord[];
   };
-  appEnv: AppEnv | null;
+  appEnv: AppEnv;
 }
 const DeployPage: React.FC<ReleasePageProps> = ({
   dispatch,
@@ -117,11 +116,9 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
   const [resourceStrategy, setResourceStrategy] =
     useState<ResourceStrategyDTO>();
-  const [domains, setDomains] = useState<string[]>();
-  const [pods, setPods] = useState<PodDTO[]>();
 
   const [form] = Form.useForm();
-  const [resourceForm] = Form.useForm();
+  const [pods, setPods] = useState<PodDTO[]>([]);
 
   // 配置项数据
   const [configMapData, setConfigMapData] = useState<
@@ -512,9 +509,11 @@ const DeployPage: React.FC<ReleasePageProps> = ({
               ),
             },
             {
-              header: "域名配置",
+              header: "服务域名配置",
               key: 3,
-              config: <></>,
+              config: (
+                <DomainHostConfigPanel appEnv={appEnv}></DomainHostConfigPanel>
+              ),
             },
           ].map((item) => (
             <Collapse.Panel key={item.key} header={item.header}>

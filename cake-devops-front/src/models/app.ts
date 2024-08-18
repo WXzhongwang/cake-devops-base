@@ -111,6 +111,8 @@ export interface AppEnv {
   status: string | null;
   deployStatus: string;
   progress: string;
+  serviceName: string;
+  ingressName: string;
 }
 
 export interface AppMemberDTO {
