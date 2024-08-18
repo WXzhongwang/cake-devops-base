@@ -308,7 +308,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       );
 
       setResourceStrategy(appEnv.resourceStrategy);
-      setDomains(appEnv.domains);
+      // setDomains(appEnv.domains);
     }
   }, [appEnv]);
 
