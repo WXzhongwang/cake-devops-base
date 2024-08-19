@@ -169,10 +169,25 @@ public class K8sCloudService extends BaseCloudService {
     }
 
 
+    @Override
     public boolean rollbackDeployment(DeployContext context) {
         String namespace = context.getNamespace().getName().getName();
         String deploymentName = context.getDeploymentName();
-        AppsV1Api apiInstance = new AppsV1Api(apiClient);
+//        try {
+//            AppsV1Api apiInstance = new AppsV1Api(apiClient);
+//            // 创建回滚配置
+//            String rollbackToJson = "{\"rollbackTo\":{\"revision\":1}}"; // 回滚到前一个版本
+//            V1DeploymentRollback deploymentRollback = new Gson().fromJson(rollbackToJson, V1DeploymentRollback.class);
+//
+//            // 执行回滚
+//            apiInstance.createNamespacedDeploymentRollback(namespace, deploymentName, deploymentRollback, null, null, null, null);
+//
+//            log.info("Rolled back Deployment '{}' in namespace '{}' to revision 1.", deploymentName, namespace);
+//            return true;
+//        } catch (ApiException e) {
+//            log.error("Failed to rollback Deployment '{}' in namespace '{}'.", deploymentName, namespace, e);
+//            return false;
+//        }
         return true;
     }
 
