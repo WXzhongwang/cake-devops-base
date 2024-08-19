@@ -89,8 +89,10 @@ public class K8sCloudService extends BaseCloudService {
         try {
             AppsV1Api apiInstance = new AppsV1Api(apiClient);
             // 环境内已经设置过deploymentName
-            boolean existingDeployment = StringUtils.isNoneBlank(context.getAppEnv().getDeploymentName());
-            if (existingDeployment) {
+            // boolean existingDeployment = StringUtils.isNoneBlank(context.getAppEnv().getDeploymentName());
+            V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
+
+            if (existingDeployment != null) {
                 // 如果存在，则更新
                 apiInstance.replaceNamespacedDeployment(deploymentName, namespace, deployment, null, null, null, null);
                 log.info("Deployment {} updated successfully.", deploymentName);
@@ -147,13 +149,18 @@ public class K8sCloudService extends BaseCloudService {
         String namespace = context.getNamespace().getName().getName();
         ResourceStrategy resourceStrategy = context.getAppEnv().getResourceStrategy();
         Integer replicas = resourceStrategy.getReplicas();
+        String deploymentName = context.getDeploymentName();
         try {
             AppsV1Api apiInstance = new AppsV1Api(apiClient);
-
-            V1Scale scale = new V1Scale()
-                    .spec(new V1ScaleSpec().replicas(replicas));
-            apiInstance.replaceNamespacedDeploymentScale(context.getDeploymentName(), namespace, scale, null, null, null, null);
-            log.info("Deployment scaled to replicas: " + replicas);
+            // 获取 V1Deployment
+            V1Deployment deploy = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
+            try {
+                V1DeploymentSpec newSpec = deploy.getSpec().replicas(replicas);
+                V1Deployment newDeploy = deploy.spec(newSpec);
+                apiInstance.replaceNamespacedDeployment(deploymentName, namespace, newDeploy, null, null, null, null);
+            } catch (ApiException ex) {
+                log.warn("Scale the pod failed for Deployment:" + deploymentName, ex);
+            }
             return true;
         } catch (ApiException e) {
             log.error("Failed to scale Deployment.", e);

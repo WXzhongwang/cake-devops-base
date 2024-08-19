@@ -12,6 +12,7 @@ import com.rany.cake.devops.base.domain.repository.ClusterRepository;
 import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
+import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.service.ReleaseCenter;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.CloudFactory;
@@ -178,6 +179,27 @@ public class K8SClientTests extends BaseTests {
         configMap.put("d", "789");
         boolean configMapUpdated = cloudService.updateConfigMap(context);
         Assert.assertTrue(configMapUpdated);
+    }
+
+    @Test
+    public void testScaleDeployment() {
+        Release release = releaseRepository.find(new ReleaseId("984061302513217536"));
+        App app = appRepository.find(release.getAppId());
+        AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
+        Cluster cluster = clusterRepository.find(appEnv.getClusterId());
+        Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
+
+
+        K8sCloudService cloudService = new K8sCloudService("https://kubernetes.docker.internal:6443", "");
+        DeployContext context = new DeployContext();
+        context.setAppEnv(appEnv);
+        appEnv.setResourceStrategy(new ResourceStrategy(3, "", "", "", ""));
+        context.setApp(app);
+        context.setCluster(cluster);
+        context.setNamespace(namespace);
+        context.setDeploymentName("cake-devops-base");
+        boolean success = cloudService.scaleDeployment(context);
+        Assert.assertTrue(success);
     }
 }
 
