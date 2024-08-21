@@ -6,6 +6,8 @@ import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.type.NamespaceName;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.K8sCloudService;
+import com.rany.cake.devops.base.service.cloud.dto.CreateNameSpaceCmd;
+import com.rany.cake.devops.base.service.cloud.dto.ListPodCmd;
 import com.rany.cake.devops.base.service.cloud.dto.PodInfoDTO;
 import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import com.rany.cake.devops.base.service.context.DeployContext;
@@ -43,18 +45,19 @@ public class ClientTest {
         BaseCloudService cloudService = new K8sCloudService("https://kubernetes.docker.internal:6443", "");
         DeployContext context = new DeployContext(new String("12345"));
         context.setNamespace(new Namespace(new NamespaceId("12345"), new NamespaceName("cake-honda"), new ClusterId("1L")));
-        boolean nameSpace = cloudService.createNameSpace(context);
+        boolean nameSpace = cloudService.createNameSpace(context, new CreateNameSpaceCmd("cake-honda"));
         Assert.assertTrue(nameSpace);
     }
 
     @Test
     public void testListDeploymentPod() {
-
         K8sCloudService cloudService = new K8sCloudService("https://kubernetes.docker.internal:6443", "");
-        DeployContext context = new DeployContext(new String("12345"));
-        context.setNamespace(new Namespace(new NamespaceId("12345"), new NamespaceName("cake-honda"), new ClusterId("1L")));
-        context.setDeploymentName("cake-devops-base");
-        List<PodInfoDTO> podsForDeployment = cloudService.getPodsForDeployment(context);
+        DeployContext context = new DeployContext();
+        ListPodCmd listPodCmd = new ListPodCmd();
+        listPodCmd.setDeploymentName("cake-devops-base");
+        listPodCmd.setDeploymentName("cake-honda");
+        List<PodInfoDTO> podsForDeployment = cloudService.getPodsForDeployment(context,
+                listPodCmd);
         Assert.assertFalse(podsForDeployment.isEmpty());
     }
 
@@ -63,7 +66,6 @@ public class ClientTest {
     public void testListNamespace() {
         BaseCloudService cloudService = new K8sCloudService("https://kubernetes.docker.internal:6443", "");
         DeployContext context = new DeployContext();
-        // context.setNamespace(new Namespace(new NamespaceId("12345"), new NamespaceName("cake-devops"), new ClusterId("1L")));
         List<V1Namespace> v1Namespaces = cloudService.listNamespaces(context);
         Assert.assertFalse(v1Namespaces.isEmpty());
     }
@@ -91,11 +93,6 @@ public class ClientTest {
         AppsV1Api apiInstance = new AppsV1Api(apiClient);
         String labelSelector = "app=" + deploymentName; // 使用标准标签
         try {
-//            V1DeploymentList listNamespacedDeployment =
-//                    apiInstance.listNamespacedDeployment(namespace, null, null, null, null, deploymentName, null, null, null, null, null);
-//
-//            List<V1Deployment> appsV1DeploymentItems = listNamespacedDeployment.getItems();
-
             V1Deployment result = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
             if (result.getMetadata() != null) {
                 log.warn("No Deployments found with labelSelector '{}'.", labelSelector);

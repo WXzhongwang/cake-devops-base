@@ -36,7 +36,7 @@ import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.AppDataAdapter;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.CloudFactory;
-import com.rany.cake.devops.base.service.cloud.dto.PodInfoDTO;
+import com.rany.cake.devops.base.service.cloud.dto.*;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.util.enums.AppEnvEnum;
 import com.rany.cake.devops.base.util.enums.AppRoleEnum;
@@ -223,8 +223,15 @@ public class AppRemoteService implements AppService {
         context.setCluster(cluster);
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
-        context.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
-        Boolean updated = cloudService.createOrUpdateConfigMap(context);
+
+
+        UpdateConfigMapCmd createConfigMapCmd = new UpdateConfigMapCmd();
+        createConfigMapCmd.setNamespace(namespace.getName().getName());
+        createConfigMapCmd.setAppName(app.getAppName().getName());
+        createConfigMapCmd.setEnvName(appEnv.getEnvName());
+        createConfigMapCmd.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
+        createConfigMapCmd.setCurrentConfigMap(appEnv.getConfigMap());
+        Boolean updated = cloudService.createOrUpdateConfigMap(context, createConfigMapCmd);
         if (updated) {
             appEnv.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
             appDomainService.updateAppEnv(appEnv);
@@ -246,10 +253,10 @@ public class AppRemoteService implements AppService {
         context.setNamespace(namespace);
         context.setApp(app);
         context.setCluster(cluster);
-        context.setDeploymentName(appEnv.getDeploymentName());
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
-        List<PodInfoDTO> podList = cloudService.getPodsForDeployment(context);
+        ListPodCmd listPodCmd = new ListPodCmd(namespace.getName().getName(), appEnv.getDeploymentName());
+        List<PodInfoDTO> podList = cloudService.getPodsForDeployment(context, listPodCmd);
         return appDataAdapter.convertPodInfo(podList);
     }
 
@@ -269,10 +276,11 @@ public class AppRemoteService implements AppService {
         context.setCluster(cluster);
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
-        appEnv.setEnvVars(modifyEnvVarsCommand.getEnvVars());
-        context.setConfigMap(modifyEnvVarsCommand.getEnvVars());
-        Boolean updated = cloudService.updateDeploymentEnvVars(context);
+        UpdateEnvVarsCmd updateEnvVarsCmd = new UpdateEnvVarsCmd();
+        updateEnvVarsCmd.setEnvVars(modifyEnvVarsCommand.getEnvVars());
+        Boolean updated = cloudService.updateDeploymentEnvVars(context, updateEnvVarsCmd);
         if (updated) {
+            appEnv.setEnvVars(modifyEnvVarsCommand.getEnvVars());
             appDomainService.updateAppEnv(appEnv);
         }
         return updated;
@@ -296,9 +304,13 @@ public class AppRemoteService implements AppService {
         ResourceStrategy resourceStrategy = appDataAdapter.strategyTargetToSource(modifyEnvResourceCommand.getResourceStrategyDTO());
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
-        appEnv.setResourceStrategy(resourceStrategy);
-        Boolean updated = cloudService.updateDeploymentResources(context);
+        UpdateResourceCmd updateResourceCmd = new UpdateResourceCmd();
+        updateResourceCmd.setResourceStrategy(resourceStrategy);
+        updateResourceCmd.setDeploymentName(appEnv.getDeploymentName());
+        updateResourceCmd.setNamespace(namespace.getName().getName());
+        Boolean updated = cloudService.updateDeploymentResources(context, updateResourceCmd);
         if (updated) {
+            appEnv.setResourceStrategy(resourceStrategy);
             appDomainService.updateAppEnv(appEnv);
         }
         return updated;
@@ -321,7 +333,12 @@ public class AppRemoteService implements AppService {
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
         appEnv.setDomains(modifyAppEnvDomainCommand.getDomains());
-        Boolean updated = cloudService.createOrUpdateIngress(context);
+        CreateIngressCmd createIngressCmd = new CreateIngressCmd(namespace.getName().getName(), modifyAppEnvDomainCommand.getServiceName(),
+                modifyAppEnvDomainCommand.getServicePort(),
+                appEnv.getDomains(),
+                modifyAppEnvDomainCommand.getIngressName()
+        );
+        Boolean updated = cloudService.createOrUpdateIngress(context, createIngressCmd);
         if (updated) {
             appDomainService.updateAppEnv(appEnv);
         }

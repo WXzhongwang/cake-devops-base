@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.service.cloud;
 
-import com.rany.cake.devops.base.service.cloud.dto.PodInfoDTO;
+import com.rany.cake.devops.base.service.cloud.dto.*;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.models.V1Namespace;
@@ -90,7 +90,7 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean createDeployment(DeployContext context);
+    public abstract boolean createDeployment(DeployContext context, CreateDeploymentCmd createDeploymentCmd);
 
     /**
      * createOrUpdateDeployment
@@ -98,9 +98,15 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean createOrUpdateDeployment(DeployContext context);
+    public abstract boolean createOrUpdateDeployment(DeployContext context, CreateDeploymentCmd createDeploymentCmd);
 
-    public abstract List<PodInfoDTO> getPodsForDeployment(DeployContext context);
+    /**
+     * 获取pod列表
+     *
+     * @param context 上下文信息
+     * @return pod列表
+     */
+    public abstract List<PodInfoDTO> getPodsForDeployment(DeployContext context, ListPodCmd listPodCmd);
 
     /**
      * 扩缩容
@@ -108,7 +114,7 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean scaleDeployment(DeployContext context);
+    public abstract boolean scaleDeployment(DeployContext context, ScaleDeploymentCmd scaleDeploymentCmd);
 
     /**
      * 回滚发布
@@ -124,7 +130,7 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean deleteDeployment(DeployContext context);
+    public abstract boolean deleteDeployment(DeployContext context, DeleteDeploymentCmd deleteDeploymentCmd);
 
 
     /**
@@ -133,7 +139,7 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean createService(DeployContext context);
+    public abstract boolean createService(DeployContext context, CreateServiceCmd createServiceCmd);
 
     /**
      * updateService
@@ -141,7 +147,7 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean updateService(DeployContext context);
+    public abstract boolean updateService(DeployContext context, ModifyServiceCmd modifyServiceCmd);
 
     /**
      * deleteService 删除服务
@@ -149,7 +155,7 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean deleteService(DeployContext context);
+    public abstract boolean deleteService(DeployContext context, DeleteServiceCmd deleteServiceCmd);
 
     /**
      * 创建configMap
@@ -157,7 +163,7 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean createConfigMap(DeployContext context);
+    public abstract boolean createConfigMap(DeployContext context, CreateConfigMapCmd createConfigMapCmd);
 
     /**
      * 创建或更新configMap
@@ -165,7 +171,7 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean createOrUpdateConfigMap(DeployContext context);
+    public abstract boolean createOrUpdateConfigMap(DeployContext context, UpdateConfigMapCmd createConfigMapCmd);
 
     /**
      * 更新configMap
@@ -173,23 +179,21 @@ public abstract class BaseCloudService {
      * @param context 上下文信息
      * @return 是否成功
      */
-    public abstract boolean updateConfigMap(DeployContext context);
+    public abstract boolean updateConfigMap(DeployContext context, UpdateConfigMapCmd updateConfigMapCmd);
 
-    public abstract boolean createIngress(DeployContext context);
+    public abstract boolean createIngress(DeployContext context, CreateIngressCmd createIngressCmd);
 
-    public abstract boolean createOrUpdateIngress(DeployContext context);
+    public abstract boolean createOrUpdateIngress(DeployContext context, CreateIngressCmd createIngressCmd);
 
-    public abstract boolean deleteIngress(DeployContext context);
+    public abstract boolean deleteIngress(DeployContext context, DeleteIngressCmd deleteIngressCmd);
 
-    public abstract boolean createNameSpace(DeployContext context);
+    public abstract boolean createNameSpace(DeployContext context, CreateNameSpaceCmd createNameSpaceCmd);
 
     public abstract List<V1Namespace> listNamespaces(DeployContext context);
 
-    public abstract V1Namespace getNamespace(DeployContext context);
-
     public abstract V1Namespace getNamespace(String name);
 
-    public abstract boolean updateDeploymentResources(DeployContext context);
+    public abstract boolean updateDeploymentResources(DeployContext context, UpdateResourceCmd updateResourceCmd);
 
-    public abstract boolean updateDeploymentEnvVars(DeployContext context);
+    public abstract boolean updateDeploymentEnvVars(DeployContext context, UpdateEnvVarsCmd updateEnvVarsCmd);
 }

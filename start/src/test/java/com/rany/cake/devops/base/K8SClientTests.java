@@ -12,12 +12,12 @@ import com.rany.cake.devops.base.domain.repository.ClusterRepository;
 import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
-import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.service.ReleaseCenter;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.CloudFactory;
 import com.rany.cake.devops.base.service.cloud.K8sCloudService;
 import com.rany.cake.devops.base.service.cloud.KubernetesConstants;
+import com.rany.cake.devops.base.service.cloud.dto.*;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.util.enums.ClusterTypeEnum;
@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -93,12 +94,20 @@ public class K8SClientTests extends BaseTests {
         context.setCluster(cluster);
         context.setAppEnv(appEnv);
         context.setDeploymentName(app.getAppName().getName());
-        context.setServiceName(app.getAppName().getName() + "-svc");
-        context.setServicePort(8080);
-        context.setContainerPort(8300);
-        context.setIngressName(app.getAppName().getName());
-        context.setDeploymentImage("registry.cn-hangzhou.aliyuncs.com/cake-devops-base/cake-devops-base:R202407292146090014");
-        boolean deployment = cloudService.createDeployment(context);
+
+        CreateDeploymentCmd createDeploymentCmd = new CreateDeploymentCmd();
+        createDeploymentCmd.setNamespace("cake-honda");
+        createDeploymentCmd.setAppName("cake-devops-base");
+        createDeploymentCmd.setDeploymentName("cake-devops-base");
+        createDeploymentCmd.setDeploymentImage("registry.cn-hangzhou.aliyuncs.com/cake-devops-base/cake-devops-base:R202407292146090014");
+        createDeploymentCmd.setHealthCheck("/ok");
+        createDeploymentCmd.setEnvVars(new HashMap<>());
+        createDeploymentCmd.setResourceStrategy(appEnv.getResourceStrategy());
+        createDeploymentCmd.setVolumeMounts(Collections.emptyList());
+        createDeploymentCmd.setContainerPort(KubernetesConstants.DEFAULT_WEB_SERVICE_PORT);
+
+        boolean deployment = cloudService.createDeployment(context,
+                createDeploymentCmd);
         Assert.assertTrue(deployment);
     }
 
@@ -117,7 +126,7 @@ public class K8SClientTests extends BaseTests {
         Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
 
 
-        DeployContext context = new DeployContext(new String("12345"));
+        DeployContext context = new DeployContext();
         context.setNamespace(namespace);
         context.setApp(app);
         context.setRelease(release);
@@ -125,13 +134,20 @@ public class K8SClientTests extends BaseTests {
         context.setAppEnv(appEnv);
 
         context.setDeploymentName(app.getAppName().getName());
-        context.setServiceName(app.getAppName().getName() + "-svc");
-        context.setServicePort(KubernetesConstants.DEFAULT_SERVICE_PORT);
-        context.setContainerPort(KubernetesConstants.DEFAULT_WEB_SERVICE_PORT);
-        context.setIngressName(app.getAppName().getName());
 
-        context.setDeploymentImage("registry.cn-hangzhou.aliyuncs.com/cake-devops-base/cake-devops-base:R202407292146090014");
-        boolean deployment = cloudService.createService(context);
+        // context.setDeploymentImage("registry.cn-hangzhou.aliyuncs.com/cake-devops-base/cake-devops-base:R202407292146090014");
+        CreateServiceCmd createServiceCmd = new CreateServiceCmd(
+                "cake-devops-base",
+                "cake-honda",
+                app.getAppName().getName() + "-svc",
+                KubernetesConstants.DEFAULT_SERVICE_PORT,
+                KubernetesConstants.DEFAULT_WEB_SERVICE_PORT,
+                "TCP",
+                "ClusterIP",
+                null
+
+        );
+        boolean deployment = cloudService.createService(context, createServiceCmd);
         Assert.assertTrue(deployment);
     }
 
@@ -143,62 +159,42 @@ public class K8SClientTests extends BaseTests {
         Assert.assertTrue(connected);
 
 
-        Release release = releaseRepository.find(new ReleaseId("906359016366682112"));
-        App app = appRepository.find(release.getAppId());
-        AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
-        Cluster cluster = clusterRepository.find(appEnv.getClusterId());
-        Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
-
-
-        DeployContext context = new DeployContext(new String("12345"));
-        context.setNamespace(namespace);
-        context.setApp(app);
-        context.setRelease(release);
-        context.setCluster(cluster);
-        context.setAppEnv(appEnv);
-
-        context.setDeploymentName(app.getAppName().getName());
-        context.setServiceName(app.getAppName().getName() + "-svc");
-        context.setServicePort(KubernetesConstants.DEFAULT_SERVICE_PORT);
-        context.setContainerPort(KubernetesConstants.DEFAULT_WEB_SERVICE_PORT);
-        context.setIngressName(app.getAppName().getName());
-
-
+        DeployContext context = new DeployContext();
         HashMap<String, String> configMap = new HashMap<>();
         configMap.put("a", "123");
         configMap.put("b", "234");
         configMap.put("c", "345");
         configMap.put("d", "456");
-        context.setConfigMap(configMap);
-        boolean configMapCreated = cloudService.createConfigMap(context);
+
+        CreateConfigMapCmd createConfigMapCmd = new CreateConfigMapCmd();
+        createConfigMapCmd.setConfigMap(configMap);
+        createConfigMapCmd.setAppName("cake-devops-base");
+        createConfigMapCmd.setEnvName("ceshi");
+        boolean configMapCreated = cloudService.createConfigMap(context,
+                createConfigMapCmd);
         Assert.assertTrue(configMapCreated);
 
         configMap.put("a", "234");
         configMap.put("b", "345");
         configMap.put("c", "567");
         configMap.put("d", "789");
-        boolean configMapUpdated = cloudService.updateConfigMap(context);
+        UpdateConfigMapCmd updateConfigMapCmd = new UpdateConfigMapCmd();
+        createConfigMapCmd.setConfigMap(configMap);
+        createConfigMapCmd.setAppName("cake-devops-base");
+        createConfigMapCmd.setEnvName("ceshi");
+        boolean configMapUpdated = cloudService.updateConfigMap(context, updateConfigMapCmd);
         Assert.assertTrue(configMapUpdated);
     }
 
     @Test
     public void testScaleDeployment() {
-        Release release = releaseRepository.find(new ReleaseId("984061302513217536"));
-        App app = appRepository.find(release.getAppId());
-        AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
-        Cluster cluster = clusterRepository.find(appEnv.getClusterId());
-        Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
-
-
         K8sCloudService cloudService = new K8sCloudService("https://kubernetes.docker.internal:6443", "");
         DeployContext context = new DeployContext();
-        context.setAppEnv(appEnv);
-        appEnv.setResourceStrategy(new ResourceStrategy(3, "", "", "", ""));
-        context.setApp(app);
-        context.setCluster(cluster);
-        context.setNamespace(namespace);
-        context.setDeploymentName("cake-devops-base");
-        boolean success = cloudService.scaleDeployment(context);
+        ScaleDeploymentCmd scaleDeploymentCmd = new ScaleDeploymentCmd();
+        scaleDeploymentCmd.setDeploymentName("cake-devops-base");
+        scaleDeploymentCmd.setNamespace("cake-honda");
+        scaleDeploymentCmd.setReplicas(2);
+        boolean success = cloudService.scaleDeployment(context, scaleDeploymentCmd);
         Assert.assertTrue(success);
     }
 }

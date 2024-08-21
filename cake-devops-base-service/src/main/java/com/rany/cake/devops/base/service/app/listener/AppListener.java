@@ -15,6 +15,7 @@ import com.rany.cake.devops.base.domain.type.NamespaceName;
 import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.CloudFactory;
+import com.rany.cake.devops.base.service.cloud.dto.CreateNameSpaceCmd;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import io.kubernetes.client.openapi.models.V1Namespace;
 import org.springframework.context.event.EventListener;
@@ -51,7 +52,7 @@ public class AppListener {
             Namespace newNamespace = new Namespace(new NamespaceId(String.valueOf(snowflakeIdWorker.nextId())), new NamespaceName(department), clusterId);
             DeployContext context = new DeployContext();
             context.setNamespace(newNamespace);
-            if (cloudService.createNameSpace(context)) {
+            if (cloudService.createNameSpace(context, new CreateNameSpaceCmd(department))) {
                 nameSpaceRepository.save(newNamespace);
             }
         }

@@ -50,8 +50,8 @@ public class AppEnv extends BaseEntity<String> {
      */
     private Map<String, String> envVars;
     private String deploymentName;
-    private String serviceName;
-    private String ingressName;
+    private String service;
+    private String ingress;
     /**
      * 环境资源策略
      */

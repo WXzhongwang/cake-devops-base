@@ -19,4 +19,7 @@ import java.util.List;
 public class ModifyAppEnvDomainCommand extends BaseCommand {
     private String envId;
     private List<String> domains;
+    private String serviceName;
+    private Integer servicePort;
+    private String ingressName;
 }
