@@ -160,10 +160,14 @@ const AppList: React.FC<AppListProps> = ({
             }}
           >
             <Form.Item name="appName" label="应用名称">
-              <Input placeholder="请输入应用名称" />
+              <Input placeholder="请输入应用名称" style={{ width: "120px" }} />
             </Form.Item>
             <Form.Item name="department" label="部门">
-              <Select placeholder="请选择部门" allowClear>
+              <Select
+                placeholder="请选择部门"
+                style={{ width: "120px" }}
+                allowClear
+              >
                 {formattedDepartments?.map((option) => (
                   <Option key={option.value} value={option.value}>
                     {option.label}
@@ -172,7 +176,7 @@ const AppList: React.FC<AppListProps> = ({
               </Select>
             </Form.Item>
             <Form.Item name="language" label="开发语言">
-              <Select placeholder="请选择开发语言">
+              <Select placeholder="请选择开发语言" style={{ width: "120px" }}>
                 <Option value="java">Java</Option>
                 <Option value="python">Python</Option>
                 {/* 其他语言选项 */}
