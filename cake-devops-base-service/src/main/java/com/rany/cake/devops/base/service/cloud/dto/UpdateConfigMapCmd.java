@@ -15,6 +15,7 @@ public class UpdateConfigMapCmd {
     private String namespace;
     private String appName;
     private String envName;
+    private String envId;
     /**
      * 预计要更新的configMap键值对
      */

@@ -52,6 +52,7 @@ public class KubernetesDeployPlugin extends BasePlugin {
         createDeploymentCmd.setResourceStrategy(appEnv.getResourceStrategy());
         createDeploymentCmd.setVolumeMounts(app.getVolumeMounts());
         createDeploymentCmd.setContainerPort(KubernetesConstants.DEFAULT_WEB_SERVICE_PORT);
+        createDeploymentCmd.setNamespace(namespace.getName().getName());
 
         boolean deploymentCreated = cloudService.createOrUpdateDeployment(context,
                 createDeploymentCmd);

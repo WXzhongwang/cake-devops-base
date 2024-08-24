@@ -229,6 +229,7 @@ public class AppRemoteService implements AppService {
         createConfigMapCmd.setNamespace(namespace.getName().getName());
         createConfigMapCmd.setAppName(app.getAppName().getName());
         createConfigMapCmd.setEnvName(appEnv.getEnvName());
+        createConfigMapCmd.setEnvId(appEnv.getEnvId());
         createConfigMapCmd.setConfigMap(modifyAppEnvConfigMapCommand.getConfigMap());
         createConfigMapCmd.setCurrentConfigMap(appEnv.getConfigMap());
         Boolean updated = cloudService.createOrUpdateConfigMap(context, createConfigMapCmd);
@@ -277,6 +278,8 @@ public class AppRemoteService implements AppService {
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
         UpdateEnvVarsCmd updateEnvVarsCmd = new UpdateEnvVarsCmd();
+        updateEnvVarsCmd.setNamespace(namespace.getName().getName());
+        updateEnvVarsCmd.setDeploymentName(appEnv.getDeployment());
         updateEnvVarsCmd.setEnvVars(modifyEnvVarsCommand.getEnvVars());
         Boolean updated = cloudService.updateDeploymentEnvVars(context, updateEnvVarsCmd);
         if (updated) {

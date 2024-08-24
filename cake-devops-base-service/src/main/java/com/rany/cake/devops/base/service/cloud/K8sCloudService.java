@@ -7,6 +7,7 @@ import com.rany.cake.devops.base.service.cloud.dto.*;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.utils.KubernetesUtils;
 import com.rany.cake.toolkit.lang.utils.Lists;
+import com.rany.cake.toolkit.lang.utils.Spells;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.custom.Quantity;
 import io.kubernetes.client.openapi.ApiException;
@@ -327,7 +328,10 @@ public class K8sCloudService extends BaseCloudService {
         String namespace = updateConfigMapCmd.getNamespace();
         String appName = updateConfigMapCmd.getAppName();
         String envName = updateConfigMapCmd.getEnvName().toLowerCase();
-        String configMapName = String.format("%s-%s", appName, envName);
+
+        String spell = Spells.getSpell(envName);
+
+        String configMapName = String.format("%s-%s-%s", appName, updateConfigMapCmd.getEnvId(), spell);
         Map<String, String> configMapData = updateConfigMapCmd.getCurrentConfigMap();
         Map<String, String> updateConfigMapData = updateConfigMapCmd.getConfigMap();
 

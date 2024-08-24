@@ -57,6 +57,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
               required: true,
               message: `请输入${title}!`,
             },
+            ...(dataIndex === "label"
+              ? [
+                  {
+                    pattern: /^[a-zA-Z_][a-zA-Z0-9_.-]*$/,
+                    message: `配置项名称必须以字母或下划线开头，并且只能包含字母、数字、下划线、短横线或点`,
+                  },
+                ]
+              : []),
           ]}
         >
           <Input />
@@ -219,6 +227,8 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
         configMap: configMap,
       },
     });
+    message.success("更新成功");
+    window.location.reload();
   };
 
   return (
