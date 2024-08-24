@@ -420,6 +420,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     });
     // 清空选择
     setSelectedRow(null);
+    window.location.reload();
   };
 
   const handleCreateReleaseDrawer = () => {
