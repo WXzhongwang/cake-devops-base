@@ -255,7 +255,7 @@ public class AppRemoteService implements AppService {
         context.setCluster(cluster);
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
-        ListPodCmd listPodCmd = new ListPodCmd(namespace.getName().getName(), appEnv.getDeploymentName());
+        ListPodCmd listPodCmd = new ListPodCmd(namespace.getName().getName(), appEnv.getDeployment());
         List<PodInfoDTO> podList = cloudService.getPodsForDeployment(context, listPodCmd);
         return appDataAdapter.convertPodInfo(podList);
     }
@@ -306,7 +306,7 @@ public class AppRemoteService implements AppService {
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
         UpdateResourceCmd updateResourceCmd = new UpdateResourceCmd();
         updateResourceCmd.setResourceStrategy(resourceStrategy);
-        updateResourceCmd.setDeploymentName(appEnv.getDeploymentName());
+        updateResourceCmd.setDeploymentName(appEnv.getDeployment());
         updateResourceCmd.setNamespace(namespace.getName().getName());
         Boolean updated = cloudService.updateDeploymentResources(context, updateResourceCmd);
         if (updated) {

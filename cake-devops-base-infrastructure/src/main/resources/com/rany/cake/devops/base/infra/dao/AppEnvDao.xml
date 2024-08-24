@@ -25,9 +25,9 @@
         <result column="deploy_status" jdbcType="VARCHAR" property="deployStatus"/>
         <result column="progress" jdbcType="VARCHAR" property="progress"/>
         <result column="custom_build_script" jdbcType="VARCHAR" property="customBuildScript"/>
-        <result column="deployment_name" jdbcType="VARCHAR" property="deploymentName"/>
-        <result column="service_name" jdbcType="VARCHAR" property="serviceName"/>
-        <result column="ingress_name" jdbcType="VARCHAR" property="ingressName"/>
+        <result column="deployment" jdbcType="VARCHAR" property="deployment"/>
+        <result column="service" jdbcType="VARCHAR" property="service"/>
+        <result column="ingress" jdbcType="VARCHAR" property="ingress"/>
         <result column="config_map" property="configMap" jdbcType="VARCHAR"
         />
         <result column="env_vars" property="envVars" jdbcType="VARCHAR"
@@ -38,7 +38,7 @@
         id
         , env_id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
         auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
-        modifier, deploy_status, progress, custom_build_script, deployment_name, service_name, ingress_name,
+        modifier, deploy_status, progress, custom_build_script, deployment, service, ingress,
         config_map, env_vars
     </sql>
     <select id="selectByAppId" resultMap="BaseResultMap">
@@ -67,7 +67,7 @@
                              auto_scaling, need_approval, status,
                              is_deleted, gmt_create, gmt_modified,
                              creator, modifier, deploy_status, progress,
-                             custom_build_script, deployment_name, service_name, ingress_name, config_map,
+                             custom_build_script, deployment, service, ingress, config_map,
                              env_vars)
         values (#{envId},
                 #{clusterId.clusterId},
@@ -161,14 +161,14 @@
             <if test="customBuildScript != null">
                 custom_build_script = #{customBuildScript},
             </if>
-            <if test="deploymentName != null">
-                deployment_name = #{deploymentName},
+            <if test="deployment != null">
+                deployment = #{deployment},
             </if>
-            <if test="serviceName != null">
-                service_name = #{serviceName},
+            <if test="service != null">
+                service = #{service},
             </if>
-            <if test="ingressName != null">
-                ingress_name = #{ingressName},
+            <if test="ingress != null">
+                ingress = #{ingress},
             </if>
         </set>
         where env_id = #{envId}

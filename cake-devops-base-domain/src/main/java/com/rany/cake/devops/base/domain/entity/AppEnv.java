@@ -49,7 +49,7 @@ public class AppEnv extends BaseEntity<String> {
      * 环境变量注入
      */
     private Map<String, String> envVars;
-    private String deploymentName;
+    private String deployment;
     private String service;
     private String ingress;
     /**

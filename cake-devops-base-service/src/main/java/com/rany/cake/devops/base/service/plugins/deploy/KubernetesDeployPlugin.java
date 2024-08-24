@@ -48,7 +48,7 @@ public class KubernetesDeployPlugin extends BasePlugin {
             log.error("创建Deployment失败");
             return false;
         }
-        appEnv.setDeploymentName(appEnv.getDeploymentName());
+        appEnv.setDeployment(appEnv.getDeployment());
         appRepository.updateAppEnv(appEnv);
         return true;
     }
