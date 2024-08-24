@@ -317,6 +317,37 @@ public class AppRemoteService implements AppService {
     }
 
     @Override
+    public Boolean scale(ScaleEnvCommand scaleEnvCommand) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(scaleEnvCommand.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
+        context.setApp(app);
+        context.setCluster(cluster);
+        context.setDeploymentName(app.getAppName().getName());
+        ResourceStrategy resourceStrategy = appEnv.getResourceStrategy();
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+        ScaleDeploymentCmd scaleDeploymentCmd = new ScaleDeploymentCmd();
+        scaleDeploymentCmd.setNamespace(namespace.getName().getName());
+        scaleDeploymentCmd.setReplicas(scaleEnvCommand.getReplicas());
+        scaleDeploymentCmd.setDeploymentName(appEnv.getDeployment());
+        Boolean updated = cloudService.scaleDeployment(context, scaleDeploymentCmd);
+        if (updated) {
+            resourceStrategy.setReplicas(scaleEnvCommand.getReplicas());
+            appEnv.setResourceStrategy(resourceStrategy);
+            appDomainService.updateAppEnv(appEnv);
+        }
+        return updated;
+    }
+
+    @Override
     public Boolean modifyAppEnvDomains(ModifyAppEnvDomainCommand modifyAppEnvDomainCommand) {
         DeployContext context = new DeployContext();
         AppEnv appEnv = appDomainService.getAppEnv(modifyAppEnvDomainCommand.getEnvId());

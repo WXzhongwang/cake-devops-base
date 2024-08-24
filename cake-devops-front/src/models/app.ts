@@ -37,6 +37,11 @@ export interface ModifyAppResourcesPayload {
   resourceStrategyDTO: ResourceStrategyDTO;
 }
 
+export interface ScalePayload {
+  envId: string;
+  replicas: number;
+}
+
 export interface ModifyAppEnvConfigMapPayload {
   envId: string;
   configMap: Record<string, string> | null;
@@ -179,6 +184,11 @@ interface ModifyAppResourcesAction extends BaseAction {
   payload: ModifyAppResourcesPayload;
 }
 
+interface ScaleAction extends BaseAction {
+  type: "app/scale";
+  payload: ScalePayload;
+}
+
 interface GetAppEnvAction extends BaseAction {
   type: "app/getAppEnv";
   payload: { envId: string };
@@ -239,6 +249,7 @@ export interface AppModelType {
     modifyAppEnvConfigMap: Effect;
     modifyAppResources: Effect;
     listAppPods: Effect;
+    scale: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
@@ -376,6 +387,18 @@ const AppModel: AppModelType = {
       { call, put }
     ) {
       const response = yield call(appService.modifyAppEnvResource, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *scale({ payload, callback }: ScaleAction, { call, put }) {
+      const response = yield call(appService.scale, payload);
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {

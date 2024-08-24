@@ -77,6 +77,13 @@ export async function modifyAppEnvResource(data: any) {
   });
 }
 
+export async function scale(data: any) {
+  return request(`/api/devops/app/scale`, {
+    method: "POST",
+    data,
+  });
+}
+
 export async function getAppEnv(data: any) {
   return request(`/api/devops/app/get-app-env`, {
     method: "POST",

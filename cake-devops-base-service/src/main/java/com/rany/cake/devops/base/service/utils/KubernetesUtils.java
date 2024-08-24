@@ -58,8 +58,8 @@ public final class KubernetesUtils {
                 status.getConditions().stream()
                         .anyMatch(c -> "Ready".equals(c.getType()) && "True".equals(c.getStatus()));
 
-        OffsetDateTime startTime = Objects.requireNonNull(status.getStartTime());
-        String formattedStartTime = startTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        OffsetDateTime startTime = status.getStartTime();
+        String formattedStartTime = startTime != null ? startTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) : "";
 
         return new PodInfoDTO(
                 Objects.requireNonNull(pod.getMetadata()).getName(),

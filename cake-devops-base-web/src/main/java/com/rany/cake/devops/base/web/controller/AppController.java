@@ -69,6 +69,12 @@ public class AppController {
         return PojoResult.succeed(appService.modifyAppEnvResource(modifyEnvResourceCommand));
     }
 
+    @PostMapping("/scale")
+    public PojoResult<Boolean> scale(@RequestBody ScaleEnvCommand scaleEnvCommand) {
+        return PojoResult.succeed(appService.scale(scaleEnvCommand));
+    }
+
+
     @PostMapping("/list-app-pods")
     public ListResult<PodDTO> listAppPods(@RequestBody AppEnvPodQuery appEnvPodQuery) {
         return ListResult.succeed(appService.listAppEnvPod(appEnvPodQuery));

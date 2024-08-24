@@ -86,6 +86,8 @@ public interface AppService {
      */
     Boolean modifyAppEnvResource(ModifyEnvResourceCommand modifyEnvResourceCommand);
 
+    Boolean scale(ScaleEnvCommand scaleEnvCommand);
+
     /**
      * 修改环境域名
      *
