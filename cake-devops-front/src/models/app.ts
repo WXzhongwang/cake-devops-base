@@ -116,8 +116,18 @@ export interface AppEnv {
   status: string | null;
   deployStatus: string;
   progress: string;
+  deployment: string;
+  service: string;
+  ingress: string;
+}
+
+export interface ServiceItem {
   serviceName: string;
-  ingressName: string;
+  servicePort: number;
+  containerPort: number;
+  serviceProtocol: string;
+  serviceType: string;
+  nodePort?: number;
 }
 
 export interface AppMemberDTO {

@@ -16,8 +16,8 @@ const DomainHostConfigPanel: React.FC<DomainHostConfigPanelProps> = ({
   const [serviceForm] = Form.useForm();
   const [ingressForm] = Form.useForm();
   const [domainsList, setDomainsList] = useState(appEnv.domains);
-  const [serviceName, setServiceName] = useState(appEnv.serviceName);
-  const [ingressName, setIngressName] = useState(appEnv.ingressName);
+  const [serviceName, setServiceName] = useState(appEnv.service);
+  const [ingressName, setIngressName] = useState(appEnv.ingress);
 
   const handleServiceSubmit = () => {
     serviceForm.validateFields().then((values) => {

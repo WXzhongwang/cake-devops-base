@@ -1,20 +1,9 @@
 import React, { useState } from "react";
 import Table, { ColumnsType } from "antd/lib/table";
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  Popconfirm,
-  Space,
-  Tabs,
-  Typography,
-} from "antd";
-import { nanoid } from "nanoid";
+import { Button, Form, Input, message, Space, Tabs, Typography } from "antd";
 import { ResourceStrategyDTO } from "@/models/app";
 import { connect, Dispatch } from "umi";
 import { API } from "typings";
-import { values } from "lodash";
 
 interface EnvVarConfigPanelProps {
   resourceStrategy: ResourceStrategyDTO | undefined;
