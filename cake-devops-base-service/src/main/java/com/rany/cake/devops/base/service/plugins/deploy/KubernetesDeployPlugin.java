@@ -1,10 +1,12 @@
 package com.rany.cake.devops.base.service.plugins.deploy;
 
+import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.repository.AppRepository;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.CloudFactory;
+import com.rany.cake.devops.base.service.cloud.KubernetesConstants;
 import com.rany.cake.devops.base.service.cloud.dto.CreateDeploymentCmd;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
@@ -34,6 +36,7 @@ public class KubernetesDeployPlugin extends BasePlugin {
     public boolean execute(DeployContext context) {
         Namespace namespace = context.getNamespace();
         AppEnv appEnv = context.getAppEnv();
+        App app = context.getApp();
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
         V1Namespace deployNamespace = cloudService.getNamespace(namespace.getName().getName());
@@ -42,6 +45,14 @@ public class KubernetesDeployPlugin extends BasePlugin {
             return false;
         }
         CreateDeploymentCmd createDeploymentCmd = new CreateDeploymentCmd();
+        createDeploymentCmd.setDeploymentName(app.getAppName().getName());
+        createDeploymentCmd.setDeploymentImage(context.getDeploymentImage());
+        createDeploymentCmd.setHealthCheck(context.getDeploymentImage());
+        createDeploymentCmd.setEnvVars(appEnv.getEnvVars());
+        createDeploymentCmd.setResourceStrategy(appEnv.getResourceStrategy());
+        createDeploymentCmd.setVolumeMounts(app.getVolumeMounts());
+        createDeploymentCmd.setContainerPort(KubernetesConstants.DEFAULT_WEB_SERVICE_PORT);
+
         boolean deploymentCreated = cloudService.createOrUpdateDeployment(context,
                 createDeploymentCmd);
         if (!deploymentCreated) {
