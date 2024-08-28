@@ -1,17 +1,12 @@
-package com.rany.cake.devops.base.service.cloud.dto;
+package com.rany.cake.devops.base.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.rany.cake.devops.base.api.common.base.DTO;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ModifyServiceCmd {
-    private String namespace;
-
+@EqualsAndHashCode(callSuper = false)
+public class ServiceDTO extends DTO {
     /**
      * 发布服务名
      */

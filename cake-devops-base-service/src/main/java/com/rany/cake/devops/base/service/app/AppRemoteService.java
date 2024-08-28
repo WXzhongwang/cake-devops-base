@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.app;
 
+import com.alibaba.fastjson.JSON;
 import com.cake.framework.common.exception.BusinessException;
 import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
@@ -19,6 +20,7 @@ import com.rany.cake.devops.base.domain.base.AppConfig;
 import com.rany.cake.devops.base.domain.base.DepartmentConfig;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.entity.ServiceValueObject;
 import com.rany.cake.devops.base.domain.events.AppEnvCreateEvent;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
@@ -287,6 +289,122 @@ public class AppRemoteService implements AppService {
             appDomainService.updateAppEnv(appEnv);
         }
         return updated;
+    }
+
+    @Override
+    public Boolean modifyService(ModifyServiceCommand modifyServiceCommand) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(modifyServiceCommand.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
+        context.setApp(app);
+        context.setCluster(cluster);
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+
+        ModifyServiceCmd modifyServiceCmd = new ModifyServiceCmd();
+        modifyServiceCmd.setNamespace(namespace.getName().getName());
+        modifyServiceCmd.setServicePort(modifyServiceCommand.getServicePort());
+        modifyServiceCmd.setServiceProtocol(modifyServiceCommand.getServiceProtocol());
+        modifyServiceCmd.setServiceType(modifyServiceCommand.getServiceType());
+        modifyServiceCmd.setContainerPort(modifyServiceCommand.getContainerPort());
+        modifyServiceCmd.setNodePort(modifyServiceCommand.getNodePort());
+        modifyServiceCmd.setServiceName(modifyServiceCommand.getServiceName());
+
+
+        Boolean updated = cloudService.updateService(context, modifyServiceCmd);
+        List<ServiceValueObject> serviceList = appEnv.getServiceList();
+        serviceList.stream().filter(service -> service.getServiceName().equals(modifyServiceCommand.getServiceName())).forEach(service -> {
+            service.setContainerPort(modifyServiceCommand.getContainerPort());
+            service.setNodePort(modifyServiceCommand.getNodePort());
+            service.setServicePort(modifyServiceCommand.getServicePort());
+            service.setServiceProtocol(modifyServiceCommand.getServiceProtocol());
+            service.setServiceType(modifyServiceCommand.getServiceType());
+        });
+        if (updated) {
+            appEnv.setService(JSON.toJSONString(serviceList));
+            appDomainService.updateAppEnv(appEnv);
+        }
+        return updated;
+    }
+
+    @Override
+    public Boolean createService(CreateServiceCommand createServiceCommand) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(createServiceCommand.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
+        context.setApp(app);
+        context.setCluster(cluster);
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+
+        CreateServiceCmd createServiceCmd = new CreateServiceCmd();
+        createServiceCmd.setNamespace(namespace.getName().getName());
+        createServiceCmd.setServicePort(createServiceCommand.getServicePort());
+        createServiceCmd.setServiceProtocol(createServiceCommand.getServiceProtocol());
+        createServiceCmd.setServiceType(createServiceCommand.getServiceType());
+        createServiceCmd.setContainerPort(createServiceCommand.getContainerPort());
+        createServiceCmd.setNodePort(createServiceCommand.getNodePort());
+        createServiceCmd.setServiceName(createServiceCommand.getServiceName());
+
+        List<ServiceValueObject> serviceList = appEnv.getServiceList();
+        serviceList.add(ServiceValueObject.builder()
+                .containerPort(createServiceCommand.getContainerPort())
+                .nodePort(createServiceCommand.getNodePort())
+                .serviceName(createServiceCommand.getServiceName())
+                .servicePort(createServiceCommand.getServicePort())
+                .serviceProtocol(createServiceCommand.getServiceProtocol())
+                .serviceType(createServiceCommand.getServiceType())
+                .build());
+        Boolean created = cloudService.createService(context, createServiceCmd);
+        if (created) {
+            appEnv.setService(JSON.toJSONString(appEnv.getService()));
+            appDomainService.updateAppEnv(appEnv);
+        }
+        return created;
+    }
+
+    @Override
+    public Boolean deleteService(DeleteServiceCommand deleteServiceCommand) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(deleteServiceCommand.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
+        context.setApp(app);
+        context.setCluster(cluster);
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+
+        DeleteServiceCmd deleteServiceCmd = new DeleteServiceCmd();
+        deleteServiceCmd.setNamespace(namespace.getName().getName());
+        deleteServiceCmd.setServiceName(deleteServiceCommand.getServiceName());
+        Boolean deleted = cloudService.deleteService(context, deleteServiceCmd);
+        List<ServiceValueObject> serviceList = appEnv.getServiceList();
+        serviceList.removeIf(service -> service.getServiceName().equals(deleteServiceCommand.getServiceName()));
+        if (deleted) {
+            appEnv.setService(JSON.toJSONString(appEnv.getService()));
+            appDomainService.updateAppEnv(appEnv);
+        }
+        return deleted;
     }
 
     @Override

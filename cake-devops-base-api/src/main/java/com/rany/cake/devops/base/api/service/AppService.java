@@ -79,6 +79,30 @@ public interface AppService {
     Boolean modifyAppEnvVars(ModifyEnvVarsCommand modifyEnvVarsCommand);
 
     /**
+     * 更新服务
+     *
+     * @param modifyServiceCommand 更新服务
+     * @return 是否成功
+     */
+    Boolean modifyService(ModifyServiceCommand modifyServiceCommand);
+
+    /**
+     * 添加服务
+     *
+     * @param createServiceCommand 添加服务
+     * @return 是否成功
+     */
+    Boolean createService(CreateServiceCommand createServiceCommand);
+
+    /**
+     * 删除服务
+     *
+     * @param deleteServiceCommand 删除服务
+     * @return 是否成功
+     */
+    Boolean deleteService(DeleteServiceCommand deleteServiceCommand);
+
+    /**
      * 修改环境资源配置
      *
      * @param modifyEnvResourceCommand 修改环境资源配置

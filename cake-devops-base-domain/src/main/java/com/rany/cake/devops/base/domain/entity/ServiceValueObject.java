@@ -1,17 +1,14 @@
-package com.rany.cake.devops.base.service.cloud.dto;
+package com.rany.cake.devops.base.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.cake.framework.common.base.BaseValueObject;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ModifyServiceCmd {
-    private String namespace;
-
+@EqualsAndHashCode(callSuper = true)
+public class ServiceValueObject extends BaseValueObject {
     /**
      * 发布服务名
      */
@@ -41,4 +38,5 @@ public class ModifyServiceCmd {
      * 并将这一端口映射到所选择的Pod上。这样，当流量发送到集群中任一节点的该端口时，Kubernetes会将流量转发到对应的Pod。
      */
     private Integer nodePort;
+
 }

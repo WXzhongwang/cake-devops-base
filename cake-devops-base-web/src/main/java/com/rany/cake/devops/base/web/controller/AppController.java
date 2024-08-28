@@ -100,6 +100,22 @@ public class AppController {
         return PageResult.succeed(appMemberService.pageAppMembers(appMemberPageQuery));
     }
 
+    @PostMapping("/modify-svc")
+    public PojoResult<Boolean> modifyService(@RequestBody ModifyServiceCommand modifyServiceCmd) {
+        return PojoResult.succeed(appService.modifyService(modifyServiceCmd));
+    }
+
+    @PostMapping("/create-svc")
+    public PojoResult<Boolean> createService(@RequestBody CreateServiceCommand createServiceCommand) {
+        return PojoResult.succeed(appService.createService(createServiceCommand));
+    }
+
+    @PostMapping("/delete-svc")
+    public PojoResult<Boolean> deleteService(@RequestBody DeleteServiceCommand deleteServiceCommand) {
+        return PojoResult.succeed(appService.deleteService(deleteServiceCommand));
+    }
+
+
     @PostMapping("/add-member")
     public PojoResult<Boolean> addMember(@RequestBody AddAppMemberCommand addAppMemberCommand) {
         return PojoResult.succeed(appMemberService.addMember(addAppMemberCommand));

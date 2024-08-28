@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.domain.entity;
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
 import com.cake.framework.common.base.BaseEntity;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
@@ -11,6 +12,7 @@ import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.util.enums.EnvDeployStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -80,6 +82,8 @@ public class AppEnv extends BaseEntity<String> {
      */
     private String progress;
 
+    private List<ServiceValueObject> serviceList;
+
     public AppEnv() {
     }
 
@@ -114,5 +118,12 @@ public class AppEnv extends BaseEntity<String> {
         this.deployStatus = EnvDeployStatusEnum.NORMAL.getValue();
         this.gmtModified = new Date();
         this.progress = progress;
+    }
+
+    public List<ServiceValueObject> getServiceList() {
+        if (StringUtils.isNotEmpty(service)) {
+            serviceList = JSON.parseArray(service, ServiceValueObject.class);
+        }
+        return serviceList;
     }
 }

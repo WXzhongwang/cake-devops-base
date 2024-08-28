@@ -1,16 +1,21 @@
-package com.rany.cake.devops.base.service.cloud.dto;
+package com.rany.cake.devops.base.api.command.app;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
+/**
+ * ModifyServiceCommand
+ *
+ * @author zhongshengwang
+ * @description configMap
+ * @date 2023/1/28 20:10
+ * @email 18668485565163.com
+ */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ModifyServiceCmd {
-    private String namespace;
+@EqualsAndHashCode(callSuper = false)
+public class ModifyServiceCommand extends BaseCommand {
+    private String envId;
 
     /**
      * 发布服务名
@@ -41,4 +46,5 @@ public class ModifyServiceCmd {
      * 并将这一端口映射到所选择的Pod上。这样，当流量发送到集群中任一节点的该端口时，Kubernetes会将流量转发到对应的Pod。
      */
     private Integer nodePort;
+
 }

@@ -181,7 +181,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
     },
     {
       title: "nodePort",
-      dataIndex: "nodePort",
+      dataIndex: "serviceProtocol",
       editable: true,
     },
     {
