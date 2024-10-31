@@ -107,13 +107,13 @@ export default {
     {
       icon: "https://gw.alipayobjects.com/zos/antfincdn/FLrTNDvlna/antv.png",
       title: "ACL",
-      desc: "角色平台",
+      desc: "统一权限管理",
       url: "https://antv.vision/",
       target: "_blank",
     },
     {
       icon: "https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg",
-      title: "Pro Components",
+      title: "搜索中台",
       desc: "搜索中台",
       url: "https://procomponents.ant.design/",
     },
