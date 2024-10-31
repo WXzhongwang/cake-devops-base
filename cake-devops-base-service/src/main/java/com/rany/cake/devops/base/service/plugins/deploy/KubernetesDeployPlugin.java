@@ -46,6 +46,7 @@ public class KubernetesDeployPlugin extends BasePlugin {
         }
         CreateDeploymentCmd createDeploymentCmd = new CreateDeploymentCmd();
         createDeploymentCmd.setDeploymentName(app.getAppName().getName());
+        createDeploymentCmd.setAppName(app.getAppName().getName());
         createDeploymentCmd.setDeploymentImage(context.getDeploymentImage());
         createDeploymentCmd.setHealthCheck(context.getDeploymentImage());
         createDeploymentCmd.setEnvVars(appEnv.getEnvVars());
