@@ -108,7 +108,7 @@ public class AppMemberRemoteService implements AppMemberService {
         if (account == null || Objects.isNull(account.getContent())) {
             throw new BusinessException(BusinessErrorMessage.ACCOUNT_NOT_FOUND);
         }
-        AppMember exist = appMemberDomainService.findById(String.valueOf(addAppMemberCommand.getAccountId()),
+        AppMember exist = appMemberDomainService.findById(addAppMemberCommand.getAccountId(),
                 addAppMemberCommand.getAppId());
         if (exist != null) {
             throw new BusinessException(DevOpsErrorMessage.MEMBER_DUPLICATED);

@@ -26,6 +26,7 @@ public interface AppMemberRepository extends Repository<AppMember, MemberId> {
      * @return
      */
     AppMember findByAccountId(String accountId);
+    AppMember findByAppAccountId(String accountId, String appId);
 
     AppMember findById(String accountId);
 
