@@ -41,7 +41,7 @@ public class AppMemberDomainService {
     }
 
     public AppMember findById(String accountId, String appId) {
-        return appMemberRepository.findByAccountId(accountId);
+        return appMemberRepository.findByAppAccountId(accountId, appId);
     }
 
     public List<AppMember> findByAppId(AppMemberPageQueryParam param) {
