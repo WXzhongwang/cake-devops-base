@@ -6,19 +6,20 @@ import com.jcraft.jsch.Session;
 import com.rany.cake.devops.base.CakeDevopsBaseApplication;
 import com.rany.cake.devops.base.domain.aggregate.*;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.entity.DeployHistory;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.pk.ReleaseId;
-import com.rany.cake.devops.base.domain.repository.AppRepository;
-import com.rany.cake.devops.base.domain.repository.ClusterRepository;
-import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
-import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
+import com.rany.cake.devops.base.domain.repository.*;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.ReleaseCenter;
 import com.rany.cake.devops.base.service.base.Constants;
+import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
+import com.rany.cake.devops.base.util.enums.DeployHistoryStatusEnum;
+import com.rany.cake.toolkit.lang.time.Dates;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -64,6 +65,10 @@ public class DefaultDeployPipelineTest {
     private HostDomainService hostDomainService;
     @Autowired
     private HostConnectionService hostConnectionService;
+    @Autowired
+    private RedisSerialNumberGenerator redisSerialNumberGenerator;
+    @Autowired
+    private DeployHistoryRepository deployHistoryRepository;
 
 
     @Test
@@ -79,7 +84,15 @@ public class DefaultDeployPipelineTest {
         AppEnv appEnv = appRepository.getAppEnv(release.getEnvId());
         Cluster cluster = clusterRepository.find(appEnv.getClusterId());
         Namespace namespace = nameSpaceRepository.find(new NamespaceId("1"));
-        releaseCenter.release(release, app, appEnv, namespace, cluster);
+        DeployHistory history = new DeployHistory();
+        history.setAppId(app.getAppId().getAppId());
+        history.setEnvId(appEnv.getEnvId());
+        history.setStartTime(Dates.date());
+        history.setDeployStatus(DeployHistoryStatusEnum.PENDING.getCode());
+        String pipeKey = redisSerialNumberGenerator.generatePipeNumber(release.getReleaseNo());
+        history.setPipeKey(history.getPipeKey());
+        deployHistoryRepository.save(history);
+        releaseCenter.release(pipeKey, release, app, appEnv, namespace, cluster, history);
     }
 
     @Test

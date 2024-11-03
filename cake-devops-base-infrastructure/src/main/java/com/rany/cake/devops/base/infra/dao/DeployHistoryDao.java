@@ -12,7 +12,7 @@ public interface DeployHistoryDao {
      * 新增
      *
      * @param history 日志
-     * @return
+     * @return 行数
      */
     int save(DeployHistory history);
 

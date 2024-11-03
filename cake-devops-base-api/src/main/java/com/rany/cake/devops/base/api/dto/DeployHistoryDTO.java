@@ -17,7 +17,7 @@ public class DeployHistoryDTO extends DTO {
     private String imagePath;
     private String deploymentName;
     private String content;
-    private String progress;
+    private String releaseId;
 
     /**
      * 用于追溯日志

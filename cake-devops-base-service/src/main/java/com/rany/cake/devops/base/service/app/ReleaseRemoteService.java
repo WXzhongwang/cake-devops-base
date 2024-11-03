@@ -15,9 +15,9 @@ import com.rany.cake.devops.base.api.service.ReleaseService;
 import com.rany.cake.devops.base.domain.aggregate.*;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.entity.DeployHistory;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
-import com.rany.cake.devops.base.domain.pk.NamespaceId;
 import com.rany.cake.devops.base.domain.pk.ReleaseId;
 import com.rany.cake.devops.base.domain.repository.*;
 import com.rany.cake.devops.base.domain.repository.param.ReleasePageQueryParam;
@@ -32,6 +32,8 @@ import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.lock.client.RedissonLockClient;
 import com.rany.cake.devops.base.util.enums.ApprovalStatus;
+import com.rany.cake.devops.base.util.enums.DeployHistoryStatusEnum;
+import com.rany.cake.toolkit.lang.time.Dates;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +62,7 @@ public class ReleaseRemoteService implements ReleaseService {
     private final ReleaseCenter releaseCenter;
     private final ReleaseDataAdapter releaseDataAdapter;
     private final ApprovalDataAdapter approvalDataAdapter;
+    private final DeployHistoryRepository deployHistoryRepository;
 
     @Override
     public Boolean createRelease(CreateReleaseCommand createReleaseCommand) {
@@ -131,13 +134,24 @@ public class ReleaseRemoteService implements ReleaseService {
                 throw new DevOpsException(DevOpsErrorMessage.APPROVAL_NOT_APPROVED);
             }
         }
-
+        DeployHistory history = new DeployHistory();
+        history.setAppId(app.getAppId().getAppId());
+        history.setEnvId(appEnv.getEnvId());
+        history.setStartTime(Dates.date());
+        history.setDeployStatus(DeployHistoryStatusEnum.PENDING.getCode());
+        String pipeKey = redisSerialNumberGenerator.generatePipeNumber(release.getReleaseNo());
+        history.setPipeKey(history.getPipeKey());
+        history.setReleaseId(release.getReleaseId().getReleaseId());
         String lockKey = String.format(Constants.CI_CD_DEPLOY_LOCK, app.getAppId(), appEnv.getEnvId());
         try {
             redissonLockClient.lock(lockKey);
-            releaseCenter.release(release, app, appEnv, namespace, cluster);
+            deployHistoryRepository.save(history);
+            releaseCenter.release(pipeKey, release, app, appEnv, namespace, cluster, history);
         } catch (Exception ex) {
             log.error("发生错误，请重试", ex);
+            history.setDeployStatus(DeployHistoryStatusEnum.FAILED.getCode());
+            history.setEndTime(Dates.date());
+            deployHistoryRepository.update(history);
         } finally {
             redissonLockClient.unlock(lockKey);
         }

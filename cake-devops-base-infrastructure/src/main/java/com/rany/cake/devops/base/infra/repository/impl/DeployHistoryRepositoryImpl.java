@@ -32,8 +32,8 @@ public class DeployHistoryRepositoryImpl implements DeployHistoryRepository {
 
     @Override
     public void save(DeployHistory log) {
-        DeployHistoryPO deployHistoryPO = deployHistoryConvertor.sourceToTarget(log);
-        deployHistoryPOMapper.insertSelective(deployHistoryPO);
+        deployHistoryDao.save(log);
+        log.setId(log.getId());
     }
 
     @Override

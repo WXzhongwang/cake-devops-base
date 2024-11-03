@@ -5,7 +5,7 @@ import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
 import com.rany.cake.devops.base.domain.aggregate.Release;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
-import com.rany.cake.devops.base.domain.repository.DeployHistoryRepository;
+import com.rany.cake.devops.base.domain.entity.DeployHistory;
 import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.context.DefaultDeployPipeline;
 import com.rany.cake.devops.base.service.context.DeployContext;
@@ -35,8 +35,6 @@ import javax.annotation.Resource;
 
 @Component
 public class ReleaseCenter {
-    @Resource
-    private DeployHistoryRepository deployHistoryRepository;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
     @Resource
@@ -74,14 +72,14 @@ public class ReleaseCenter {
     private ProgressUpdater progressUpdater;
 
 
-    public Boolean release(Release release, App app, AppEnv appEnv, Namespace namespace, Cluster cluster) {
-        String pipeKey = redisSerialNumberGenerator.generatePipeNumber(release.getReleaseNo());
+    public Boolean release(String pipeKey, Release release, App app, AppEnv appEnv, Namespace namespace, Cluster cluster, DeployHistory history) {
         DeployContext deployContext = new DeployContext(pipeKey);
         deployContext.setRelease(release);
         deployContext.setApp(app);
         deployContext.setAppEnv(appEnv);
         deployContext.setCluster(cluster);
         deployContext.setNamespace(namespace);
+        deployContext.setDeployHistory(history);
 
         DeployPipeline pipeline = new DefaultDeployPipeline(deployContext, progressUpdater);
         pipeline.addLast(approvalPlugin);

@@ -3,6 +3,7 @@ package com.rany.cake.devops.base.service.context;
 import com.alibaba.fastjson.JSON;
 import com.rany.cake.devops.base.domain.aggregate.*;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
+import com.rany.cake.devops.base.domain.entity.DeployHistory;
 import com.rany.cake.devops.base.util.enums.ReleaseStatus;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import lombok.Data;
@@ -62,6 +63,11 @@ public class DeployContext implements Serializable {
      * 发布环境
      */
     private AppEnv appEnv;
+
+    /**
+     * 单次部署历史数据
+     */
+    private DeployHistory deployHistory;
 
     /**
      * 实际部署物镜像地址

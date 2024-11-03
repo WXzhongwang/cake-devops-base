@@ -61,6 +61,7 @@ public class PushAcrPlugin extends BasePlugin {
                     crConfig.getHost(), crConfig.getNameSpace(), appName, releaseVersion);
             log.info("完整镜像地址，{}", imageName);
             context.setDeploymentImage(imageName);
+            context.getDeployHistory().setImagePath(imageName);
         } catch (JSchException e) {
             log.error("DeliveryPlugin error", e);
             return false;
