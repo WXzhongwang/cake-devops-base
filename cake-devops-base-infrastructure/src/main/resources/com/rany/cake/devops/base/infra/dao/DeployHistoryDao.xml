@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rany.cake.devops.base.infra.dao.DeployHistoryDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.DeployHistoryPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="env_id" jdbcType="VARCHAR" property="envId"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="is_deleted" jdbcType="CHAR" property="isDeleted"/>
+        <result column="deploy_status" jdbcType="VARCHAR" property="deployStatus"/>
+        <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
+        <result column="deployment_name" jdbcType="VARCHAR" property="deploymentName"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="progress" jdbcType="VARCHAR" property="progress"/>
+        <result column="pipe_key" jdbcType="VARCHAR" property="pipeKey"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+        id
+        , gmt_create, gmt_modified, env_id, app_id, start_time, end_time, is_deleted, deploy_status,
+        image_path, deployment_name, content, creator, modifier, progress, pipeKey
+    </sql>
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.DeployHistory">
+        insert into deploy_history (gmt_create, gmt_modified,
+                                    env_id, app_id, start_time,
+                                    end_time, is_deleted, deploy_status,
+                                    image_path, deployment_name, content,
+                                    creator, modifier, progress,
+                                    pipe_key)
+        values (#{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+                #{envId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP},
+                #{endTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=CHAR}, #{deployStatus,jdbcType=VARCHAR},
+                #{imagePath,jdbcType=VARCHAR}, #{deploymentName,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+                #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{progress,jdbcType=VARCHAR},
+                #{pipekey,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.DeployHistory">
+        update deploy_history
+        <set>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="envId != null">
+                env_id = #{envId,jdbcType=VARCHAR},
+            </if>
+            <if test="appId != null">
+                app_id = #{appId,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=CHAR},
+            </if>
+            <if test="deployStatus != null">
+                deploy_status = #{deployStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="imagePath != null">
+                image_path = #{imagePath,jdbcType=VARCHAR},
+            </if>
+            <if test="deploymentName != null">
+                deployment_name = #{deploymentName,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="progress != null">
+                progress = #{progress,jdbcType=VARCHAR},
+            </if>
+            <if test="pipeKey != null">
+                pipe_key = #{pipekey,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="pageQuery"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.DeployHistoryPageParam"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from deploy_history
+        where
+        is_deleted = '0' and app_id = #{appId}
+        and env_id = #{envId}
+        order by id desc
+    </select>
+</mapper>

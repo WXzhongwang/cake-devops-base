@@ -51,6 +51,9 @@
         <console-table-builder.version>1.2</console-table-builder.version>
         <kubernetes-client.verison>16.0.2</kubernetes-client.verison>
         <gitlab-api.verison>4.19.0</gitlab-api.verison>
+        <aliyun-log.version>0.6.111</aliyun-log.version>
+        <protobuf.version>2.5.0</protobuf.version>
+        <aliyun-log-appendeer.version>0.1.18</aliyun-log-appendeer.version>
         <!--        <github-api.verison>octokit-java</github-api.verison>-->
 
 
@@ -359,6 +362,22 @@
             <!--                <artifactId>octokit-java</artifactId>-->
             <!--                <version>${github-api.verison}</version>-->
             <!--            </dependency>-->
+
+            <dependency>
+                <groupId>com.aliyun.openservices</groupId>
+                <artifactId>aliyun-log</artifactId>
+                <version>${aliyun-log.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun.openservices</groupId>
+                <artifactId>aliyun-log-logback-appender</artifactId>
+                <version>${aliyun-log-appendeer.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

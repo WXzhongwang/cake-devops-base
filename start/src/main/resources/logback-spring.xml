@@ -5,7 +5,7 @@
     <property name="ENCODING" value="UTF-8"/>
     <springProperty scope="context" name="log.path" source="logging.file.path"
                     defaultValue="/home/admin/cake-devops/logs"/>
-    
+
     <springProperty scope="context" name="rabbitmq-address" source="spring.rabbitmq.addresses"
                     defaultValue="127.0.0.1:5672"/>
     <springProperty scope="context" name="rabbitmq-username" source="spring.rabbitmq.username" defaultValue="guest"/>
@@ -14,6 +14,17 @@
     <springProperty scope="context" name="exchange-name" source="devops.log.exchangeName"
                     defaultValue="default-exchange"/>
     <springProperty scope="context" name="binding-key" source="devops.log.bindingKey" defaultValue="default-routing"/>
+
+
+    <!-- SLS 相关配置 -->
+    <springProperty scope="context" name="sls-project" source="devops.sls.project" defaultValue="cake-devops-log"/>
+    <springProperty scope="context" name="sls-logstore" source="devops.sls.logstore" defaultValue="deploy-log"/>
+    <springProperty scope="context" name="sls-endpoint" source="devops.sls.endpoint"
+                    defaultValue="http://cn-hangzhou.log.aliyuncs.com"/>
+    <springProperty scope="context" name="sls-access-key-id" source="devops.sls.accessKeyId"
+                    defaultValue="your-access-key-id"/>
+    <springProperty scope="context" name="sls-access-key-secret" source="devops.sls.accessKeySecret"
+                    defaultValue="your-access-key-secret"/>
 
 
     <property name="CONSOLE_LOG_PATTERN"
@@ -66,6 +77,34 @@
         <deliveryMode>NON_PERSISTENT</deliveryMode>
     </appender>
 
+    <!--为了防止进程退出时，内存中的数据丢失，请加上此选项-->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    <!-- 新增 SLS Appender -->
+    <appender name="SLS" class="com.aliyun.openservices.log.logback.LoghubAppender">
+        <!--必选项-->
+        <!-- 账号及网络配置 -->
+        <endpoint>cn-hangzhou.log.aliyuncs.com</endpoint>
+        <accessKeyId>${sls-access-key-id}</accessKeyId>
+        <accessKeySecret>${sls-access-key-secret}</accessKeySecret>
+
+        <!-- sls 项目配置 -->
+        <project>${sls-project}</project>
+        <logStore>${sls-logstore}</logStore>
+        <!--必选项 (end)-->
+
+        <!-- 可选项 详见 '参数说明'-->
+        <totalSizeInBytes>104857600</totalSizeInBytes>
+        <maxBlockMs>60000</maxBlockMs>
+        <ioThreadCount>8</ioThreadCount>
+        <batchSizeThresholdInBytes>524288</batchSizeThresholdInBytes>
+        <batchCountThreshold>4096</batchCountThreshold>
+        <lingerMs>2000</lingerMs>
+        <retries>10</retries>
+        <baseRetryBackoffMs>100</baseRetryBackoffMs>
+        <maxRetryBackoffMs>100</maxRetryBackoffMs>
+        <mdcFields>__pipe_key__</mdcFields>
+    </appender>
+
     <springProfile name="dev,test,pre,prod">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
@@ -73,6 +112,7 @@
         </root>
         <logger name="RabbitMq" level="debug">
             <appender-ref ref="RABBITMQ"/>
+            <appender-ref ref="SLS"/>
         </logger>
     </springProfile>
 </configuration>

@@ -107,6 +107,12 @@ devops:
       - label: 职能团队
         value: cake-hr
         abbr: HR
+  sls:
+    project: cake-devops-log
+    logstore: devops-log
+    endpoint: https://cn-hangzhou.log.aliyuncs.com
+    accessKeyId: xxxx
+    accessKeySecret: xxxx
   log:
     queueName: devops-log-queue
     exchangeName: devops-log-exchange
