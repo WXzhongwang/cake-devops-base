@@ -109,7 +109,7 @@ devops:
         abbr: HR
   sls:
     project: cake-devops-log
-    logstore: devops-log
+    logstore: deploy-log
     endpoint: https://cn-hangzhou.log.aliyuncs.com
     accessKeyId: xxxx
     accessKeySecret: xxxx

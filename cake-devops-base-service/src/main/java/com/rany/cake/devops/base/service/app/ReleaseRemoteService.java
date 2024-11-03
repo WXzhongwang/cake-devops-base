@@ -140,8 +140,9 @@ public class ReleaseRemoteService implements ReleaseService {
         history.setStartTime(Dates.date());
         history.setDeployStatus(DeployHistoryStatusEnum.PENDING.getCode());
         String pipeKey = redisSerialNumberGenerator.generatePipeNumber(release.getReleaseNo());
-        history.setPipeKey(history.getPipeKey());
+        history.setPipeKey(pipeKey);
         history.setReleaseId(release.getReleaseId().getReleaseId());
+        history.init(deployCommand.getUser());
         String lockKey = String.format(Constants.CI_CD_DEPLOY_LOCK, app.getAppId(), appEnv.getEnvId());
         try {
             redissonLockClient.lock(lockKey);

@@ -27,8 +27,10 @@ public class DeployHistory extends BaseEntity<Long> {
      */
     private String pipeKey;
 
-    public DeployHistory() {
+    public void init(String user) {
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.gmtCreate = this.gmtModified = Dates.date();
+        this.creator = user;
+        this.modifier = user;
     }
 }
