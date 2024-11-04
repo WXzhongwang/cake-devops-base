@@ -79,13 +79,13 @@ const getApprovalStatusText = (status: string) => {
 };
 
 interface ReleasePageProps {
-  dispatch: Dispatch;
-  appDetail: AppInfo | null;
+  appDetail: AppInfo;
   releases: {
     total: number;
     list: ReleaseRecord[];
   };
   appEnv: AppEnv;
+  dispatch: Dispatch;
 }
 const DeployPage: React.FC<ReleasePageProps> = ({
   dispatch,
@@ -96,11 +96,13 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   const { id } = useParams();
   // 发布单详情抽屉
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [selectedEnvironment, setSelectedEnvironment] = useState<
-    string | undefined | null
-  >(appDetail?.appEnvList?.[0]?.envId);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [deployDisabled, setDeployDisabled] = useState(false);
+
+  const [selectedEnvironment, setSelectedEnvironment] = useState<
+    string | undefined | null
+  >(appEnv?.envId);
+
   // 使用 useRef 创建一个变量来存储定时器的引用
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [selectedRow, setSelectedRow] = useState<ReleaseRecord | null>(null);
@@ -485,139 +487,145 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         </Select>,
       ]}
     >
-      <Space size="middle" direction="vertical" style={{ width: "100%" }}>
-        <Card
-          title={`${appDetail?.appName}:[${appEnv?.envName}(${appEnv?.env})]`}
-          extra={
-            <div>
-              {parsedProgress?.pipeKey && (
-                <Button onClick={() => handleViewLogs(parsedProgress?.pipeKey)}>
-                  查看发布日志
+      {appDetail && (
+        <Space size="middle" direction="vertical" style={{ width: "100%" }}>
+          <Card
+            title={`${appDetail?.appName}:[${appEnv?.envName}(${appEnv?.env})]`}
+            extra={
+              <div>
+                {parsedProgress?.pipeKey && (
+                  <Button
+                    onClick={() => handleViewLogs(parsedProgress?.pipeKey)}
+                  >
+                    查看发布日志
+                  </Button>
+                )}
+
+                <Button
+                  key="release"
+                  onClick={handleRelease}
+                  disabled={deployDisabled || !selectedRow}
+                >
+                  立即发布
                 </Button>
-              )}
-
-              <Button
-                key="release"
-                onClick={handleRelease}
-                disabled={deployDisabled || !selectedRow}
+              </div>
+            }
+          >
+            {/* 存在发布进度 */}
+            {parsedProgress && (
+              <Steps
+                current={parsedProgress.current}
+                status={parsedProgress.status}
+                size="small"
               >
-                立即发布
-              </Button>
-            </div>
-          }
-        >
-          {/* 存在发布进度 */}
-          {parsedProgress && (
-            <Steps
-              current={parsedProgress.current}
-              status={parsedProgress.status}
-              size="small"
-            >
-              {parsedProgress.steps.map((step: any, index: number) => (
-                <Steps.Step
-                  key={index}
-                  title={step.title}
-                  description={
-                    step.description === "AWAIT_EXECUTE" ? (
-                      <div>待执行</div>
-                    ) : step.description === "EXECUTING" ? (
-                      <div>执行中</div>
-                    ) : step.description === "EXECUTED" ? (
-                      <div>
-                        已执行
-                        <br></br>
-                        耗时:{step.cost}秒
-                      </div>
-                    ) : (
-                      step.description
-                    )
-                  }
-                />
-              ))}
-            </Steps>
-          )}
-        </Card>
+                {parsedProgress.steps.map((step: any, index: number) => (
+                  <Steps.Step
+                    key={index}
+                    title={step.title}
+                    description={
+                      step.description === "AWAIT_EXECUTE" ? (
+                        <div>待执行</div>
+                      ) : step.description === "EXECUTING" ? (
+                        <div>执行中</div>
+                      ) : step.description === "EXECUTED" ? (
+                        <div>
+                          已执行
+                          <br></br>
+                          耗时:{step.cost}秒
+                        </div>
+                      ) : (
+                        step.description
+                      )
+                    }
+                  />
+                ))}
+              </Steps>
+            )}
+          </Card>
 
-        <Card title="Pod节点">
-          <Table
-            columns={podColumns}
-            dataSource={pods}
-            rowKey={"id"}
-            pagination={false}
-          />
-        </Card>
+          <Card title="Pod节点">
+            <Table
+              columns={podColumns}
+              dataSource={pods}
+              rowKey={"id"}
+              pagination={false}
+            />
+          </Card>
 
-        <Collapse defaultActiveKey={[]}>
-          {[
-            {
-              header: "资源配置",
-              key: 0,
-              config: (
-                <EnvResourcePanel
-                  resourceStrategy={resourceStrategy}
-                  selectedEnvironment={selectedEnvironment}
-                ></EnvResourcePanel>
-              ),
-            },
-            {
-              header: "环境变量",
-              key: 1,
-              config: (
-                <EnvVarConfigPanel
-                  initialEnvVars={envVarsData}
-                  selectedEnvironment={selectedEnvironment}
-                />
-              ),
-            },
-            {
-              header: "配置项",
-              key: 2,
-              config: (
-                <ConfigMapConfigPanel
-                  initialConfigMap={configMapData}
-                  selectedEnvironment={selectedEnvironment}
-                />
-              ),
-            },
-            {
-              header: "服务域名配置",
-              key: 3,
-              config: (
-                <DomainHostConfigPanel appEnv={appEnv}></DomainHostConfigPanel>
-              ),
-            },
-          ].map((item) => (
-            <Collapse.Panel key={item.key} header={item.header}>
-              {item.config}
-            </Collapse.Panel>
-          ))}
-        </Collapse>
+          <Collapse defaultActiveKey={[]}>
+            {[
+              {
+                header: "资源配置",
+                key: 0,
+                config: (
+                  <EnvResourcePanel
+                    resourceStrategy={resourceStrategy}
+                    selectedEnvironment={selectedEnvironment}
+                  ></EnvResourcePanel>
+                ),
+              },
+              {
+                header: "环境变量",
+                key: 1,
+                config: (
+                  <EnvVarConfigPanel
+                    initialEnvVars={envVarsData}
+                    selectedEnvironment={selectedEnvironment}
+                  />
+                ),
+              },
+              {
+                header: "配置项",
+                key: 2,
+                config: (
+                  <ConfigMapConfigPanel
+                    initialConfigMap={configMapData}
+                    selectedEnvironment={selectedEnvironment}
+                  />
+                ),
+              },
+              {
+                header: "服务域名配置",
+                key: 3,
+                config: (
+                  <DomainHostConfigPanel
+                    appEnv={appEnv}
+                    appName={appDetail.appName}
+                  ></DomainHostConfigPanel>
+                ),
+              },
+            ].map((item) => (
+              <Collapse.Panel key={item.key} header={item.header}>
+                {item.config}
+              </Collapse.Panel>
+            ))}
+          </Collapse>
 
-        <Card
-          title="发布单"
-          extra={
-            <div>
-              <Button onClick={handleCreateReleaseDrawer}>添加发布单</Button>
-            </div>
-          }
-        >
-          <Table
-            columns={columns}
-            dataSource={releases.list}
-            rowKey={"releaseId"}
-            rowSelection={{
-              ...rowSelection,
-            }}
-            pagination={{
-              total: releases.total,
-              current: pagination.pageNo,
-              pageSize: pagination.pageSize,
-              onChange: handlePaginationChange,
-            }}
-          />
-        </Card>
-      </Space>
-
+          <Card
+            title="发布单"
+            extra={
+              <div>
+                <Button onClick={handleCreateReleaseDrawer}>添加发布单</Button>
+              </div>
+            }
+          >
+            <Table
+              columns={columns}
+              dataSource={releases.list}
+              rowKey={"releaseId"}
+              rowSelection={{
+                ...rowSelection,
+              }}
+              pagination={{
+                total: releases.total,
+                current: pagination.pageNo,
+                pageSize: pagination.pageSize,
+                onChange: handlePaginationChange,
+              }}
+            />
+          </Card>
+        </Space>
+      )}
       {/* 新建发布单抽屉 */}
       <Drawer
         title="添加发布单"

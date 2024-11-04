@@ -7,6 +7,7 @@ import {
   message,
   Modal,
   Popconfirm,
+  Select,
   Space,
   Typography,
 } from "antd";
@@ -52,10 +53,20 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
       const row = await form.validateFields();
       const newData = [...data];
       const index = newData.findIndex((item) => item.id === editingItem?.id);
-      newData.splice(index, 1, { ...editingItem, ...row });
+      if (index !== -1) {
+        newData.splice(index, 1, { ...editingItem, ...row });
+      } else {
+        newData.push({ ...row, id: nanoid(), editable: false });
+      }
       setData(newData);
       setEditingItem(null);
       message.success("保存成功");
+
+      // 调用接口保存数据
+      dispatch({
+        type: "app/saveService",
+        payload: { ...row, environment: selectedEnvironment },
+      });
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
     }
@@ -81,6 +92,12 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
     const newData = data.filter((item) => item.id !== id);
     setData(newData);
     message.success("删除成功");
+
+    // 调用接口删除数据
+    dispatch({
+      type: "app/deleteService",
+      payload: { id, environment: selectedEnvironment },
+    });
   };
 
   const columns = [
@@ -145,28 +162,35 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
             label="服务端口"
             rules={[{ required: true, message: "请输入服务端口!" }]}
           >
-            <Input type="number" />
+            <Input type="number" defaultValue={80} />
           </Form.Item>
           <Form.Item
             name="containerPort"
             label="容器端口"
             rules={[{ required: true, message: "请输入容器端口!" }]}
           >
-            <Input type="number" />
+            <Input type="number" defaultValue={8300} />
           </Form.Item>
           <Form.Item
             name="serviceProtocol"
             label="服务协议"
             rules={[{ required: true, message: "请输入服务协议!" }]}
           >
-            <Input />
+            <Select>
+              <Select.Option value="TCP">TCP</Select.Option>
+              <Select.Option value="UDP">UDP</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item
             name="serviceType"
             label="服务类型"
             rules={[{ required: true, message: "请输入服务类型!" }]}
           >
-            <Input />
+            <Select>
+              <Select.Option value="ClusterIP">ClusterIP</Select.Option>
+              <Select.Option value="NodePort">NodePort</Select.Option>
+              <Select.Option value="LoadBalancer">LoadBalancer</Select.Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

@@ -27,7 +27,7 @@ const { Paragraph } = Typography;
 const { Option } = Select;
 interface AppDetailProps {
   dispatch: Dispatch;
-  appDetail: AppInfo | null;
+  appDetail: AppInfo;
   appMembers: {
     total: number;
     list: AppMemberDTO[];
@@ -138,74 +138,76 @@ const AppDetail: React.FC<AppDetailProps> = ({
 
   return (
     <Space style={{ width: "100%" }} direction="vertical" size="large">
-      <Card
-        title={`${appDetail?.appName} 详情页`}
-        extra={
-          <div>
-            <Button onClick={handleDeploy}>立即部署</Button>
-            <Button onClick={switchMemberDrawer} style={{ marginLeft: 16 }}>
-              项目成员
-            </Button>
-          </div>
-        }
-      >
-        <Space style={{ width: "100%" }} direction="vertical" size="large">
-          <Descriptions title="应用基础详情" bordered>
-            <Descriptions.Item label="应用名称">
-              <Paragraph
-                copyable={{ tooltips: ["点击复制", "复制成功"] }}
-                style={{ display: "inline" }}
-              >
-                {appDetail?.appName ?? "--"}
-              </Paragraph>
-            </Descriptions.Item>
-            <Descriptions.Item label="仓库">
-              <Paragraph
-                copyable={{ tooltips: ["点击复制", "复制成功"] }}
-                style={{ display: "inline" }}
-              >
-                {appDetail?.repo}
-              </Paragraph>
-            </Descriptions.Item>
-            <Descriptions.Item label="语言">
-              {appDetail?.language}
-            </Descriptions.Item>
-            <Descriptions.Item label="默认分支">
-              {appDetail?.defaultBranch}
-            </Descriptions.Item>
-            <Descriptions.Item label="开发模式">
-              {appDetail?.developMode}
-            </Descriptions.Item>
-            <Descriptions.Item label="部门">
-              {appDetail?.department}
-            </Descriptions.Item>
-            <Descriptions.Item label="部门缩写">
-              {appDetail?.departmentAbbreviation}
-            </Descriptions.Item>
-            <Descriptions.Item label="创建时间">
-              {dayjs(appDetail?.gmtCreate).format("YYYY-MM-DD HH:mm:ss")}
-            </Descriptions.Item>
-            <Descriptions.Item label="更新时间">
-              {dayjs(appDetail?.gmtModified).format("YYYY-MM-DD HH:mm:ss")}
-            </Descriptions.Item>
-            {/* 添加其他属性 */}
-          </Descriptions>
-        </Space>
+      {appDetail && (
+        <Card
+          title={`${appDetail.appName} 详情页`}
+          extra={
+            <div>
+              <Button onClick={handleDeploy}>立即部署</Button>
+              <Button onClick={switchMemberDrawer} style={{ marginLeft: 16 }}>
+                项目成员
+              </Button>
+            </div>
+          }
+        >
+          <Space style={{ width: "100%" }} direction="vertical" size="large">
+            <Descriptions title="应用基础详情" bordered>
+              <Descriptions.Item label="应用名称">
+                <Paragraph
+                  copyable={{ tooltips: ["点击复制", "复制成功"] }}
+                  style={{ display: "inline" }}
+                >
+                  {appDetail.appName ?? "--"}
+                </Paragraph>
+              </Descriptions.Item>
+              <Descriptions.Item label="仓库">
+                <Paragraph
+                  copyable={{ tooltips: ["点击复制", "复制成功"] }}
+                  style={{ display: "inline" }}
+                >
+                  {appDetail.repo}
+                </Paragraph>
+              </Descriptions.Item>
+              <Descriptions.Item label="语言">
+                {appDetail.language}
+              </Descriptions.Item>
+              <Descriptions.Item label="默认分支">
+                {appDetail.defaultBranch}
+              </Descriptions.Item>
+              <Descriptions.Item label="开发模式">
+                {appDetail.developMode}
+              </Descriptions.Item>
+              <Descriptions.Item label="部门">
+                {appDetail.department}
+              </Descriptions.Item>
+              <Descriptions.Item label="部门缩写">
+                {appDetail.departmentAbbreviation}
+              </Descriptions.Item>
+              <Descriptions.Item label="创建时间">
+                {dayjs(appDetail.gmtCreate).format("YYYY-MM-DD HH:mm:ss")}
+              </Descriptions.Item>
+              <Descriptions.Item label="更新时间">
+                {dayjs(appDetail.gmtModified).format("YYYY-MM-DD HH:mm:ss")}
+              </Descriptions.Item>
+              {/* 添加其他属性 */}
+            </Descriptions>
+          </Space>
 
-        {/* 添加抽屉 */}
-        <CreateEnvDrawer
-          onClose={switchDrawer}
-          onFinish={onFinish}
-          open={drawerVisible}
-          clusterList={clusterList}
-        />
-        {/* 团队抽屉成员 */}
-        <TeamMembersDrawer
-          appMembers={appMembers}
-          onClose={switchMemberDrawer}
-          open={teamMembersDrawerVisible}
-        />
-      </Card>
+          {/* 添加抽屉 */}
+          <CreateEnvDrawer
+            onClose={switchDrawer}
+            onFinish={onFinish}
+            open={drawerVisible}
+            clusterList={clusterList}
+          />
+          {/* 团队抽屉成员 */}
+          <TeamMembersDrawer
+            appMembers={appMembers}
+            onClose={switchMemberDrawer}
+            open={teamMembersDrawerVisible}
+          />
+        </Card>
+      )}
 
       <Card
         title={`环境信息`}
@@ -216,44 +218,45 @@ const AppDetail: React.FC<AppDetailProps> = ({
         }
       >
         <Row justify="start">
-          {appDetail?.appEnvList.map((appEnv: AppEnv) => (
-            <Col span={8} key={appEnv.envId}>
-              <Card
-                title={appEnv.envName}
-                key={appEnv.envId}
-                // extra={<a href="#">详情</a>}
-                style={{ width: 300, marginBottom: "16px" }}
-              >
-                <p>环境: {appEnv.env}</p>
-                <p>
-                  环境状态:{" "}
-                  <Tag color={appEnv.status === "0" ? "success" : "error"}>
-                    {appEnv.status === "0" ? "已启用" : "已停用"}
-                  </Tag>
-                </p>
-                <div style={{ marginTop: "16px" }}>
-                  <h5>资源策略</h5>
-                  <Descriptions colon column={1} bordered size="small">
-                    <Descriptions.Item label="副本数">
-                      {appEnv.resourceStrategy.replicas}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="CPU">
-                      {appEnv.resourceStrategy.cpu}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="内存">
-                      {appEnv.resourceStrategy.memory}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="最大CPU">
-                      {appEnv.resourceStrategy.maxCpu}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="最大内存">
-                      {appEnv.resourceStrategy.maxMemory}
-                    </Descriptions.Item>
-                  </Descriptions>
-                </div>
-              </Card>
-            </Col>
-          ))}
+          {appDetail &&
+            appDetail.appEnvList?.map((appEnv: AppEnv) => (
+              <Col span={8} key={appEnv.envId}>
+                <Card
+                  title={appEnv.envName}
+                  key={appEnv.envId}
+                  // extra={<a href="#">详情</a>}
+                  style={{ width: 300, marginBottom: "16px" }}
+                >
+                  <p>环境: {appEnv.env}</p>
+                  <p>
+                    环境状态:{" "}
+                    <Tag color={appEnv.status === "0" ? "success" : "error"}>
+                      {appEnv.status === "0" ? "已启用" : "已停用"}
+                    </Tag>
+                  </p>
+                  <div style={{ marginTop: "16px" }}>
+                    <h5>资源策略</h5>
+                    <Descriptions colon column={1} bordered size="small">
+                      <Descriptions.Item label="副本数">
+                        {appEnv.resourceStrategy.replicas}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="CPU">
+                        {appEnv.resourceStrategy.cpu}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="内存">
+                        {appEnv.resourceStrategy.memory}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="最大CPU">
+                        {appEnv.resourceStrategy.maxCpu}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="最大内存">
+                        {appEnv.resourceStrategy.maxMemory}
+                      </Descriptions.Item>
+                    </Descriptions>
+                  </div>
+                </Card>
+              </Col>
+            ))}
         </Row>
       </Card>
     </Space>
