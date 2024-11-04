@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Button, Form, Input, Space, Table, Tabs, Typography } from "antd";
 import { connect, Dispatch } from "umi";
 import { API } from "typings";
-import { AppEnv } from "@/models/app";
+import { AppEnv, ServiceItem } from "@/models/app";
+import ServicePanel from "./service-panel";
 
 interface DomainHostConfigPanelProps {
   appEnv: AppEnv;
@@ -16,7 +17,9 @@ const DomainHostConfigPanel: React.FC<DomainHostConfigPanelProps> = ({
   const [serviceForm] = Form.useForm();
   const [ingressForm] = Form.useForm();
   const [domainsList, setDomainsList] = useState(appEnv.domains);
-  const [serviceName, setServiceName] = useState(appEnv.service);
+  const initialServices = appEnv.service ? JSON.parse(appEnv.service) : [];
+  const [services, setServices] = useState(initialServices);
+  // const [serviceName, setServiceName] = useState(appEnv.service);
   const [ingressName, setIngressName] = useState(appEnv.ingress);
 
   const handleServiceSubmit = () => {
@@ -62,24 +65,10 @@ const DomainHostConfigPanel: React.FC<DomainHostConfigPanelProps> = ({
             key: "service",
             children: (
               <>
-                <Form
-                  form={serviceForm}
-                  initialValues={{ serviceName }}
-                  layout="horizontal"
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                  style={{ maxWidth: 600, marginBottom: 16 }}
-                >
-                  <Form.Item label="Service 名称" name="serviceName">
-                    <Input placeholder="请输入Service名称" />
-                  </Form.Item>
-
-                  <Space style={{ marginBottom: 16 }}>
-                    <Button type="primary" onClick={handleServiceSubmit}>
-                      更新Service信息
-                    </Button>
-                  </Space>
-                </Form>
+                <ServicePanel
+                  initialServices={initialServices}
+                  selectedEnvironment={appEnv.envId}
+                ></ServicePanel>
               </>
             ),
           },
