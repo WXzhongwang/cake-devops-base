@@ -21,6 +21,7 @@
 - [x] **websocket+rabbitmq**: 日志推送
 - [x] **dingtalk**: 基于钉钉扫码登录实现的sso
 - [x] **OSS**: 基于cms-client实现的前端代码推送和部署（灰度&资源托管&CDN加速）
+- [x] **SLS**: pipeline构建日志写入SLS便于回溯，查询
 
 ## 远景
 

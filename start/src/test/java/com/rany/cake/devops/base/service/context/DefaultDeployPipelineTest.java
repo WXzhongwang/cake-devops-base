@@ -88,7 +88,7 @@ public class DefaultDeployPipelineTest {
         history.setAppId(app.getAppId().getAppId());
         history.setEnvId(appEnv.getEnvId());
         history.setStartTime(Dates.date());
-        history.setDeployStatus(DeployHistoryStatusEnum.PENDING.getCode());
+        history.setDeployStatus(DeployHistoryStatusEnum.PENDING.getValue());
         String pipeKey = redisSerialNumberGenerator.generatePipeNumber(release.getReleaseNo());
         history.setPipeKey(history.getPipeKey());
         deployHistoryRepository.save(history);

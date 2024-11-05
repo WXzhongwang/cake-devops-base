@@ -12,6 +12,7 @@ import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.plugins.BasePlugin;
 import com.rany.cake.devops.base.service.plugins.annotation.PluginName;
 import com.rany.cake.devops.base.util.enums.DeployHistoryStatusEnum;
+import com.rany.cake.toolkit.lang.time.Dates;
 import io.kubernetes.client.openapi.models.V1Namespace;
 import org.springframework.stereotype.Component;
 
@@ -65,7 +66,8 @@ public class KubernetesDeployPlugin extends BasePlugin {
         appEnv.setDeployment(appEnv.getDeployment());
         appRepository.updateAppEnv(appEnv);
         context.getDeployHistory().setDeploymentName(appEnv.getDeployment());
-        context.getDeployHistory().setDeployStatus(DeployHistoryStatusEnum.SUCCESS.getCode());
+        context.getDeployHistory().setEndTime(Dates.date());
+        context.getDeployHistory().setDeployStatus(DeployHistoryStatusEnum.SUCCESS.getValue());
         return true;
     }
 }

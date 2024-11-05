@@ -3,7 +3,7 @@ cms:
   oss:
     endpoint: https://rany-ops.oss-cn-hangzhou.aliyuncs.com
   page:
-    version: 1.0.17
+    version: 1.0.18
     path: cake-devops-base/${cms.page.version}/index.html
   site:
     name: cake-devops-base

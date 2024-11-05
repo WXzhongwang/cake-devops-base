@@ -138,7 +138,7 @@ public class ReleaseRemoteService implements ReleaseService {
         history.setAppId(app.getAppId().getAppId());
         history.setEnvId(appEnv.getEnvId());
         history.setStartTime(Dates.date());
-        history.setDeployStatus(DeployHistoryStatusEnum.PENDING.getCode());
+        history.setDeployStatus(DeployHistoryStatusEnum.PENDING.getValue());
         String pipeKey = redisSerialNumberGenerator.generatePipeNumber(release.getReleaseNo());
         history.setPipeKey(pipeKey);
         history.setReleaseId(release.getReleaseId().getReleaseId());
@@ -150,7 +150,7 @@ public class ReleaseRemoteService implements ReleaseService {
             releaseCenter.release(pipeKey, release, app, appEnv, namespace, cluster, history);
         } catch (Exception ex) {
             log.error("发生错误，请重试", ex);
-            history.setDeployStatus(DeployHistoryStatusEnum.FAILED.getCode());
+            history.setDeployStatus(DeployHistoryStatusEnum.FAILED.getValue());
             history.setEndTime(Dates.date());
             deployHistoryRepository.update(history);
         } finally {

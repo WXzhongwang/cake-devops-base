@@ -189,7 +189,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
             <Select>
               <Select.Option value="ClusterIP">ClusterIP</Select.Option>
               <Select.Option value="NodePort">NodePort</Select.Option>
-              <Select.Option value="LoadBalancer">LoadBalancer</Select.Option>
+              {/* <Select.Option value="LoadBalancer">LoadBalancer</Select.Option> */}
             </Select>
           </Form.Item>
         </Form>

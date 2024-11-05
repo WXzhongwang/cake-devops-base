@@ -15,7 +15,7 @@ public enum DeployHistoryStatusEnum {
 
     PENDING("发布中", "0"),
     FAILED("已失败", "1"),
-    SUCCESS("已失败", "2"),
+    SUCCESS("已成功", "2"),
     ;
 
     private final String code;
