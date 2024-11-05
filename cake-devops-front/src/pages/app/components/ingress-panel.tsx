@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Table, { ColumnsType } from "antd/lib/table";
 import {
   Button,
+  Card,
   Form,
   Input,
   message,
@@ -16,6 +17,11 @@ import { connect, Dispatch } from "umi";
 import { API } from "typings";
 import appDetail from "../app-detail";
 import { AppInfo } from "@/models/app";
+import {
+  CloseOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -33,18 +39,18 @@ interface WrapIngressItem {
 
 interface RuleItem {
   host: string;
-  http: {
-    paths: PathItem[];
-  };
+  paths: PathItem[];
+  tcp: PortItem[];
 }
 
 interface PathItem {
   path: string;
   pathType: string;
-  service: ServiceConfigItem;
+  serviceName: string;
+  servicePort: number;
 }
-
-interface ServiceConfigItem {
+interface PortItem {
+  port: string;
   serviceName: string;
   servicePort: number;
 }
@@ -87,52 +93,58 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
     }
   };
 
-  const handleAddHost = () => {
-    const newRule: RuleItem = {
-      host: "",
-      http: {
-        paths: [],
-      },
-    };
-    form.setFieldsValue({
-      rules: [...(form.getFieldValue("rules") || []), newRule],
-    });
-  };
+  // const handleAddHost = () => {
+  //   const newRule: RuleItem = {
+  //     host: "",
+  //     http: {
+  //       paths: [],
+  //     },
+  //   };
+  //   form.setFieldsValue({
+  //     rules: [...(form.getFieldValue("rules") || []), newRule],
+  //   });
+  // };
 
-  const handleRemoveHost = (index: number) => {
-    const rules = form.getFieldValue("rules") || [];
-    const newRules = rules.filter((_: RuleItem, i: number) => i !== index);
-    form.setFieldsValue({ rules: newRules });
-  };
+  // const handleRemoveHost = (index: number) => {
+  //   const rules = form.getFieldValue("rules") || [];
+  //   const newRules = rules.filter((_: RuleItem, i: number) => i !== index);
+  //   form.setFieldsValue({ rules: newRules });
+  // };
 
-  const handleAddPath = (hostIndex: number) => {
-    const newPaths: PathItem[] = [
-      ...(form.getFieldValue(`rules[${hostIndex}].http.paths`) || []),
-      {
-        path: "",
-        pathType: "Exact",
-        service: {
-          serviceName: "",
-          servicePort: 80,
-        },
-      },
-    ];
-    form.setFieldsValue({
-      [`rules[${hostIndex}].http.paths`]: newPaths,
-    });
-  };
+  // const handleAddPath = (hostIndex: number) => {
+  //   const newPaths: PathItem[] = [
+  //     ...(form.getFieldValue(`rules[${hostIndex}].http.paths`) || []),
+  //     {
+  //       path: "",
+  //       pathType: "Exact",
+  //       service: {
+  //         serviceName: "",
+  //         servicePort: 80,
+  //       },
+  //     },
+  //   ];
+  //   form.setFieldsValue({
+  //     [`rules[${hostIndex}].http.paths`]: newPaths,
+  //   });
+  // };
 
-  const handleRemovePath = (hostIndex: number, pathIndex: number) => {
-    const paths = form.getFieldValue(`rules[${hostIndex}].http.paths`) || [];
-    const newPaths = paths.filter((_: PathItem, i: number) => i !== pathIndex);
-    form.setFieldsValue({
-      [`rules[${hostIndex}].http.paths`]: newPaths,
-    });
-  };
+  // const handleRemovePath = (hostIndex: number, pathIndex: number) => {
+  //   const paths = form.getFieldValue(`rules[${hostIndex}].http.paths`) || [];
+  //   const newPaths = paths.filter((_: PathItem, i: number) => i !== pathIndex);
+  //   form.setFieldsValue({
+  //     [`rules[${hostIndex}].http.paths`]: newPaths,
+  //   });
+  // };
 
   return (
     <Space style={{ width: "100%" }} direction="vertical">
-      <Title level={3}>{ingress.ingressName}</Title>
+      <Button
+        type="primary"
+        style={{ marginBottom: 16 }}
+        onClick={() => handleEdit(ingress)}
+      >
+        编辑 Ingress
+      </Button>
       <Modal
         width={800}
         title={editingItem ? "编辑 Ingress" : "新增 Ingress"}
@@ -145,6 +157,8 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
           initialValues={{
             ingressName: appName,
           }}
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 18 }}
           layout="horizontal"
         >
           <Form.Item
@@ -157,89 +171,232 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
 
           <Form.List name="rules">
             {(fields, { add, remove }) => (
+              <div
+                style={{ display: "flex", rowGap: 16, flexDirection: "column" }}
+              >
+                {fields.map((field) => (
+                  <Card
+                    size="small"
+                    title={`Rule ${field.name + 1}`}
+                    key={field.key}
+                    extra={
+                      <CloseOutlined
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                    }
+                  >
+                    <Form.Item label="host" name={[field.name, "host"]}>
+                      <Input />
+                    </Form.Item>
+
+                    {/* Nest Form.List */}
+                    <Form.Item label="http">
+                      <Form.List name={[field.name, "paths"]}>
+                        {(subFields, subOpt) => (
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              rowGap: 16,
+                            }}
+                          >
+                            {subFields.map((subField) => (
+                              <Space key={subField.key}>
+                                <Form.Item
+                                  noStyle
+                                  name={[subField.name, "pathType"]}
+                                >
+                                  <Input placeholder="pathType" />
+                                </Form.Item>
+                                <Form.Item
+                                  noStyle
+                                  name={[subField.name, "path"]}
+                                >
+                                  <Input placeholder="path" />
+                                </Form.Item>
+                                <Form.Item
+                                  noStyle
+                                  name={[subField.name, "serviceName"]}
+                                >
+                                  <Input placeholder="serviceName" />
+                                </Form.Item>
+                                <Form.Item
+                                  noStyle
+                                  name={[subField.name, "servicePort"]}
+                                >
+                                  <Input placeholder="servicePort" />
+                                </Form.Item>
+                                <CloseOutlined
+                                  onClick={() => {
+                                    subOpt.remove(subField.name);
+                                  }}
+                                />
+                              </Space>
+                            ))}
+                            <Button
+                              type="dashed"
+                              onClick={() => subOpt.add()}
+                              block
+                            >
+                              + 添加Path
+                            </Button>
+                          </div>
+                        )}
+                      </Form.List>
+                    </Form.Item>
+
+                    {/* Nest Form.List */}
+                    <Form.Item label="tcp">
+                      <Form.List name={[field.name, "ports"]}>
+                        {(subFields, subOpt) => (
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              rowGap: 16,
+                            }}
+                          >
+                            {subFields.map((subField) => (
+                              <Space key={subField.key}>
+                                <Form.Item
+                                  noStyle
+                                  name={[subField.name, "port"]}
+                                >
+                                  <Input placeholder="port" />
+                                </Form.Item>
+                                <Form.Item
+                                  noStyle
+                                  name={[subField.name, "serviceName"]}
+                                >
+                                  <Input placeholder="serviceName" />
+                                </Form.Item>
+                                <Form.Item
+                                  noStyle
+                                  name={[subField.name, "servicePort"]}
+                                >
+                                  <Input placeholder="servicePort" />
+                                </Form.Item>
+                                <CloseOutlined
+                                  onClick={() => {
+                                    subOpt.remove(subField.name);
+                                  }}
+                                />
+                              </Space>
+                            ))}
+                            <Button
+                              type="dashed"
+                              onClick={() => subOpt.add()}
+                              block
+                            >
+                              + 添加Port
+                            </Button>
+                          </div>
+                        )}
+                      </Form.List>
+                    </Form.Item>
+                  </Card>
+                ))}
+
+                <Button type="dashed" onClick={() => add()} block>
+                  + 添加规则
+                </Button>
+              </div>
+            )}
+          </Form.List>
+
+          {/* <Form.List name="rules">
+            {(fields, { add, remove }) => (
               <>
                 {fields.map((field, hostIndex) => (
-                  <div key={field.key}>
-                    <Space align="baseline">
-                      <Form.Item
-                        {...field}
-                        name={[field.name, "host"]}
-                        label={`Host ${hostIndex + 1}`}
-                        rules={[
-                          {
-                            required: true,
-                            message: `请输入 Host ${hostIndex + 1}!`,
-                          },
-                        ]}
-                      >
-                        <Input />
-                      </Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => handleAddPath(hostIndex)}
-                        block
-                      >
-                        添加 Path
-                      </Button>
-                      <Button
-                        type="dashed"
-                        onClick={() => handleRemoveHost(hostIndex)}
-                        block
-                      >
-                        删除 Host
-                      </Button>
-                    </Space>
-                    <Space direction="horizontal">
-                      <Table
-                        columns={[
-                          { title: "pathType", dataIndex: "pathType" },
-                          { title: "path", dataIndex: "path" },
-                          {
-                            title: "服务名称",
-                            dataIndex: "service.serviceName",
-                          },
-                          {
-                            title: "服务端口",
-                            dataIndex: "service.servicePort",
-                          },
-                          {
-                            title: "操作",
-                            dataIndex: "operation",
-                            render: (text, record, index) => (
-                              <Space size={"middle"}>
-                                <Typography.Link
-                                  onClick={() =>
-                                    handleRemovePath(hostIndex, index)
-                                  }
-                                >
-                                  删除
-                                </Typography.Link>
-                              </Space>
-                            ),
-                          },
-                        ]}
-                        dataSource={form.getFieldValue(
-                          `rules[${hostIndex}].http.paths`
-                        )}
-                        pagination={false}
-                      />
-                    </Space>
-                  </div>
+                  <Space
+                    key={field.key}
+                    style={{ display: "flex", marginBottom: 8 }}
+                    align="baseline"
+                  >
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "host"]}
+                      label={`域名 ${hostIndex + 1}`}
+                      rules={[
+                        {
+                          required: true,
+                          message: `请输入 Host ${hostIndex + 1}!`,
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      onClick={() => handleRemoveHost(hostIndex)}
+                    />
+                    <Button
+                      type="dashed"
+                      onClick={() => handleAddPath(hostIndex)}
+                      block
+                    >
+                      添加 Path
+                    </Button>
+
+                    <Table
+                      columns={[
+                        { title: "pathType", dataIndex: "pathType" },
+                        { title: "path", dataIndex: "path" },
+                        {
+                          title: "服务名称",
+                          dataIndex: "service.serviceName",
+                        },
+                        {
+                          title: "服务端口",
+                          dataIndex: "service.servicePort",
+                        },
+                        {
+                          title: "操作",
+                          dataIndex: "operation",
+                          render: (text, record, index) => (
+                            <Space size={"middle"}>
+                              <Typography.Link
+                                onClick={() =>
+                                  handleRemovePath(hostIndex, index)
+                                }
+                              >
+                                删除
+                              </Typography.Link>
+                            </Space>
+                          ),
+                        },
+                      ]}
+                      dataSource={form.getFieldValue(
+                        `rules[${hostIndex}].http.paths`
+                      )}
+                      pagination={false}
+                    />
+                  </Space>
                 ))}
                 <Form.Item>
-                  <Button type="dashed" onClick={() => handleAddHost()} block>
+                  <Button
+                    type="dashed"
+                    onClick={() => handleAddHost()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
                     添加 Host
                   </Button>
                 </Form.Item>
               </>
             )}
-          </Form.List>
+          </Form.List> */}
+
+          <Form.Item noStyle shouldUpdate>
+            {() => (
+              <Typography>
+                <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
+              </Typography>
+            )}
+          </Form.Item>
         </Form>
       </Modal>
-
-      <Button type="primary" onClick={() => handleEdit(ingress)}>
-        编辑 Ingress
-      </Button>
     </Space>
   );
 };

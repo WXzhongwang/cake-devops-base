@@ -132,7 +132,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
         onClick={handleAddNew}
         style={{ marginBottom: 16 }}
       >
-        新增服务
+        新增Service
       </Button>
 
       <Table
