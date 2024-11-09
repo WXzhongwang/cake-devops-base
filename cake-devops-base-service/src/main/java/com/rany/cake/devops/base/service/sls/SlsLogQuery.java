@@ -36,7 +36,7 @@ public class SlsLogQuery {
     public List<QueriedLog> queryLogsByPipeKey(String pipeKey, long from, long to) throws Exception {
         // 构建查询请求
         GetLogsRequest request = new GetLogsRequest(project, logstore, (int) from, (int) to, null,
-                "__pipeKey__:" + pipeKey);
+                "__pipe_key__:" + pipeKey);
         // 发送查询请求
         GetLogsResponse getLogsResponse = client.GetLogs(request);
         return getLogsResponse.getLogs();

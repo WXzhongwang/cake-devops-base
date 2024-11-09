@@ -39,9 +39,9 @@ public class SlsDeployLogQueryService {
         try {
             logs = slsLogQuery.queryLogsByPipeKey(pipeKey, from, to);
             for (QueriedLog log : logs) {
+                DeployLogDTO deployLogDTO = new DeployLogDTO();
+                deployLogDTO.setPipeKey(pipeKey);
                 for (LogContent mContent : log.mLogItem.mContents) {
-                    DeployLogDTO deployLogDTO = new DeployLogDTO();
-                    deployLogDTO.setPipeKey(pipeKey);
                     if (StringUtils.equals(mContent.mKey, "message")) {
                         deployLogDTO.setMessage(mContent.mValue);
                     }
@@ -57,8 +57,8 @@ public class SlsDeployLogQueryService {
                     if (StringUtils.equals(mContent.mKey, "location")) {
                         deployLogDTO.setLocation(mContent.mValue);
                     }
-                    queriedLogs.add(deployLogDTO);
                 }
+                queriedLogs.add(deployLogDTO);
             }
         } catch (Exception e) {
             log.error("查询日志异常", e);

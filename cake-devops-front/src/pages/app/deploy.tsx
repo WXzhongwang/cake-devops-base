@@ -26,10 +26,16 @@ import {
   Descriptions,
   Divider,
   Collapse,
+  TabsProps,
+  Tabs,
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
 import { AppEnv, AppInfo, PodDTO, ResourceStrategyDTO } from "@/models/app";
-import { ReleaseRecord } from "@/models/release";
+import {
+  DeployHistoryDTO,
+  DeployLogDTO,
+  ReleaseRecord,
+} from "@/models/release";
 import moment from "moment";
 import dayjs from "dayjs";
 import { TableRowSelection } from "antd/lib/table/interface";
@@ -61,6 +67,19 @@ const getReleaseStatusText = (status: string) => {
   }
 };
 
+const getDeployStatusText = (status: string) => {
+  switch (status) {
+    case "0":
+      return "发布中";
+    case "1":
+      return "发布失败";
+    case "2":
+      return "发布成功";
+    default:
+      return "未知状态";
+  }
+};
+
 const getApprovalStatusText = (status: string) => {
   switch (status) {
     case "PENDING":
@@ -84,6 +103,10 @@ interface ReleasePageProps {
     total: number;
     list: ReleaseRecord[];
   };
+  deployHistory: {
+    total: number;
+    list: DeployHistoryDTO[];
+  };
   appEnv: AppEnv;
   dispatch: Dispatch;
 }
@@ -91,12 +114,17 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   dispatch,
   appDetail,
   releases,
+  deployHistory,
   appEnv,
 }) => {
   const { id } = useParams();
   // 发布单详情抽屉
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
+  const [historyPagination, setHistoryPagination] = useState({
+    pageNo: 1,
+    pageSize: 10,
+  });
   const [deployDisabled, setDeployDisabled] = useState(false);
 
   const [selectedEnvironment, setSelectedEnvironment] = useState<
@@ -115,12 +143,15 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   const [logDrawerVisible, setLogDrawerVisible] = useState(false);
   // 新增 pipeKey 状态用于传递给查看发布日志的抽屉
   const [pipeKey, setPipeKey] = useState<string>("");
+  // 在组件中定义状态来控制是否显示查看发布日志按钮和抽屉
+  const [historyLogDrawerVisible, setHistoryLogDrawerVisible] = useState(false);
 
   const [resourceStrategy, setResourceStrategy] =
     useState<ResourceStrategyDTO>();
 
   const [form] = Form.useForm();
   const [pods, setPods] = useState<PodDTO[]>([]);
+  const [deployHistoryLogs, setDeployHistoryLog] = useState<DeployLogDTO[]>([]);
 
   // 配置项数据
   const [configMapData, setConfigMapData] = useState<
@@ -296,6 +327,19 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     setViewDrawerVisible(true);
   };
 
+  const handleViewHistoryLog = (pipeKey: string) => {
+    dispatch({
+      type: "release/queryDeployLog",
+      payload: {
+        pipeKey: pipeKey,
+      },
+      callback: (content: DeployLogDTO[]) => {
+        setDeployHistoryLog(content);
+        setHistoryLogDrawerVisible(!historyLogDrawerVisible);
+      },
+    });
+  };
+
   const pageRelease = useCallback(() => {
     if (selectedEnvironment) {
       console.log("开始调用环境信息", selectedEnvironment);
@@ -344,9 +388,31 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     });
   }, [dispatch, id]);
 
+  const pageDeployHistory = useCallback(() => {
+    if (selectedEnvironment) {
+      console.log("开始调用环境信息", selectedEnvironment);
+      dispatch({
+        type: "release/pageDeployHistory",
+        payload: {
+          ...pagination,
+          appId: id,
+          envId: selectedEnvironment,
+        },
+      });
+    }
+  }, [dispatch, historyPagination, id, selectedEnvironment]);
+
+  useEffect(() => {
+    dispatch({
+      type: "app/getAppDetail",
+      payload: { id },
+    });
+  }, [dispatch, id]);
+
   useEffect(() => {
     pageRelease();
-  }, [pageRelease]);
+    pageDeployHistory();
+  }, [pageRelease, pageDeployHistory]);
 
   useEffect(() => {
     if (appEnv) {
@@ -492,23 +558,15 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           <Card
             title={`${appDetail?.appName}:[${appEnv?.envName}(${appEnv?.env})]`}
             extra={
-              <div>
+              <Space>
                 {parsedProgress?.pipeKey && (
                   <Button
                     onClick={() => handleViewLogs(parsedProgress?.pipeKey)}
                   >
-                    查看发布日志
+                    查看日志
                   </Button>
                 )}
-
-                <Button
-                  key="release"
-                  onClick={handleRelease}
-                  disabled={deployDisabled || !selectedRow}
-                >
-                  立即发布
-                </Button>
-              </div>
+              </Space>
             }
           >
             {/* 存在发布进度 */}
@@ -601,12 +659,20 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             ))}
           </Collapse>
 
+          {/* 发布单 */}
           <Card
             title="发布单"
             extra={
-              <div>
+              <Space>
+                <Button
+                  key="release"
+                  onClick={handleRelease}
+                  disabled={deployDisabled || !selectedRow}
+                >
+                  立即发布
+                </Button>
                 <Button onClick={handleCreateReleaseDrawer}>添加发布单</Button>
-              </div>
+              </Space>
             }
           >
             <Table
@@ -621,6 +687,95 @@ const DeployPage: React.FC<ReleasePageProps> = ({
                 current: pagination.pageNo,
                 pageSize: pagination.pageSize,
                 onChange: handlePaginationChange,
+              }}
+            />
+          </Card>
+
+          <Card title="发布历史">
+            <Table
+              columns={[
+                {
+                  title: "pipeKey",
+                  dataIndex: "pipeKey",
+                  key: "pipeKey",
+                  render: (text: any, record: DeployHistoryDTO) => {
+                    return (
+                      <Paragraph
+                        copyable={{ tooltips: ["点击复制", "复制成功"] }}
+                        style={{ display: "inline" }}
+                      >
+                        {record?.pipeKey}
+                      </Paragraph>
+                    );
+                  },
+                },
+                {
+                  title: "开始时间",
+                  dataIndex: "startTime",
+                  key: "releaseDate",
+                  render: (text: any, record: DeployHistoryDTO) => {
+                    return (
+                      <div>
+                        {dayjs(record?.startTime).format("YYYY-MM-DD HH:mm:ss")}
+                      </div>
+                    );
+                  },
+                },
+                {
+                  title: "结束时间",
+                  dataIndex: "gmtModified",
+                  key: "gmtModified",
+                  render: (text: any, record: DeployHistoryDTO) => {
+                    return (
+                      <div>
+                        {dayjs(record?.endTime).format("YYYY-MM-DD HH:mm:ss")}
+                      </div>
+                    );
+                  },
+                },
+                {
+                  title: "发布内容",
+                  dataIndex: "content",
+                  key: "content",
+                },
+                {
+                  title: "发布人",
+                  dataIndex: "creatorName",
+                  key: "creatorName",
+                },
+                {
+                  title: "发布状态",
+                  dataIndex: "deployStatus",
+                  key: "deployStatus",
+                  render: (text: any, record: DeployHistoryDTO) => {
+                    let statusText = getDeployStatusText(record.deployStatus);
+                    return statusText;
+                  },
+                },
+                {
+                  title: "操作",
+                  key: "action",
+                  render: (text: any, record: DeployHistoryDTO) => (
+                    <Space size="middle">
+                      <a onClick={() => handleViewHistoryLog(record.pipeKey)}>
+                        查看日志
+                      </a>
+                    </Space>
+                  ),
+                },
+              ]}
+              dataSource={deployHistory.list}
+              rowKey={"pipeKey"}
+              pagination={{
+                total: deployHistory.total,
+                current: historyPagination.pageNo,
+                pageSize: historyPagination.pageSize,
+                onChange: (page, pageSize) => {
+                  setHistoryPagination({
+                    pageNo: page,
+                    pageSize: pageSize || 10,
+                  });
+                },
               }}
             />
           </Card>
@@ -776,6 +931,21 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         )}
       </Drawer>
 
+      {/* 发布单详情抽屉 */}
+      <Drawer
+        title="发布记录日志"
+        width={1200}
+        onClose={() => setHistoryLogDrawerVisible(false)}
+        open={historyLogDrawerVisible}
+      >
+        {/* 发布单详情 */}
+        {deployHistoryLogs?.map((log: DeployLogDTO) => (
+          <p>
+            {log.time} {log.message}
+          </p>
+        ))}
+      </Drawer>
+
       <DeployLogDrawer
         open={logDrawerVisible}
         onClose={() => {
@@ -801,6 +971,10 @@ export default connect(
         total: number;
         list: ReleaseRecord[];
       };
+      deployHistory: {
+        total: number;
+        list: DeployHistoryDTO[];
+      };
     };
   }) => ({
     appDetail: app.appDetail,
@@ -808,6 +982,10 @@ export default connect(
     releases: {
       total: release.releases.total,
       list: release.releases.list,
+    },
+    deployHistory: {
+      total: release.deployHistory.total,
+      list: release.deployHistory.list,
     },
   })
 )(DeployPage);

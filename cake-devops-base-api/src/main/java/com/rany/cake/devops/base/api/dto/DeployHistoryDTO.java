@@ -23,4 +23,6 @@ public class DeployHistoryDTO extends DTO {
      * 用于追溯日志
      */
     private String pipeKey;
+    private String creator;
+    private String creatorName;
 }

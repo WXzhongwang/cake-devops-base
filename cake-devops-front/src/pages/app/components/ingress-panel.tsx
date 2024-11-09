@@ -208,7 +208,14 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
                                   noStyle
                                   name={[subField.name, "pathType"]}
                                 >
-                                  <Input placeholder="pathType" />
+                                  <Select placeholder="路径类型">
+                                    <Select.Option value="Exact">
+                                      Exact
+                                    </Select.Option>
+                                    <Select.Option value="Prefix">
+                                      Prefix
+                                    </Select.Option>
+                                  </Select>
                                 </Form.Item>
                                 <Form.Item
                                   noStyle
@@ -305,88 +312,6 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
               </div>
             )}
           </Form.List>
-
-          {/* <Form.List name="rules">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map((field, hostIndex) => (
-                  <Space
-                    key={field.key}
-                    style={{ display: "flex", marginBottom: 8 }}
-                    align="baseline"
-                  >
-                    <Form.Item
-                      {...field}
-                      name={[field.name, "host"]}
-                      label={`域名 ${hostIndex + 1}`}
-                      rules={[
-                        {
-                          required: true,
-                          message: `请输入 Host ${hostIndex + 1}!`,
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      onClick={() => handleRemoveHost(hostIndex)}
-                    />
-                    <Button
-                      type="dashed"
-                      onClick={() => handleAddPath(hostIndex)}
-                      block
-                    >
-                      添加 Path
-                    </Button>
-
-                    <Table
-                      columns={[
-                        { title: "pathType", dataIndex: "pathType" },
-                        { title: "path", dataIndex: "path" },
-                        {
-                          title: "服务名称",
-                          dataIndex: "service.serviceName",
-                        },
-                        {
-                          title: "服务端口",
-                          dataIndex: "service.servicePort",
-                        },
-                        {
-                          title: "操作",
-                          dataIndex: "operation",
-                          render: (text, record, index) => (
-                            <Space size={"middle"}>
-                              <Typography.Link
-                                onClick={() =>
-                                  handleRemovePath(hostIndex, index)
-                                }
-                              >
-                                删除
-                              </Typography.Link>
-                            </Space>
-                          ),
-                        },
-                      ]}
-                      dataSource={form.getFieldValue(
-                        `rules[${hostIndex}].http.paths`
-                      )}
-                      pagination={false}
-                    />
-                  </Space>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => handleAddHost()}
-                    block
-                    icon={<PlusOutlined />}
-                  >
-                    添加 Host
-                  </Button>
-                </Form.Item>
-              </>
-            )}
-          </Form.List> */}
 
           <Form.Item noStyle shouldUpdate>
             {() => (

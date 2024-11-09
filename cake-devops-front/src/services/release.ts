@@ -5,6 +5,8 @@ import {
   DeployPayload,
   PageReleasePayload,
   ClosePayload,
+  PageDeployHistoryPayload,
+  QueryPipeLogPayLoad,
 } from "@/models/release";
 
 export async function create(data: CreateReleasePayload) {
@@ -19,6 +21,19 @@ export async function page(data: PageReleasePayload) {
     method: "POST",
     data,
   });
+}
+
+export async function pageDeployHistory(data: PageDeployHistoryPayload) {
+  return request("/api/devops/release/page-deploy-history", {
+    method: "POST",
+    data,
+  });
+}
+export async function queryPipeLog(data: QueryPipeLogPayLoad) {
+  console.log("payload", data);
+  return request(
+    `/api/devops/release/query-deploy-log?pipeKey=` + data.pipeKey
+  );
 }
 
 export async function deploy(data: DeployPayload) {
