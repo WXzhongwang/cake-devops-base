@@ -1,10 +1,11 @@
 # cake-devops-base
 
-**cake-devops-base** JavaDevops实现。
+**cake-devops-base** Java Devops实现。
 
-1. SpringBoot 2.2.6.RELEASE
+1. 后端采用SpringBoot 2.2.6.RELEASE
 2. K8S 1.19.2
 3. shell
+4. 前端采用React
 
 ## 依赖工具链
 
