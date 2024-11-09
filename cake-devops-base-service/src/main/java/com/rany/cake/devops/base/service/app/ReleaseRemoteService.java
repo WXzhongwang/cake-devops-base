@@ -32,6 +32,7 @@ import com.rany.cake.devops.base.service.base.Constants;
 import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.lock.client.RedissonLockClient;
 import com.rany.cake.devops.base.util.enums.ApprovalStatus;
+import com.rany.cake.devops.base.util.enums.DeployContentEnum;
 import com.rany.cake.devops.base.util.enums.DeployHistoryStatusEnum;
 import com.rany.cake.toolkit.lang.time.Dates;
 import lombok.AllArgsConstructor;
@@ -139,6 +140,7 @@ public class ReleaseRemoteService implements ReleaseService {
         history.setEnvId(appEnv.getEnvId());
         history.setStartTime(Dates.date());
         history.setDeployStatus(DeployHistoryStatusEnum.PENDING.getValue());
+        history.setContent(DeployContentEnum.NEW.getContent());
         String pipeKey = redisSerialNumberGenerator.generatePipeNumber(release.getReleaseNo());
         history.setPipeKey(pipeKey);
         history.setReleaseId(release.getReleaseId().getReleaseId());

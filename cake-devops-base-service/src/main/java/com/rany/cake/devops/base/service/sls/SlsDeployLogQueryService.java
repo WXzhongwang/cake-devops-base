@@ -42,6 +42,7 @@ public class SlsDeployLogQueryService {
                 DeployLogDTO deployLogDTO = new DeployLogDTO();
                 deployLogDTO.setPipeKey(pipeKey);
                 for (LogContent mContent : log.mLogItem.mContents) {
+
                     if (StringUtils.equals(mContent.mKey, "message")) {
                         deployLogDTO.setMessage(mContent.mValue);
                     }
