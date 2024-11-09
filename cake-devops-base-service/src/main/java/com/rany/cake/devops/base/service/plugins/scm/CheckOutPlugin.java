@@ -43,7 +43,8 @@ public class CheckOutPlugin extends BasePlugin {
         Release release = context.getRelease();
         String ref = StringUtils.isNotEmpty(release.getReleaseBranch()) ? release.getReleaseBranch() : release.getReleaseCommitId();
         log.info("Current code repo:{}, default branch:{}", codeRepository.getRepo(), codeRepository.getDefaultBranch());
-        BaseCodeService codeService = codeFactory.build(codeRepository.of(), codeRepository.getConnectionString(), codeRepository.getToken());
+        BaseCodeService codeService = codeFactory.build(codeRepository.of(), codeRepository.getConnectionString(),
+                codeRepository.getToken());
         String[] repos = RepoUrlUtils.extractRepoInfo(codeRepository.getRepo());
         if (repos == null) {
             log.error("Current code repo extract error");

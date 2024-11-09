@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.service.code;
 
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
+import com.rany.cake.devops.base.service.code.codeup.CodeUpCodeService;
 import com.rany.cake.devops.base.service.code.github.GitHubCodeService;
 import com.rany.cake.devops.base.service.code.gitlab.GitLabCodeService;
 import com.rany.cake.devops.base.util.enums.CodePlatformEnum;
@@ -24,9 +25,9 @@ public class CodeFactory {
         if (codePlatform == CodePlatformEnum.GITHUB) {
             return new GitHubCodeService(connectString, token);
         }
-//        if (codePlatform == CodePlatformEnum.CODE_UP) {
-//            return new CodeUpCodeService(connectString, token);
-//        }
+        if (codePlatform == CodePlatformEnum.CODE_UP) {
+            return new CodeUpCodeService(connectString, token);
+        }
         throw new DevOpsException(DevOpsErrorMessage.OPS_CONNECTED_ERROR);
     }
 }

@@ -940,9 +940,9 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       >
         {/* 发布单详情 */}
         {deployHistoryLogs?.map((log: DeployLogDTO) => (
-          <p>
+          <div>
             {log.time} {log.message}
-          </p>
+          </div>
         ))}
       </Drawer>
 
