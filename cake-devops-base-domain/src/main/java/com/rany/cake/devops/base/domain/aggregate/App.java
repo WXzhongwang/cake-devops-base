@@ -4,9 +4,9 @@ import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
-import com.rany.cake.devops.base.domain.entity.AppExtend;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.type.AppName;
+import com.rany.cake.devops.base.domain.valueobject.AppExtend;
 import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
@@ -93,6 +93,10 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
      * webhook
      */
     private String webhook;
+    /**
+     * 拓展参数
+     */
+    private String extend;
 
     /**
      * 业务归属

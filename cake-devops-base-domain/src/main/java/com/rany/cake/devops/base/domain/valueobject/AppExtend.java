@@ -1,6 +1,6 @@
-package com.rany.cake.devops.base.domain.entity;
+package com.rany.cake.devops.base.domain.valueobject;
 
-import com.cake.framework.common.base.BaseEntity;
+import com.cake.framework.common.base.BaseValueObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,5 +15,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class AppExtend extends BaseEntity<Long> {
+public class AppExtend extends BaseValueObject {
+
+    private CodeUpConfig codeUp;
+
 }
