@@ -234,9 +234,10 @@ const DeployPage: React.FC<ReleasePageProps> = ({
           {/* 查看按钮 */}
           <a onClick={() => handleViewDetails(record)}>查看</a>
           {/* 关闭按钮 */}
-          {record.releaseStatus !== "PENDING" && (
-            <a onClick={() => handleConfirmClose(record)}>关闭</a>
-          )}
+          {record.releaseStatus !== "PENDING" &&
+            record.releaseStatus !== "FINISHED" && (
+              <a onClick={() => handleConfirmClose(record)}>关闭</a>
+            )}
         </Space>
       ),
     },
@@ -728,7 +729,8 @@ const DeployPage: React.FC<ReleasePageProps> = ({
                   render: (text: any, record: DeployHistoryDTO) => {
                     return (
                       <div>
-                        {dayjs(record?.endTime).format("YYYY-MM-DD HH:mm:ss")}
+                        {record?.endTime &&
+                          dayjs(record?.endTime).format("YYYY-MM-DD HH:mm:ss")}
                       </div>
                     );
                   },
