@@ -33,4 +33,5 @@ public class CreateAppCommand extends BaseCommand {
     private List<AppMemberDTO> appMembers;
     private String healthCheck;
     private String webhook;
+    private String appExtend;
 }

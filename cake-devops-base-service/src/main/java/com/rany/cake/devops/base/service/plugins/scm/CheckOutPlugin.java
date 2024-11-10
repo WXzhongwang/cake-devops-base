@@ -1,6 +1,7 @@
 package com.rany.cake.devops.base.service.plugins.scm;
 
 import com.rany.cake.devops.base.domain.aggregate.Release;
+import com.rany.cake.devops.base.domain.valueobject.AppExtend;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.service.code.BaseCodeService;
 import com.rany.cake.devops.base.service.code.CodeFactory;
@@ -40,11 +41,14 @@ public class CheckOutPlugin extends BasePlugin {
     public boolean execute(DeployContext context) {
         CodeRepository codeRepository = context.getApp().getCodeRepository();
         String appName = context.getApp().getAppName().getName();
+        AppExtend appExtend = context.getApp().getAppExtend();
         Release release = context.getRelease();
         String ref = StringUtils.isNotEmpty(release.getReleaseBranch()) ? release.getReleaseBranch() : release.getReleaseCommitId();
         log.info("Current code repo:{}, default branch:{}", codeRepository.getRepo(), codeRepository.getDefaultBranch());
-        BaseCodeService codeService = codeFactory.build(codeRepository.of(), codeRepository.getConnectionString(),
-                codeRepository.getToken());
+        BaseCodeService codeService = codeFactory.build(codeRepository.of(),
+                codeRepository.getConnectionString(),
+                codeRepository.getToken(),
+                appExtend);
         String[] repos = RepoUrlUtils.extractRepoInfo(codeRepository.getRepo());
         if (repos == null) {
             log.error("Current code repo extract error");
@@ -52,7 +56,8 @@ public class CheckOutPlugin extends BasePlugin {
         }
         String serialNum = redisSerialNumberGenerator.generateSerialNumber(appName);
         String newReleaseBranchName = RepoUrlUtils.generateReleaseBranchName(serialNum);
-        Boolean success = codeService.createBranch(codeRepository.getRepo(), newReleaseBranchName, ref);
+        String[] pair = RepoUrlUtils.extractRepoInfo(codeRepository.getRepo());
+        Boolean success = codeService.createBranch(pair[0], pair[1], ref);
         if (BooleanUtils.isNotTrue(success)) {
             log.error("Create new branch failed, {}", newReleaseBranchName);
             return false;

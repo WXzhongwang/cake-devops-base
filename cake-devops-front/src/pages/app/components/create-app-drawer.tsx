@@ -161,6 +161,13 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
         >
           <Input placeholder="请输入健康检查地址" />
         </Form.Item>
+        <Form.Item
+          name="appExtend"
+          label="扩展配置JSON"
+          rules={[{ required: true, message: "扩展配置参数" }]}
+        >
+          <Input.TextArea placeholder="扩展配置参数" />
+        </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
             提交

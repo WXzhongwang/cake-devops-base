@@ -29,8 +29,7 @@
           app_id
         , app_name, description, repo, default_branch, language, develop_mode, owner, health_check,
     status, is_deleted, gmt_create, gmt_modified, department_abbreviation, department,
-    creator, modifier, webhook, code_platform, connection_string, token
-
+    creator, modifier, webhook, code_platform, connection_string, token, extend
     </sql>
 
     <select id="selectByAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -47,7 +46,7 @@
                          status, is_deleted, gmt_create,
                          gmt_modified, department_abbreviation,
                          department, webhook, creator, modifier,
-                         code_platform, connection_string, token)
+                         code_platform, connection_string, token, extend)
         values (#{appId.appId},
                 #{appName.name,jdbcType=VARCHAR},
                 #{description,jdbcType=VARCHAR},
@@ -68,7 +67,8 @@
                 #{modifier},
                 #{codeRepository.codePlatform},
                 #{codeRepository.connectionString},
-                #{codeRepository.token})
+                #{codeRepository.token},
+                #{appExtend,typeHandler=com.cake.framework.mybatis.handler.GenericObjectTypeHandler})
     </insert>
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.aggregate.App">

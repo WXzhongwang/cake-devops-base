@@ -1,133 +1,139 @@
 package com.rany.cake.devops.base.service.code.codeup;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.*;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.Base64;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class CodeUpService {
 
-    private final String codeUpApiUrl;
-    private final String accessKeyId;
-    private final String accessKeySecret;
-    private final CloseableHttpClient httpClient;
+    private final String domain;
+    private final String organizationId;
+    private final String personalAccessToken;
+    private final OkHttpClient client;
 
-    public CodeUpService(String codeUpApiUrl, String accessKeyId, String accessKeySecret) {
-        this.codeUpApiUrl = codeUpApiUrl;
-        this.accessKeyId = accessKeyId;
-        this.accessKeySecret = accessKeySecret;
-        this.httpClient = HttpClients.createDefault();
+    public CodeUpService(String domain, String organizationId, String personalAccessToken) {
+        this.domain = domain;
+        this.organizationId = organizationId;
+        this.personalAccessToken = personalAccessToken;
+
+        // 配置连接池化的OkHttpClient
+        ConnectionPool connectionPool = new ConnectionPool(5, 5, TimeUnit.MINUTES);
+        this.client = new OkHttpClient.Builder()
+                .connectionPool(connectionPool)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .build();
     }
 
-    private String sendRequest(String method, String endpoint, String payload) throws IOException {
-        String fullUrl = codeUpApiUrl + endpoint;
-        switch (method) {
-            case "GET":
-                HttpGet httpGet = new HttpGet(fullUrl);
-                httpGet.setHeader(HttpHeaders.AUTHORIZATION, generateAuthorizationHeader(method, endpoint, httpGet));
-                return executeRequest(httpGet);
-            case "POST":
-                HttpPost httpPost = new HttpPost(fullUrl);
-                httpPost.setHeader(HttpHeaders.AUTHORIZATION, generateAuthorizationHeader(method, endpoint, httpPost));
-                httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-                httpPost.setEntity(new StringEntity(payload, StandardCharsets.UTF_8));
-                return executeRequest(httpPost);
-            case "PUT":
-                HttpPut httpPut = new HttpPut(fullUrl);
-                httpPut.setHeader(HttpHeaders.AUTHORIZATION, generateAuthorizationHeader(method, endpoint, httpPut));
-                httpPut.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-                httpPut.setEntity(new StringEntity(payload, StandardCharsets.UTF_8));
-                return executeRequest(httpPut);
-            case "DELETE":
-                HttpDelete httpDelete = new HttpDelete(fullUrl);
-                httpDelete.setHeader(HttpHeaders.AUTHORIZATION, generateAuthorizationHeader(method, endpoint, httpDelete));
-                return executeRequest(httpDelete);
-            default:
-                throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+    public Boolean createBranch(String repo, String branch, String ref) {
+        // 构建请求URL
+        String requestUrl = String.format("https://%s/oapi/v1/codeup/organizations/%s/repositories/%s/branches?branch=%s&ref=%s",
+                domain, organizationId, repo, branch, ref);
+
+        // 构建请求体
+//        JSONObject requestObject = new JSONObject();
+//        requestObject.put("ref", ref);
+//        requestObject.put("branch", branch);
+//        requestObject.put("organizationId", organizationId);
+//        requestObject.put("repositoryId", repo);
+        RequestBody body = RequestBody.create(MediaType.get("application/json"), "");
+
+        // 构建请求
+        Request request = new Request.Builder()
+                .url(requestUrl)
+                .post(body)
+                .header("Content-Type", "application/json")
+                .header("x-yunxiao-token", personalAccessToken)
+                .build();
+
+        // 发送请求并处理响应
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                log.info("创建分支成功");
+                return true;
+            } else {
+                log.error("创建分支失败: {} {}", response.code(), response.message());
+            }
+        } catch (IOException e) {
+            log.error("创建分支时发生错误", e);
         }
+        return false;
     }
 
-    private String generateAuthorizationHeader(String method, String endpoint, HttpUriRequest request) {
-        String date = DateTimeFormatter.ISO_INSTANT.format(Instant.now().atZone(ZoneOffset.UTC));
-        request.setHeader(HttpHeaders.DATE, date);
+    public List<Branch> listBranches(String repo, Integer page, Integer perPage, String sort, String search) {
+        String requestUrl = String.format("https://%s/oapi/v1/codeup/organizations/%s/repositories/%s/branches",
+                domain, organizationId, repo);
+        // 构建请求体
+        JSONObject requestObject = new JSONObject();
+        requestObject.put("organizationId", organizationId);
+        requestObject.put("repositoryId", repo);
+        requestObject.put("page", page);
+        requestObject.put("perPage", perPage);
+        requestObject.put("sort", sort);
+        requestObject.put("search", search);
+        RequestBody body = RequestBody.create(MediaType.get("application/json"), requestObject.toString());
 
-        String canonicalizedHeaders = HttpHeaders.DATE.toLowerCase() + ":" + date + "\n";
-        String canonicalizedResource = endpoint;
-        String stringToSign = method.toUpperCase() + "\n" +
-                canonicalizedHeaders + canonicalizedResource;
+        // 构建请求
+        Request request = new Request.Builder()
+                .url(requestUrl)
+                .post(body)
+                .header("Content-Type", "application/json")
+                .header("x-yunxiao-token", personalAccessToken)
+                .build();
 
-        String signature = sign(stringToSign, accessKeySecret);
-        return "Signature " + accessKeyId + ":" + signature;
-    }
-
-    private String sign(String stringToSign, String secret) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-            byte[] messageBytes = stringToSign.getBytes(StandardCharsets.UTF_8);
-            byte[] hash = digest.digest(keyBytes);
-            byte[] result = new byte[hash.length + messageBytes.length];
-            System.arraycopy(hash, 0, result, 0, hash.length);
-            System.arraycopy(messageBytes, 0, result, hash.length, messageBytes.length);
-            byte[] signature = digest.digest(result);
-            return Base64.getEncoder().encodeToString(signature);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Failed to generate SHA-1 signature", e);
+        // 发送请求并处理响应
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+                List<Branch> branches = JSON.parseArray(responseBody, Branch.class);
+                log.info("获取分支列表成功");
+                return branches;
+            }
+        } catch (IOException e) {
+            log.error("获取分支列表时发生错误", e);
         }
+        return new ArrayList<>();
     }
 
-    private String executeRequest(HttpUriRequest request) throws IOException {
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                return EntityUtils.toString(entity);
+    @Data
+    public static class Branch {
+        private Commit commit;
+        private boolean defaultBranch;
+        private String name;
+        private boolean protectedBranch;
+        private String webUrl;
+
+        // Commit 类用于封装提交信息
+        @Data
+        public static class Commit {
+            private String authorEmail;
+            private String authorName;
+            private String authoredDate;
+            private String committedDate;
+            private String committerEmail;
+            private String committerName;
+            private String id;
+            private String message;
+            private List<String> parentIds;
+            private String shortId;
+            private Stats stats;
+            private String title;
+            private String webUrl;
+
+            @Data
+            public static class Stats {
+                private int additions;
+                private int deletions;
+                private int total;
             }
         }
-        return null;
-    }
-
-    // 创建仓库
-    public String createRepository(String name, String description) throws IOException {
-        String payload = "{\"name\": \"" + name + "\", \"description\": \"" + description + "\"}";
-        return sendRequest("POST", "/api/v1/repos", payload);
-    }
-
-    // 获取仓库信息
-    public String getRepository(String repoId) throws IOException {
-        return sendRequest("GET", "/api/v1/repos/" + repoId, "");
-    }
-
-    // 创建分支
-    public String createBranch(String repoId, String branch, String sha) throws IOException {
-        String payload = "{\"ref\": \"refs/heads/" + branch + "\", \"sha\": \"" + sha + "\"}";
-        return sendRequest("POST", "/api/v1/repos/" + repoId + "/git/refs", payload);
-    }
-
-    // 获取分支列表
-    public String listBranches(String repoId) throws IOException {
-        return sendRequest("GET", "/api/v1/repos/" + repoId + "/branches", "");
-    }
-
-    // 获取特定分支信息
-    public String getBranch(String repoId, String branch) throws IOException {
-        return sendRequest("GET", "/api/v1/repos/" + repoId + "/branches/" + branch, "");
-    }
-
-    // 创建标签
-    public String createTag(String repoId, String tag, String sha) throws IOException {
-        String payload = "{\"tag\": \"" + tag + "\", \"message\": \"Create tag\", \"object\": \"" + sha + "\", \"type\": \"commit\"}";
-        return sendRequest("POST", "/api/v1/repos/" + repoId + "/git/tags", payload);
     }
 }

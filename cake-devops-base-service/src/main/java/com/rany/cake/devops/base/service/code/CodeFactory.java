@@ -2,6 +2,8 @@ package com.rany.cake.devops.base.service.code;
 
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
+import com.rany.cake.devops.base.domain.valueobject.AppExtend;
+import com.rany.cake.devops.base.domain.valueobject.CodeUpConfig;
 import com.rany.cake.devops.base.service.code.codeup.CodeUpCodeService;
 import com.rany.cake.devops.base.service.code.github.GitHubCodeService;
 import com.rany.cake.devops.base.service.code.gitlab.GitLabCodeService;
@@ -18,7 +20,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CodeFactory {
-    public BaseCodeService build(CodePlatformEnum codePlatform, String connectString, String token) {
+    public BaseCodeService build(CodePlatformEnum codePlatform, String connectString, String token,
+                                 AppExtend appExtend) {
         if (codePlatform == CodePlatformEnum.GITLAB) {
             return new GitLabCodeService(connectString, token);
         }
@@ -26,7 +29,8 @@ public class CodeFactory {
             return new GitHubCodeService(connectString, token);
         }
         if (codePlatform == CodePlatformEnum.CODE_UP) {
-            return new CodeUpCodeService(connectString, token);
+            CodeUpConfig codeUp = appExtend.getCodeUp();
+            return new CodeUpCodeService(codeUp.getDomain(), codeUp.getOrganizationId(), codeUp.getHeaderToken());
         }
         throw new DevOpsException(DevOpsErrorMessage.OPS_CONNECTED_ERROR);
     }

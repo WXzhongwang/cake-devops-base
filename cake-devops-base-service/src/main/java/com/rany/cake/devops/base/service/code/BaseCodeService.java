@@ -1,5 +1,7 @@
 package com.rany.cake.devops.base.service.code;
 
+import java.util.List;
+
 /**
  * 代码托管服务
  *
@@ -10,5 +12,7 @@ package com.rany.cake.devops.base.service.code;
  */
 public abstract class BaseCodeService {
 
-    public abstract Boolean createBranch(String repoUrl, String branchName, String ref);
+    public abstract Boolean createBranch(String repo, String branchName, String ref);
+
+    public abstract List<Branch> listBranch(String repo, String search, Integer pageNo, Integer pageSize);
 }

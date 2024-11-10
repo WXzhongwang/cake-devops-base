@@ -31,6 +31,7 @@ import com.rany.cake.devops.base.domain.service.AppDomainService;
 import com.rany.cake.devops.base.domain.service.AppMemberDomainService;
 import com.rany.cake.devops.base.domain.service.ClusterDomainService;
 import com.rany.cake.devops.base.domain.type.AppName;
+import com.rany.cake.devops.base.domain.valueobject.AppExtend;
 import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
 import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
@@ -52,6 +53,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.context.ApplicationContext;
@@ -97,6 +99,9 @@ public class AppRemoteService implements AppService {
                 EnumUtils.getEnum(CodeLanguageEnum.class, createAppCommand.getLanguage()),
                 EnumUtils.getEnum(DevelopMode.class, createAppCommand.getDevelopMode()));
         app.setWebhook(createAppCommand.getWebhook());
+        if (StringUtils.isNotEmpty(createAppCommand.getAppExtend())) {
+            app.setAppExtend(JSON.parseObject(createAppCommand.getAppExtend(), AppExtend.class));
+        }
         List<DepartmentConfig.Department> departments = departmentConfig.getDepartments();
         Optional<DepartmentConfig.Department> department = departments.stream().filter(p -> Objects.equals(p.getValue(), createAppCommand.getDepartment())).findFirst();
         if (!department.isPresent()) {
@@ -108,9 +113,6 @@ public class AppRemoteService implements AppService {
         app.setHealthCheck(createAppCommand.getHealthCheck());
 
         Set<String> accountIds = Sets.newHashSet(createAppCommand.getOwner());
-//        if (CollectionUtils.isNotEmpty(createAppCommand.getAppMembers())) {
-//            accountIds.addAll(createAppCommand.getAppMembers().stream().map(AppMemberDTO::getAccountId).collect(Collectors.toSet()));
-//        }
         List<Long> accountIdLongs = accountIds.stream().map(NumberUtils::toLong).collect(Collectors.toList());
         AccountQuery accountQuery = new AccountQuery();
         accountQuery.setAccountIds(accountIdLongs);

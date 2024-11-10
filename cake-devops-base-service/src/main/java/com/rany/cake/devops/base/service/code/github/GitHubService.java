@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.code.github;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.*;
@@ -10,16 +11,19 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
+@Slf4j
 public class GitHubService {
 
     private final String githubApiUrl;
     private final String githubApiToken;
     private final CloseableHttpClient httpClient;
+    private final String owner;
 
-    public GitHubService(String githubApiUrl, String githubApiToken) {
+    public GitHubService(String githubApiUrl, String githubApiToken, String owner) {
         this.githubApiUrl = githubApiUrl;
         this.githubApiToken = githubApiToken;
         this.httpClient = HttpClients.createDefault();
+        this.owner = owner;
     }
 
     private String sendRequest(String method, String endpoint, String payload) throws IOException {
@@ -60,29 +64,25 @@ public class GitHubService {
         return null;
     }
 
-    public String createRepository(String name, String description) throws IOException {
-        String payload = "{\"name\": \"" + name + "\", \"description\": \"" + description + "\"}";
-        return sendRequest("POST", "/user/repos", payload);
-    }
 
-    public String getRepository(String owner, String repo) throws IOException {
+    public String getRepository(String repo) throws IOException {
         return sendRequest("GET", "/repos/" + owner + "/" + repo, "");
     }
 
-    public String createBranch(String owner, String repo, String branch, String sha) throws IOException {
+    public String createBranch(String repo, String branch, String sha) throws IOException {
         String payload = "{\"ref\": \"refs/heads/" + branch + "\", \"sha\": \"" + sha + "\"}";
         return sendRequest("POST", "/repos/" + owner + "/" + repo + "/git/refs", payload);
     }
 
-    public String getBranch(String owner, String repo, String branch) throws IOException {
+    public String getBranch(String repo, String branch) throws IOException {
         return sendRequest("GET", "/repos/" + owner + "/" + repo + "/branches/" + branch, "");
     }
 
-    public String listBranches(String owner, String repo) throws IOException {
+    public String listBranches(String repo) throws IOException {
         return sendRequest("GET", "/repos/" + owner + "/" + repo + "/branches", "");
     }
 
-    public String createTag(String owner, String repo, String tag, String sha) throws IOException {
+    public String createTag(String repo, String tag, String sha) throws IOException {
         String payload = "{\"tag\": \"" + tag + "\", \"message\": \"Create tag\", \"object\": \"" + sha + "\", \"type\": \"commit\"}";
         return sendRequest("POST", "/repos/" + owner + "/" + repo + "/git/tags", payload);
     }

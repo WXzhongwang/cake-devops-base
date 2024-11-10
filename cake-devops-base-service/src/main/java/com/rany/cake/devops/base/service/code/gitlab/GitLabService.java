@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.service.code.gitlab;
 
-import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -66,14 +65,8 @@ public class GitLabService {
         return get(getProjectEndpoint);
     }
 
-    public Project getProject(String repoUrl) {
+    public Project getProject(String namespace, String projectName) {
         // 通过项目路径获取项目信息
-        String[] namespaceAndProject = RepoUrlUtils.extractRepoInfo(repoUrl);
-        if (namespaceAndProject == null) {
-            return null;
-        }
-        String namespace = namespaceAndProject[0];
-        String projectName = namespaceAndProject[1];
         try {
             return gitLabApi.getProjectApi().getProject(namespace, projectName);
         } catch (GitLabApiException e) {
@@ -82,15 +75,9 @@ public class GitLabService {
         }
     }
 
-//    public String createBranch(String projectId, String branchName, String ref) throws IOException {
-//        String createBranchEndpoint = "/projects/" + projectId + "/repository/branches";
-//        String payload = "{\"branch\": " + branchName + ", \"ref\": " + ref + "}";
-//        return post(createBranchEndpoint, payload);
-//    }
-
-    public Branch createBranch(String repoUrl, String branchName, String ref) {
+    public Branch createBranch(String repo, String branchName, String ref) {
         // 获取项目
-        Project project = this.getProject(repoUrl);
+        Project project = this.getProject(repo, branchName);
         try {
             project = gitLabApi.getProjectApi().getProject(project.getId());
             // 创建新分支
