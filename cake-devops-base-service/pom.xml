@@ -149,6 +149,13 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>devops20210625</artifactId>
+            <version>4.14.0</version>
+        </dependency>
+
     </dependencies>
 
 
