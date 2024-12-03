@@ -53,34 +53,6 @@ public class CodeUpService {
     }
 
     public Boolean createBranch(String repo, String branch, String ref) {
-//        // 构建请求URL
-//        String requestUrl = String.format("https://%s/oapi/v1/codeup/organizations/%s/repositories/%s/branches?branch=%s&ref=%s",
-//                domain, organizationId, URL.encode(repo), branch, ref);
-//
-//        // 构建请求体
-//        RequestBody body = RequestBody.create(MediaType.get("application/json"), "");
-//
-//        log.info("requestUrl:{}", requestUrl);
-//        // 构建请求
-//        Request request = new Request.Builder()
-//                .url(requestUrl)
-//                .post(body)
-//                .header("Content-Type", "application/json")
-//                .header("x-yunxiao-token", personalAccessToken)
-//                .build();
-//
-//        // 发送请求并处理响应
-//        try (Response response = client.newCall(request).execute()) {
-//            if (response.isSuccessful()) {
-//                log.info("创建分支成功");
-//                return true;
-//            } else {
-//                log.error("创建分支失败: {} {}", response.code(), response.message());
-//            }
-//        } catch (IOException e) {
-//            log.error("创建分支时发生错误", e);
-//        }
-//        return false;
         com.aliyun.devops20210625.models.CreateBranchRequest createBranchRequest = new com.aliyun.devops20210625.models.CreateBranchRequest()
                 .setBranchName(branch)
                 .setRef(ref)
