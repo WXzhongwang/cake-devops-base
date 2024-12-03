@@ -1,11 +1,14 @@
 package com.rany.cake.devops.base.service.code.codeup;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
+import okhttp3.ConnectionPool;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,22 +71,22 @@ public class CodeUpService {
     }
 
     public List<Branch> listBranches(String repo, Integer page, Integer perPage, String sort, String search) {
+
+        // 添加查询参数
         String requestUrl = String.format("https://%s/oapi/v1/codeup/organizations/%s/repositories/%s/branches",
-                domain, organizationId, repo);
-        // 构建请求体
-        JSONObject requestObject = new JSONObject();
-        requestObject.put("organizationId", organizationId);
-        requestObject.put("repositoryId", repo);
-        requestObject.put("page", page);
-        requestObject.put("perPage", perPage);
-        requestObject.put("sort", sort);
-        requestObject.put("search", search);
-        RequestBody body = RequestBody.create(MediaType.get("application/json"), requestObject.toString());
+                domain, organizationId, repo) + "?page=" + page +
+                "&perPage=" + perPage +
+                "&sort=" + sort;
+
+        if (StringUtils.isNotEmpty(search)) {
+            requestUrl += "&search=" + search;
+        }
+
 
         // 构建请求
         Request request = new Request.Builder()
                 .url(requestUrl)
-                .post(body)
+                .get()
                 .header("Content-Type", "application/json")
                 .header("x-yunxiao-token", personalAccessToken)
                 .build();

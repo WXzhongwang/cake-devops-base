@@ -17,9 +17,8 @@ export interface CreateAppPayload {
   departmentAbbreviation: string;
   department: string;
   healthCheck: string;
-  connectionString: string;
   codePlatform: string;
-  token: string;
+  appExtend: string;
 }
 
 export interface CreateAppEnvPayload {

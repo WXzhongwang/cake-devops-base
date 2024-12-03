@@ -34,7 +34,13 @@ public class CodeUpCodeService extends BaseCodeService {
     @Override
     public List<Branch> listBranch(String repo, String search, Integer pageNo, Integer pageSize) {
         List<Branch> branches = new ArrayList<>();
-        List<CodeUpService.Branch> searchBranches = codeUpService.listBranches(repo, pageNo, pageSize, "updated_at", search);
+        String[] repoParams = RepoUrlUtils.extractFromCodeUpSsh(repo);
+        StringJoiner stringJoiner = new StringJoiner("/", "", "");
+        for (String repoParam : repoParams) {
+            stringJoiner.add(repoParam);
+        }
+        String repoEncodeURL = URL.encode(stringJoiner.toString());
+        List<CodeUpService.Branch> searchBranches = codeUpService.listBranches(repoEncodeURL, pageNo, pageSize, "updated_at", search);
         for (CodeUpService.Branch branch : searchBranches) {
             log.info("branch: {}", branch);
             Branch updatedAt = new Branch();

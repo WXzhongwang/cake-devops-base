@@ -126,9 +126,10 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
           <Select placeholder="代码托管平台">
             <Option value="GITHUB">GITHUB</Option>
             <Option value="GITLAB">GITLAB</Option>
+            <Option value="CODEUP">CODEUP</Option>
           </Select>
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="connectionString"
           label="连接地址"
           rules={[{ required: true, message: "连接地址" }]}
@@ -141,7 +142,7 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
           rules={[{ required: true, message: "连接凭证" }]}
         >
           <Input.TextArea placeholder="请输入连接凭证" />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           name="language"
           label="开发语言"
@@ -151,7 +152,7 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
             <Option value="JAVA">Java</Option>
             <Option value="PYTHON">Python</Option>
             <Option value="GO">GO</Option>
-            {/* 其他语言选项 */}
+            <Option value="NodeJs">NodeJs</Option>
           </Select>
         </Form.Item>
         <Form.Item
@@ -159,7 +160,7 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
           label="健康检查地址"
           rules={[{ required: true, message: "请输入健康检查地址" }]}
         >
-          <Input placeholder="请输入健康检查地址" />
+          <Input placeholder="请输入健康检查地址 /ok" />
         </Form.Item>
         <Form.Item
           name="appExtend"
