@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.code.github;
 
+import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -17,13 +18,11 @@ public class GitHubService {
     private final String githubApiUrl;
     private final String githubApiToken;
     private final CloseableHttpClient httpClient;
-    private final String owner;
 
-    public GitHubService(String githubApiUrl, String githubApiToken, String owner) {
+    public GitHubService(String githubApiUrl, String githubApiToken) {
         this.githubApiUrl = githubApiUrl;
         this.githubApiToken = githubApiToken;
         this.httpClient = HttpClients.createDefault();
-        this.owner = owner;
     }
 
     private String sendRequest(String method, String endpoint, String payload) throws IOException {
@@ -66,25 +65,41 @@ public class GitHubService {
 
 
     public String getRepository(String repo) throws IOException {
-        return sendRequest("GET", "/repos/" + owner + "/" + repo, "");
+        String[] repoInfo = RepoUrlUtils.extractRepoInfo(repo);
+        String owner = repoInfo[0];
+        String repoName = repoInfo[1];
+        return sendRequest("GET", "/repos/" + owner + "/" + repoName, "");
     }
 
+
     public String createBranch(String repo, String branch, String sha) throws IOException {
+        String[] repoInfo = RepoUrlUtils.extractRepoInfo(repo);
+        String owner = repoInfo[0];
+        String repoName = repoInfo[1];
         String payload = "{\"ref\": \"refs/heads/" + branch + "\", \"sha\": \"" + sha + "\"}";
-        return sendRequest("POST", "/repos/" + owner + "/" + repo + "/git/refs", payload);
+        return sendRequest("POST", "/repos/" + owner + "/" + repoName + "/git/refs", payload);
     }
 
     public String getBranch(String repo, String branch) throws IOException {
-        return sendRequest("GET", "/repos/" + owner + "/" + repo + "/branches/" + branch, "");
+        String[] repoInfo = RepoUrlUtils.extractRepoInfo(repo);
+        String owner = repoInfo[0];
+        String repoName = repoInfo[1];
+        return sendRequest("GET", "/repos/" + owner + "/" + repoName + "/branches/" + branch, "");
     }
 
     public String listBranches(String repo) throws IOException {
-        return sendRequest("GET", "/repos/" + owner + "/" + repo + "/branches", "");
+        String[] repoInfo = RepoUrlUtils.extractRepoInfo(repo);
+        String owner = repoInfo[0];
+        String repoName = repoInfo[1];
+        return sendRequest("GET", "/repos/" + owner + "/" + repoName + "/branches", "");
     }
 
     public String createTag(String repo, String tag, String sha) throws IOException {
+        String[] repoInfo = RepoUrlUtils.extractRepoInfo(repo);
+        String owner = repoInfo[0];
+        String repoName = repoInfo[1];
         String payload = "{\"tag\": \"" + tag + "\", \"message\": \"Create tag\", \"object\": \"" + sha + "\", \"type\": \"commit\"}";
-        return sendRequest("POST", "/repos/" + owner + "/" + repo + "/git/tags", payload);
+        return sendRequest("POST", "/repos/" + owner + "/" + repoName + "/git/tags", payload);
     }
 }
 

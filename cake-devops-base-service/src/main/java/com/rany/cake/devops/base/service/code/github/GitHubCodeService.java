@@ -16,7 +16,7 @@ public class GitHubCodeService extends BaseCodeService {
     public GitHubCodeService(String gitHubApiUrl, String token) {
         String[] pair = RepoUrlUtils.extractRepoInfo(gitHubApiUrl);
         String owner = pair[0];
-        this.gitHubService = new GitHubService(gitHubApiUrl, token, owner);
+        this.gitHubService = new GitHubService(gitHubApiUrl, token);
     }
 
     @Override
@@ -25,7 +25,8 @@ public class GitHubCodeService extends BaseCodeService {
             String branch = gitHubService.createBranch(repo, branchName, ref);
             log.info("branch:{}", branch);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("Github 创建分支失败", e);
+            return false;
         }
         return true;
     }

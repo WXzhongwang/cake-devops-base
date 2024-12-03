@@ -19,4 +19,6 @@ public class AppExtend extends BaseValueObject {
 
     private CodeUpConfig codeUp;
 
+    private GitHubConfig git;
+    private GitLabConfig gitlab;
 }

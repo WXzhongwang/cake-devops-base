@@ -72,10 +72,17 @@ public class ClientTest {
 
     @Test
     public void testExtract() {
-        String repoUrl = "https://github.com/WXzhongwang/cake-ops.git";
-        String[] result = RepoUrlUtils.extractRepoInfo(repoUrl);
-        if (result.length == 0) {
-            System.out.println("Invalid GitHub URL");
+//        String repoUrl = "https://github.com/WXzhongwang/cake-ops.git";
+//        String[] result = RepoUrlUtils.extractRepoInfo(repoUrl);
+//        if (result.length == 0) {
+//            System.out.println("Invalid GitHub URL");
+//        }
+
+
+        String codeUpPath = "git@codeup.aliyun.com:66460922ced1b9e566e16df5/WXzhongwang/cake-devops-base.git";
+        String[] codeUpResult = RepoUrlUtils.extractRepoInfo(codeUpPath);
+        if (codeUpResult.length == 0) {
+            System.out.println("Invalid CodeUp URL");
         }
     }
 

@@ -49,15 +49,9 @@ public class CheckOutPlugin extends BasePlugin {
                 codeRepository.getConnectionString(),
                 codeRepository.getToken(),
                 appExtend);
-        String[] repos = RepoUrlUtils.extractRepoInfo(codeRepository.getRepo());
-        if (repos == null) {
-            log.error("Current code repo extract error");
-            return false;
-        }
         String serialNum = redisSerialNumberGenerator.generateSerialNumber(appName);
         String newReleaseBranchName = RepoUrlUtils.generateReleaseBranchName(serialNum);
-        String[] pair = RepoUrlUtils.extractRepoInfo(codeRepository.getRepo());
-        Boolean success = codeService.createBranch(pair[0], pair[1], ref);
+        Boolean success = codeService.createBranch(codeRepository.getRepo(), newReleaseBranchName, ref);
         if (BooleanUtils.isNotTrue(success)) {
             log.error("Create new branch failed, {}", newReleaseBranchName);
             return false;

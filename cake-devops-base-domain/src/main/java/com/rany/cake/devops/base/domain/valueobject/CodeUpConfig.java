@@ -20,4 +20,8 @@ public class CodeUpConfig {
      * x-yunxiao-token
      */
     private String headerToken;
+
+    private String accessKeyId;
+
+    private String accessKeySecret;
 }

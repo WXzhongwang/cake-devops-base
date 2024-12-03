@@ -4,6 +4,8 @@ import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
 import com.rany.cake.devops.base.domain.valueobject.AppExtend;
 import com.rany.cake.devops.base.domain.valueobject.CodeUpConfig;
+import com.rany.cake.devops.base.domain.valueobject.GitHubConfig;
+import com.rany.cake.devops.base.domain.valueobject.GitLabConfig;
 import com.rany.cake.devops.base.service.code.codeup.CodeUpCodeService;
 import com.rany.cake.devops.base.service.code.github.GitHubCodeService;
 import com.rany.cake.devops.base.service.code.gitlab.GitLabCodeService;
@@ -23,14 +25,17 @@ public class CodeFactory {
     public BaseCodeService build(CodePlatformEnum codePlatform, String connectString, String token,
                                  AppExtend appExtend) {
         if (codePlatform == CodePlatformEnum.GITLAB) {
-            return new GitLabCodeService(connectString, token);
+            GitLabConfig gitlab = appExtend.getGitlab();
+            return new GitLabCodeService(gitlab.getDomain(), gitlab.getToken());
         }
         if (codePlatform == CodePlatformEnum.GITHUB) {
-            return new GitHubCodeService(connectString, token);
+            GitHubConfig git = appExtend.getGit();
+            return new GitHubCodeService(git.getDomain(), git.getToken());
         }
         if (codePlatform == CodePlatformEnum.CODE_UP) {
             CodeUpConfig codeUp = appExtend.getCodeUp();
-            return new CodeUpCodeService(codeUp.getDomain(), codeUp.getOrganizationId(), codeUp.getHeaderToken());
+            return new CodeUpCodeService(codeUp.getDomain(), codeUp.getOrganizationId(), codeUp.getHeaderToken(),
+                    codeUp.getAccessKeyId(), codeUp.getAccessKeySecret());
         }
         throw new DevOpsException(DevOpsErrorMessage.OPS_CONNECTED_ERROR);
     }

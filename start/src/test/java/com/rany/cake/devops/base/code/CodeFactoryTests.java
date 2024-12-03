@@ -29,10 +29,9 @@ public class CodeFactoryTests extends BaseTests {
         // git@codeup.aliyun.com:66460922ced1b9e566e16df5/WXzhongwang/cake-devops-base.git
 
         // URL-Encoder 编码的全路径
-        String url = "git@codeup.aliyun.com:66460922ced1b9e566e16df5/WXzhongwang/cake-devops-base.git";
         String repo = app.getCodeRepository().getRepo();
-        String encodeURL = URL.encode(repo);
-        Boolean branch = codeService.createBranch(URL.encode("WXzhongwang/cake-devops-base"), "code-support", "main");
+        String encodeURL = URL.encode("66460922ced1b9e566e16df5/WXzhongwang/cake-devops-base");
+        Boolean branch = codeService.createBranch(encodeURL, "code-support", "main");
         Assert.assertTrue(branch);
     }
 }
