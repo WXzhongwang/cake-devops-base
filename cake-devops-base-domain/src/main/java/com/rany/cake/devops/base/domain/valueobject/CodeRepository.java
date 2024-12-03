@@ -34,14 +34,6 @@ public class CodeRepository extends BaseValueObject {
      * 代码平台
      */
     private String codePlatform;
-    /**
-     * 连接字符串
-     */
-    private String connectionString;
-    /**
-     * 凭证token
-     */
-    private String token;
 
     public CodePlatformEnum of() {
         if (StringUtils.equals(codePlatform, CodePlatformEnum.GITHUB.getValue())) {
@@ -49,6 +41,9 @@ public class CodeRepository extends BaseValueObject {
         }
         if (StringUtils.equals(codePlatform, CodePlatformEnum.GITLAB.getValue())) {
             return CodePlatformEnum.GITLAB;
+        }
+        if (StringUtils.equals(codePlatform, CodePlatformEnum.CODE_UP.getValue())) {
+            return CodePlatformEnum.CODE_UP;
         }
         throw new UnsupportedOperationException("不支持的代码平台");
     }

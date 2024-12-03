@@ -46,8 +46,6 @@ public class CheckOutPlugin extends BasePlugin {
         String ref = StringUtils.isNotEmpty(release.getReleaseBranch()) ? release.getReleaseBranch() : release.getReleaseCommitId();
         log.info("Current code repo:{}, default branch:{}", codeRepository.getRepo(), codeRepository.getDefaultBranch());
         BaseCodeService codeService = codeFactory.build(codeRepository.of(),
-                codeRepository.getConnectionString(),
-                codeRepository.getToken(),
                 appExtend);
         String serialNum = redisSerialNumberGenerator.generateSerialNumber(appName);
         String newReleaseBranchName = RepoUrlUtils.generateReleaseBranchName(serialNum);

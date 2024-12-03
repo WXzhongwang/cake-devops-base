@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CodeFactory {
-    public BaseCodeService build(CodePlatformEnum codePlatform, String connectString, String token,
+    public BaseCodeService build(CodePlatformEnum codePlatform,
                                  AppExtend appExtend) {
         if (codePlatform == CodePlatformEnum.GITLAB) {
             GitLabConfig gitlab = appExtend.getGitlab();

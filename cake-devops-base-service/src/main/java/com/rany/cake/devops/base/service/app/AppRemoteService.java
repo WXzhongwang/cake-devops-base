@@ -95,7 +95,7 @@ public class AppRemoteService implements AppService {
                 createAppCommand.getOwner(),
                 createAppCommand.getDescription(),
                 new CodeRepository(createAppCommand.getRepo(), createAppCommand.getDefaultBranch(),
-                        createAppCommand.getCodePlatform(), createAppCommand.getConnectionString(), createAppCommand.getToken()),
+                        createAppCommand.getCodePlatform()),
                 EnumUtils.getEnum(CodeLanguageEnum.class, createAppCommand.getLanguage()),
                 EnumUtils.getEnum(DevelopMode.class, createAppCommand.getDevelopMode()));
         app.setWebhook(createAppCommand.getWebhook());
