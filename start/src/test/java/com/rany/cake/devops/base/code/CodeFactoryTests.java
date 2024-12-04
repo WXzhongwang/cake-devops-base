@@ -1,12 +1,12 @@
 package com.rany.cake.devops.base.code;
 
 import com.rany.cake.devops.base.BaseTests;
+import com.rany.cake.devops.base.api.dto.code.Branch;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
 import com.rany.cake.devops.base.domain.valueobject.AppExtend;
 import com.rany.cake.devops.base.service.code.BaseCodeService;
-import com.rany.cake.devops.base.service.code.Branch;
 import com.rany.cake.devops.base.service.code.CodeFactory;
 import com.rany.cake.devops.base.util.enums.CodePlatformEnum;
 import org.junit.Assert;

@@ -34,7 +34,7 @@ public class CodeFactory {
         }
         if (codePlatform == CodePlatformEnum.CODE_UP) {
             CodeUpConfig codeUp = appExtend.getCodeUp();
-            return new CodeUpCodeService(codeUp.getDomain(), codeUp.getOrganizationId(), codeUp.getHeaderToken(),
+            return new CodeUpCodeService(codeUp.getOrganizationId(), codeUp.getHeaderToken(),
                     codeUp.getAccessKeyId(), codeUp.getAccessKeySecret());
         }
         throw new DevOpsException(DevOpsErrorMessage.OPS_CONNECTED_ERROR);

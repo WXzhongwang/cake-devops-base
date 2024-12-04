@@ -22,7 +22,7 @@ public class GitLabCodeService extends BaseCodeService {
     }
 
     @Override
-    public List<com.rany.cake.devops.base.service.code.Branch> listBranch(String repo, String search, Integer pageNo, Integer pageSize) {
+    public List<com.rany.cake.devops.base.api.dto.code.Branch> listBranch(String repo, String search, Integer pageNo, Integer pageSize) {
         return null;
     }
 }

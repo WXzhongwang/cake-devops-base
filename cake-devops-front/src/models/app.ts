@@ -26,6 +26,11 @@ export interface CreateAppEnvPayload {
   env: AppEnv;
 }
 
+export interface ListAppBranchPayload {
+  appId: string;
+  search: string;
+}
+
 export interface ModifyAppEnvVarsPayload {
   envId: string;
   envVars: Record<string, string> | null;
@@ -100,6 +105,11 @@ export interface Department {
   abbr: string;
 }
 
+export interface BranchInfo {
+  name: string;
+  protectBranch: boolean;
+}
+
 export interface AppEnv {
   envId: string | null;
   appId: string | null;
@@ -171,6 +181,11 @@ export interface AppState {
 interface CreateAppAction extends BaseAction {
   type: "app/createApp";
   payload: CreateAppPayload;
+}
+
+interface ListAppBranchAction extends BaseAction {
+  type: "app/listBranch";
+  payload: ListAppBranchPayload;
 }
 
 interface CreateAppEnvAction extends BaseAction {
@@ -259,6 +274,7 @@ export interface AppModelType {
     modifyAppResources: Effect;
     listAppPods: Effect;
     scale: Effect;
+    listAppBranch: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
@@ -301,7 +317,6 @@ const AppModel: AppModelType = {
     },
     *createApp({ payload, callback }: CreateAppAction, { call, put }) {
       const response = yield call(appService.createApp, payload);
-      // yield put({ type: "getAppList" });
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
@@ -311,7 +326,17 @@ const AppModel: AppModelType = {
         message.error(msg);
       }
     },
-
+    *listAppBrach({ payload, callback }: ListAppBranchAction, { call, put }) {
+      const response = yield call(appService.listAppBranch, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
+    },
     *updateMember({ payload, callback }: UpdateMemberAction, { call, put }) {
       const response = yield call(appService.updateMember, payload);
       const { success, msg } = response;

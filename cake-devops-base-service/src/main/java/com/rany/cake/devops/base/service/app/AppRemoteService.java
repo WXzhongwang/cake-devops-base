@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.rany.cake.devops.base.api.command.app.*;
 import com.rany.cake.devops.base.api.dto.*;
+import com.rany.cake.devops.base.api.dto.code.Branch;
 import com.rany.cake.devops.base.api.exception.DevOpsErrorMessage;
 import com.rany.cake.devops.base.api.exception.DevOpsException;
 import com.rany.cake.devops.base.api.query.app.*;
@@ -40,6 +41,8 @@ import com.rany.cake.devops.base.service.adapter.AppDataAdapter;
 import com.rany.cake.devops.base.service.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.cloud.CloudFactory;
 import com.rany.cake.devops.base.service.cloud.dto.*;
+import com.rany.cake.devops.base.service.code.BaseCodeService;
+import com.rany.cake.devops.base.service.code.CodeFactory;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.util.enums.AppEnvEnum;
 import com.rany.cake.devops.base.util.enums.AppRoleEnum;
@@ -58,7 +61,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.context.ApplicationContext;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -85,8 +87,8 @@ public class AppRemoteService implements AppService {
     private final AppDataAdapter appDataAdapter;
     private final DepartmentConfig departmentConfig;
     private final ApplicationContext applicationContext;
-    @Resource
-    private CloudFactory cloudFactory;
+    private final CodeFactory codeFactory;
+    private final CloudFactory cloudFactory;
 
     @Override
     public String createApp(CreateAppCommand createAppCommand) {
@@ -524,5 +526,17 @@ public class AppRemoteService implements AppService {
                     .setAbbr(department.getAbbr()));
         }
         return departmentDTOS;
+    }
+
+    @Override
+    public List<Branch> listAppBranch(String appId, String search) {
+        App app = appDomainService.getApp(new AppId(appId));
+        if (app == null) {
+            throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
+        }
+        CodeRepository codeRepository = app.getCodeRepository();
+        AppExtend appExtend = app.getAppExtend();
+        BaseCodeService codeService = codeFactory.build(codeRepository.of(), appExtend);
+        return codeService.listBranch(codeRepository.getRepo(), search, 1, 100);
     }
 }

@@ -30,7 +30,13 @@ import {
   Tabs,
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
-import { AppEnv, AppInfo, PodDTO, ResourceStrategyDTO } from "@/models/app";
+import {
+  AppEnv,
+  AppInfo,
+  BranchInfo,
+  PodDTO,
+  ResourceStrategyDTO,
+} from "@/models/app";
 import {
   DeployHistoryDTO,
   DeployLogDTO,
@@ -152,6 +158,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   const [form] = Form.useForm();
   const [pods, setPods] = useState<PodDTO[]>([]);
   const [deployHistoryLogs, setDeployHistoryLog] = useState<DeployLogDTO[]>([]);
+  const [branches, setBranches] = useState<BranchInfo[]>([]);
 
   // 配置项数据
   const [configMapData, setConfigMapData] = useState<
@@ -341,6 +348,19 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     });
   };
 
+  const listAppBranch = (search: string) => {
+    dispatch({
+      type: "app/listBranch",
+      payload: {
+        appId: appDetail.appId,
+        search: search,
+      },
+      callback: (content: BranchInfo[]) => {
+        setBranches(content);
+      },
+    });
+  };
+
   const pageRelease = useCallback(() => {
     if (selectedEnvironment) {
       console.log("开始调用环境信息", selectedEnvironment);
@@ -493,6 +513,9 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   };
 
   const handleCreateReleaseDrawer = () => {
+    if (drawerVisible) {
+      listAppBranch("");
+    }
     setDrawerVisible(!drawerVisible);
   };
 

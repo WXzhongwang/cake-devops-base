@@ -8,6 +8,7 @@ import {
   UpdateAppMemberPayload,
   DeleteAppMemberPayload,
   AddAppMemberPayload,
+  ListAppBranchPayload,
 } from "@/models/app";
 export async function pageAppList(data: QueryAppPayload) {
   return request("/api/devops/app/page", {
@@ -54,6 +55,12 @@ export async function createAppEnv(data: CreateAppEnvPayload) {
 
 export async function getAppDetail(id: number) {
   return request(`/api/devops/app/get?id=${id}`);
+}
+
+export async function listAppBranch(data: ListAppBranchPayload) {
+  return request(
+    `/api/devops/app/list-branch?appId=${data.appId}&search=${data.search}`
+  );
 }
 
 export async function modifyAppEnvConfigMap(data: any) {

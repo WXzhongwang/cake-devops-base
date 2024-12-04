@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.code.github;
 
+import com.rany.cake.devops.base.api.dto.code.Branch;
 import com.rany.cake.devops.base.service.code.BaseCodeService;
-import com.rany.cake.devops.base.service.code.Branch;
 import com.rany.cake.devops.base.service.code.RepoUrlUtils;
 import lombok.extern.slf4j.Slf4j;
 

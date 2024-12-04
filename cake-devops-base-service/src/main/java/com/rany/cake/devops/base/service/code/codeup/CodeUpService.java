@@ -1,44 +1,27 @@
 package com.rany.cake.devops.base.service.code.codeup;
 
-import com.alibaba.fastjson.JSON;
+import com.aliyun.devops20210625.models.*;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.ConnectionPool;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class CodeUpService {
 
-    private final String domain;
     private final String organizationId;
     private final String personalAccessToken;
-    private final OkHttpClient client;
-
     private final com.aliyun.devops20210625.Client devopsClient;
 
     @SneakyThrows
-    public CodeUpService(String domain, String organizationId, String personalAccessToken,
+    public CodeUpService(String organizationId, String personalAccessToken,
                          String accessKeyId, String accessKeySecret) {
-        this.domain = domain;
         this.organizationId = organizationId;
         this.personalAccessToken = personalAccessToken;
 
-        // 配置连接池化的OkHttpClient
-        ConnectionPool connectionPool = new ConnectionPool(5, 5, TimeUnit.MINUTES);
-        this.client = new OkHttpClient.Builder()
-                .connectionPool(connectionPool)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .build();
         com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config()
                 // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID。
                 .setAccessKeyId(accessKeyId)
@@ -59,8 +42,7 @@ public class CodeUpService {
         java.util.Map<String, String> headers = new java.util.HashMap<>();
         try {
             // 复制代码运行请自行打印 API 的返回值
-            devopsClient.createBranchWithOptions(repo,
-                    createBranchRequest, headers, runtime);
+            devopsClient.createBranchWithOptions(repo, createBranchRequest, headers, runtime);
         } catch (Exception error) {
             // 此处仅做打印展示，请谨慎对待异常处理，在工程项目中切勿直接忽略异常。
             // 错误 message
@@ -71,38 +53,51 @@ public class CodeUpService {
     }
 
     public List<Branch> listBranches(String repo, Integer page, Integer perPage, String sort, String search) {
-
-        // 添加查询参数
-        String requestUrl = String.format("https://%s/oapi/v1/codeup/organizations/%s/repositories/%s/branches",
-                domain, organizationId, repo) + "?page=" + page +
-                "&perPage=" + perPage +
-                "&sort=" + sort;
-
-        if (StringUtils.isNotEmpty(search)) {
-            requestUrl += "&search=" + search;
-        }
-
-
-        // 构建请求
-        Request request = new Request.Builder()
-                .url(requestUrl)
-                .get()
-                .header("Content-Type", "application/json")
-                .header("x-yunxiao-token", personalAccessToken)
-                .build();
-
-        // 发送请求并处理响应
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                List<Branch> branches = JSON.parseArray(responseBody, Branch.class);
-                log.info("获取分支列表成功");
-                return branches;
+        ListRepositoryBranchesRequest request = new ListRepositoryBranchesRequest()
+                .setOrganizationId(organizationId)
+                .setAccessToken(personalAccessToken)
+                .setPage((long) page)
+                .setPageSize((long) perPage)
+                .setSearch(search)
+                .setSort(sort);
+        try {
+            ListRepositoryBranchesResponse response = devopsClient.listRepositoryBranches(repo, request);
+            ListRepositoryBranchesResponseBody body = response.body;
+            List<Branch> branches = new ArrayList<>();
+            List<ListRepositoryBranchesResponseBody.ListRepositoryBranchesResponseBodyResult> result = body.result;
+            for (ListRepositoryBranchesResponseBody.ListRepositoryBranchesResponseBodyResult item : result) {
+                log.info("Branch: {}", item.name);
+                Branch element = new Branch();
+                element.setName(item.name);
+                element.setDefaultBranch(BooleanUtils.toBooleanObject(item._protected));
+                branches.add(element);
             }
-        } catch (IOException e) {
-            log.error("获取分支列表时发生错误", e);
+            return branches;
+        } catch (Exception error) {
+            // 此处仅做打印展示，请谨慎对待异常处理，在工程项目中切勿直接忽略异常。
+            // 错误 message
+            log.error(error.getMessage(), error);
         }
         return new ArrayList<>();
+    }
+
+
+    public Long getRepositoryId(String repo) {
+        try {
+            GetRepositoryRequest request = new GetRepositoryRequest()
+                    .setAccessToken(personalAccessToken)
+                    .setIdentity(repo)
+                    .setOrganizationId(organizationId);
+            GetRepositoryResponse repository = devopsClient.getRepository(request);
+            GetRepositoryResponseBody body = repository.body;
+            GetRepositoryResponseBody.GetRepositoryResponseBodyRepository repositoryInfo = body.getRepository();
+            return repositoryInfo.getId();
+        } catch (Exception error) {
+            // 此处仅做打印展示，请谨慎对待异常处理，在工程项目中切勿直接忽略异常。
+            // 错误 message
+            log.error(error.getMessage(), error);
+        }
+        return null;
     }
 
     @Data

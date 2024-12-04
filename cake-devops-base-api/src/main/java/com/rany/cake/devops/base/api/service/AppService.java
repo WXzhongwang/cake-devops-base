@@ -6,6 +6,7 @@ import com.rany.cake.devops.base.api.dto.AppDTO;
 import com.rany.cake.devops.base.api.dto.AppEnvDTO;
 import com.rany.cake.devops.base.api.dto.DepartmentDTO;
 import com.rany.cake.devops.base.api.dto.PodDTO;
+import com.rany.cake.devops.base.api.dto.code.Branch;
 import com.rany.cake.devops.base.api.query.app.*;
 
 import java.util.List;
@@ -143,5 +144,12 @@ public interface AppService {
      * @return 团队列表
      */
     List<DepartmentDTO> listDepartments();
+
+    /**
+     * 获取应用分支
+     *
+     * @return 分支列表
+     */
+    List<Branch> listAppBranch(String appId, String search);
 
 }

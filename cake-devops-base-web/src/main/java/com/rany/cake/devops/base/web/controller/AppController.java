@@ -8,6 +8,7 @@ import com.rany.cake.devops.base.api.command.member.AddAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.UpdateAppMemberCommand;
 import com.rany.cake.devops.base.api.dto.*;
+import com.rany.cake.devops.base.api.dto.code.Branch;
 import com.rany.cake.devops.base.api.query.app.*;
 import com.rany.cake.devops.base.api.service.AppMemberService;
 import com.rany.cake.devops.base.api.service.AppService;
@@ -89,6 +90,12 @@ public class AppController {
     public ListResult<AppEnvDTO> listAppEnv(@RequestBody AppEnvQuery appEnvQuery) {
         return ListResult.succeed(appService.listAppEnv(appEnvQuery));
     }
+
+    @GetMapping("/list-branch")
+    public ListResult<Branch> listAppEnv(@RequestParam("appId") String appId, @RequestParam("search") String search) {
+        return ListResult.succeed(appService.listAppBranch(appId, search));
+    }
+
 
     @GetMapping("/departments")
     public ListResult<DepartmentDTO> getDepartments() {
