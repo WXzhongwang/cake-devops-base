@@ -27,6 +27,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+/**
+ * @author zhongshengwang
+ */
 @RestController
 @RequestMapping("/api/devops/sftp")
 public class SftpController {

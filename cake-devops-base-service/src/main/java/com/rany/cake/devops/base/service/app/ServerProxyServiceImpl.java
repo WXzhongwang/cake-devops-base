@@ -34,9 +34,8 @@ import java.util.List;
  */
 @Service
 @Slf4j
-//@ShenyuService("/server-proxy/**")
 @AllArgsConstructor
-public class ServerProxyRemoteService implements ServerProxyService {
+public class ServerProxyServiceImpl implements ServerProxyService {
 
     private ServerProxyRepository serverProxyRepository;
     private ServerProxyDataAdapter serverProxyDataAdapter;

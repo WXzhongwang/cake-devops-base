@@ -15,6 +15,8 @@ import javax.annotation.Resource;
 
 /**
  * 代理配置
+ *
+ * @author zhongshengwang
  */
 @RestController
 @RequestMapping("/api/devops/proxy")

@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * 监控endpoint
+ *
+ * @author zhongshengwang
+ */
 @RestController
 @RequestMapping("/api/devops/host-monitor/endpoint")
 public class HostMonitorEndpointController {

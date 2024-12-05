@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author zhongshengwang
+ */
 @RestController
 @RequestMapping("/api/devops/user")
 public class UserController {

@@ -23,11 +23,13 @@ import org.apache.dubbo.config.annotation.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-//@ShenyuService("/host-alarm-config/**")
 @Slf4j
 @AllArgsConstructor
-public class HostAlarmConfigRemoteService implements HostAlarmConfigService {
+public class HostAlarmConfigServiceImpl implements HostAlarmConfigService {
 
     private final HostAlarmConfigRepository hostAlarmConfigRepository;
     private final HostAlarmConfigDataAdapter hostAlarmConfigDataAdapter;

@@ -55,10 +55,9 @@ import java.util.stream.Collectors;
  * @email 18668485565163.com
  */
 @Service
-//@ShenyuService("/host-monitor/**")
 @Slf4j
 @AllArgsConstructor
-public class HostMonitorRemoteService implements HostMonitorService {
+public class HostMonitorServiceImpl implements HostMonitorService {
 
     private final HostMonitorRepository hostMonitorRepository;
     private final HostRepository hostRepository;

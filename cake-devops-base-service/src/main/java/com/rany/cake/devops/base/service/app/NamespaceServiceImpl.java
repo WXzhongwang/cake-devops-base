@@ -30,10 +30,9 @@ import java.util.List;
  * @email 18668485565163.com
  */
 @Service
-//@ShenyuService("/namespace/**")
 @Slf4j
 @AllArgsConstructor
-public class NamespaceRemoteService implements NamespaceService {
+public class NamespaceServiceImpl implements NamespaceService {
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final ClusterDomainService clusterDomainService;
     private final NamespaceDomainService namespaceDomainService;

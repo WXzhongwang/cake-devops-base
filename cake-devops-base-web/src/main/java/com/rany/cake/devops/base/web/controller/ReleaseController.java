@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * 发布管理
+ *
+ * @author zhongshengwang
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/devops/release")

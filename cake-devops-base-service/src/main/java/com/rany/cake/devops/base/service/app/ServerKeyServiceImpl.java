@@ -8,7 +8,6 @@ import com.rany.cake.devops.base.api.dto.ServerKeyDTO;
 import com.rany.cake.devops.base.api.query.key.ServerKeyBasicQuery;
 import com.rany.cake.devops.base.api.query.key.ServerKeyPageQuery;
 import com.rany.cake.devops.base.api.service.ServerKeyService;
-import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.entity.ServerKey;
 import com.rany.cake.devops.base.domain.repository.param.ServerKeyQueryParam;
 import com.rany.cake.devops.base.domain.service.ServerKeyDomainService;
@@ -31,10 +30,8 @@ import java.util.List;
  */
 @Service
 @Slf4j
-//@ShenyuService("/server-key/**")
 @AllArgsConstructor
-public class ServerKeyRemoteService implements ServerKeyService {
-    private final SnowflakeIdWorker snowflakeIdWorker;
+public class ServerKeyServiceImpl implements ServerKeyService {
     private final ServerKeyDomainService serverKeyDomainService;
     private final ServerKeyDataAdapter serverKeyDataAdapter;
 

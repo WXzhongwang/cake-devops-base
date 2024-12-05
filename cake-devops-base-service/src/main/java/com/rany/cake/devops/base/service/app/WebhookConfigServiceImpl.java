@@ -24,14 +24,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-//@ShenyuService("/webhook-config/**")
 @Slf4j
 @AllArgsConstructor
-public class WebhookConfigRemoteService implements WebhookConfigService {
+public class WebhookConfigServiceImpl implements WebhookConfigService {
 
-    private WebhookConfigRepository webhookConfigRepository;
-    private WebhookDataAdapter webhookDataAdapter;
+    private final WebhookConfigRepository webhookConfigRepository;
+    private final WebhookDataAdapter webhookDataAdapter;
 
     @Override
     public String createWebhook(CreateWebhookCommand command) {

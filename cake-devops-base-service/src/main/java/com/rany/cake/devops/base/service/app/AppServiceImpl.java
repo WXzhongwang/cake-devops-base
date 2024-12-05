@@ -29,7 +29,6 @@ import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
 import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
-import com.rany.cake.devops.base.domain.service.AppMemberDomainService;
 import com.rany.cake.devops.base.domain.service.ClusterDomainService;
 import com.rany.cake.devops.base.domain.type.AppName;
 import com.rany.cake.devops.base.domain.valueobject.AppExtend;
@@ -74,13 +73,11 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-// @ShenyuService("/app/**")
 @AllArgsConstructor
-public class AppRemoteService implements AppService {
+public class AppServiceImpl implements AppService {
     private final AppConfig tenantConfig;
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final AccountFacade accountFacade;
-    private final AppMemberDomainService appMemberDomainService;
     private final AppDomainService appDomainService;
     private final ClusterDomainService clusterDomainService;
     private final NameSpaceRepository nameSpaceRepository;

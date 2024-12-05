@@ -29,10 +29,9 @@ import java.util.List;
  * @email 18668485565163.com
  */
 @Service
-//@ShenyuService("/host-group/**")
 @Slf4j
 @AllArgsConstructor
-public class HostGroupRemoteService implements HostGroupService {
+public class HostGroupServiceImpl implements HostGroupService {
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final HostGroupDomainService hostGroupDomainService;
     private final HostGroupDataAdapter hostGroupDataAdapter;

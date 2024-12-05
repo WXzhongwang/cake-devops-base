@@ -48,10 +48,9 @@ import java.util.stream.Collectors;
  * @email 18668485565163.com
  */
 @Service
-//@ShenyuService("/host/**")
 @Slf4j
 @AllArgsConstructor
-public class HostRemoteService implements HostService {
+public class HostServiceImpl implements HostService {
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final HostDomainService hostDomainService;
     private final HostDataAdapter hostDataAdapter;

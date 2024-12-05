@@ -27,13 +27,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-//@ShenyuService("/host-env/**")
 @Slf4j
 @AllArgsConstructor
-public class HostEnvRemoteService implements HostEnvService {
-    private HostEnvRepository hostEnvRepository;
-    private HostEnvDataAdapter hostEnvDataAdapter;
+public class HostEnvServiceImpl implements HostEnvService {
+    private final HostEnvRepository hostEnvRepository;
+    private final HostEnvDataAdapter hostEnvDataAdapter;
 
     @Override
     public String createHostEnv(CreateHostEnvCommand command) {

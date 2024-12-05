@@ -40,11 +40,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 主机终端配置
+ *
+ * @author zhongshengwang
+ */
 @Service
-//@ShenyuService("/host/terminal/**")
 @Slf4j
 @AllArgsConstructor
-public class HostTerminalConfigRemoteService implements HostTerminalConfigService {
+public class HostTerminalConfigServiceImpl implements HostTerminalConfigService {
 
     @Resource
     private RedisTemplate<String, String> redisTemplate;

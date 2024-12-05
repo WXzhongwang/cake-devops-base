@@ -24,11 +24,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-//@ShenyuService("/host-env/**")
 @Slf4j
 @AllArgsConstructor
-public class SystemEnvRemoteService implements SystemEnvService {
+public class SystemEnvServiceImpl implements SystemEnvService {
     private SystemEnvRepository systemEnvRepository;
     private SystemEnvDataAdapter systemEnvDataAdapter;
 

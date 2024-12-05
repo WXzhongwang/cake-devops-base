@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 /**
- * 应用
+ * 机组
+ *
+ * @author zhongshengwang
  */
 @RestController
 @RequestMapping("/api/devops/host-group")

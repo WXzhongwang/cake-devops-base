@@ -15,6 +15,8 @@ import javax.annotation.Resource;
 
 /**
  * script 配置
+ *
+ * @author zhongshengwang
  */
 @RestController
 @RequestMapping("/api/devops/script-template")

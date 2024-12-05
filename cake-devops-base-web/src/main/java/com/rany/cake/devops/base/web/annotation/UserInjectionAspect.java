@@ -14,9 +14,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
+/**
+ * @author zhongshengwang
+ */
 @Aspect
 @Component
 public class UserInjectionAspect {
+
     @Before("execution(* com.rany.cake.devops.base.web.controller.*Controller.*(..))")
     public void injectUserIntoBaseCommand(JoinPoint joinPoint) {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();

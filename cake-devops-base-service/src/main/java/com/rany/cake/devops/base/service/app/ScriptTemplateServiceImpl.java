@@ -23,11 +23,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-//@ShenyuService("/script-template/**")
 @Slf4j
 @AllArgsConstructor
-public class ScriptTemplateRemoteService implements ScriptTemplateService {
+public class ScriptTemplateServiceImpl implements ScriptTemplateService {
 
     private ScriptTemplateRepository scriptTemplateRepository;
     private ScriptTemplateDataAdapter scriptTemplateDataAdapter;

@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * @author zhongshengwang
+ */
 @RestController
 @RequestMapping("/api/devops/server-key")
 public class ServerKeyController {

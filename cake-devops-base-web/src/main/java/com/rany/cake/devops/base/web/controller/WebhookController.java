@@ -15,6 +15,8 @@ import javax.annotation.Resource;
 
 /**
  * webhook 配置
+ *
+ * @author zhongshengwang
  */
 @RestController
 @RequestMapping("/api/devops/webhook")

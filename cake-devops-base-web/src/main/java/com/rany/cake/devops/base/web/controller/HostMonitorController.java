@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * 主机监控
+ *
+ * @author zhongshengwang
+ */
 @RestController
 @RequestMapping("/api/devops/host-monitor")
 public class HostMonitorController {

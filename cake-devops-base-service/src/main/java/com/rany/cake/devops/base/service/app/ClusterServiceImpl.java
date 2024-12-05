@@ -29,12 +29,10 @@ import java.util.List;
  * @email 18668485565163.com
  */
 @Service
-// @ShenyuService("/cluster/**")
 @Slf4j
 @AllArgsConstructor
-public class ClusterRemoteService implements ClusterService {
+public class ClusterServiceImpl implements ClusterService {
     private final SnowflakeIdWorker idGenerator;
-
     private final ClusterDomainService clusterDomainService;
     private final ClusterDataAdapter clusterDataAdapter;
 
@@ -44,7 +42,6 @@ public class ClusterRemoteService implements ClusterService {
         if (clusterTypeEnum == null) {
             throw new DevOpsException(DevOpsErrorMessage.OPS_SUPPORTED_ERROR);
         }
-        // TODO: 缺少实现
         return Boolean.TRUE;
     }
 

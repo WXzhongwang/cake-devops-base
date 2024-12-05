@@ -20,19 +20,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-//@ShenyuService("/web-side-message/**")
 @Slf4j
 @AllArgsConstructor
-public class WebSideMessageRemoteService implements WebSideMessageService {
+public class WebSideMessageServiceImpl implements WebSideMessageService {
 
     private final WebSideMessageRepository webSideMessageRepository;
     private final WebSideMessageDataAdapter webSideMessageDataAdapter;
 
     @Override
     public Integer getUnreadCount(Long userId) {
-        Integer unreadCount = webSideMessageRepository.getUnreadCount(userId);
-        return unreadCount;
+        return webSideMessageRepository.getUnreadCount(userId);
     }
 
     @Override

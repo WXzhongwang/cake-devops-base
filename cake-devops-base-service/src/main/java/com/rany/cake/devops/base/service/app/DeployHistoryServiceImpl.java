@@ -13,7 +13,6 @@ import com.rany.cake.devops.base.domain.entity.DeployHistory;
 import com.rany.cake.devops.base.domain.repository.DeployHistoryRepository;
 import com.rany.cake.devops.base.domain.repository.param.DeployHistoryPageParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
-import com.rany.cake.devops.base.service.adapter.AppMemberAdapter;
 import com.rany.cake.devops.base.service.adapter.DeployHistoryDataAdapter;
 import com.rany.cake.devops.base.service.sls.SlsDeployLogQueryService;
 import com.rany.ops.api.facade.account.AccountFacade;
@@ -26,9 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author zhongshengwang
+ */
 @AllArgsConstructor
 @Service
-public class DeployHistoryRemoteService implements DeployHistoryService {
+public class DeployHistoryServiceImpl implements DeployHistoryService {
 
     private final SlsDeployLogQueryService slsDeployLogQueryService;
     private final DeployHistoryRepository deployHistoryRepository;
@@ -36,7 +38,6 @@ public class DeployHistoryRemoteService implements DeployHistoryService {
 
     private final AppConfig appConfig;
     private final AccountFacade accountFacade;
-    private final AppMemberAdapter appMemberAdapter;
 
     @Override
     public List<DeployLogDTO> queryDeployLog(String pipeKey, long from, long to) {

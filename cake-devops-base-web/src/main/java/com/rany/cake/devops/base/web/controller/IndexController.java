@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 
 /**
  * 页面资源托管
+ *
+ * @author zhongshengwang
  */
 @Slf4j
 @RestController

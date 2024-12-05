@@ -41,11 +41,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-// @ShenyuService("/alarm-group/**")
 @Slf4j
 @AllArgsConstructor
-public class AlarmGroupRemoteService implements AlarmGroupService {
+public class AlarmGroupServiceImpl implements AlarmGroupService {
 
     private final AlarmGroupRepository alarmGroupRepository;
     private final AlarmGroupDataAdapter alarmGroupDataAdapter;

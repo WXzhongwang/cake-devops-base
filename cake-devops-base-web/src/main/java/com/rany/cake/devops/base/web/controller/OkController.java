@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 页面资源托管
+ * 健康检查
+ *
+ * @author zhongshengwang
  */
 @Slf4j
 @RestController

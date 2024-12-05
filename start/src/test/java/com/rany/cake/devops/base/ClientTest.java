@@ -32,10 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * ClientTest
  *
- * @author zhongwang
- * @date 2024/7/24
- * @slogan Why Not
- * @email zhongshengwang.zsw@alibaba-inc.com
+ * @author zhongshengwang
  */
 public class ClientTest {
 

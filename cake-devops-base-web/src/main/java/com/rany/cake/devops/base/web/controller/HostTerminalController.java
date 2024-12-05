@@ -34,6 +34,11 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 终端管理
+ *
+ * @author zhongshengwang
+ */
 @RestController
 @RequestMapping("/api/devops/host/terminal")
 public class HostTerminalController {

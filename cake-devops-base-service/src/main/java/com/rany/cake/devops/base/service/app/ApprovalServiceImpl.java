@@ -14,11 +14,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-// @ShenyuService("/approval/**")
 @Slf4j
 @AllArgsConstructor
-public class ApprovalRemoteService implements ApprovalService {
+public class ApprovalServiceImpl implements ApprovalService {
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final ApprovalDomainService approvalDomainService;
     private final ApprovalDataAdapter approvalDataAdapter;

@@ -8,7 +8,6 @@ import java.lang.annotation.*;
  * @author zhongwang
  * @date 2024/7/30
  * @slogan Why Not
- * @email zhongshengwang.zsw@alibaba-inc.com
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

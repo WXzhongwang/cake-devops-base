@@ -13,8 +13,6 @@ import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.domain.repository.FileTransferLogRepository;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
 import com.rany.cake.devops.base.domain.repository.param.FileTransferLogParam;
-import com.rany.cake.devops.base.domain.service.HostDomainService;
-import com.rany.cake.devops.base.service.adapter.FileTransferLogDataAdapter;
 import com.rany.cake.devops.base.service.base.PathBuilders;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.service.handler.sftp.*;
@@ -52,11 +50,9 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-//@ShenyuService("/sftp/**")
 @AllArgsConstructor
-public class SftpRemoteService implements SftpService {
+public class SftpServiceImpl implements SftpService {
 
-    private final HostDomainService hostDomainService;
     private final HostRepository hostRepository;
     private final SftpInternalService sftpInternalService;
     private final SftpBasicExecutorHolder sftpBasicExecutorHolder;
@@ -64,7 +60,6 @@ public class SftpRemoteService implements SftpService {
     private final TransferProcessorManager transferProcessorManager;
     private final HostConnectionService hostConnectionService;
     private final RedisTemplate<String, String> redisTemplate;
-    private final FileTransferLogDataAdapter fileTransferLogDataAdapter;
 
     @Override
     public FileOpenDTO open(OpenSftpCommand openSftpCommand) {

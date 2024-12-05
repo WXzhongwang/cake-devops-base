@@ -15,6 +15,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author zhongshengwang
+ */
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 

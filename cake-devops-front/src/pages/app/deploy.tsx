@@ -52,6 +52,7 @@ import EnvResourcePanel from "./components/env-resource-panel";
 import DomainHostConfigPanel from "./components/domain-host-config-panel";
 
 const { Paragraph } = Typography;
+const { Option } = Select;
 
 // 在组件中定义 getReleaseStatusText 函数
 const getReleaseStatusText = (status: string) => {
@@ -834,7 +835,13 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             name="releaseBranch"
             rules={[{ required: true, message: "请输入发布分支" }]}
           >
-            <Input />
+            <Select placeholder="请选择分支">
+              {branches?.map((branch) => (
+                <Option key={branch.name} value={branch.name}>
+                  {branch.name}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             label="发布版本"

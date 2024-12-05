@@ -18,6 +18,8 @@ import javax.annotation.Resource;
 
 /**
  * 应用
+ *
+ * @author zhongshengwang
  */
 @RestController
 @RequestMapping("/api/devops/app")

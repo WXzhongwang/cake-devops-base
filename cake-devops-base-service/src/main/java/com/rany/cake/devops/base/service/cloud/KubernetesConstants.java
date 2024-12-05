@@ -3,10 +3,7 @@ package com.rany.cake.devops.base.service.cloud;
 /**
  * KubernetesConstants
  *
- * @author zhongwang
- * @date 2024/7/30
- * @slogan Why Not
- * @email zhongshengwang.zsw@alibaba-inc.com
+ * @author zhongshengwang
  */
 public final class KubernetesConstants {
     private KubernetesConstants() {

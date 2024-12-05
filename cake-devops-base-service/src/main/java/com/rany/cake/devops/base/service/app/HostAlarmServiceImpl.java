@@ -26,11 +26,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-//@ShenyuService("/host-alarm/**")
 @Slf4j
 @AllArgsConstructor
-public class HostAlarmRemoteService implements HostAlarmService {
+public class HostAlarmServiceImpl implements HostAlarmService {
     private final HostRepository hostRepository;
     private final HostAlarmHistoryRepository hostAlarmHistoryRepository;
     private final HostAlarmHistoryDataAdapter hostAlarmHistoryDataAdapter;

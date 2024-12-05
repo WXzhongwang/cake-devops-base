@@ -14,6 +14,8 @@ import javax.annotation.Resource;
 
 /**
  * 命名空间
+ *
+ * @author zhongshengwang
  */
 @RestController
 @RequestMapping("/api/devops/namespace")

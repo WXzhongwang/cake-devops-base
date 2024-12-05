@@ -39,11 +39,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
+/**
+ * @author zhongshengwang
+ */
 @Service
 @Slf4j
-// @ShenyuService("/member/**")
 @AllArgsConstructor
-public class AppMemberRemoteService implements AppMemberService {
+public class AppMemberServiceImpl implements AppMemberService {
 
     private final AppConfig appConfig;
     private final AccountFacade accountFacade;

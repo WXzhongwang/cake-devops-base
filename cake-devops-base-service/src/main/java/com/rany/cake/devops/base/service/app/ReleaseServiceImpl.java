@@ -45,11 +45,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * @author zhongshengwang
+ */
 @Service
-//@ShenyuService("/release/**")
 @Slf4j
 @AllArgsConstructor
-public class ReleaseRemoteService implements ReleaseService {
+public class ReleaseServiceImpl implements ReleaseService {
     private final SnowflakeIdWorker snowflakeIdWorker;
     private final ReleaseDomainService releaseDomainService;
     private final ApprovalDomainService approvalDomainService;
