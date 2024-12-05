@@ -31,6 +31,9 @@
         from user_event_log
         where is_deleted = '0'
         and user_id = #{userId}
+        <if test="userId != null and userId != ''">
+            and user_id = #{userId}
+        </if>
         <if test="eventClassify != null">
             and event_classify = #{eventClassify,jdbcType=INTEGER}
         </if>
