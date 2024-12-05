@@ -61,6 +61,9 @@ public class UserEventLogServiceImpl implements UserEventLogService {
         log.setExecResult(isSuccess ? Const.ENABLE : Const.DISABLE);
         log.setGmtCreate(new Date());
         log.setGmtModified(new Date());
+        log.setCreator(userId);
+        log.setModifier(userId);
+        log.setGmtModified(new Date());
         log.setIsDeleted(DeleteStatusEnum.NO.getValue());
         // 插入
         userEventLogRepository.save(log);

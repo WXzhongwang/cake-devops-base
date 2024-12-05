@@ -9,7 +9,7 @@ import com.rany.cake.devops.base.api.query.log.UserEventLogPageQuery;
 /**
  * 用户操作日志服务
  *
- * @author Jiahang Li
+ * @author zhongshengwang
  * @version 1.0.0
  * @since 2022/1/22 20:19
  */

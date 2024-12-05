@@ -33,8 +33,7 @@ public class UserEventLogRepositoryImpl implements UserEventLogRepository {
 
     @Override
     public void save(UserEventLog log) {
-        UserEventLogPO userEventLogPO = userEventLogDataConvertor.sourceToTarget(log);
-        userEventLogPOMapper.insert(userEventLogPO);
+        userEventLogDao.save(log);
     }
 
     @Override

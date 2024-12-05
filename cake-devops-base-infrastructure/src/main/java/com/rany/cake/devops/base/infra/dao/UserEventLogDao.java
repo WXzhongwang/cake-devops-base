@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.infra.dao;
 
+import com.rany.cake.devops.base.domain.entity.UserEventLog;
 import com.rany.cake.devops.base.domain.repository.param.UserEventLogQueryPageParam;
 import com.rany.cake.devops.base.infra.po.UserEventLogPO;
 
@@ -14,4 +15,6 @@ public interface UserEventLogDao {
      * @return 日志结果
      */
     List<UserEventLogPO> selectList(UserEventLogQueryPageParam param);
+
+    int save(UserEventLog log);
 }

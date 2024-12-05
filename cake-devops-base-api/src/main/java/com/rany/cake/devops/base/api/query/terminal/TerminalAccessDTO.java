@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 访问终端响应
  *
- * @author Jiahang Li
+ * @author zhongshengwang
  * @version 1.0.0
  * @since 2021/4/1 16:40
  */

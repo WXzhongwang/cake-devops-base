@@ -22,7 +22,7 @@ public enum EventType {
     /**
      * 修改报警组
      */
-    UPDATE_ALARM_GROUP(120020, EventClassify.ALARM_GROUP, "修改报警组", "修改报警组 <sb>${before}</sb>"),
+    UPDATE_ALARM_GROUP(120020, EventClassify.ALARM_GROUP, "修改报警组", "修改报警组 <sb>${name}</sb>"),
 
     /**
      * 删除报警组

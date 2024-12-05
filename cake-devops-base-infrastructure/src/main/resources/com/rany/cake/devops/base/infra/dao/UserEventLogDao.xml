@@ -47,7 +47,7 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.rany.cake.devops.base.domain.entity.UserEventLog">
+    <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.UserEventLog">
 
         insert into user_event_log (user_id, username,
                                     event_classify, event_type, log_info,
