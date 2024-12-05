@@ -1,6 +1,11 @@
 package com.rany.cake.devops.base.api.service;
 
 
+import com.cake.framework.common.response.Page;
+import com.rany.cake.devops.base.api.common.enums.EventType;
+import com.rany.cake.devops.base.api.dto.log.UserEventLogDTO;
+import com.rany.cake.devops.base.api.query.log.UserEventLogPageQuery;
+
 /**
  * 用户操作日志服务
  *
@@ -16,6 +21,8 @@ public interface UserEventLogService {
      * @param eventType 操作
      * @param isSuccess 是否成功
      */
-    void recordLog(Integer eventType, boolean isSuccess);
+    void recordLog(EventType eventType, boolean isSuccess);
 
+
+    Page<UserEventLogDTO> pageQueryLog(UserEventLogPageQuery query);
 }

@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.rany.cake.devops.base.service.lock.config.RedissonConfiguration
+  com.rany.cake.devops.base.service.integration.lock.config.RedissonConfiguration
 
 

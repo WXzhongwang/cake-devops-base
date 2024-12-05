@@ -10,7 +10,7 @@ import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.infra.convertor.BaseConvertor;
-import com.rany.cake.devops.base.service.cloud.dto.PodInfoDTO;
+import com.rany.cake.devops.base.service.integration.cloud.dto.PodInfoDTO;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;

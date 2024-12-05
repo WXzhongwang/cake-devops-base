@@ -1,5 +1,6 @@
 import * as userService from "@/services/user";
-import { API } from "typings";
+import { message } from "antd";
+import { API, BaseAction } from "typings";
 import { Effect, Reducer } from "umi";
 
 type UserModelState = {
@@ -24,7 +25,7 @@ interface QueryAppMembersAction {
   payload: QueryAppAccountPayload;
 }
 
-interface QueryMenuAction {
+interface QueryMenuAction extends BaseAction {
   type: "user/queryMenu";
 }
 
@@ -159,12 +160,21 @@ const UserModel: UserModelType = {
         payload: res.content?.items,
       });
     },
-    *queryMenu({}: QueryMenuAction, { call, put }) {
-      const res = yield call(userService.queryUserMenu);
+    *queryMenu({ callback }: QueryMenuAction, { call, put }) {
+      const response = yield call(userService.queryUserMenu);
       yield put({
         type: "setMenu",
-        payload: res.content,
+        payload: response.content,
       });
+
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
   },
   reducers: {

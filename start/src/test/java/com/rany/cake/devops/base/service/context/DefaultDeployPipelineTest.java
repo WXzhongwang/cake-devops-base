@@ -15,7 +15,7 @@ import com.rany.cake.devops.base.domain.repository.*;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.ReleaseCenter;
 import com.rany.cake.devops.base.service.base.Constants;
-import com.rany.cake.devops.base.service.code.RedisSerialNumberGenerator;
+import com.rany.cake.devops.base.service.integration.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.devops.base.util.enums.DeployHistoryStatusEnum;

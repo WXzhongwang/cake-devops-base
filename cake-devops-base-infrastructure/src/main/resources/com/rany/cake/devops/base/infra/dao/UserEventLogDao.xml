@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rany.cake.devops.base.infra.dao.UserEventLogDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.UserEventLogPO">
+
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="event_classify" property="eventClassify" jdbcType="INTEGER"/>
+        <result column="event_type" property="eventType" jdbcType="INTEGER"/>
+        <result column="log_info" property="logInfo" jdbcType="VARCHAR"/>
+        <result column="params_json" property="paramsJson" jdbcType="VARCHAR"/>
+        <result column="exec_result" property="execResult" jdbcType="INTEGER"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+        id
+        , user_id, username, event_classify, event_type, log_info, params_json, exec_result,
+    is_deleted, gmt_create, gmt_modified, creator, modifier
+    </sql>
+
+    <select id="selectList" resultMap="BaseResultMap"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.UserEventLogQueryPageParam">
+        select
+        <include refid="Base_Column_List"/>
+        from user_event_log
+        where is_deleted = '0'
+        and user_id = #{userId}
+        <if test="eventClassify != null">
+            and event_classify = #{eventClassify,jdbcType=INTEGER}
+        </if>
+        <if test="eventType != null">
+            and event_type = #{eventType,jdbcType=INTEGER}
+        </if>
+        <if test="startDate != null">
+            and gmt_create >= #{startDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endDate != null">
+            and gmt_create &lt;= #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        order by gmt_create desc, id desc
+    </select>
+
+
+    <insert id="insert" parameterType="com.rany.cake.devops.base.domain.entity.UserEventLog">
+
+        insert into user_event_log (user_id, username,
+                                    event_classify, event_type, log_info,
+                                    params_json, exec_result, is_deleted,
+                                    gmt_create, gmt_modified, creator,
+                                    modifier)
+        values (#{userId}, #{username,jdbcType=VARCHAR},
+                #{eventClassify,jdbcType=INTEGER}, #{eventType,jdbcType=INTEGER}, #{logInfo,jdbcType=VARCHAR},
+                #{paramsJson,jdbcType=VARCHAR}, #{execResult,jdbcType=INTEGER}, #{isDeleted,jdbcType=VARCHAR},
+                #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
+                #{modifier,jdbcType=VARCHAR})
+    </insert>
+
+</mapper>

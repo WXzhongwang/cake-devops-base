@@ -1,6 +1,8 @@
 package com.rany.cake.devops.base.web.config;
 
-import com.rany.cake.devops.base.web.interceptor.ExposeApiHeaderInterceptor;
+import com.rany.cake.devops.base.service.interceptor.AuthInterceptor;
+import com.rany.cake.devops.base.service.interceptor.ExposeApiHeaderInterceptor;
+import com.rany.cake.devops.base.service.interceptor.LogInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

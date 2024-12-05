@@ -1,8 +1,8 @@
 package com.rany.cake.devops.base.lock;
 
-import com.rany.cake.devops.base.service.lock.annotation.JLock;
-import com.rany.cake.devops.base.service.lock.annotation.JRepeat;
-import com.rany.cake.devops.base.service.lock.client.RedissonLockClient;
+import com.rany.cake.devops.base.service.integration.lock.annotation.JLock;
+import com.rany.cake.devops.base.service.integration.lock.annotation.JRepeat;
+import com.rany.cake.devops.base.service.integration.lock.client.RedissonLockClient;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

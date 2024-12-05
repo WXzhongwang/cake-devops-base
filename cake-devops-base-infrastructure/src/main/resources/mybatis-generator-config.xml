@@ -205,5 +205,12 @@
                enableSelectByExample="false" enableUpdateByExample="false">
         </table>
 
+
+        <table schema="cake_devops" tableName="user_event_log"
+               domainObjectName="UserEventLogPO" enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false">
+        </table>
+
     </context>
 </generatorConfiguration>

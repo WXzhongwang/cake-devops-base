@@ -274,7 +274,7 @@ export interface AppModelType {
     modifyAppResources: Effect;
     listAppPods: Effect;
     scale: Effect;
-    listAppBranch: Effect;
+    listBranch: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
@@ -326,12 +326,12 @@ const AppModel: AppModelType = {
         message.error(msg);
       }
     },
-    *listAppBrach({ payload, callback }: ListAppBranchAction, { call, put }) {
+    *listBranch({ payload, callback }: ListAppBranchAction, { call, put }) {
       const response = yield call(appService.listAppBranch, payload);
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);

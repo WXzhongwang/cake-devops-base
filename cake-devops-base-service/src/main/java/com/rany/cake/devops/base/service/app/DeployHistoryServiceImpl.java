@@ -14,7 +14,7 @@ import com.rany.cake.devops.base.domain.repository.DeployHistoryRepository;
 import com.rany.cake.devops.base.domain.repository.param.DeployHistoryPageParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.DeployHistoryDataAdapter;
-import com.rany.cake.devops.base.service.sls.SlsDeployLogQueryService;
+import com.rany.cake.devops.base.service.integration.sls.SlsDeployLogQueryService;
 import com.rany.ops.api.facade.account.AccountFacade;
 import com.rany.ops.api.query.account.AccountQuery;
 import com.rany.ops.common.dto.account.AccountDTO;

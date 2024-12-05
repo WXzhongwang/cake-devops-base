@@ -1,13 +1,13 @@
 package com.rany.cake.devops.base.web.config;
 
 import com.rany.cake.devops.base.service.handler.sftp.FileTransferNotifyHandler;
+import com.rany.cake.devops.base.service.interceptor.FileTransferNotifyInterceptor;
+import com.rany.cake.devops.base.service.interceptor.TailFileInterceptor;
+import com.rany.cake.devops.base.service.interceptor.TerminalAccessInterceptor;
+import com.rany.cake.devops.base.service.interceptor.TerminalWatcherInterceptor;
 import com.rany.cake.devops.base.service.tail.TailFileHandler;
 import com.rany.cake.devops.base.service.ws.TerminalMessageHandler;
 import com.rany.cake.devops.base.service.ws.watcher.TerminalWatcherHandler;
-import com.rany.cake.devops.base.web.interceptor.FileTransferNotifyInterceptor;
-import com.rany.cake.devops.base.web.interceptor.TailFileInterceptor;
-import com.rany.cake.devops.base.web.interceptor.TerminalAccessInterceptor;
-import com.rany.cake.devops.base.web.interceptor.TerminalWatcherInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;

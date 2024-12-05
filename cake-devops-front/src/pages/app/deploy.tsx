@@ -354,9 +354,10 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       type: "app/listBranch",
       payload: {
         appId: appDetail.appId,
-        search: search,
+        search: search || "",
       },
       callback: (content: BranchInfo[]) => {
+        console.log(content);
         setBranches(content);
       },
     });
@@ -514,7 +515,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   };
 
   const handleCreateReleaseDrawer = () => {
-    if (drawerVisible) {
+    if (drawerVisible === false) {
       listAppBranch("");
     }
     setDrawerVisible(!drawerVisible);

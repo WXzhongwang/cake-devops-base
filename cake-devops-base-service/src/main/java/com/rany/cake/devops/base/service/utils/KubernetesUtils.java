@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.utils;
 
 import com.rany.cake.devops.base.service.base.Constants;
-import com.rany.cake.devops.base.service.cloud.dto.PodInfoDTO;
+import com.rany.cake.devops.base.service.integration.cloud.dto.PodInfoDTO;
 import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1PodStatus;
 

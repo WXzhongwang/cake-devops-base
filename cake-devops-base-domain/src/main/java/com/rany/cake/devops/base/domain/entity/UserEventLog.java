@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class UserEventLog extends BaseEntity<Long> {
-    private Long userId;
+    private String userId;
     private String username;
     private Integer eventClassify;
     private Integer eventType;
