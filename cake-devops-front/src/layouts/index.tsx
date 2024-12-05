@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ProLayout, ProSettings } from "@ant-design/pro-layout";
-import { Dropdown } from "antd";
+import { Dropdown, Spin } from "antd"; // 引入 Spin 用于加载指示器
 import { logout } from "@/services/user";
 import { connect, Dispatch, history, Link, Outlet } from "umi";
 import { LogoutOutlined } from "@ant-design/icons";
@@ -24,7 +24,7 @@ interface MenuItem {
 }
 
 const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
-  const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
+  const [settings, setSetting] = useState<Partial<ProSettings>>({
     fixSiderbar: true,
     layout: "top",
     splitMenus: false,
@@ -35,18 +35,24 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
   });
   const [pathname, setPathname] = useState("/apps");
   const [menuData, setMenuData] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true); // 新增 loading 状态
+
   const getUserInfo = () => {
     dispatch({
       type: "user/getUserInfo",
     });
   };
+
   const queryUserMenu = async () => {
     dispatch({
       type: "user/queryMenu",
       callback: (content: UserRoleMenuDTO) => {
         console.log(content);
-        const menuData = convertMenuTreeToProLayoutMenu(content.menuTree);
-        setMenuData(menuData);
+        const convertedMenuData = convertMenuTreeToProLayoutMenu(
+          content.menuTree
+        );
+        setMenuData(convertedMenuData);
+        setLoading(false); // 菜单数据加载完成后设置 loading 为 false
       },
     });
   };
@@ -73,6 +79,22 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
     queryUserMenu();
   }, []);
 
+  if (loading) {
+    // 如果还在加载中，显示加载指示器
+    return (
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return (
     <div
       id="main-pro-layout"
@@ -97,48 +119,39 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
           src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
           size: "small",
           title: userData?.userName,
-          render: (props, dom) => {
-            return (
-              <Dropdown
-                menu={{
-                  items: [
-                    {
-                      key: "logout",
-                      icon: <LogoutOutlined />,
-                      label: "退出登录",
-                      onClick: async () => {
-                        const res = await logout();
-                        if (res.success) {
-                          history.push("/apps");
-                        }
-                      },
+          render: (props, dom) => (
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    key: "logout",
+                    icon: <LogoutOutlined />,
+                    label: "退出登录",
+                    onClick: async () => {
+                      const res = await logout();
+                      if (res.success) {
+                        history.push("/apps");
+                      }
                     },
-                  ],
-                }}
-              >
-                {dom}
-              </Dropdown>
-            );
-          },
-        }}
-        actionsRender={(props) => {
-          if (props.isMobile) return [];
-          return [<Inbox key="Inbox" />];
-        }}
-        menuFooterRender={(props) => {
-          if (props?.collapsed) return undefined;
-          return (
-            <div
-              style={{
-                textAlign: "center",
-                paddingBlockStart: 12,
+                  },
+                ],
               }}
             >
+              {dom}
+            </Dropdown>
+          ),
+        }}
+        actionsRender={(props) =>
+          props.isMobile ? [] : [<Inbox key="Inbox" />]
+        }
+        menuFooterRender={(props) =>
+          props?.collapsed ? undefined : (
+            <div style={{ textAlign: "center", paddingBlockStart: 12 }}>
               <div>© 2024 Made with 钟望</div>
               <div>by Cake</div>
             </div>
-          );
-        }}
+          )
+        }
         menuItemRender={(menuItemProps, defaultDom) => {
           if (menuItemProps.isUrl || menuItemProps.children) {
             return defaultDom;
@@ -148,9 +161,7 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
               <Link
                 to={menuItemProps.path}
                 target={menuItemProps.target}
-                onClick={() => {
-                  setPathname(menuItemProps.path || "/apps");
-                }}
+                onClick={() => setPathname(menuItemProps.path || "/apps")}
               >
                 {defaultDom}
               </Link>
@@ -174,11 +185,9 @@ export default connect(
       userData: API.UserInfo;
       menu: UserRoleMenuDTO;
     };
-  }) => {
-    return {
-      isLogin: user.isLogin,
-      userData: user.userData,
-      menu: user.menu,
-    };
-  }
+  }) => ({
+    isLogin: user.isLogin,
+    userData: user.userData,
+    menu: user.menu,
+  })
 )(Layout);
