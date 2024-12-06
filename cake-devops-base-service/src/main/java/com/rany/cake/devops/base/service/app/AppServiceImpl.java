@@ -2,7 +2,6 @@ package com.rany.cake.devops.base.service.app;
 
 import com.alibaba.fastjson.JSON;
 import com.cake.framework.common.exception.BusinessException;
-import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -37,12 +36,12 @@ import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.AppDataAdapter;
+import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.integration.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.integration.cloud.CloudFactory;
+import com.rany.cake.devops.base.service.integration.cloud.dto.*;
 import com.rany.cake.devops.base.service.integration.code.BaseCodeService;
 import com.rany.cake.devops.base.service.integration.code.CodeFactory;
-import com.rany.cake.devops.base.service.context.DeployContext;
-import com.rany.cake.devops.base.service.integration.cloud.dto.*;
 import com.rany.cake.devops.base.util.enums.AppEnvEnum;
 import com.rany.cake.devops.base.util.enums.AppRoleEnum;
 import com.rany.cake.devops.base.util.enums.CodeLanguageEnum;
@@ -116,14 +115,13 @@ public class AppServiceImpl implements AppService {
         AccountQuery accountQuery = new AccountQuery();
         accountQuery.setAccountIds(accountIdLongs);
         accountQuery.setTenantId(tenantConfig.getTenantId());
-        ListResult<AccountDTO> accounts = accountFacade.findAccounts(accountQuery);
-        if (accounts == null || CollectionUtils.isEmpty(accounts.getContent())) {
+        List<AccountDTO> accounts = accountFacade.findAccounts(accountQuery);
+        if (CollectionUtils.isEmpty(accounts)) {
             throw new BusinessException(BusinessErrorMessage.ACCOUNT_NOT_FOUND);
         }
 
 
-        List<AccountDTO> content = accounts.getContent();
-        Map<Long, AccountDTO> accountMap = Maps.uniqueIndex(content, AccountDTO::getId);
+        Map<Long, AccountDTO> accountMap = Maps.uniqueIndex(accounts, AccountDTO::getId);
         ArrayList<AppMember> appMembers = new ArrayList<>();
         app.setAppMembers(appMembers);
 

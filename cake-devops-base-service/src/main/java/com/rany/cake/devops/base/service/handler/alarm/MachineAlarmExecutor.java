@@ -1,7 +1,6 @@
 package com.rany.cake.devops.base.service.handler.alarm;
 
 import com.alibaba.fastjson.JSON;
-import com.cake.framework.common.response.ListResult;
 import com.google.common.collect.Maps;
 import com.rany.cake.devops.base.api.dto.AppAccountDTO;
 import com.rany.cake.devops.base.domain.base.AppConfig;
@@ -83,9 +82,8 @@ public class MachineAlarmExecutor {
         AccountQuery accountQuery = new AccountQuery();
         accountQuery.setTenantId(appConfig.getTenantId());
         accountQuery.setAccountIds(alarmUserIdList);
-        ListResult<AccountDTO> accountsList = accountFacade.findAccounts(accountQuery);
-        List<AccountDTO> accountDTOList = accountsList.getContent();
-        List<AppAccountDTO> appAccountDTOList = appMemberAdapter.toDTO(accountDTOList);
+        List<AccountDTO> accountsList = accountFacade.findAccounts(accountQuery);
+        List<AppAccountDTO> appAccountDTOList = appMemberAdapter.toDTO(accountsList);
         Map<String, AppAccountDTO> userMapping = Maps.uniqueIndex(appAccountDTOList, AppAccountDTO::getId);
 
         context.setUserMapping(userMapping);

@@ -2,7 +2,6 @@ package com.rany.cake.devops.base.service.app;
 
 import com.cake.framework.common.exception.BusinessException;
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Maps;
 import com.rany.cake.devops.base.api.command.agent.InstallMonitorAgentCommand;
 import com.rany.cake.devops.base.api.command.agent.SyncMonitorAgentCommand;
@@ -131,9 +130,8 @@ public class HostMonitorServiceImpl implements HostMonitorService {
             AccountBasicQuery accountBasicQuery = new AccountBasicQuery();
             accountBasicQuery.setAccountId(Long.valueOf(command.getUser()));
             accountBasicQuery.setTenantId(appConfig.getTenantId());
-            PojoResult<AccountDTO> account = accountFacade.getAccount(accountBasicQuery);
-            AccountDTO content = account.getContent();
-            AppAccountDTO appAccountDTO = appMemberAdapter.toDTO(content);
+            AccountDTO account = accountFacade.getAccount(accountBasicQuery);
+            AppAccountDTO appAccountDTO = appMemberAdapter.toDTO(account);
             Threads.start(new MonitorAgentInstallTask(hostConnectionService,
                             hostDomainService,
                             monitorAgents,

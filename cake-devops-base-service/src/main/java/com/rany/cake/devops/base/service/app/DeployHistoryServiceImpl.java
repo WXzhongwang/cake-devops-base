@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.service.app;
 
-import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -54,8 +53,7 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
         AccountQuery accountQuery = new AccountQuery();
         accountQuery.setTenantId(appConfig.getTenantId());
         accountQuery.setAccountIds(creators);
-        ListResult<AccountDTO> accountsList = accountFacade.findAccounts(accountQuery);
-        List<AccountDTO> accountDTOList = accountsList.getContent();
+        List<AccountDTO> accountDTOList = accountFacade.findAccounts(accountQuery);
         ImmutableMap<Long, AccountDTO> idMap = Maps.uniqueIndex(accountDTOList, AccountDTO::getId);
         for (DeployHistoryDTO deployHistoryDTO : deployHistoryDTOS) {
             AccountDTO accountDTO = idMap.get(Long.valueOf(deployHistoryDTO.getCreator()));

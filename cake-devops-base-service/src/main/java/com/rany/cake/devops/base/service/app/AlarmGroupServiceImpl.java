@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.service.app;
 
-import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
 import com.google.common.collect.Maps;
 import com.rany.cake.devops.base.api.command.alarm.CreateAlarmGroupCommand;
@@ -146,8 +145,7 @@ public class AlarmGroupServiceImpl implements AlarmGroupService {
             AccountQuery accountQuery = new AccountQuery();
             accountQuery.setTenantId(appConfig.getTenantId());
             accountQuery.setAccountIds(alarmUserIdList);
-            ListResult<AccountDTO> accountsList = accountFacade.findAccounts(accountQuery);
-            List<AccountDTO> accountDTOList = accountsList.getContent();
+            List<AccountDTO> accountDTOList = accountFacade.findAccounts(accountQuery);
             List<AppAccountDTO> appAccountDTOList = appMemberAdapter.toDTO(accountDTOList);
             Map<String, AppAccountDTO> userMapping = Maps.uniqueIndex(appAccountDTOList, AppAccountDTO::getId);
             for (AlarmGroupUserDTO user : users) {

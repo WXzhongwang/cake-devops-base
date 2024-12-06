@@ -59,10 +59,10 @@ public class UserController {
         UserRoleMenuPermissionQuery userRoleMenuPermissionQuery = new UserRoleMenuPermissionQuery();
         userRoleMenuPermissionQuery.setAccountId(Long.valueOf(ssoUser.getUserId()));
         userRoleMenuPermissionQuery.setAppCode(Constants.CAKE_DEVOPS_ACL_APP_CODE);
-        PojoResult<UserRoleMenuDTO> userRbacModel = rbacQueryFacade.getUserRbacModel(userRoleMenuPermissionQuery);
-        if (userRbacModel == null || !userRbacModel.getSuccess()) {
+        UserRoleMenuDTO userRbacModel = rbacQueryFacade.getUserRbacModel(userRoleMenuPermissionQuery);
+        if (userRbacModel == null) {
             throw new BusinessException(DevOpsErrorMessage.USER_MENU_INFO_ERROR);
         }
-        return PojoResult.succeed(userRbacModel.getContent());
+        return PojoResult.succeed(userRbacModel);
     }
 }

@@ -2,10 +2,7 @@ package com.rany.cake.devops.base.service.app;
 
 
 import com.cake.framework.common.exception.BusinessException;
-import com.cake.framework.common.response.ListResult;
 import com.cake.framework.common.response.Page;
-import com.cake.framework.common.response.PageResult;
-import com.cake.framework.common.response.PojoResult;
 import com.google.common.collect.Maps;
 import com.rany.cake.devops.base.api.command.member.AddAppMemberCommand;
 import com.rany.cake.devops.base.api.command.member.DeleteAppMemberCommand;
@@ -35,7 +32,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -60,8 +60,7 @@ public class AppMemberServiceImpl implements AppMemberService {
         accountQuery.setTenantId(appConfig.getTenantId());
         accountQuery.setPageNo(memberPageQuery.getPageNo());
         accountQuery.setPageSize(memberPageQuery.getPageSize());
-        PageResult<AccountDTO> accounts = accountFacade.pageAccounts(accountQuery);
-        Page<AccountDTO> content = accounts.getContent();
+        Page<AccountDTO> content = accountFacade.pageAccounts(accountQuery);
         Collection<AccountDTO> items = content.getItems();
         List<AppAccountDTO> dtoList = appMemberAdapter.toDTO(new ArrayList<>(items));
         return PageUtils.build(content, dtoList);
@@ -78,8 +77,7 @@ public class AppMemberServiceImpl implements AppMemberService {
         AccountQuery accountQuery = new AccountQuery();
         accountQuery.setTenantId(appConfig.getTenantId());
         accountQuery.setAccountIds(members.stream().map(p -> Long.valueOf(p.getAccountId())).collect(Collectors.toList()));
-        ListResult<AccountDTO> accountsList = accountFacade.findAccounts(accountQuery);
-        List<AccountDTO> accountDTOList = accountsList.getContent();
+        List<AccountDTO> accountDTOList = accountFacade.findAccounts(accountQuery);
         List<AppAccountDTO> appAccountDTOList = appMemberAdapter.toDTO(accountDTOList);
         Map<String, AppAccountDTO> accountDTOMap = Maps.uniqueIndex(appAccountDTOList, AppAccountDTO::getId);
         for (AppMemberDTO appMemberDTO : appMemberDTOList) {
@@ -106,8 +104,8 @@ public class AppMemberServiceImpl implements AppMemberService {
         AccountBasicQuery accountQuery = new AccountBasicQuery();
         accountQuery.setTenantId(appConfig.getTenantId());
         accountQuery.setAccountId(Long.valueOf(addAppMemberCommand.getAccountId()));
-        PojoResult<AccountDTO> account = accountFacade.getAccount(accountQuery);
-        if (account == null || Objects.isNull(account.getContent())) {
+        AccountDTO account = accountFacade.getAccount(accountQuery);
+        if (account == null) {
             throw new BusinessException(BusinessErrorMessage.ACCOUNT_NOT_FOUND);
         }
         AppMember exist = appMemberDomainService.findById(addAppMemberCommand.getAccountId(),
