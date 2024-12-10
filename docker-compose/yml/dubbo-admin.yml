@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dubbo-admin
+  labels:
+    app: dubbo-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dubbo-admin
+  template:
+    metadata:
+      labels:
+        app: dubbo-admin
+    spec:
+      containers:
+        - name: dubbo-admin
+          image: apache/dubbo-admin:0.2.0
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: ADMIN_ROOT
+              value: "/"
+            - name: SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR
+              value: "zookeeper://zookeeper:2181"
+            - name: DUBBO_REGISTRY_ADDRESS
+              value: "zookeeper://zookeeper:2181"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dubbo-admin
+spec:
+  selector:
+    app: dubbo-admin
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: http
+  type: LoadBalancer
