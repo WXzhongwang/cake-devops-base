@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zookeeper
+  labels:
+    app: zookeeper
 spec:
   replicas: 1
   selector:
@@ -16,12 +18,12 @@ spec:
         - name: zookeeper
           image: zookeeper:3.6.3
           ports:
-            - containerPort: 2181
-              name: client
-            - containerPort: 2888
-              name: server
-            - containerPort: 3888
-              name: leader-election
+            - name: client
+              containerPort: 2181
+            - name: server
+              containerPort: 2888
+            - name: leader-election
+              containerPort: 3888
           env:
             - name: ZOOKEEPER_CLIENT_PORT
               value: "2181"
@@ -36,7 +38,22 @@ spec:
               mountPath: /var/lib/zookeeper/data
       volumes:
         - name: zookeeper-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: zookeeper-pvc
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
 ---
 apiVersion: v1
 kind: Service
@@ -49,3 +66,4 @@ spec:
     - protocol: TCP
       port: 2181
       targetPort: client
+

@@ -121,7 +121,7 @@ public class AppServiceImpl implements AppService {
         }
 
 
-        Map<Long, AccountDTO> accountMap = Maps.uniqueIndex(accounts, AccountDTO::getId);
+        Map<String, AccountDTO> accountMap = Maps.uniqueIndex(accounts, AccountDTO::getId);
         ArrayList<AppMember> appMembers = new ArrayList<>();
         app.setAppMembers(appMembers);
 
@@ -130,7 +130,7 @@ public class AppServiceImpl implements AppService {
                 CollectionUtils.isEmpty(createAppCommand.getAppMembers()) ? Maps.newHashMap() :
                         Maps.uniqueIndex(createAppCommand.getAppMembers(), AppMemberDTO::getAccountId);
 
-        for (Map.Entry<Long, AccountDTO> entry : accountMap.entrySet()) {
+        for (Map.Entry<String, AccountDTO> entry : accountMap.entrySet()) {
             AppMember member = new AppMember(new MemberId(String.valueOf(snowflakeIdWorker.nextId())), app.getAppId(), String.valueOf(entry.getKey()));
             member.init(createAppCommand.getUser());
             // 如果是owner

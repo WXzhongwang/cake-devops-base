@@ -54,9 +54,9 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
         accountQuery.setTenantId(appConfig.getTenantId());
         accountQuery.setAccountIds(creators);
         List<AccountDTO> accountDTOList = accountFacade.findAccounts(accountQuery);
-        ImmutableMap<Long, AccountDTO> idMap = Maps.uniqueIndex(accountDTOList, AccountDTO::getId);
+        ImmutableMap<String, AccountDTO> idMap = Maps.uniqueIndex(accountDTOList, AccountDTO::getId);
         for (DeployHistoryDTO deployHistoryDTO : deployHistoryDTOS) {
-            AccountDTO accountDTO = idMap.get(Long.valueOf(deployHistoryDTO.getCreator()));
+            AccountDTO accountDTO = idMap.get(deployHistoryDTO.getCreator());
             if (accountDTO != null) {
                 deployHistoryDTO.setCreatorName(accountDTO.getAccountName());
             }
