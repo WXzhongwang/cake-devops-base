@@ -10,6 +10,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class UserEventLogQueryPageParam extends BasePageParam {
     private Long userId;
+    private String userName;
     private Integer eventType;
     private Integer eventClassify;
     private Date startDate;

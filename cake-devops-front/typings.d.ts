@@ -27,6 +27,14 @@ declare namespace API {
     realName: string;
   };
 
+  type Page<T> = {
+    pageNo: number;
+    pageSize: number;
+    totalPage: number;
+    total: number;
+    items: T[];
+  };
+
   /** 用户信息响应结果 */
   type UserInfoResponse = ResponseBody<UserInfo>;
   /** 登出响应结果 */

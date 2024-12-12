@@ -3,6 +3,9 @@ package com.rany.cake.devops.base.api.common.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 事件类型
  *
@@ -676,6 +679,19 @@ public enum EventType {
             }
         }
         return null;
+    }
+
+    public static List<EventType> ofClassify(Integer type) {
+        if (type == null) {
+            return null;
+        }
+        List<EventType> list = new ArrayList<>();
+        for (EventType value : values()) {
+            if (value.classify.getClassify().equals(type)) {
+                list.add(value);
+            }
+        }
+        return list;
     }
 
 }

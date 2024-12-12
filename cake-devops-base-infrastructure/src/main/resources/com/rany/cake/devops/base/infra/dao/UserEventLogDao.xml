@@ -30,9 +30,11 @@
         <include refid="Base_Column_List"/>
         from user_event_log
         where is_deleted = '0'
-        and user_id = #{userId}
         <if test="userId != null and userId != ''">
             and user_id = #{userId}
+        </if>
+        <if test="userName != null and userName != ''">
+            and username like concat('%', #{userName}, '%')
         </if>
         <if test="eventClassify != null">
             and event_classify = #{eventClassify,jdbcType=INTEGER}

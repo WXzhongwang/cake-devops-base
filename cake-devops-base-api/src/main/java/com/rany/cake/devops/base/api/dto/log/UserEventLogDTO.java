@@ -1,6 +1,8 @@
 package com.rany.cake.devops.base.api.dto.log;
 
 import com.rany.cake.devops.base.api.common.base.DTO;
+import com.rany.cake.devops.base.api.common.enums.EventClassify;
+import com.rany.cake.devops.base.api.common.enums.EventType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,4 +27,19 @@ public class UserEventLogDTO extends DTO {
     protected String creator;
     protected String modifier;
     protected String isDeleted;
+
+    public String getEventClassifyName() {
+        if (eventClassify != null) {
+            return EventClassify.of(eventClassify).getLabel();
+        }
+        return eventClassifyName;
+    }
+
+    public String getEventTypeName() {
+        if (eventType != null) {
+            return EventType.of(eventType).getLabel();
+        }
+        return eventTypeName;
+    }
+
 }
