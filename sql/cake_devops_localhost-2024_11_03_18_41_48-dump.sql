@@ -25,15 +25,15 @@ DROP TABLE IF EXISTS `alarm_group`;
 CREATE TABLE `alarm_group`
 (
     `id`                bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `group_name`        varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin  DEFAULT NULL COMMENT '报警组名称',
-    `group_description` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL COMMENT '报警组描述',
+    `group_name`        varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin  DEFAULT NULL COMMENT '告警组名称',
+    `group_description` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL COMMENT '告警组描述',
     `is_deleted`        varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin   DEFAULT '1' COMMENT '是否删除 0未删除 1已删除',
     `gmt_create`        datetime(4) DEFAULT CURRENT_TIMESTAMP (4) COMMENT '创建时间',
     `gmt_modified`      datetime(4) DEFAULT CURRENT_TIMESTAMP (4) ON UPDATE CURRENT_TIMESTAMP (4) COMMENT '修改时间',
     `creator`           varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
     `modifier`          varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='报警组';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='告警组';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,7 +62,7 @@ DROP TABLE IF EXISTS `alarm_group_notify`;
 CREATE TABLE `alarm_group_notify`
 (
     `id`           bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `group_id`     bigint                                                 DEFAULT NULL COMMENT '报警组id',
+    `group_id`     bigint                                                 DEFAULT NULL COMMENT '告警组id',
     `notify_id`    bigint                                                 DEFAULT NULL COMMENT '通知id',
     `notify_type`  int                                                    DEFAULT NULL COMMENT '通知类型 10 webhook',
     `is_deleted`   varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin   DEFAULT '0' COMMENT '是否删除 1未删除 2已删除',
@@ -72,7 +72,7 @@ CREATE TABLE `alarm_group_notify`
     `modifier`     varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY            `group_idx` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='报警组通知方式';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='告警组通知方式';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,9 +103,9 @@ DROP TABLE IF EXISTS `alarm_group_user`;
 CREATE TABLE `alarm_group_user`
 (
     `id`           bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `group_id`     bigint                                                 DEFAULT NULL COMMENT '报警组id',
-    `account_id`   bigint                                                 DEFAULT NULL COMMENT '报警组成员id',
-    `username`     varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin  DEFAULT NULL COMMENT '报警组成员用户名',
+    `group_id`     bigint                                                 DEFAULT NULL COMMENT '告警组id',
+    `account_id`   bigint                                                 DEFAULT NULL COMMENT '告警组成员id',
+    `username`     varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin  DEFAULT NULL COMMENT '告警组成员用户名',
     `is_deleted`   varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin   DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
     `gmt_create`   datetime(4) DEFAULT CURRENT_TIMESTAMP (4) COMMENT '创建时间',
     `gmt_modified` datetime(4) DEFAULT CURRENT_TIMESTAMP (4) ON UPDATE CURRENT_TIMESTAMP (4) COMMENT '修改时间',
@@ -113,7 +113,7 @@ CREATE TABLE `alarm_group_user`
     `modifier`     varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY            `group_id_idx` (`group_id`,`account_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='报警组成员';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin ROW_FORMAT=DYNAMIC COMMENT='告警组成员';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

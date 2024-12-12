@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 报警组用户实体
+ * 告警组用户实体
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * 报警组实体
+ * 告警组实体
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

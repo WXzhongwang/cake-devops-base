@@ -5,6 +5,7 @@ import {
   DatePicker,
   Form,
   Input,
+  Popover,
   Select,
   Space,
   Table,
@@ -117,7 +118,12 @@ const LogPage: React.FC<ClusterListProps> = ({ dispatch }) => {
       title: "操作",
       key: "actions",
       render: (text: any, record: UserEventLogDTO) => (
-        <Space size="middle">查看</Space>
+        <Popover
+          content={<div dangerouslySetInnerHTML={{ __html: record.logInfo }} />}
+          title="详细操作内容"
+        >
+          <Button type="link">查看</Button>
+        </Popover>
       ),
     },
   ];
@@ -157,7 +163,7 @@ const LogPage: React.FC<ClusterListProps> = ({ dispatch }) => {
       <Card>
         <Space size="middle" direction="vertical" style={{ width: "100%" }}>
           <Form form={form} layout="inline" onFinish={onFinish}>
-            <Form.Item name="userName" label="请输入用户名称">
+            <Form.Item name="userName" label="用户名">
               <Input placeholder="请输入用户名称" />
             </Form.Item>
 
@@ -192,7 +198,7 @@ const LogPage: React.FC<ClusterListProps> = ({ dispatch }) => {
               </Select>
             </Form.Item>
 
-            <Form.Item name="timeRange" label="报警时间范围">
+            <Form.Item name="timeRange" label="时间范围">
               <RangePicker
                 showTime
                 placeholder={["开始时间", "结束时间"]}

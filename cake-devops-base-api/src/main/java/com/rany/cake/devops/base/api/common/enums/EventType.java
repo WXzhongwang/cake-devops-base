@@ -18,19 +18,19 @@ import java.util.List;
 public enum EventType {
 
     /**
-     * 添加报警组
+     * 添加告警组
      */
-    ADD_ALARM_GROUP(120010, EventClassify.ALARM_GROUP, "添加报警组", "添加报警组 <sb>${name}</sb>"),
+    ADD_ALARM_GROUP(120010, EventClassify.ALARM_GROUP, "添加告警组", "添加告警组 <sb>${name}</sb>"),
 
     /**
-     * 修改报警组
+     * 修改告警组
      */
-    UPDATE_ALARM_GROUP(120020, EventClassify.ALARM_GROUP, "修改报警组", "修改报警组 <sb>${name}</sb>"),
+    UPDATE_ALARM_GROUP(120020, EventClassify.ALARM_GROUP, "修改告警组", "修改告警组 <sb>${name}</sb>"),
 
     /**
-     * 删除报警组
+     * 删除告警组
      */
-    DELETE_ALARM_GROUP(120030, EventClassify.ALARM_GROUP, "删除报警组", "删除报警组 <sb>${name}</sb>"),
+    DELETE_ALARM_GROUP(120030, EventClassify.ALARM_GROUP, "删除告警组", "删除告警组 <sb>${name}</sb>"),
 
     // -------------------- 机器操作 --------------------
 

@@ -905,7 +905,7 @@ export const EVENT_CLASSIFY = {
   },
   ALARM_GROUP: {
     value: 120,
-    label: "报警组操作",
+    label: "告警组操作",
   },
   MACHINE: {
     value: 200,
@@ -1055,17 +1055,17 @@ export const EVENT_TYPE = {
   },
   ADD_ALARM_GROUP: {
     value: 120010,
-    label: "添加报警组",
+    label: "添加告警组",
     classify: 120,
   },
   UPDATE_ALARM_GROUP: {
     value: 120020,
-    label: "修改报警组",
+    label: "修改告警组",
     classify: 120,
   },
   DELETE_ALARM_GROUP: {
     value: 120030,
-    label: "删除报警组",
+    label: "删除告警组",
     classify: 120,
   },
   ADD_MACHINE: {

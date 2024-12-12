@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 报警组通知方式
+ * 告警组通知方式
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

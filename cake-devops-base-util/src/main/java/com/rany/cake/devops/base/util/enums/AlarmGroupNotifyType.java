@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 报警组通知方式
+ * 告警组通知方式
  */
 @Getter
 @AllArgsConstructor

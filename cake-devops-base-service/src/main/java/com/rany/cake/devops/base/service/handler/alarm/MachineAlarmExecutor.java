@@ -55,7 +55,7 @@ public class MachineAlarmExecutor {
 
     public void execute(MachineAlarmContext context) {
         log.info("机器触发报警推送 context: {}", JSON.toJSONString(context));
-        // 查询报警组
+        // 查询告警组
         List<HostAlarmGroup> hostAlarmGroups = hostAlarmGroupRepository.find(new HostId(context.getHostId()));
         List<Long> alarmGroupIdList = hostAlarmGroups
                 .stream()
@@ -66,7 +66,7 @@ public class MachineAlarmExecutor {
             return;
         }
         List<AlarmGroup> alarmGroupList = alarmGroupRepository.findByGroupIds(alarmGroupIdList);
-        // 查询报警组员
+        // 查询告警组员
         List<Long> alarmUserIdList = new ArrayList<>();
         for (AlarmGroup alarmGroup : alarmGroupList) {
             for (AlarmGroupUser user : alarmGroup.getUsers()) {

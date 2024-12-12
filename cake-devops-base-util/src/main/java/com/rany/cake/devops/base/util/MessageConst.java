@@ -230,6 +230,6 @@ public class MessageConst {
 
     public static final String WEBHOOK_ABSENT = "webhook 不存在";
 
-    public static final String ALARM_GROUP_ABSENT = "报警组不存在";
+    public static final String ALARM_GROUP_ABSENT = "告警组不存在";
 
 }

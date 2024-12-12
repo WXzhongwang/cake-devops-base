@@ -20,9 +20,9 @@ public enum EventClassify {
     AUTHENTICATION(100, "认证操作"),
 
     /**
-     * 报警组操作
+     * 告警组操作
      */
-    ALARM_GROUP(120, "报警组操作"),
+    ALARM_GROUP(120, "告警组操作"),
 
     /**
      * 机器操作
