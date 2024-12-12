@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ProLayout, ProSettings } from "@ant-design/pro-layout";
+import { MenuDataItem, ProLayout, ProSettings } from "@ant-design/pro-layout";
 import { Dropdown, Spin } from "antd"; // 引入 Spin 用于加载指示器
 import { logout } from "@/services/user";
 import { connect, Dispatch, history, Link, Outlet } from "umi";
@@ -8,19 +8,13 @@ import defaultProps from "./_default";
 import { API } from "typings";
 import { MenuTreeDTO, UserRoleMenuDTO } from "@/models/user";
 import Inbox from "./index-box";
+import * as allIcons from "@ant-design/icons";
 
 interface LayoutProps {
   dispatch: Dispatch;
   isLogin: boolean;
   userData: API.UserInfo;
   menu: UserRoleMenuDTO;
-}
-
-interface MenuItem {
-  path: string;
-  name: string;
-  icon?: React.ReactNode;
-  children?: MenuItem[];
 }
 
 const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
@@ -34,8 +28,6 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
     siderMenuType: "sub",
   });
   const [pathname, setPathname] = useState("/apps");
-  const [menuData, setMenuData] = useState<MenuItem[]>([]);
-  const [loading, setLoading] = useState(true); // 新增 loading 状态
 
   const getUserInfo = () => {
     dispatch({
@@ -44,56 +36,51 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
   };
 
   const queryUserMenu = async () => {
-    dispatch({
-      type: "user/queryMenu",
-      callback: (content: UserRoleMenuDTO) => {
-        console.log(content);
-        const convertedMenuData = convertMenuTreeToProLayoutMenu(
-          content.menuTree
-        );
-        setMenuData(convertedMenuData);
-        setLoading(false); // 菜单数据加载完成后设置 loading 为 false
-      },
+    return new Promise<MenuDataItem[]>((resolve) => {
+      dispatch({
+        type: "user/queryMenu",
+        callback: (content: UserRoleMenuDTO) => {
+          const convertedMenuData = convertMenuTreeToProLayoutMenu(
+            content.menuTree
+          );
+          console.log("converted:", convertedMenuData);
+          resolve(convertedMenuData);
+        },
+      });
     });
   };
 
-  const getMenuData = useCallback(async () => menuData, [menuData]);
-
   const convertMenuTreeToProLayoutMenu = (
     menuTree: MenuTreeDTO[]
-  ): MenuItem[] => {
-    return menuTree.map((item) => ({
-      path: item.path,
-      name: item.name,
-      icon: item.icon ? (
-        <img src={item.icon} alt={`${item.name} icon`} />
-      ) : undefined,
-      children: item.children
-        ? convertMenuTreeToProLayoutMenu(item.children)
-        : undefined,
-    }));
+  ): MenuDataItem[] => {
+    return menuTree.map((item) => {
+      return {
+        key: item.path,
+        label: item.name,
+        icon: getIcon(item.icon),
+        children: item.children
+          ? convertMenuTreeToProLayoutMenu(item.children)
+          : [],
+      };
+    });
+  };
+
+  const getIcon = (icon: string) => {
+    if (!icon) {
+      return undefined;
+    }
+    if (icon.startsWith("http")) {
+      return <img src={icon} alt={icon} />;
+    }
+    let fixIconName =
+      icon.slice(0, 1).toLocaleUpperCase() + icon.slice(1) + icon;
+    // @ts-ignore
+    return React.createElement(allIcons[fixIconName] || allIcons[icon]);
   };
 
   useEffect(() => {
     getUserInfo();
-    queryUserMenu();
   }, []);
-
-  if (loading) {
-    // 如果还在加载中，显示加载指示器
-    return (
-      <div
-        style={{
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Spin size="large" />
-      </div>
-    );
-  }
 
   return (
     <div
@@ -109,7 +96,7 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
         menu={{
           type: "group",
           collapsedShowGroupTitle: true,
-          request: getMenuData,
+          request: queryUserMenu,
         }}
         waterMarkProps={{
           content: [userData?.userName, userData?.userId],
@@ -163,7 +150,10 @@ const Layout: React.FC<LayoutProps> = ({ dispatch, isLogin, userData }) => {
                 target={menuItemProps.target}
                 onClick={() => setPathname(menuItemProps.path || "/apps")}
               >
-                {defaultDom}
+                <div className="ant-pro-base-menu-horizontal-item-title">
+                  {menuItemProps.icon}
+                  {menuItemProps.name}
+                </div>
               </Link>
             );
           }

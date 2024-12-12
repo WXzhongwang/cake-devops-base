@@ -473,8 +473,6 @@ const AppModel: AppModelType = {
 
     *getDepartments({}: QueryDepartmentAction, { call, put }) {
       const response = yield call(appService.getDepartments);
-      console.log(response);
-
       if (response?.content) {
         yield put({
           type: "setDepartments",

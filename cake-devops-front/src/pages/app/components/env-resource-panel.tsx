@@ -18,7 +18,6 @@ const EnvResourcePanel: React.FC<EnvVarConfigPanelProps> = ({
 }) => {
   const [replicasForm] = Form.useForm();
   const [resourceForm] = Form.useForm();
-  console.log("resourceStrategy", resourceStrategy);
 
   const scale = () => {
     replicasForm.validateFields().then((values) => {

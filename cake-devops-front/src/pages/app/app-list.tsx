@@ -125,8 +125,6 @@ const AppList: React.FC<AppListProps> = ({
     },
   ];
 
-  console.log("departments", departments);
-
   useEffect(() => {
     // 当部门列表更新时，格式化并设置Select的选项
     const options = departments?.map((dep: Department) => ({

@@ -125,7 +125,6 @@ const UserModel: UserModelType = {
   effects: {
     *logout(_, { call, put }) {
       const res: API.LogoutResponse = yield call(userService.logout);
-      console.log("res", res);
       yield put({
         type: "setUserInfo",
         payload: {
