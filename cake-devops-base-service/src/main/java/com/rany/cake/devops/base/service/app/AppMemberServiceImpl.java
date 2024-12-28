@@ -102,7 +102,7 @@ public class AppMemberServiceImpl implements AppMemberService {
     @Override
     public Boolean addMember(AddAppMemberCommand addAppMemberCommand) {
         AccountBasicQuery accountQuery = new AccountBasicQuery();
-        accountQuery.setTenantId(appConfig.getTenantId());
+        // accountQuery.setTenantId(appConfig.getTenantId());
         accountQuery.setAccountId(Long.valueOf(addAppMemberCommand.getAccountId()));
         AccountDTO account = accountFacade.getAccount(accountQuery);
         if (account == null) {

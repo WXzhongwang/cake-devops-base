@@ -129,7 +129,7 @@ public class HostMonitorServiceImpl implements HostMonitorService {
             // 创建安装任务
             AccountBasicQuery accountBasicQuery = new AccountBasicQuery();
             accountBasicQuery.setAccountId(Long.valueOf(command.getUser()));
-            accountBasicQuery.setTenantId(appConfig.getTenantId());
+            // accountBasicQuery.setTenantId(appConfig.getTenantId());
             AccountDTO account = accountFacade.getAccount(accountBasicQuery);
             AppAccountDTO appAccountDTO = appMemberAdapter.toDTO(account);
             Threads.start(new MonitorAgentInstallTask(hostConnectionService,
