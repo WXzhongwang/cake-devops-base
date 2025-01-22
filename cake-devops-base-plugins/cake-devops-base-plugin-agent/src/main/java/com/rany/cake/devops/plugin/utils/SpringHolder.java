@@ -14,7 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * <p>
  * 需要配置 <bean id="springHolder" class="com.rany.cake.devops.plugin.utils.SpringHolder"/>
  *
- * @author zhongshengwang
+ * @author
  * @version 1.0.0
  * @since 2020/2/3 14:36
  */

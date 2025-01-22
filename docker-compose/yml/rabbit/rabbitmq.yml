@@ -29,3 +29,32 @@ spec:
         - name: rabbitmq-storage
           persistentVolumeClaim:
             claimName: rabbitmq-pvc
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rabbitmq-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+    - protocol: TCP
+      name: amqp
+      port: 5672
+    - protocol: TCP
+      name: http
+      port: 15672
+  type: NodePort
