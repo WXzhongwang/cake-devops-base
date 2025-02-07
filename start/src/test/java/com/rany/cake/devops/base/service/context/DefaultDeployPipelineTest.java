@@ -15,8 +15,8 @@ import com.rany.cake.devops.base.domain.repository.*;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.ReleaseCenter;
 import com.rany.cake.devops.base.service.base.Constants;
-import com.rany.cake.devops.base.service.integration.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
+import com.rany.cake.devops.base.service.integration.code.RedisSerialNumberGenerator;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.devops.base.util.enums.DeployHistoryStatusEnum;
 import com.rany.cake.toolkit.lang.time.Dates;
@@ -92,7 +92,7 @@ public class DefaultDeployPipelineTest {
         String pipeKey = redisSerialNumberGenerator.generatePipeNumber(release.getReleaseNo());
         history.setPipeKey(history.getPipeKey());
         deployHistoryRepository.save(history);
-        releaseCenter.release(pipeKey, release, app, appEnv, namespace, cluster, history);
+        releaseCenter.release(pipeKey, release, app, appEnv, namespace, cluster, history, true);
     }
 
     @Test

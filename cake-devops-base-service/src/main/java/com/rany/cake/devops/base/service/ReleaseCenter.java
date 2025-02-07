@@ -72,7 +72,9 @@ public class ReleaseCenter {
     private ProgressUpdater progressUpdater;
 
 
-    public Boolean release(String pipeKey, Release release, App app, AppEnv appEnv, Namespace namespace, Cluster cluster, DeployHistory history) {
+    public Boolean release(String pipeKey, Release release, App app, AppEnv appEnv,
+                           Namespace namespace, Cluster cluster, DeployHistory history,
+                           Boolean forTest) {
         DeployContext deployContext = new DeployContext(pipeKey);
         deployContext.setRelease(release);
         deployContext.setApp(app);
@@ -99,9 +101,11 @@ public class ReleaseCenter {
             // 仅线上环境存在rebase阶段
             pipeline.addLast(rebaseMasterPlugin);
         }
-        // pipeline.addLast(pushHarborPlugin);
-        threadPoolTaskExecutor.execute(pipeline::start);
-        // pipeline.start();
+        if (forTest) {
+            pipeline.start();
+        } else {
+            threadPoolTaskExecutor.execute(pipeline::start);
+        }
         return Boolean.TRUE;
     }
 }

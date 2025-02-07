@@ -40,4 +40,4 @@ function send_notification {
 }
 
 # 示例用法
-# send_notification "构建失败" "failed" "MyApp" "https://your-dingtalk-webhook-url"
+send_notification "$1" "$2" "$3" "$4"

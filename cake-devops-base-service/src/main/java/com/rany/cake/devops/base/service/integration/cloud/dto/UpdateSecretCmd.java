@@ -19,11 +19,11 @@ public class UpdateSecretCmd {
     /**
      * 更新的secretMap键值对
      */
-    private Map<String, String> secretMap;
+    private Map<String, byte[]> secretMap;
 
     /**
      * 原来的secretMap键值对
      */
-    private Map<String, String> currentSecretMap;
+    private Map<String, byte[]> currentSecretMap;
 
 }

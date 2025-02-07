@@ -31,5 +31,5 @@ build/
 .vscode/
 
 cake-devops-front/node_modules/
-
+docker-compose/java-build-source.tar.gz
 cake-devops-base-infrastructure/src/main/resources/gen.properties

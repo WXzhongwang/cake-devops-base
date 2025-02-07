@@ -28,12 +28,9 @@
         <result column="deployment" jdbcType="VARCHAR" property="deployment"/>
         <result column="service" jdbcType="VARCHAR" property="service"/>
         <result column="ingress" jdbcType="VARCHAR" property="ingress"/>
-        <result column="config_map" property="configMap" jdbcType="VARCHAR"
-        />
-        <result column="secret_map" property="secretMap" jdbcType="VARCHAR"
-        />
-        <result column="env_vars" property="envVars" jdbcType="VARCHAR"
-        />
+        <result column="config_map" property="configMap" jdbcType="VARCHAR"/>
+        <result column="secret_map" property="secretMap" jdbcType="VARCHAR"/>
+        <result column="env_vars" property="envVars" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -41,7 +38,7 @@
         , env_id, cluster_id, app_id, domains, env_name, env, replicas, cpu, max_cpu, memory, max_memory,
         auto_scaling, need_approval, status, is_deleted, gmt_create, gmt_modified, creator,
         modifier, deploy_status, progress, custom_build_script, deployment, service, ingress,
-        config_map, env_vars
+        config_map, env_vars, secret_map
     </sql>
     <select id="selectByAppId" resultMap="BaseResultMap">
 
@@ -70,7 +67,8 @@
                              is_deleted, gmt_create, gmt_modified,
                              creator, modifier, deploy_status, progress,
                              custom_build_script, deployment, service, ingress, config_map,
-                             env_vars)
+                             env_vars,
+                             secret_map)
         values (#{envId},
                 #{clusterId.clusterId},
                 #{appId.appId},

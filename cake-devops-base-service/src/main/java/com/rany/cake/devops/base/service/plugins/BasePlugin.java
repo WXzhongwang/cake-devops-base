@@ -4,12 +4,15 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.base.CrConfig;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.context.Plugin;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
+import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,5 +56,26 @@ public abstract class BasePlugin implements Plugin {
         SessionStore sessionStore = hostConnectionService.openSessionStore(deployHost);
         context.setSessionStore(sessionStore);
         return sessionStore;
+    }
+
+    protected void sendNotification(DeployContext context, String comment, Boolean succeed) {
+        String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
+        log.info("Send notification");
+        log.info("workspace directory: " + workspace);
+
+        SessionStore sessionStore = getCurrentSessionStore(context);
+        try {
+            Session session = sessionStore.getSession();
+            String webHook = context.getApp().getWebhook();
+            String appName = context.getApp().getAppName().getName();
+            // "$message" "$webhook_url" "$status" "$app_name"
+            String executeCommand = String.format(" sh send_notification.sh '%s' '%s' '%s' '%s'",
+                    comment, webHook, succeed ? "succeed" : "failed", appName);
+            if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
+                log.error("发送告警提醒");
+            }
+        } catch (JSchException e) {
+            log.error("发送告警提醒 error", e);
+        }
     }
 }

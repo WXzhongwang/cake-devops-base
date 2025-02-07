@@ -88,23 +88,32 @@ public class K8sCloudService extends BaseCloudService {
         // 假设这里有获取Deployment名称的方法
         // 创建 Deployment
         V1Deployment deployment = createBasicDeployment(createDeploymentCmd);
-        try {
-            AppsV1Api apiInstance = new AppsV1Api(apiClient);
-            V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
 
+        AppsV1Api apiInstance = new AppsV1Api(apiClient);
+        try {
+            V1Deployment existingDeployment = apiInstance.readNamespacedDeployment(deploymentName, namespace, null);
             if (existingDeployment != null) {
                 // 如果存在，则更新
                 apiInstance.replaceNamespacedDeployment(deploymentName, namespace, deployment, null, null, null, null);
                 log.info("Deployment {} updated successfully.", deploymentName);
-            } else {
-                // 如果不存在，则创建
-                apiInstance.createNamespacedDeployment(namespace, deployment, null, null, null, null);
-                log.info("Deployment {} created successfully.", deploymentName);
             }
             return true;
         } catch (ApiException e) {
-            log.error("Failed to create or update Deployment {}. {}", deploymentName, e.getResponseBody(), e);
-            return false;
+            // 检查异常是否是因为 Deployment 不存在
+            if (e.getCode() == 404) {
+                log.warn("Deployment {} not found. Creating new Deployment.", deploymentName);
+                try {
+                    apiInstance.createNamespacedDeployment(namespace, deployment, null, null, null, null);
+                    log.info("Deployment {} created successfully.", deploymentName);
+                    return true;
+                } catch (ApiException createException) {
+                    log.error("Failed to create Deployment {}. {}", deploymentName, createException.getResponseBody(), createException);
+                    return false;
+                }
+            } else {
+                log.error("Failed to create or update Deployment {}. {}", deploymentName, e.getResponseBody(), e);
+                return false;
+            }
         }
     }
 
@@ -336,7 +345,7 @@ public class K8sCloudService extends BaseCloudService {
         String namespace = updateConfigMapCmd.getNamespace();
         String appName = updateConfigMapCmd.getAppName();
         String configMapName = "config-map-" + appName;
-        Map<String, String> configMapData = updateConfigMapCmd.getCurrentConfigMap();
+        Map<String, String> currentConfigMapData = updateConfigMapCmd.getCurrentConfigMap();
         Map<String, String> updateConfigMapData = updateConfigMapCmd.getConfigMap();
 
         V1ObjectMeta meta = new V1ObjectMeta();
@@ -345,33 +354,42 @@ public class K8sCloudService extends BaseCloudService {
         labels.put(FIX_LABEL, appName);
         meta.setLabels(labels);
 
+
+        CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+        V1ConfigMap configMap = new V1ConfigMap()
+                .apiVersion("v1")
+                .kind("ConfigMap")
+                .metadata(meta)
+                .data(updateConfigMapData);
+
         try {
+            V1ConfigMap v1ConfigMap = coreV1Api.readNamespacedConfigMap(configMapName, namespace, null);
+            Map<String, String> data = v1ConfigMap.getData();
+            log.info("Current configMap data:{}", JSON.toJSONString(data));
 
-            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
-            V1ConfigMap configMap = new V1ConfigMap()
-                    .apiVersion("v1")
-                    .kind("ConfigMap")
-                    .metadata(meta)
-                    .data(updateConfigMapData);
+            if (!KubernetesUtils.equalMaps2(data, currentConfigMapData)) {
+                log.warn("Current inconsistent configMap data:{}", JSON.toJSONString(data));
+            }
 
-            // 尝试获取现有的 ConfigMap
-            if (configMapData != null && !configMapData.isEmpty()) {
-                // 如果存在，则更新 ConfigMap
-                // 检查数据是否已经相同，避免不必要的更新
-                if (!StringUtils.equals(JSON.toJSONString(configMapData), JSON.toJSONString(updateConfigMapData))) {
-                    coreV1Api.replaceNamespacedConfigMap(appName, namespace, configMap, null, null, null, null);
-                    log.info("ConfigMap {} updated successfully.", appName);
-                } else {
-                    log.info("ConfigMap {} already up-to-date.", appName);
-                }
-            } else {
-                // 如果不存在，则创建 ConfigMap
-                coreV1Api.createNamespacedConfigMap(namespace, configMap, null, null, null, null);
-                log.info("ConfigMap {} created successfully.", appName);
+            if (!KubernetesUtils.equalMaps2(data, updateConfigMapData)) {
+                coreV1Api.replaceNamespacedConfigMap(configMapName, namespace, configMap, null, null, null, null);
+                log.info("ConfigMap {} updated successfully.", appName);
             }
             return true;
         } catch (ApiException e) {
             // 处理其他类型的错误
+            if (e.getCode() == 404) {
+                log.warn("ConfigMap {} not found. Creating new ConfigMap.", configMapName);
+                try {
+                    // 如果不存在，则创建 ConfigMap
+                    coreV1Api.createNamespacedConfigMap(namespace, configMap, null, null, null, null);
+                    log.info("ConfigMap {} created successfully.", appName);
+                    return true;
+                } catch (ApiException createException) {
+                    log.error("Failed to create ConfigMap {}. {}", configMapName, createException.getResponseBody(), createException);
+                    return false;
+                }
+            }
             log.error("Error while creating or updating ConfigMap {}: {}", appName, e.getResponseBody(), e);
             return false;
         }
@@ -406,11 +424,7 @@ public class K8sCloudService extends BaseCloudService {
         String namespace = createSecretCmd.getNamespace();
         String appName = createSecretCmd.getAppName();
         String secretName = "secret-map-" + appName;
-        Map<String, String> secretData = createSecretCmd.getSecretData();
-        Map<String, byte[]> bytesSecretData = Maps.newHashMap();
-        for (Map.Entry<String, String> es : secretData.entrySet()) {
-            bytesSecretData.put(es.getKey(), es.getValue().getBytes());
-        }
+        Map<String, byte[]> secretData = createSecretCmd.getSecretData();
         V1ObjectMeta meta = new V1ObjectMeta();
         meta.setName(secretName);
         Map<String, String> labels = Maps.newHashMapWithExpectedSize(1);
@@ -426,7 +440,7 @@ public class K8sCloudService extends BaseCloudService {
                     .kind("Secret")
                     .metadata(meta)
                     .type("Opaque")
-                    .data(bytesSecretData);
+                    .data(secretData);
             // 创建 Secret
             coreV1Api.createNamespacedSecret(namespace, secret, null, null, null, null);
             log.info("Secret created successfully.");
@@ -442,18 +456,14 @@ public class K8sCloudService extends BaseCloudService {
         String namespace = updateSecretCmd.getNamespace();
         String appName = updateSecretCmd.getAppName();
         String secretName = "secret-map-" + appName;
-        Map<String, String> secretData = updateSecretCmd.getSecretMap();
-        Map<String, byte[]> bytesSecretData = Maps.newHashMap();
-        for (Map.Entry<String, String> es : secretData.entrySet()) {
-            bytesSecretData.put(es.getKey(), es.getValue().getBytes());
-        }
+        Map<String, byte[]> secretData = updateSecretCmd.getSecretMap();
 
         try {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             // 获取要更新的 Secret
             V1Secret existingSecret = coreV1Api.readNamespacedSecret(secretName, namespace, null);
             // 修改 Secret 的数据
-            existingSecret.setData(bytesSecretData);
+            existingSecret.setData(secretData);
             // 更新 Secret
             coreV1Api.replaceNamespacedSecret(secretName, namespace, existingSecret, null, null, null, null);
             log.info("Secret update successfully.");
@@ -469,40 +479,46 @@ public class K8sCloudService extends BaseCloudService {
         String namespace = updateSecretCmd.getNamespace();
         String appName = updateSecretCmd.getAppName();
         String secretName = "secret-map-" + appName;
-        Map<String, String> currentSecretData = updateSecretCmd.getCurrentSecretMap();
-        Map<String, String> updateSecretData = updateSecretCmd.getSecretMap();
-        Map<String, byte[]> bytesSecretData = Maps.newHashMap();
-        for (Map.Entry<String, String> es : updateSecretData.entrySet()) {
-            bytesSecretData.put(es.getKey(), es.getValue().getBytes());
-        }
+        Map<String, byte[]> currentSecretData = updateSecretCmd.getCurrentSecretMap();
+        Map<String, byte[]> updateSecretData = updateSecretCmd.getSecretMap();
+
+        CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+        V1Secret secret = new V1Secret()
+                .apiVersion("v1")
+                .kind("Secret")
+                .metadata(new V1ObjectMeta().name(secretName))
+                .type("Opaque")
+                .data(updateSecretData);
 
         try {
-            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
-            V1Secret secret = new V1Secret()
-                    .apiVersion("v1")
-                    .kind("Secret")
-                    .metadata(new V1ObjectMeta().name(secretName))
-                    .type("Opaque")
-                    .data(bytesSecretData);
+            V1Secret v1Secret = coreV1Api.readNamespacedSecret(secretName, namespace, null);
+            Map<String, byte[]> data = v1Secret.getData();
+            log.info("Current secret data:{}", JSON.toJSONString(data));
 
-            // 尝试获取现有的 Secret
-            if (currentSecretData != null && !currentSecretData.isEmpty()) {
-                // 如果存在，则更新 Secret
-                // 检查数据是否已经相同，避免不必要的更新
-                if (!StringUtils.equals(JSON.toJSONString(currentSecretData), JSON.toJSONString(updateSecretData))) {
-                    coreV1Api.replaceNamespacedSecret(secretName, namespace, secret, null, null, null, null);
-                    log.info("Secret {} updated successfully.", secretName);
-                } else {
-                    log.info("Secret {} already up-to-date.", secretName);
-                }
-            } else {
-                // 如果不存在，则创建 Secret
-                coreV1Api.createNamespacedSecret(namespace, secret, null, null, null, null);
-                log.info("Secret {} created successfully.", secretName);
+            if (!KubernetesUtils.equalMaps(data, currentSecretData)) {
+                log.warn("Current inconsistent secret data:{}", JSON.toJSONString(data));
+            }
+
+
+            if (!KubernetesUtils.equalMaps(data, updateSecretData)) {
+                coreV1Api.replaceNamespacedSecret(secretName, namespace, secret, null, null, null, null);
+                log.info("Secret {} updated successfully.", appName);
             }
             return true;
         } catch (ApiException e) {
             // 处理其他类型的错误
+            if (e.getCode() == 404) {
+                log.warn("Secret {} not found. Creating new ConfigMap.", secretName);
+                try {
+                    // 如果不存在，则创建 ConfigMap
+                    coreV1Api.createNamespacedSecret(namespace, secret, null, null, null, null);
+                    log.info("Secret {} created successfully.", appName);
+                    return true;
+                } catch (ApiException createException) {
+                    log.error("Failed to create Secret {}. {}", secretName, createException.getResponseBody(), createException);
+                    return false;
+                }
+            }
             log.error("Error while creating or updating Secret {}: {}", secretName, e.getResponseBody(), e);
             return false;
         }

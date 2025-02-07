@@ -19,6 +19,6 @@ public class CreateSecretCmd {
     /**
      * secretData
      */
-    private Map<String, String> secretData;
+    private Map<String, byte[]> secretData;
 
 }

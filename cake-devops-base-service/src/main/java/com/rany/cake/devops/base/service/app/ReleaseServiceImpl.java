@@ -151,7 +151,7 @@ public class ReleaseServiceImpl implements ReleaseService {
         try {
             redissonLockClient.lock(lockKey);
             deployHistoryRepository.save(history);
-            releaseCenter.release(pipeKey, release, app, appEnv, namespace, cluster, history);
+            releaseCenter.release(pipeKey, release, app, appEnv, namespace, cluster, history, false);
         } catch (Exception ex) {
             log.error("发生错误，请重试", ex);
             history.setDeployStatus(DeployHistoryStatusEnum.FAILED.getValue());

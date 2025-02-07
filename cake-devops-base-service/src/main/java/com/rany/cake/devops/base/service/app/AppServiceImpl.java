@@ -42,6 +42,7 @@ import com.rany.cake.devops.base.service.integration.cloud.CloudFactory;
 import com.rany.cake.devops.base.service.integration.cloud.dto.*;
 import com.rany.cake.devops.base.service.integration.code.BaseCodeService;
 import com.rany.cake.devops.base.service.integration.code.CodeFactory;
+import com.rany.cake.devops.base.service.utils.KubernetesUtils;
 import com.rany.cake.devops.base.util.enums.AppEnvEnum;
 import com.rany.cake.devops.base.util.enums.AppRoleEnum;
 import com.rany.cake.devops.base.util.enums.CodeLanguageEnum;
@@ -264,8 +265,8 @@ public class AppServiceImpl implements AppService {
         updateSecretCmd.setAppName(app.getAppName().getName());
         updateSecretCmd.setEnvName(appEnv.getEnvName());
         updateSecretCmd.setEnvId(appEnv.getEnvId());
-        updateSecretCmd.setSecretMap(modifySecretMapCommand.getSecretMap());
-        updateSecretCmd.setCurrentSecretMap(appEnv.getSecretMap());
+        updateSecretCmd.setSecretMap(KubernetesUtils.convertSecretData(modifySecretMapCommand.getSecretMap()));
+        updateSecretCmd.setCurrentSecretMap(KubernetesUtils.convertSecretData(appEnv.getSecretMap()));
         Boolean updated = cloudService.createOrUpdateSecret(context, updateSecretCmd);
         if (updated) {
             appEnv.setSecretMap(modifySecretMapCommand.getSecretMap());
