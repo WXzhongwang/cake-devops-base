@@ -20,7 +20,6 @@ import com.rany.cake.devops.base.domain.base.AppConfig;
 import com.rany.cake.devops.base.domain.base.DepartmentConfig;
 import com.rany.cake.devops.base.domain.base.SnowflakeIdWorker;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
-import com.rany.cake.devops.base.domain.entity.ServiceValueObject;
 import com.rany.cake.devops.base.domain.events.AppEnvCreateEvent;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
@@ -30,10 +29,7 @@ import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
 import com.rany.cake.devops.base.domain.service.AppDomainService;
 import com.rany.cake.devops.base.domain.service.ClusterDomainService;
 import com.rany.cake.devops.base.domain.type.AppName;
-import com.rany.cake.devops.base.domain.valueobject.AppExtend;
-import com.rany.cake.devops.base.domain.valueobject.BusinessOwnership;
-import com.rany.cake.devops.base.domain.valueobject.CodeRepository;
-import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
+import com.rany.cake.devops.base.domain.valueobject.*;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.AppDataAdapter;
 import com.rany.cake.devops.base.service.context.DeployContext;
@@ -385,6 +381,7 @@ public class AppServiceImpl implements AppService {
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
 
         CreateServiceCmd createServiceCmd = new CreateServiceCmd();
+        createServiceCmd.setAppName(app.getAppName().getName());
         createServiceCmd.setNamespace(namespace.getName().getName());
         createServiceCmd.setServicePort(createServiceCommand.getServicePort());
         createServiceCmd.setServiceProtocol(createServiceCommand.getServiceProtocol());
@@ -404,7 +401,7 @@ public class AppServiceImpl implements AppService {
                 .build());
         Boolean created = cloudService.createService(context, createServiceCmd);
         if (created) {
-            appEnv.setService(JSON.toJSONString(appEnv.getService()));
+            appEnv.setService(JSON.toJSONString(serviceList));
             appDomainService.updateAppEnv(appEnv);
         }
         return created;
@@ -434,7 +431,7 @@ public class AppServiceImpl implements AppService {
         List<ServiceValueObject> serviceList = appEnv.getServiceList();
         serviceList.removeIf(service -> service.getServiceName().equals(deleteServiceCommand.getServiceName()));
         if (deleted) {
-            appEnv.setService(JSON.toJSONString(appEnv.getService()));
+            appEnv.setService(JSON.toJSONString(serviceList));
             appDomainService.updateAppEnv(appEnv);
         }
         return deleted;
@@ -518,10 +515,20 @@ public class AppServiceImpl implements AppService {
         BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
                 context.getCluster().getConnectionString(), context.getCluster().getToken());
         appEnv.setDomains(modifyAppEnvDomainCommand.getDomains());
-        CreateIngressCmd createIngressCmd = new CreateIngressCmd(namespace.getName().getName(), modifyAppEnvDomainCommand.getServiceName(),
-                modifyAppEnvDomainCommand.getServicePort(),
-                appEnv.getDomains(),
-                modifyAppEnvDomainCommand.getIngressName()
+
+
+        List<IngressRuleValueObject> rules = new ArrayList<>();
+        IngressDTO ingressDTO = modifyAppEnvDomainCommand.getIngressDTO();
+        for (IngressRuleDTO ingressRuleDTO : ingressDTO.getRules()) {
+            IngressRuleValueObject rule = new IngressRuleValueObject(ingressRuleDTO.getHost(), new ArrayList<>());
+            for (IngressPathDTO ingressPathDTO : ingressRuleDTO.getPaths()) {
+                rule.getPaths().add(new IngressPathValueObject(ingressPathDTO.getPath(), ingressPathDTO.getPathType(),
+                        new BackEndValueObject(ingressPathDTO.getBackend().getServiceName(), ingressPathDTO.getBackend().getServicePort())));
+            }
+            rules.add(rule);
+        }
+        CreateIngressCmd createIngressCmd = new CreateIngressCmd(namespace.getName().getName(),
+                rules, ingressDTO.getIngressName()
         );
         Boolean updated = cloudService.createOrUpdateIngress(context, createIngressCmd);
         if (updated) {

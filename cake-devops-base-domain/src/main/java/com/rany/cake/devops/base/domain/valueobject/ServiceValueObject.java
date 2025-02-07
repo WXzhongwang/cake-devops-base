@@ -1,4 +1,4 @@
-package com.rany.cake.devops.base.domain.entity;
+package com.rany.cake.devops.base.domain.valueobject;
 
 import com.cake.framework.common.base.BaseValueObject;
 import lombok.*;

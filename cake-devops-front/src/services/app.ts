@@ -9,6 +9,12 @@ import {
   DeleteAppMemberPayload,
   AddAppMemberPayload,
   ListAppBranchPayload,
+  ModifyAppEnvConfigMapPayload,
+  ModifyAppEnvVarsPayload,
+  ModifyAppResourcesPayload,
+  AppServicePayload,
+  DeleteAppServicePayload,
+  SaveIngressPayload,
 } from "@/models/app";
 export async function pageAppList(data: QueryAppPayload) {
   return request("/api/devops/app/page", {
@@ -63,21 +69,51 @@ export async function listAppBranch(data: ListAppBranchPayload) {
   );
 }
 
-export async function modifyAppEnvConfigMap(data: any) {
+export async function modifyAppEnvConfigMap(
+  data: ModifyAppEnvConfigMapPayload
+) {
   return request(`/api/devops/app/modify-config-map`, {
     method: "POST",
     data,
   });
 }
 
-export async function modifyAppEnvVars(data: any) {
+export async function modifyAppEnvVars(data: ModifyAppEnvVarsPayload) {
   return request(`/api/devops/app/modify-env-vars`, {
     method: "POST",
     data,
   });
 }
 
-export async function modifyAppEnvResource(data: any) {
+export async function createService(data: AppServicePayload) {
+  return request(`/api/devops/app/create-svc`, {
+    method: "POST",
+    data,
+  });
+}
+
+export async function modifyService(data: AppServicePayload) {
+  return request(`/api/devops/app/modify-svc`, {
+    method: "POST",
+    data,
+  });
+}
+
+export async function deleteService(data: DeleteAppServicePayload) {
+  return request(`/api/devops/app/delete-svc`, {
+    method: "POST",
+    data,
+  });
+}
+
+export async function saveIngress(data: SaveIngressPayload) {
+  return request(`/api/devops/app/modify-env-domains`, {
+    method: "POST",
+    data,
+  });
+}
+
+export async function modifyAppEnvResource(data: ModifyAppResourcesPayload) {
   return request(`/api/devops/app/modify-env-resources`, {
     method: "POST",
     data,

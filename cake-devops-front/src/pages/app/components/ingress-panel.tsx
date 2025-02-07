@@ -16,7 +16,7 @@ import { nanoid } from "nanoid";
 import { connect, Dispatch } from "umi";
 import { API } from "typings";
 import appDetail from "../app-detail";
-import { AppInfo } from "@/models/app";
+import { AppInfo, IngressDTO } from "@/models/app";
 import {
   CloseOutlined,
   MinusCircleOutlined,
@@ -26,33 +26,10 @@ import {
 const { Title } = Typography;
 
 interface IngressPanelProps {
-  ingress: WrapIngressItem;
+  ingress: IngressDTO;
   appName: string;
   selectedEnvironment: string | undefined | null;
   dispatch: Dispatch;
-}
-
-interface WrapIngressItem {
-  ingressName: string;
-  rules: RuleItem[];
-}
-
-interface RuleItem {
-  host: string;
-  paths: PathItem[];
-  tcp: PortItem[];
-}
-
-interface PathItem {
-  path: string;
-  pathType: string;
-  serviceName: string;
-  servicePort: number;
-}
-interface PortItem {
-  port: string;
-  serviceName: string;
-  servicePort: number;
 }
 
 const IngressPanel: React.FC<IngressPanelProps> = ({
@@ -63,10 +40,10 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
 }) => {
   console.log("init", appName);
   const [form] = Form.useForm();
-  const [editingItem, setEditingItem] = useState<WrapIngressItem | null>(null);
+  const [editingItem, setEditingItem] = useState<IngressDTO | null>(null);
   const [modelOpen, setModelOpen] = useState<boolean>(false);
 
-  const handleEdit = (item: WrapIngressItem) => {
+  const handleEdit = (item: IngressDTO) => {
     setEditingItem(item);
     setModelOpen(!modelOpen);
     form.setFieldsValue({ ...item });
@@ -80,61 +57,22 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
   const handleSave = async () => {
     try {
       const row = await form.validateFields();
-      setEditingItem(null);
-      message.success("保存成功");
 
       // 调用接口保存数据
       dispatch({
         type: "app/saveIngress",
-        payload: { ...row, environment: selectedEnvironment },
+        payload: {
+          envId: selectedEnvironment,
+          ingressDTO: row,
+        },
+        callback: (res: boolean) => {
+          handleCancel;
+        },
       });
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
     }
   };
-
-  // const handleAddHost = () => {
-  //   const newRule: RuleItem = {
-  //     host: "",
-  //     http: {
-  //       paths: [],
-  //     },
-  //   };
-  //   form.setFieldsValue({
-  //     rules: [...(form.getFieldValue("rules") || []), newRule],
-  //   });
-  // };
-
-  // const handleRemoveHost = (index: number) => {
-  //   const rules = form.getFieldValue("rules") || [];
-  //   const newRules = rules.filter((_: RuleItem, i: number) => i !== index);
-  //   form.setFieldsValue({ rules: newRules });
-  // };
-
-  // const handleAddPath = (hostIndex: number) => {
-  //   const newPaths: PathItem[] = [
-  //     ...(form.getFieldValue(`rules[${hostIndex}].http.paths`) || []),
-  //     {
-  //       path: "",
-  //       pathType: "Exact",
-  //       service: {
-  //         serviceName: "",
-  //         servicePort: 80,
-  //       },
-  //     },
-  //   ];
-  //   form.setFieldsValue({
-  //     [`rules[${hostIndex}].http.paths`]: newPaths,
-  //   });
-  // };
-
-  // const handleRemovePath = (hostIndex: number, pathIndex: number) => {
-  //   const paths = form.getFieldValue(`rules[${hostIndex}].http.paths`) || [];
-  //   const newPaths = paths.filter((_: PathItem, i: number) => i !== pathIndex);
-  //   form.setFieldsValue({
-  //     [`rules[${hostIndex}].http.paths`]: newPaths,
-  //   });
-  // };
 
   return (
     <Space style={{ width: "100%" }} direction="vertical">
@@ -155,7 +93,8 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
         <Form
           form={form}
           initialValues={{
-            ingressName: appName,
+            ingressName: ingress.ingressName ?? appName,
+            rules: ingress.rules,
           }}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 18 }}
@@ -225,13 +164,21 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
                                 </Form.Item>
                                 <Form.Item
                                   noStyle
-                                  name={[subField.name, "serviceName"]}
+                                  name={[
+                                    subField.name,
+                                    "backend",
+                                    "serviceName",
+                                  ]}
                                 >
                                   <Input placeholder="serviceName" />
                                 </Form.Item>
                                 <Form.Item
                                   noStyle
-                                  name={[subField.name, "servicePort"]}
+                                  name={[
+                                    subField.name,
+                                    "backend",
+                                    "servicePort",
+                                  ]}
                                 >
                                   <Input placeholder="servicePort" />
                                 </Form.Item>
@@ -248,56 +195,6 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
                               block
                             >
                               + 添加Path
-                            </Button>
-                          </div>
-                        )}
-                      </Form.List>
-                    </Form.Item>
-
-                    {/* Nest Form.List */}
-                    <Form.Item label="tcp">
-                      <Form.List name={[field.name, "ports"]}>
-                        {(subFields, subOpt) => (
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              rowGap: 16,
-                            }}
-                          >
-                            {subFields.map((subField) => (
-                              <Space key={subField.key}>
-                                <Form.Item
-                                  noStyle
-                                  name={[subField.name, "port"]}
-                                >
-                                  <Input placeholder="port" />
-                                </Form.Item>
-                                <Form.Item
-                                  noStyle
-                                  name={[subField.name, "serviceName"]}
-                                >
-                                  <Input placeholder="serviceName" />
-                                </Form.Item>
-                                <Form.Item
-                                  noStyle
-                                  name={[subField.name, "servicePort"]}
-                                >
-                                  <Input placeholder="servicePort" />
-                                </Form.Item>
-                                <CloseOutlined
-                                  onClick={() => {
-                                    subOpt.remove(subField.name);
-                                  }}
-                                />
-                              </Space>
-                            ))}
-                            <Button
-                              type="dashed"
-                              onClick={() => subOpt.add()}
-                              block
-                            >
-                              + 添加Port
                             </Button>
                           </div>
                         )}

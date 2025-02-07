@@ -51,21 +51,25 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
   const handleSave = async () => {
     try {
       const row = await form.validateFields();
-      const newData = [...data];
-      const index = newData.findIndex((item) => item.id === editingItem?.id);
-      if (index !== -1) {
-        newData.splice(index, 1, { ...editingItem, ...row });
-      } else {
-        newData.push({ ...row, id: nanoid(), editable: false });
-      }
-      setData(newData);
-      setEditingItem(null);
-      message.success("保存成功");
+      debugger;
+      // const newData = [...data];
+      // const index = newData.findIndex((item) => item.id === editingItem?.id);
+      // if (index !== -1) {
+      //   newData.splice(index, 1, { ...editingItem, ...row });
+      // } else {
+      //   newData.push({ ...row, id: nanoid(), editable: false });
+      // }
+      // setData(newData);
 
       // 调用接口保存数据
       dispatch({
         type: "app/saveService",
-        payload: { ...row, environment: selectedEnvironment },
+        payload: { ...row, envId: selectedEnvironment },
+        callback: (res: boolean) => {
+          setEditingItem(null);
+          setModelOpen(!modelOpen);
+          message.success("保存成功");
+        },
       });
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
@@ -82,21 +86,20 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
       serviceType: "ClusterIP",
       editable: true,
     };
-    // setData([...data, newRow]);
-    // handleEdit(newRow); // 直接编辑新行
     form.setFieldsValue({ ...newRow });
     setModelOpen(!modelOpen);
   };
 
-  const handleDelete = (id: string) => {
-    const newData = data.filter((item) => item.id !== id);
-    setData(newData);
-    message.success("删除成功");
-
+  const handleDelete = (record: WrapServiceItem) => {
+    const newData = data.filter((item) => item.id !== record.id);
     // 调用接口删除数据
     dispatch({
       type: "app/deleteService",
-      payload: { id, environment: selectedEnvironment },
+      payload: { serviceName: record.serviceName, envId: selectedEnvironment },
+      callback: (res: boolean) => {
+        setData(newData);
+        message.success("删除成功");
+      },
     });
   };
 
@@ -116,7 +119,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
           </Typography.Link>
           <Popconfirm
             title="确认删除吗?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => handleDelete(record)}
           >
             <Typography.Link>删除</Typography.Link>
           </Popconfirm>
@@ -137,7 +140,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
 
       <Table
         bordered
-        rowKey="id"
+        rowKey="serviceName"
         dataSource={data}
         columns={columns}
         pagination={false}
@@ -162,14 +165,14 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
             label="服务端口"
             rules={[{ required: true, message: "请输入服务端口!" }]}
           >
-            <Input type="number" defaultValue={80} />
+            <Input type="number" />
           </Form.Item>
           <Form.Item
             name="containerPort"
             label="容器端口"
             rules={[{ required: true, message: "请输入容器端口!" }]}
           >
-            <Input type="number" defaultValue={8300} />
+            <Input type="number" />
           </Form.Item>
           <Form.Item
             name="serviceProtocol"

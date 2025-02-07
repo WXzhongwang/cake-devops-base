@@ -2,8 +2,7 @@ package com.rany.cake.devops.base.service.integration.cloud;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
-import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
+import com.rany.cake.devops.base.domain.valueobject.*;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.integration.cloud.dto.*;
 import com.rany.cake.devops.base.service.utils.KubernetesUtils;
@@ -280,24 +279,11 @@ public class K8sCloudService extends BaseCloudService {
         try {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             // 调用 Kubernetes API 删除 Service
-            coreV1Api.deleteNamespacedService(
-                    deleteServiceCmd.getServiceName(),
-                    // Service 名称
-                    deleteServiceCmd.getNamespace(),
-                    // 命名空间
-                    null,
-                    // 删除选项
-                    null,
-                    // 删除时的预览
-                    null,
-                    // 删除策略
-                    null,
-                    // 处理选项
-                    null,
-                    // 查询参数
-                    new V1DeleteOptions()
-                    // 删除选项
-            );
+//            coreV1Api.deleteNamespacedService(deleteServiceCmd.getServiceName(),
+//                    deleteServiceCmd.getNamespace(), null, null, null, null, null, null);
+            coreV1Api.deleteNamespacedServiceAsync(deleteServiceCmd.getServiceName(),
+                    deleteServiceCmd.getNamespace(), null, null, null, null, null, null, null);
+            // check if service deleted
             log.info("Service delete successfully.");
             return true;
         } catch (ApiException e) {
@@ -528,23 +514,25 @@ public class K8sCloudService extends BaseCloudService {
     public boolean createIngress(DeployContext context, CreateIngressCmd createIngressCmd) {
         String namespace = createIngressCmd.getNamespace();
         List<V1IngressRule> rules = new ArrayList<>();
-        for (String domain : createIngressCmd.getDomains()) {
+        V1HTTPIngressRuleValue v1HTTPIngressRuleValue = new V1HTTPIngressRuleValue();
+        for (IngressRuleValueObject rule : createIngressCmd.getRules()) {
+            for (IngressPathValueObject pathItem : rule.getPaths()) {
+                BackEndValueObject backend = pathItem.getBackend();
+                V1HTTPIngressPath path = new V1HTTPIngressPath()
+                        .backend(
+                                new V1IngressBackend()
+                                        .service(
+                                                new V1IngressServiceBackend()
+                                                        .name(backend.getServiceName())
+                                                        .port(new V1ServiceBackendPort()
+                                                                .number(backend.getServicePort())))
+                        ).path(pathItem.getPath())
+                        .pathType(pathItem.getPathType());
+                v1HTTPIngressRuleValue.addPathsItem(path);
+            }
             V1IngressRule http = new V1IngressRule()
-                    .host(domain)  // 替换为你的域名
-                    .http(new V1HTTPIngressRuleValue()
-                            .addPathsItem(
-                                    new V1HTTPIngressPath()
-                                            .backend(
-                                                    new V1IngressBackend()
-                                                            .service(
-                                                                    new V1IngressServiceBackend()
-                                                                            .name(createIngressCmd.getServiceName())
-                                                                            .port(new V1ServiceBackendPort()
-                                                                                    .number(createIngressCmd.getServicePort())))
-                                            ).path("/")
-                            )
-
-                    );
+                    .host(rule.getHost()) // 替换为你的域名
+                    .http(v1HTTPIngressRuleValue);
             rules.add(http);
         }
 
@@ -589,28 +577,29 @@ public class K8sCloudService extends BaseCloudService {
     @Override
     public boolean createOrUpdateIngress(DeployContext context, CreateIngressCmd createIngressCmd) {
         String namespace = createIngressCmd.getNamespace();
-        List<String> domains = createIngressCmd.getDomains();
+        String ingressName = createIngressCmd.getIngressName();
         List<V1IngressRule> rules = new ArrayList<>();
-        for (String domain : domains) {
-            V1IngressRule rule = new V1IngressRule()
-                    .host(domain)
-                    .http(new V1HTTPIngressRuleValue()
-                            .addPathsItem(
-                                    new V1HTTPIngressPath()
-                                            .backend(
-                                                    new V1IngressBackend()
-                                                            .service(
-                                                                    new V1IngressServiceBackend()
-                                                                            .name(createIngressCmd.getServiceName())
-                                                                            .port(new V1ServiceBackendPort()
-                                                                                    .number(createIngressCmd.getServicePort())))
-                                            ).path("/")
-                                            .pathType("Prefix")
-                            )
-                    );
-            rules.add(rule);
+        V1HTTPIngressRuleValue v1HTTPIngressRuleValue = new V1HTTPIngressRuleValue();
+        for (IngressRuleValueObject rule : createIngressCmd.getRules()) {
+            for (IngressPathValueObject pathItem : rule.getPaths()) {
+                BackEndValueObject backend = pathItem.getBackend();
+                V1HTTPIngressPath path = new V1HTTPIngressPath()
+                        .backend(
+                                new V1IngressBackend()
+                                        .service(
+                                                new V1IngressServiceBackend()
+                                                        .name(backend.getServiceName())
+                                                        .port(new V1ServiceBackendPort()
+                                                                .number(backend.getServicePort())))
+                        ).path(pathItem.getPath())
+                        .pathType(pathItem.getPathType());
+                v1HTTPIngressRuleValue.addPathsItem(path);
+            }
+            V1IngressRule http = new V1IngressRule()
+                    .host(rule.getHost()) // 替换为你的域名
+                    .http(v1HTTPIngressRuleValue);
+            rules.add(http);
         }
-
 
         // 添加 defaultBackend 配置
         V1IngressBackend defaultBackend = new V1IngressBackend()
@@ -630,28 +619,33 @@ public class K8sCloudService extends BaseCloudService {
                 .rules(rules)
                 .defaultBackend(defaultBackend);
         // 添加这一行来指定默认后端
-
+        NetworkingV1Api networkingV1Api = new NetworkingV1Api(apiClient);
+        V1Ingress ingress = new V1Ingress()
+                .apiVersion("networking.k8s.io/v1")
+                .kind("Ingress")
+                .metadata(new V1ObjectMeta().name(createIngressCmd.getIngressName()))
+                .spec(ingressSpec);
         try {
-            NetworkingV1Api networkingV1Api = new NetworkingV1Api(apiClient);
-            V1Ingress ingress = new V1Ingress()
-                    .apiVersion("networking.k8s.io/v1")
-                    .kind("Ingress")
-                    .metadata(new V1ObjectMeta().name(createIngressCmd.getIngressName()))
-                    .spec(ingressSpec);
-
             // 检查现有的 Ingress 是否存在
-            V1Ingress v1Ingress = networkingV1Api.readNamespacedIngress(createIngressCmd.getIngressName(), namespace, null);
-            if (v1Ingress != null) {
-                // 如果存在，则更新
-                networkingV1Api.replaceNamespacedIngress(createIngressCmd.getIngressName(), namespace, ingress, null, null, null, null);
-                log.info("Ingress {} updated successfully.", createIngressCmd.getIngressName());
-            } else {
-                // 如果不存在，则创建
-                networkingV1Api.createNamespacedIngress(namespace, ingress, null, null, null, null);
-                log.info("Ingress {} created successfully.", createIngressCmd.getIngressName());
-            }
+            V1Ingress v1Ingress = networkingV1Api.readNamespacedIngress(ingressName, namespace, null);
+            // 如果存在，则更新
+            networkingV1Api.replaceNamespacedIngress(ingressName, namespace, ingress, null, null, null, null);
+            log.info("Ingress {} updated successfully.", createIngressCmd.getIngressName());
             return true;
         } catch (ApiException e) {
+            // 处理其他类型的错误
+            if (e.getCode() == 404) {
+                log.warn("Ingress {} not found. Creating new Ingress.", createIngressCmd.getIngressName());
+                try {
+                    // 如果不存在，则创建
+                    networkingV1Api.createNamespacedIngress(namespace, ingress, null, null, null, null);
+                    log.info("Ingress {} created successfully.", ingressName);
+                    return true;
+                } catch (ApiException createException) {
+                    log.error("Failed to create Ingress {}. {}", ingressName, createException.getResponseBody(), createException);
+                    return false;
+                }
+            }
             log.error("Failed to create or update Ingress: {}", createIngressCmd.getIngressName(), e);
             return false;
         }

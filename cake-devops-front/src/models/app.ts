@@ -164,6 +164,41 @@ export interface PodDTO {
   ready: boolean;
 }
 
+export interface AppServicePayload extends ServiceItem {
+  envId: string;
+}
+
+export interface DeleteAppServicePayload {
+  envId: string;
+  serviceName: string;
+}
+
+export interface SaveIngressPayload {
+  envId: string;
+  ingressDTO: IngressDTO;
+}
+
+export interface IngressDTO {
+  ingressName: string;
+  rules: RuleItem[];
+}
+
+export interface RuleItem {
+  host: string;
+  paths: PathItem[];
+}
+
+export interface PathItem {
+  path: string;
+  pathType: string;
+  backend: BackEndService;
+}
+
+export interface BackEndService {
+  serviceName: string;
+  servicePort: number;
+}
+
 export interface AppState {
   appList: {
     total: number;
@@ -257,6 +292,26 @@ interface GetAppDetailAction extends BaseAction {
   payload: { id: number };
 }
 
+interface CreateAppServiceAction extends BaseAction {
+  type: "app/createService";
+  payload: AppServicePayload;
+}
+
+interface ModifyAppServiceAction extends BaseAction {
+  type: "app/modifyService";
+  payload: AppServicePayload;
+}
+
+interface DeleteAppServiceAction extends BaseAction {
+  type: "app/deleteService";
+  payload: DeleteAppServicePayload;
+}
+
+interface SaveIngressAction extends BaseAction {
+  type: "app/saveIngress";
+  payload: SaveIngressPayload;
+}
+
 export interface AppModelType {
   namespace: "app";
   state: AppState;
@@ -275,6 +330,10 @@ export interface AppModelType {
     listAppPods: Effect;
     scale: Effect;
     listBranch: Effect;
+    saveService: Effect;
+    modifyService: Effect;
+    deleteService: Effect;
+    saveIngress: Effect;
   };
   reducers: {
     setAppList: Reducer<AppState>;
@@ -493,6 +552,57 @@ const AppModel: AppModelType = {
             total: response.content.total,
           },
         });
+      }
+    },
+
+    *saveService({ payload, callback }: CreateAppServiceAction, { call, put }) {
+      const response = yield call(appService.createService, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *modifyService(
+      { payload, callback }: ModifyAppServiceAction,
+      { call, put }
+    ) {
+      const response = yield call(appService.modifyService, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *deleteService(
+      { payload, callback }: DeleteAppServiceAction,
+      { call, put }
+    ) {
+      const response = yield call(appService.deleteService, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+    *saveIngress({ payload, callback }: SaveIngressAction, { call, put }) {
+      const response = yield call(appService.saveIngress, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
       }
     },
   },

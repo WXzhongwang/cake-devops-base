@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "cake-devops-base",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "author": "1528683621@qq.com <18668485565@163.com>",
   "scripts": {
     "dev": "umi dev",

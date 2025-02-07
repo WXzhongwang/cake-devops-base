@@ -631,7 +631,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             <Table
               columns={podColumns}
               dataSource={pods}
-              rowKey={"id"}
+              rowKey={"name"}
               pagination={false}
             />
           </Card>

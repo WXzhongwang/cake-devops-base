@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSON;
 import com.cake.framework.common.base.BaseEntity;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.ClusterId;
+import com.rany.cake.devops.base.domain.valueobject.IngressValueObject;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
+import com.rany.cake.devops.base.domain.valueobject.ServiceValueObject;
 import com.rany.cake.devops.base.util.enums.AppEnvEnum;
 import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
@@ -14,6 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +91,8 @@ public class AppEnv extends BaseEntity<String> {
 
     private List<ServiceValueObject> serviceList;
 
+    private IngressValueObject ingressConfig;
+
     public AppEnv() {
     }
 
@@ -128,6 +133,13 @@ public class AppEnv extends BaseEntity<String> {
         if (StringUtils.isNotEmpty(service)) {
             serviceList = JSON.parseArray(service, ServiceValueObject.class);
         }
-        return serviceList;
+        return serviceList != null ? serviceList : new ArrayList<>();
+    }
+
+    public IngressValueObject getIngressConfig() {
+        if (StringUtils.isNotEmpty(ingress)) {
+            ingressConfig = JSON.parseObject(ingress, IngressValueObject.class);
+        }
+        return ingressConfig != null ? ingressConfig : new IngressValueObject();
     }
 }

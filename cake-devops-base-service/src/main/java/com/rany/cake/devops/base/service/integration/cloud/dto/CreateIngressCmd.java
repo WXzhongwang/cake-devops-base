@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.integration.cloud.dto;
 
+import com.rany.cake.devops.base.domain.valueobject.IngressRuleValueObject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,19 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateIngressCmd {
     private String namespace;
-    /**
-     * 发布服务名
-     */
-    private String serviceName;
-    /**
-     * 服务端口
-     */
-    private Integer servicePort;
 
     /**
-     * 域名
+     * rules
      */
-    private List<String> domains;
+    private List<IngressRuleValueObject> rules;
 
     /**
      * ingress name

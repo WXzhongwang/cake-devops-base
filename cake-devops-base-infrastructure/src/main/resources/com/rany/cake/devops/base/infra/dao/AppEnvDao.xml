@@ -60,7 +60,9 @@
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
         insert into app_env (env_id,
                              cluster_id, app_id,
-                             domains, env_name, env,
+                             domains,
+                             env_name,
+                             env,
                              replicas, cpu, memory,
                              max_cpu, max_memory,
                              auto_scaling, need_approval, status,
@@ -73,14 +75,15 @@
                 #{clusterId.clusterId},
                 #{appId.appId},
                 #{domains,jdbcType=VARCHAR,typeHandler=com.cake.framework.mybatis.handler.ListStringTypeHandler},
-                #{envName,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR},
+                #{envName,jdbcType=VARCHAR},
+                #{env,jdbcType=VARCHAR},
                 #{resourceStrategy.replicas,jdbcType=INTEGER}, #{resourceStrategy.cpu}, #{resourceStrategy.memory},
                 #{resourceStrategy.maxCpu}, #{resourceStrategy.maxMemory},
                 #{autoScaling,jdbcType=CHAR}, #{needApproval,jdbcType=CHAR}, #{status,jdbcType=VARCHAR},
                 #{isDeleted,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
                 #{deployStatus}, #{progress},
-                #{customBuildScript}, #{deploymentName}, #{serviceName}, #{ingressName},
+                #{customBuildScript}, #{deployment}, #{service}, #{ingress},
                 #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
                 #{envVars,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
                 #{secretMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler})
@@ -160,19 +163,19 @@
             <if test="deployStatus != null">
                 deploy_status = #{deployStatus},
             </if>
-            <if test="progress != null">
+            <if test="progress != null and progress != ''">
                 progress = #{progress},
             </if>
-            <if test="customBuildScript != null">
+            <if test="customBuildScript != null and customBuildScript != ''">
                 custom_build_script = #{customBuildScript},
             </if>
-            <if test="deployment != null">
+            <if test="deployment != null and deployment != ''">
                 deployment = #{deployment},
             </if>
-            <if test="service != null">
+            <if test="service != null and service != ''">
                 service = #{service},
             </if>
-            <if test="ingress != null">
+            <if test="ingress != null  and ingress != ''">
                 ingress = #{ingress},
             </if>
         </set>

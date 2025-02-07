@@ -63,11 +63,22 @@ public class AppEnvDTO extends DTO {
      * 服务列表
      */
     private List<ServiceDTO> serviceList;
+    /**
+     * ingressConfig
+     */
+    private IngressDTO ingressConfig;
 
     public List<ServiceDTO> getServiceList() {
         if (StringUtils.isNotEmpty(service)) {
             serviceList = JSON.parseArray(service, ServiceDTO.class);
         }
         return serviceList;
+    }
+
+    public IngressDTO getIngressConfig() {
+        if (StringUtils.isNotEmpty(ingress)) {
+            ingressConfig = JSON.parseObject(ingress, IngressDTO.class);
+        }
+        return ingressConfig;
     }
 }
