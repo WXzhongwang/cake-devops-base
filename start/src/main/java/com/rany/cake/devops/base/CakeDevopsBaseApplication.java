@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 })
 @ImportResource(locations = {"classpath:config/spring-*.xml"})
 @MapperScan(basePackages = {"com.rany.cake.devops.base.infra.dao", "com.rany.cake.devops.base.infra.mapper"})
+//@PropertySource(name = "k8s-app", value = "cake-devops-base", factory = CakePropertySourceFactory.class)
 public class CakeDevopsBaseApplication {
 
     public static void main(String[] args) {

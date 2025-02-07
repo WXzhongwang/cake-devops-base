@@ -20,8 +20,7 @@
         <result column="department" property="department" jdbcType="VARCHAR"/>
         <result column="webhook" property="webhook" jdbcType="VARCHAR"/>
         <result column="code_platform" property="codePlatform" jdbcType="VARCHAR"/>
-        <result column="connection_string" property="connectionString" jdbcType="VARCHAR"/>
-        <result column="token" property="token" jdbcType="VARCHAR"/>
+        <result column="extend" property="extend" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
         id
@@ -29,7 +28,7 @@
           app_id
         , app_name, description, repo, default_branch, language, develop_mode, owner, health_check,
     status, is_deleted, gmt_create, gmt_modified, department_abbreviation, department,
-    creator, modifier, webhook, code_platform, connection_string, token, extend
+    creator, modifier, webhook, code_platform, extend
     </sql>
 
     <select id="selectByAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -46,7 +45,7 @@
                          status, is_deleted, gmt_create,
                          gmt_modified, department_abbreviation,
                          department, webhook, creator, modifier,
-                         code_platform, connection_string, token, extend)
+                         code_platform, extend)
         values (#{appId.appId},
                 #{appName.name,jdbcType=VARCHAR},
                 #{description,jdbcType=VARCHAR},
@@ -66,8 +65,6 @@
                 #{creator},
                 #{modifier},
                 #{codeRepository.codePlatform},
-                #{codeRepository.connectionString},
-                #{codeRepository.token},
                 #{appExtend,typeHandler=com.cake.framework.mybatis.handler.GenericObjectTypeHandler})
     </insert>
 
@@ -91,7 +88,7 @@
             modifier                = #{modifier,jdbcType=VARCHAR},
             webhook                 = #{webhook},
             code_platform           = #{codeRepository.codePlatform},
-            connection_string       = #{codeRepository.connectionString} token = #{codeRepository.token}
+            extend                  = #{appExtend,typeHandler=com.cake.framework.mybatis.handler.GenericObjectTypeHandler}
         where app_id = #{appId.appId}
     </update>
 

@@ -31,3 +31,5 @@ build/
 .vscode/
 
 cake-devops-front/node_modules/
+
+cake-devops-base-infrastructure/src/main/resources/gen.properties

@@ -242,6 +242,39 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    public Boolean modifyAppSecretMap(ModifySecretMapCommand modifySecretMapCommand) {
+        DeployContext context = new DeployContext();
+        AppEnv appEnv = appDomainService.getAppEnv(modifySecretMapCommand.getEnvId());
+        context.setAppEnv(appEnv);
+        AppId appId = appEnv.getAppId();
+        ClusterId clusterId = appEnv.getClusterId();
+        App app = appDomainService.getApp(appId);
+        Cluster cluster = clusterDomainService.getCluster(clusterId);
+        BusinessOwnership businessOwnership = app.getBusinessOwnership();
+        Namespace namespace = nameSpaceRepository.findByCluster(cluster.getClusterId().getClusterId(), businessOwnership.getDepartment());
+        context.setNamespace(namespace);
+        context.setApp(app);
+        context.setCluster(cluster);
+        BaseCloudService cloudService = cloudFactory.build(context.getCluster().getClusterType(),
+                context.getCluster().getConnectionString(), context.getCluster().getToken());
+
+
+        UpdateSecretCmd updateSecretCmd = new UpdateSecretCmd();
+        updateSecretCmd.setNamespace(namespace.getName().getName());
+        updateSecretCmd.setAppName(app.getAppName().getName());
+        updateSecretCmd.setEnvName(appEnv.getEnvName());
+        updateSecretCmd.setEnvId(appEnv.getEnvId());
+        updateSecretCmd.setSecretMap(modifySecretMapCommand.getSecretMap());
+        updateSecretCmd.setCurrentSecretMap(appEnv.getSecretMap());
+        Boolean updated = cloudService.createOrUpdateSecret(context, updateSecretCmd);
+        if (updated) {
+            appEnv.setSecretMap(modifySecretMapCommand.getSecretMap());
+            appDomainService.updateAppEnv(appEnv);
+        }
+        return updated;
+    }
+
+    @Override
     public List<PodDTO> listAppEnvPod(AppEnvPodQuery appEnvPodQuery) {
         DeployContext context = new DeployContext();
         AppEnv appEnv = appDomainService.getAppEnv(appEnvPodQuery.getEnvId());

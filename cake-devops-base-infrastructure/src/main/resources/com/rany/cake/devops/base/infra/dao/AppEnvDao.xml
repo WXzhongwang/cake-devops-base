@@ -30,6 +30,8 @@
         <result column="ingress" jdbcType="VARCHAR" property="ingress"/>
         <result column="config_map" property="configMap" jdbcType="VARCHAR"
         />
+        <result column="secret_map" property="secretMap" jdbcType="VARCHAR"
+        />
         <result column="env_vars" property="envVars" jdbcType="VARCHAR"
         />
     </resultMap>
@@ -82,7 +84,8 @@
                 #{deployStatus}, #{progress},
                 #{customBuildScript}, #{deploymentName}, #{serviceName}, #{ingressName},
                 #{configMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
-                #{envVars,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler})
+                #{envVars,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
+                #{secretMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler})
     </insert>
 
 
@@ -106,6 +109,10 @@
             <if test="envVars != null">
                 env_vars =
                 #{envVars,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
+            </if>
+            <if test="secretMap != null">
+                secret_map =
+                #{secretMap,jdbcType=VARCHAR,typeHandler=com.rany.cake.devops.base.infra.handler.MapPairTypeHandler},
             </if>
             <if test="envName != null">
                 env_name = #{envName,jdbcType=VARCHAR},

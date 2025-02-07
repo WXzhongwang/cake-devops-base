@@ -57,6 +57,12 @@ public class AppController {
         return PojoResult.succeed(appService.modifyAppConfigMap(modifyAppEnvConfigMapCommand));
     }
 
+    @PostMapping("/modify-secret-map")
+    public PojoResult<Boolean> modifyAppSecretMap(@RequestBody ModifySecretMapCommand modifySecretMapCommand) {
+        return PojoResult.succeed(appService.modifyAppSecretMap(modifySecretMapCommand));
+    }
+
+
     @PostMapping("/modify-env-vars")
     public PojoResult<Boolean> modifyAppEnvVars(@RequestBody ModifyEnvVarsCommand modifyEnvVarsCommand) {
         return PojoResult.succeed(appService.modifyAppEnvVars(modifyEnvVarsCommand));

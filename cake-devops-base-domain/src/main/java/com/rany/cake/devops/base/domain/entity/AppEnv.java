@@ -48,6 +48,10 @@ public class AppEnv extends BaseEntity<String> {
      */
     private Map<String, String> configMap;
     /**
+     * secretMap
+     */
+    private Map<String, String> secretMap;
+    /**
      * 环境变量注入
      */
     private Map<String, String> envVars;

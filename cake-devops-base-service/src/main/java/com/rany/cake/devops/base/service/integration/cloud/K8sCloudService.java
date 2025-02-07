@@ -1,13 +1,13 @@
 package com.rany.cake.devops.base.service.integration.cloud;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import com.rany.cake.devops.base.domain.valueobject.ResourceStrategy;
 import com.rany.cake.devops.base.domain.valueobject.VolumeMount;
 import com.rany.cake.devops.base.service.context.DeployContext;
 import com.rany.cake.devops.base.service.integration.cloud.dto.*;
 import com.rany.cake.devops.base.service.utils.KubernetesUtils;
 import com.rany.cake.toolkit.lang.utils.Lists;
-import com.rany.cake.toolkit.lang.utils.Spells;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.custom.Quantity;
 import io.kubernetes.client.openapi.ApiException;
@@ -34,6 +34,8 @@ public class K8sCloudService extends BaseCloudService {
     public K8sCloudService(String connectString, String token) {
         build(connectString, token);
     }
+
+    public static final String FIX_LABEL = "k8s-app";
 
     @Override
     public boolean testConnection(DeployContext context) {
@@ -299,16 +301,23 @@ public class K8sCloudService extends BaseCloudService {
     public boolean createConfigMap(DeployContext context, CreateConfigMapCmd createConfigMapCmd) {
         String namespace = createConfigMapCmd.getNamespace();
         String appName = createConfigMapCmd.getAppName();
-        String envName = createConfigMapCmd.getEnvName().toLowerCase();
-        String configMapName = String.format("%s-%s", appName, envName);
+        String configMapName = "config-map-" + appName;
         Map<String, String> configMapPair = createConfigMapCmd.getConfigMap();
+
+        V1ObjectMeta meta = new V1ObjectMeta();
+        meta.setName(configMapName);
+        Map<String, String> labels = Maps.newHashMapWithExpectedSize(1);
+        labels.put(FIX_LABEL, appName);
+        meta.setLabels(labels);
+
+
         try {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             // 创建 ConfigMap 对象
             V1ConfigMap configMap = new V1ConfigMap()
                     .apiVersion("v1")
                     .kind("ConfigMap")
-                    .metadata(new V1ObjectMeta().name(configMapName))
+                    .metadata(meta)
                     .data(configMapPair);
             // 添加需要的键值对
             // 创建 ConfigMap
@@ -322,25 +331,27 @@ public class K8sCloudService extends BaseCloudService {
         }
     }
 
-
     @Override
     public boolean createOrUpdateConfigMap(DeployContext context, UpdateConfigMapCmd updateConfigMapCmd) {
         String namespace = updateConfigMapCmd.getNamespace();
         String appName = updateConfigMapCmd.getAppName();
-        String envName = updateConfigMapCmd.getEnvName().toLowerCase();
-
-        String spell = Spells.getSpell(envName);
-
-        String configMapName = String.format("%s-%s-%s", appName, updateConfigMapCmd.getEnvId(), spell);
+        String configMapName = "config-map-" + appName;
         Map<String, String> configMapData = updateConfigMapCmd.getCurrentConfigMap();
         Map<String, String> updateConfigMapData = updateConfigMapCmd.getConfigMap();
 
+        V1ObjectMeta meta = new V1ObjectMeta();
+        meta.setName(configMapName);
+        Map<String, String> labels = Maps.newHashMapWithExpectedSize(1);
+        labels.put(FIX_LABEL, appName);
+        meta.setLabels(labels);
+
         try {
+
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             V1ConfigMap configMap = new V1ConfigMap()
                     .apiVersion("v1")
                     .kind("ConfigMap")
-                    .metadata(new V1ObjectMeta().name(configMapName))
+                    .metadata(meta)
                     .data(updateConfigMapData);
 
             // 尝试获取现有的 ConfigMap
@@ -348,20 +359,20 @@ public class K8sCloudService extends BaseCloudService {
                 // 如果存在，则更新 ConfigMap
                 // 检查数据是否已经相同，避免不必要的更新
                 if (!StringUtils.equals(JSON.toJSONString(configMapData), JSON.toJSONString(updateConfigMapData))) {
-                    coreV1Api.replaceNamespacedConfigMap(configMapName, namespace, configMap, null, null, null, null);
-                    log.info("ConfigMap {} updated successfully.", configMapName);
+                    coreV1Api.replaceNamespacedConfigMap(appName, namespace, configMap, null, null, null, null);
+                    log.info("ConfigMap {} updated successfully.", appName);
                 } else {
-                    log.info("ConfigMap {} already up-to-date.", configMapName);
+                    log.info("ConfigMap {} already up-to-date.", appName);
                 }
             } else {
                 // 如果不存在，则创建 ConfigMap
                 coreV1Api.createNamespacedConfigMap(namespace, configMap, null, null, null, null);
-                log.info("ConfigMap {} created successfully.", configMapName);
+                log.info("ConfigMap {} created successfully.", appName);
             }
             return true;
         } catch (ApiException e) {
             // 处理其他类型的错误
-            log.error("Error while creating or updating ConfigMap {}: {}", configMapName, e.getResponseBody(), e);
+            log.error("Error while creating or updating ConfigMap {}: {}", appName, e.getResponseBody(), e);
             return false;
         }
     }
@@ -370,9 +381,9 @@ public class K8sCloudService extends BaseCloudService {
     public boolean updateConfigMap(DeployContext context, UpdateConfigMapCmd updateConfigMapCmd) {
         String namespace = updateConfigMapCmd.getNamespace();
         String appName = updateConfigMapCmd.getAppName();
-        String envName = updateConfigMapCmd.getEnvName().toLowerCase();
-        String configMapName = String.format("%s-%s", appName, envName);
+        String configMapName = "config-map-" + appName;
         Map<String, String> configMapPair = updateConfigMapCmd.getConfigMap();
+
         try {
             CoreV1Api coreV1Api = new CoreV1Api(apiClient);
             // 获取要更新的 ConfigMap
@@ -385,6 +396,114 @@ public class K8sCloudService extends BaseCloudService {
             return true;
         } catch (ApiException e) {
             log.error("Failed to update ConfigMap.", e);
+            return false;
+        }
+    }
+
+
+    @Override
+    public boolean createSecret(DeployContext context, CreateSecretCmd createSecretCmd) {
+        String namespace = createSecretCmd.getNamespace();
+        String appName = createSecretCmd.getAppName();
+        String secretName = "secret-map-" + appName;
+        Map<String, String> secretData = createSecretCmd.getSecretData();
+        Map<String, byte[]> bytesSecretData = Maps.newHashMap();
+        for (Map.Entry<String, String> es : secretData.entrySet()) {
+            bytesSecretData.put(es.getKey(), es.getValue().getBytes());
+        }
+        V1ObjectMeta meta = new V1ObjectMeta();
+        meta.setName(secretName);
+        Map<String, String> labels = Maps.newHashMapWithExpectedSize(1);
+        labels.put(FIX_LABEL, appName);
+        meta.setLabels(labels);
+
+
+        try {
+            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+            // 创建 Secret 对象
+            V1Secret secret = new V1Secret()
+                    .apiVersion("v1")
+                    .kind("Secret")
+                    .metadata(meta)
+                    .type("Opaque")
+                    .data(bytesSecretData);
+            // 创建 Secret
+            coreV1Api.createNamespacedSecret(namespace, secret, null, null, null, null);
+            log.info("Secret created successfully.");
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to create Secret.", e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateSecret(DeployContext context, UpdateSecretCmd updateSecretCmd) {
+        String namespace = updateSecretCmd.getNamespace();
+        String appName = updateSecretCmd.getAppName();
+        String secretName = "secret-map-" + appName;
+        Map<String, String> secretData = updateSecretCmd.getSecretMap();
+        Map<String, byte[]> bytesSecretData = Maps.newHashMap();
+        for (Map.Entry<String, String> es : secretData.entrySet()) {
+            bytesSecretData.put(es.getKey(), es.getValue().getBytes());
+        }
+
+        try {
+            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+            // 获取要更新的 Secret
+            V1Secret existingSecret = coreV1Api.readNamespacedSecret(secretName, namespace, null);
+            // 修改 Secret 的数据
+            existingSecret.setData(bytesSecretData);
+            // 更新 Secret
+            coreV1Api.replaceNamespacedSecret(secretName, namespace, existingSecret, null, null, null, null);
+            log.info("Secret update successfully.");
+            return true;
+        } catch (ApiException e) {
+            log.error("Failed to update Secret.", e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean createOrUpdateSecret(DeployContext context, UpdateSecretCmd updateSecretCmd) {
+        String namespace = updateSecretCmd.getNamespace();
+        String appName = updateSecretCmd.getAppName();
+        String secretName = "secret-map-" + appName;
+        Map<String, String> currentSecretData = updateSecretCmd.getCurrentSecretMap();
+        Map<String, String> updateSecretData = updateSecretCmd.getSecretMap();
+        Map<String, byte[]> bytesSecretData = Maps.newHashMap();
+        for (Map.Entry<String, String> es : updateSecretData.entrySet()) {
+            bytesSecretData.put(es.getKey(), es.getValue().getBytes());
+        }
+
+        try {
+            CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+            V1Secret secret = new V1Secret()
+                    .apiVersion("v1")
+                    .kind("Secret")
+                    .metadata(new V1ObjectMeta().name(secretName))
+                    .type("Opaque")
+                    .data(bytesSecretData);
+
+            // 尝试获取现有的 Secret
+            if (currentSecretData != null && !currentSecretData.isEmpty()) {
+                // 如果存在，则更新 Secret
+                // 检查数据是否已经相同，避免不必要的更新
+                if (!StringUtils.equals(JSON.toJSONString(currentSecretData), JSON.toJSONString(updateSecretData))) {
+                    coreV1Api.replaceNamespacedSecret(secretName, namespace, secret, null, null, null, null);
+                    log.info("Secret {} updated successfully.", secretName);
+                } else {
+                    log.info("Secret {} already up-to-date.", secretName);
+                }
+            } else {
+                // 如果不存在，则创建 Secret
+                coreV1Api.createNamespacedSecret(namespace, secret, null, null, null, null);
+                log.info("Secret {} created successfully.", secretName);
+            }
+            return true;
+        } catch (ApiException e) {
+            // 处理其他类型的错误
+            log.error("Error while creating or updating Secret {}: {}", secretName, e.getResponseBody(), e);
             return false;
         }
     }
@@ -603,6 +722,7 @@ public class K8sCloudService extends BaseCloudService {
 
         List<V1Volume> dataVolumes = new ArrayList<>();
         List<V1VolumeMount> dataMounts = new ArrayList<>();
+        // 处理 hostPath 卷
         if (volumeMounts != null && !volumeMounts.isEmpty()) {
             for (VolumeMount volumeMount : volumeMounts) {
                 // 创建 Volume 对象
@@ -617,6 +737,34 @@ public class K8sCloudService extends BaseCloudService {
                         .mountPath(volumeMount.getMountPath());
                 dataMounts.add(mount);
             }
+        }
+
+        // 处理 ConfigMap 卷
+        String configMapName = "config-map-" + appName;
+        if (StringUtils.isNotBlank(configMapName)) {
+            V1Volume configVolume = new V1Volume()
+                    .name("config-volume")
+                    .configMap(new V1ConfigMapVolumeSource().name(configMapName));
+            dataVolumes.add(configVolume);
+
+            V1VolumeMount configMount = new V1VolumeMount()
+                    .name("config-volume")
+                    .mountPath("/etc/cake/");
+            dataMounts.add(configMount);
+        }
+
+        // 处理 Secret 卷
+        String secretName = "secret-map-" + appName;
+        if (StringUtils.isNotBlank(secretName)) {
+            V1Volume secretVolume = new V1Volume()
+                    .name("secret-volume")
+                    .secret(new V1SecretVolumeSource().secretName(secretName));
+            dataVolumes.add(secretVolume);
+
+            V1VolumeMount secretMount = new V1VolumeMount()
+                    .name("secret-volume")
+                    .mountPath("/etc/cake-secret/");
+            dataMounts.add(secretMount);
         }
 
 

@@ -56,10 +56,16 @@ public interface AppDataConvertor extends BaseConvertor<App, AppPO> {
 
 
     default String convertExtend(AppExtend appExtend) {
+        if (appExtend == null) {
+            return null;
+        }
         return JSON.toJSONString(appExtend);
     }
 
     default AppExtend reverseExtend(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
         return JSON.parseObject(value, AppExtend.class);
     }
 }

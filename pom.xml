@@ -277,6 +277,11 @@
             </dependency>
             <dependency>
                 <groupId>com.rany</groupId>
+                <artifactId>cake-framework-config</artifactId>
+                <version>${cake-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rany</groupId>
                 <artifactId>cake-framework-mybatis</artifactId>
                 <version>${cake-framework.version}</version>
             </dependency>

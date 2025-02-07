@@ -181,6 +181,13 @@ public abstract class BaseCloudService {
      */
     public abstract boolean updateConfigMap(DeployContext context, UpdateConfigMapCmd updateConfigMapCmd);
 
+    public abstract boolean createSecret(DeployContext context, CreateSecretCmd createSecretCmd);
+
+    public abstract boolean updateSecret(DeployContext context, UpdateSecretCmd updateSecretCmd);
+
+    public abstract boolean createOrUpdateSecret(DeployContext context, UpdateSecretCmd updateSecretCmd);
+
+
     public abstract boolean createIngress(DeployContext context, CreateIngressCmd createIngressCmd);
 
     public abstract boolean createOrUpdateIngress(DeployContext context, CreateIngressCmd createIngressCmd);

@@ -64,6 +64,14 @@ public interface AppService {
     Boolean modifyAppConfigMap(ModifyConfigMapCommand modifyAppEnvConfigMapCommand);
 
     /**
+     * 修改secretMap
+     *
+     * @param modifySecretMapCommand 修改secretMap
+     * @return 是否成功
+     */
+    Boolean modifyAppSecretMap(ModifySecretMapCommand modifySecretMapCommand);
+
+    /**
      * 查询应用环境内POD信息
      *
      * @param appEnvPodQuery 查询pod
