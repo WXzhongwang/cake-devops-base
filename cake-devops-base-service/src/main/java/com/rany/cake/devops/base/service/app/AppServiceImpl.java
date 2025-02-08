@@ -532,6 +532,7 @@ public class AppServiceImpl implements AppService {
         );
         Boolean updated = cloudService.createOrUpdateIngress(context, createIngressCmd);
         if (updated) {
+            appEnv.setIngress(JSON.toJSONString(ingressDTO));
             appDomainService.updateAppEnv(appEnv);
         }
         return updated;

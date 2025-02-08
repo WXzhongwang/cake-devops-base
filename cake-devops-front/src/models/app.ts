@@ -128,6 +128,8 @@ export interface AppEnv {
   deployment: string;
   service: string;
   ingress: string;
+  serviceList: ServiceItem[];
+  ingressConfig: IngressDTO;
 }
 
 export interface ServiceItem {

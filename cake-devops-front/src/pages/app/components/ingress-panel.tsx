@@ -66,12 +66,39 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
           ingressDTO: row,
         },
         callback: (res: boolean) => {
-          handleCancel;
+          setEditingItem(null);
+          setModelOpen(!modelOpen);
+          message.success("保存成功");
         },
       });
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
     }
+  };
+
+  // 格式化展示 Ingress 规则
+  const formatRules = (rules: any[]) => {
+    return rules?.map((rule, index) => (
+      <Card key={index} size="small" title={`Rule ${index + 1}`}>
+        <Typography.Text strong>Host:</Typography.Text> {rule.host}
+        <br />
+        <Typography.Text strong>Paths:</Typography.Text>
+        {rule.paths.map((path: any, pathIndex: number) => (
+          <div key={pathIndex}>
+            <Typography.Text strong>Path Type:</Typography.Text> {path.pathType}
+            <br />
+            <Typography.Text strong>Path:</Typography.Text> {path.path}
+            <br />
+            <Typography.Text strong>Service Name:</Typography.Text>{" "}
+            {path.backend.serviceName}
+            <br />
+            <Typography.Text strong>Service Port:</Typography.Text>{" "}
+            {path.backend.servicePort}
+            <br />
+          </div>
+        ))}
+      </Card>
+    ));
   };
 
   return (
@@ -83,6 +110,9 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
       >
         编辑 Ingress
       </Button>
+      <Card title={ingress.ingressName} style={{ width: "100%" }}>
+        {formatRules(ingress.rules)}
+      </Card>
       <Modal
         width={800}
         title={editingItem ? "编辑 Ingress" : "新增 Ingress"}

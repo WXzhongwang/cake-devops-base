@@ -460,7 +460,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
       );
 
       setResourceStrategy(appEnv.resourceStrategy);
-      // setDomains(appEnv.domains);
     }
   }, [appEnv]);
 
@@ -659,7 +658,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
                 ),
               },
               {
-                header: "配置项",
+                header: "ConfigMap",
                 key: 2,
                 config: (
                   <ConfigMapConfigPanel

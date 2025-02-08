@@ -17,44 +17,8 @@ const DomainHostConfigPanel: React.FC<DomainHostConfigPanelProps> = ({
   appName,
   dispatch,
 }) => {
-  const [serviceForm] = Form.useForm();
-  const [ingressForm] = Form.useForm();
-  const [domainsList, setDomainsList] = useState(appEnv.domains);
   const initialServices = appEnv.service ? JSON.parse(appEnv.service) : [];
   const initialIngress = appEnv.ingress ? JSON.parse(appEnv.ingress) : {};
-  const handleServiceSubmit = () => {
-    serviceForm.validateFields().then((values) => {
-      dispatch({
-        type: "app/updateService",
-        payload: {
-          serviceName: values.serviceName,
-        },
-      });
-    });
-  };
-
-  const handleIngressSubmit = () => {
-    ingressForm.validateFields().then((values) => {
-      dispatch({
-        type: "app/updateIngress",
-        payload: {
-          ingressName: values.ingressName,
-          domains: domainsList,
-        },
-      });
-    });
-  };
-
-  const handleAddDomain = () => {
-    ingressForm.validateFields(["newDomain"]).then((values) => {
-      setDomainsList([...domainsList, values.newDomain]);
-      ingressForm.resetFields(["newDomain"]);
-    });
-  };
-
-  const handleDeleteDomain = (domain: string) => {
-    setDomainsList(domainsList.filter((item) => item !== domain));
-  };
 
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
