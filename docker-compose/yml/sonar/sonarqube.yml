@@ -1,3 +1,4 @@
+# 这是docker-compose的启动版本
 version: "3.1"
 services:
   db:

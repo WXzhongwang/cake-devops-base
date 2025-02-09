@@ -33,7 +33,9 @@ import com.rany.cake.toolkit.lang.utils.Strings;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,6 +169,7 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean modifyHost(ModifyHostCommand modifyHostCommand) {
         Host host = hostDomainService.getHost(new HostId(modifyHostCommand.getHostId()));
         host.setHostName(modifyHostCommand.getHostName());
@@ -177,10 +180,28 @@ public class HostServiceImpl implements HostService {
         // 加密
         if (MachineAuthType.PASSWORD.getType().equals(modifyHostCommand.getAuthType())) {
             String password = modifyHostCommand.getPwd();
-            if (Strings.isNotBlank(password)) {
+            // 密码不一致才需要更新
+            if (!StringUtils.equals(password, host.getPwd()) && Strings.isNotBlank(password)) {
                 host.setPwd(ValueMix.encrypt(password));
             }
         }
+
+        // 删除机组关联关系
+        List<GroupHost> groupHost = hostDomainService.getGroupHost(host.getHostId());
+        groupHost.forEach(p -> {
+            p.delete(modifyHostCommand.getUser());
+        });
+        hostRepository.updateGroupHosts(groupHost);
+
+        // 写入新的关联关系
+        List<GroupHost> newGroupHost = new ArrayList<>();
+        for (String hostGroupId : modifyHostCommand.getHostGroupIds()) {
+            GroupHost newRel = new GroupHost(hostGroupId, host.getHostId().getHostId());
+            newRel.init(modifyHostCommand.getUser());
+            newGroupHost.add(newRel);
+        }
+        hostRepository.saveGroupHosts(newGroupHost);
+
         host.setKeyId(modifyHostCommand.getKeyId());
         host.setProxyId(modifyHostCommand.getProxyId());
         host.setServerAddr(modifyHostCommand.getServerAddr());

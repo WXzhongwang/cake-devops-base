@@ -12,6 +12,7 @@ public class CrConfig {
     private String channel;
     private HarborConf harbor;
     private AliyunConf aliyun;
+    private SonarConf sonar;
 
 
     @Data
@@ -23,13 +24,26 @@ public class CrConfig {
     }
 
     @Data
+    public static class SonarConf {
+        private String url;
+        private String token;
+    }
+
+
+    @Data
     public static class AliyunConf {
+        /**
+         * acr
+         */
         private String instanceId;
         private String region;
         private String namespace;
         private String accessKey;
         private String secretKey;
+        // docker 登录使用
         private String host;
+        private String username;
+        private String password;
     }
 
     public String getHost() {

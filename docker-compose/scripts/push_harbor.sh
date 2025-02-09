@@ -3,7 +3,6 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
-source ~/.bash_profile
 
 function push_harbor_image {
     echo "【PushImage】开始运行..."
@@ -12,10 +11,21 @@ function push_harbor_image {
     local project=$3
     local version=$4
     local webhook_url=$5
+    local HARBOR_URL=$6
+    # shellcheck disable=SC2034
+    local HARBOR_USERNAME=$7
+    local HARBOR_PASSWORD=$8
+
+    DOCKER_HOME=/usr/local/bin/docker
+    if [ ! -x "$DOCKER_HOME" ]; then
+        echo "Docker not found"
+        exit 1
+    fi
 
     repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
 
     # 登录Harbor
+    # shellcheck disable=SC2153
     $DOCKER_HOME login -u "$HARBOR_URER" -p "$HARBOR_PASSWORD" "$HARBOR_URL"
 
     # 标记镜像

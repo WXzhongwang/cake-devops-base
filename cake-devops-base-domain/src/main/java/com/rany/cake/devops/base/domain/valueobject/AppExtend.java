@@ -16,6 +16,22 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class AppExtend extends BaseValueObject {
+    /**
+     * maven version
+     */
+    private String mavenVersion;
+    /**
+     * maven version
+     */
+    private String jdkVersion;
+
+    public String getMavenVersion() {
+        return mavenVersion == null ? "3.6.3" : mavenVersion;
+    }
+
+    public String getJdkVersion() {
+        return jdkVersion == null ? "8" : jdkVersion;
+    }
 
     private CodeUpConfig codeUp;
 

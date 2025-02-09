@@ -3,8 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
-# shellcheck disable=SC1090
-source ~/.bash_profile
+
 
 function build_image {
     echo "【BuildImage】开始运行..."
@@ -13,6 +12,12 @@ function build_image {
     local version=$3
     local webhook_url=$4
     local env=$5
+
+    DOCKER_HOME=/usr/local/bin/docker
+    if [ ! -x "$DOCKER_HOME" ]; then
+        echo "Docker not found"
+        exit 1
+    fi
 
     repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
     folder_name="$(pwd)/$repo_name"
@@ -43,11 +48,11 @@ function build_image {
     if [ "$env" = "dev" ]; then
         # 输出下完整指令
         echo "docker build -f $dockerfile -t $project:$version ."
-        $DOCKER_HOME build -f $dockerfile -t "$project:$version" .
+        $DOCKER_HOME build -f "$dockerfile" -t "$project:$version" .
     else
         # 输出下完整指令
         echo "docker build --build-arg ENV=$env -f $dockerfile -t $project:$version ."
-        $DOCKER_HOME build --build-arg ENV="$env" -f $dockerfile -t "$project:$version" .
+        $DOCKER_HOME build --build-arg ENV="$env" -f "$dockerfile" -t "$project:$version" .
     fi
 
     # 判断镜像生成是否成功

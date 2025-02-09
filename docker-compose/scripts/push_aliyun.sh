@@ -3,8 +3,7 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
-# shellcheck disable=SC1090
-source ~/.bash_profile
+
 
 function push_aliyun_image {
     echo "【PushAliyunImage】开始运行..."
@@ -13,6 +12,15 @@ function push_aliyun_image {
     local project=$3
     local version=$4
     local webhook_url=$5
+    local ALIYUN_ACR_URL=$6
+    local ALIYUN_ACR_USER_NAME=$7
+    local ALIYUN_ACR_USER_PASSWORD=$8
+
+    DOCKER_HOME=/usr/local/bin/docker
+    if [ ! -x "$DOCKER_HOME" ]; then
+        echo "Docker not found"
+        exit 1
+    fi
 
     repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
 
@@ -36,4 +44,4 @@ function push_aliyun_image {
 }
 
 # 示例用法
-push_aliyun_image "$1" "$2" "$3" "$4" "$5"
+push_aliyun_image "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8"

@@ -3,12 +3,13 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
-source ~/.bash_profile
 
 function sonar_scan {
     echo "【SonarScan】开始运行..."
     local repo_url=$1
     local webhook_url=$2
+    local SONAR_URL=$3
+    local SONAR_TOKEN=$4
 
     repo_name=$(basename "$repo_url" | rev | cut -d. -f2- | rev)
     folder_name="$(pwd)/$repo_name"
@@ -17,8 +18,11 @@ function sonar_scan {
     # shellcheck disable=SC2164
     cd "$folder_name"
 
+    # shellcheck disable=SC2034
+    local SONAR_SCAN_HOME="$INSTALL_PATH/sonar-scanner-5.0.1.3006-macosx/bin/sonar-scanner"
+
     # 执行SonarQube扫描任务
-    $SONAR_SCAN_HOME \
+    SONAR_SCAN_HOME \
         -Dsonar.projectKey="$repo_name" \
         -Dsonar.sources=. \
         -Dsonar.host.url="$SONAR_URL" \

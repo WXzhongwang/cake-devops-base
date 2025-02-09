@@ -7,6 +7,16 @@ logging:
   file:
     path: /home/admin/cake-devops-base/logs
 
+cms:
+  env: test
+  oss:
+    endpoint: https://rany-ops.oss-cn-hangzhou.aliyuncs.com
+  page:
+    #    version: 1.0.22
+    path: cake-devops-base/${cms.page.version}/index.html
+  site:
+    name: cake-devops-base
+
 
 dubbo:
   application:
@@ -119,10 +129,11 @@ devops:
     bindingKey: devops-log-key
   app:
     tenantId: 768460649511661568
-  package:
-    balancer: random
   cr:
     channel: aliyun # 支持harbor或者阿里云acr
+    sonar:
+      url: http://localhost:9000
+      token: sqa_3da04fbfb55e03b741592681d888d991bedeb36a
     harbor:
       harborUrl:
       harborUser:
@@ -135,8 +146,8 @@ devops:
       secretKey:
       namespace: cake-devops-base
       host: registry.cn-hangzhou.aliyuncs.com
-
-
+      username: 1528683621@qq.com
+      password: Zsw131400
 
 easy:
   sso:

@@ -42,17 +42,21 @@ public class PushAcrPlugin extends BasePlugin {
         try {
             SessionStore sessionStore = getCurrentSessionStore(context);
             Session session = sessionStore.getSession();
-            // JSCHTool.remoteExecute(session, "cd " + workspace);
-            // push_aliyun_image "$1" "$2" "$3" "$4" "$5"
 //            local repo_url=$1
 //            local namespace=$2
 //            local project=$3
 //            local version=$4
 //            local webhook_url=$5
-            // String executeCommand = String.join(" ", "sh", "push_aliyun.sh", repo, appName, appName, releaseVersion, webHook);
-            String executeCommand = String.format(" sh %s '%s' %s %s %s '%s'",
+//            local ALIYUN_ACR_URL=$6
+//            local ALIYUN_ACR_USER_NAME=$7
+//            local ALIYUN_ACR_USER_PASSWORD=$8
+            String executeCommand = String.format(" sh %s '%s' %s %s %s '%s' '%s' '%s' '%s'",
                     crConfig.getShellName(),
-                    repo, crConfig.getNameSpace(), appName, releaseVersion, webHook);
+                    repo, crConfig.getNameSpace(), appName, releaseVersion, webHook,
+                    crConfig.getAliyun().getHost(),
+                    crConfig.getAliyun().getUsername(),
+                    crConfig.getAliyun().getPassword()
+            );
             if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
                 log.error("推送阿里云失败");
                 return false;

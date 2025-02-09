@@ -3,14 +3,17 @@
 
 source conf/cake-sample.conf
 source send_notification.sh
-# shellcheck disable=SC1090
-source ~/.bash_profile
 
 function mvn_build {
     echo "【MavenBuild】开始运行..."
     local repo_url=$1
     local webhook_url=$2
     local custom_script=$3
+    local maven_version=$4
+
+    INSTALL_PATH=/usr/local/src/software
+
+    local MAVEN_HOME_363="$INSTALL_PATH/apache-maven_$maven_version/bin/mvn"
 
     if [ -z "$repo_url" ] || [ -z "$webhook_url" ] || [ -z "$custom_script" ]; then
         echo "Usage: \$0 <repository_url> <webhook_url> <custom_maven_command>"
@@ -42,4 +45,4 @@ function mvn_build {
 }
 
 # 示例用法
-mvn_build "$1" "$2" "$3"
+mvn_build "$1" "$2" "$3" "$4"

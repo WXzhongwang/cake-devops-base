@@ -30,6 +30,7 @@ public class MavenBuildPlugin extends BasePlugin {
     @Override
     public boolean execute(DeployContext context) {
         String webHook = context.getApp().getWebhook();
+        String mavenVersion = context.getApp().getAppExtend().getMavenVersion();
         String repo = context.getApp().getCodeRepository().getRepo();
         /**
          * maven自定义编译脚本
@@ -44,11 +45,14 @@ public class MavenBuildPlugin extends BasePlugin {
         SessionStore sessionStore = getCurrentSessionStore(context);
         try {
             Session session = sessionStore.getSession();
-//            mvn_build "$1" "$2"
+
 //            local repo_url=$1
 //            local webhook_url=$2
-            //String executeCommand = String.join(" ", "sh", "maven_build.sh", repo, webHook);
-            String executeCommand = String.format(" sh maven_build.sh '%s' '%s' '%s'", repo, webHook, customBuildScript);
+//            local custom_script=$3
+//            local maven_version=$4
+            String executeCommand = String.format(" sh maven_build.sh '%s' '%s' '%s' '%s'",
+                    repo, webHook, customBuildScript, mavenVersion
+            );
             if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
                 log.error("maven编译打包失败");
                 return false;

@@ -1,10 +1,6 @@
 #!/bin/bash
-# checkout.sh
 
-source conf/cake-sample.conf
 source send_notification.sh
-# shellcheck disable=SC1090
-source ~/.bash_profile
 
 function checkout {
     echo "【Checkout】开始运行..."
