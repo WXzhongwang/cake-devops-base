@@ -6,6 +6,7 @@ import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.rany.cake.devops.base.api.service.SystemEnvService;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.base.CrConfig;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
@@ -14,6 +15,7 @@ import com.rany.cake.devops.base.service.context.Plugin;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
+import com.rany.cake.toolkit.net.remote.channel.SftpExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +33,9 @@ import java.util.concurrent.TimeUnit;
 public abstract class BasePlugin implements Plugin {
     @Resource
     protected HostDomainService hostDomainService;
+    @Resource
+    protected SystemEnvService systemEnvService;
+
     @Resource
     protected HostConnectionService hostConnectionService;
     @Resource
@@ -57,6 +62,15 @@ public abstract class BasePlugin implements Plugin {
         context.setSessionStore(sessionStore);
         return sessionStore;
     }
+
+    protected SftpExecutor getCurrentSftpExecutor(DeployContext context) {
+        SessionStore currentSessionStore = this.getCurrentSessionStore(context);
+        Host deployHost = context.getHost();
+
+        String charset = hostDomainService.getSftpCharset(deployHost.getHostId().getHostId());
+        return currentSessionStore.getSftpExecutor(charset);
+    }
+
 
     protected void sendNotification(DeployContext context, String comment, Boolean succeed) {
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);

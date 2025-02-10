@@ -32,7 +32,8 @@ public class SystemEnvRepositoryImpl implements SystemEnvRepository {
 
     @Override
     public SystemEnv findByName(String name) {
-        return null;
+        SystemEnvPO systemEnvPO = systemEnvDao.selectByName(name);
+        return systemEnvDataConvertor.targetToSource(systemEnvPO);
     }
 
     @Override
@@ -44,8 +45,7 @@ public class SystemEnvRepositoryImpl implements SystemEnvRepository {
 
     @Override
     public void save(SystemEnv env) {
-        SystemEnvPO systemEnvPO = systemEnvDataConvertor.sourceToTarget(env);
-        systemEnvPOMapper.insertSelective(systemEnvPO);
+        systemEnvDao.save(env);
 
     }
 

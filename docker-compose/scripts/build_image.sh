@@ -1,8 +1,7 @@
 #!/bin/bash
 # build_image.sh
 
-source conf/cake-sample.conf
-source send_notification.sh
+source ./send_notification.sh
 
 
 function build_image {

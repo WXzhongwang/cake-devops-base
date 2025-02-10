@@ -1,8 +1,7 @@
 #!/bin/bash
 # push_harbor.sh
 
-source conf/cake-sample.conf
-source send_notification.sh
+source ./send_notification.sh
 
 function push_harbor_image {
     echo "【PushImage】开始运行..."

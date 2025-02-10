@@ -24,9 +24,30 @@ public class AppExtend extends BaseValueObject {
      * maven version
      */
     private String jdkVersion;
+    /**
+     * nodejs version
+     */
+    private String nodejsVersion;
+    /**
+     * go version
+     */
+    private String goVersion;
+    /**
+     * python version
+     */
+    private String pythonVersion;
+
+    /**
+     * publicKey
+     */
+    private String publicKey;
 
     public String getMavenVersion() {
         return mavenVersion == null ? "3.6.3" : mavenVersion;
+    }
+
+    public String getNodejsVersion() {
+        return nodejsVersion == null ? "v20.13.1" : nodejsVersion;
     }
 
     public String getJdkVersion() {
@@ -36,5 +57,6 @@ public class AppExtend extends BaseValueObject {
     private CodeUpConfig codeUp;
 
     private GitHubConfig git;
+    
     private GitLabConfig gitlab;
 }

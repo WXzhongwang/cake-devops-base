@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source send_notification.sh
+source ./send_notification.sh
 
 function checkout {
     echo "【Checkout】开始运行..."

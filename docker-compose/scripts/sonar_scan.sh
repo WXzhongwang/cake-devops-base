@@ -1,8 +1,7 @@
 #!/bin/bash
 # sonar_scan.sh
 
-source conf/cake-sample.conf
-source send_notification.sh
+source ./send_notification.sh
 
 function sonar_scan {
     echo "【SonarScan】开始运行..."
@@ -17,6 +16,8 @@ function sonar_scan {
     # 进入代码目录
     # shellcheck disable=SC2164
     cd "$folder_name"
+
+    INSTALL_PATH=/usr/local/src/software
 
     # shellcheck disable=SC2034
     local SONAR_SCAN_HOME="$INSTALL_PATH/sonar-scanner-5.0.1.3006-macosx/bin/sonar-scanner"

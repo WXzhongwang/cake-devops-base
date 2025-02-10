@@ -1,8 +1,7 @@
 #!/bin/bash
 # push_aliyun.sh
 
-source conf/cake-sample.conf
-source send_notification.sh
+source ./send_notification.sh
 
 
 function push_aliyun_image {

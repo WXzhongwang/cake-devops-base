@@ -51,10 +51,10 @@
     <insert id="save" parameterType="com.rany.cake.devops.base.infra.po.SystemEnvPO"
             useGeneratedKeys="true" keyProperty="id">
 
-        insert into system_env (id, attr_key, attr_value,
+        insert into system_env (attr_key, attr_value,
                                 system_env, description, is_deleted,
                                 gmt_create, gmt_modified)
-        values (#{id,jdbcType=BIGINT}, #{attrKey,jdbcType=VARCHAR}, #{attrValue,jdbcType=VARCHAR},
+        values (#{attrKey,jdbcType=VARCHAR}, #{attrValue,jdbcType=VARCHAR},
                 #{systemEnv,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{isDeleted,jdbcType=VARCHAR},
                 #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
     </insert>

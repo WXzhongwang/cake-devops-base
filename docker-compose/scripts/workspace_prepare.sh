@@ -229,6 +229,11 @@ check_sonar_scanner() {
         echo "SonarScanner $sonar_version 未安装，正在安装到 $SONAR_SCANNER_PATH..."
         if [[ "$OSTYPE" == "darwin"* ]]; then
             # macOS
+            # macOS
+            echo "macOS 不支持直接下载并安装 Node.js 到固定路径，请手动安装。"
+            exit 1
+
+        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
             sudo mkdir -p "$INSTALL_PATH"
             cd "$INSTALL_PATH" || exit 1
 
@@ -239,10 +244,6 @@ check_sonar_scanner() {
             local extracted_dir=$(unzip -l "sonar-scanner-cli-$sonar_version-macosx.zip" | grep sonar-scanner | head -1 | awk '{print $4}' | cut -d'/' -f1)
             sudo mv "$extracted_dir" "$SONAR_SCANNER_PATH"
             echo "SonarScanner $sonar_version 已安装到 $SONAR_SCANNER_PATH"
-        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            # Linux
-            echo "Linux 不支持直接下载并安装 SonarScanner 到固定路径，请手动安装。"
-            exit 1
         else
             echo "不支持的操作系统。"
             exit 1
@@ -289,13 +290,13 @@ work_space_prepare() {
         check_maven "$maven_version"
     fi
 
-    if [[ -n "$node_version" ]]; then
+    if [[ -z "$node_version" ]]; then
         # node 版本支持范围可以根据需要调整
         echo "Node.js 版本为 $node_version"
         check_node "$node_version"
     fi
 
-    if [[ -n "$go_version" ]]; then
+    if [[ -z "$go_version" ]]; then
         # go 仅支持1.17.13，1.18.10，1.19.5
         if [[ "$go_version" != "1.17.13" && "$go_version" != "1.18.10" && "$go_version" != "1.19.5" ]]; then
             echo "不支持的 Go 版本: $go_version"

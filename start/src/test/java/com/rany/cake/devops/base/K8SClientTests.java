@@ -1,5 +1,7 @@
 package com.rany.cake.devops.base;
 
+import com.rany.cake.devops.base.api.command.system.CreateSystemEnvCommand;
+import com.rany.cake.devops.base.api.service.SystemEnvService;
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.aggregate.Cluster;
 import com.rany.cake.devops.base.domain.aggregate.Namespace;
@@ -13,20 +15,24 @@ import com.rany.cake.devops.base.domain.repository.NameSpaceRepository;
 import com.rany.cake.devops.base.domain.repository.ReleaseRepository;
 import com.rany.cake.devops.base.domain.service.HostDomainService;
 import com.rany.cake.devops.base.service.ReleaseCenter;
+import com.rany.cake.devops.base.service.context.DeployContext;
+import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.service.integration.cloud.BaseCloudService;
 import com.rany.cake.devops.base.service.integration.cloud.CloudFactory;
 import com.rany.cake.devops.base.service.integration.cloud.K8sCloudService;
 import com.rany.cake.devops.base.service.integration.cloud.KubernetesConstants;
-import com.rany.cake.devops.base.service.context.DeployContext;
-import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.service.integration.cloud.dto.*;
 import com.rany.cake.devops.base.util.enums.ClusterTypeEnum;
 import io.kubernetes.client.openapi.models.V1Namespace;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +57,8 @@ public class K8SClientTests extends BaseTests {
     private HostDomainService hostDomainService;
     @Autowired
     private HostConnectionService hostConnectionService;
+    @Autowired
+    private SystemEnvService systemEnvService;
 
 
     @Test
@@ -196,6 +204,26 @@ public class K8SClientTests extends BaseTests {
         scaleDeploymentCmd.setReplicas(2);
         boolean success = cloudService.scaleDeployment(context, scaleDeploymentCmd);
         Assert.assertTrue(success);
+    }
+
+
+    @Test
+    public void saveGlobalEnv() throws IOException {
+        // 读取本地 settings.xml 文件路径
+        String localSettingsXmlPath = "/usr/local/src/apache-maven-3.6.3/conf/settings.xml";
+        File localSettingsXmlFile = new File(localSettingsXmlPath);
+        if (!localSettingsXmlFile.exists()) {
+            System.out.println("本地 settings.xml 文件不存在");
+            return;
+        }
+        String settingsXmlContent = FileUtils.readFileToString(localSettingsXmlFile, StandardCharsets.UTF_8);
+
+        CreateSystemEnvCommand command = new CreateSystemEnvCommand();
+        command.setDescription("maven_settings_global_config");
+        command.setAttrKey("maven_settings_global_config");
+        command.setAttrValue(settingsXmlContent);
+        command.setUser("admin");
+        systemEnvService.createSystemEnv(command);
     }
 }
 
