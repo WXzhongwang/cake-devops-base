@@ -59,7 +59,7 @@ public class KubernetesDeployPlugin extends BasePlugin {
         boolean configMapUpdated = cloudService.createOrUpdateConfigMap(context, createConfigMapCmd);
         if (!configMapUpdated) {
             log.error("更新ConfigMap失败");
-            this.sendNotification(context, "更新ConfigMap失败", false);
+            this.sendFailureNotification(context, "更新ConfigMap失败");
             return false;
         }
 
@@ -73,7 +73,7 @@ public class KubernetesDeployPlugin extends BasePlugin {
         boolean secretMapUpdated = cloudService.createOrUpdateSecret(context, updateSecretCmd);
         if (!secretMapUpdated) {
             log.error("更新SecretMap失败");
-            this.sendNotification(context, "更新SecretMap失败", false);
+            this.sendFailureNotification(context, "更新SecretMap失败");
             return false;
         }
 
@@ -92,7 +92,7 @@ public class KubernetesDeployPlugin extends BasePlugin {
                 createDeploymentCmd);
         if (!deploymentCreated) {
             log.error("创建Deployment失败");
-            this.sendNotification(context, "创建Deployment失败", false);
+            this.sendFailureNotification(context, "创建Deployment失败");
             return false;
         }
         appEnv.setDeployment(appEnv.getDeployment());

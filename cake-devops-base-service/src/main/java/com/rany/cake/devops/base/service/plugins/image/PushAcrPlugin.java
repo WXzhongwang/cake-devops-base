@@ -50,9 +50,13 @@ public class PushAcrPlugin extends BasePlugin {
 //            local ALIYUN_ACR_URL=$6
 //            local ALIYUN_ACR_USER_NAME=$7
 //            local ALIYUN_ACR_USER_PASSWORD=$8
-            String executeCommand = String.format(" sh %s '%s' %s %s %s '%s' '%s' '%s' '%s'",
+            String executeCommand = String.format(" sh %s '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'",
                     crConfig.getShellName(),
-                    repo, crConfig.getNameSpace(), appName, releaseVersion, webHook,
+                    repo,
+                    crConfig.getNameSpace(),
+                    appName,
+                    releaseVersion,
+                    webHook,
                     crConfig.getAliyun().getHost(),
                     crConfig.getAliyun().getUsername(),
                     crConfig.getAliyun().getPassword()

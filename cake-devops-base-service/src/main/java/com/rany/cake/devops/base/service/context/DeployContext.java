@@ -15,7 +15,7 @@ import java.util.*;
  * 上下文参数
  *
  * @author zhongshengwang
- * @description TODO
+ * @description 上下文参数
  * @date 2023/1/15 20:52
  * @email 18668485565163.com
  */
@@ -202,12 +202,20 @@ public class DeployContext implements Serializable {
         this.release.setReleaseStatus(ReleaseStatus.FAILED.name());
         this.release.setGmtModified(new Date());
         this.progress.setStatus("error");
+        if (this.deployHistory != null) {
+            this.deployHistory.setDeployStatus(ReleaseStatus.FAILED.name());
+            this.deployHistory.setGmtModified(this.release.getGmtModified());
+        }
     }
 
     public void success() {
         this.release.setReleaseStatus(ReleaseStatus.FINISHED.name());
         this.release.setGmtModified(new Date());
         this.progress.setStatus("finish");
+        if (this.deployHistory != null) {
+            this.deployHistory.setDeployStatus(ReleaseStatus.FINISHED.name());
+            this.deployHistory.setGmtModified(this.release.getGmtModified());
+        }
     }
 
     public void start() {

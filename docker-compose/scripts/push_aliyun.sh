@@ -15,7 +15,8 @@ function push_aliyun_image {
     local ALIYUN_ACR_USER_NAME=$7
     local ALIYUN_ACR_USER_PASSWORD=$8
 
-    DOCKER_HOME=/usr/local/bin/docker
+
+    local DOCKER_HOME=/usr/bin/docker
     if [ ! -x "$DOCKER_HOME" ]; then
         echo "Docker not found"
         exit 1

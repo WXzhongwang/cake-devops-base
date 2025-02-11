@@ -15,7 +15,6 @@ import com.rany.cake.devops.base.service.context.Plugin;
 import com.rany.cake.devops.base.service.handler.host.HostConnectionService;
 import com.rany.cake.devops.base.service.utils.JSCHTool;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
-import com.rany.cake.toolkit.net.remote.channel.SftpExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,16 +62,7 @@ public abstract class BasePlugin implements Plugin {
         return sessionStore;
     }
 
-    protected SftpExecutor getCurrentSftpExecutor(DeployContext context) {
-        SessionStore currentSessionStore = this.getCurrentSessionStore(context);
-        Host deployHost = context.getHost();
-
-        String charset = hostDomainService.getSftpCharset(deployHost.getHostId().getHostId());
-        return currentSessionStore.getSftpExecutor(charset);
-    }
-
-
-    protected void sendNotification(DeployContext context, String comment, Boolean succeed) {
+    protected void sendFailureNotification(DeployContext context, String comment) {
         String workspace = (String) context.getArgMap().get(RunningConstant.WORKSPACE_HOME);
         log.info("Send notification");
         log.info("workspace directory: " + workspace);
@@ -84,7 +74,7 @@ public abstract class BasePlugin implements Plugin {
             String appName = context.getApp().getAppName().getName();
             // "$message" "$webhook_url" "$status" "$app_name"
             String executeCommand = String.format(" sh send_notification.sh '%s' '%s' '%s' '%s'",
-                    comment, webHook, succeed ? "succeed" : "failed", appName);
+                    comment, webHook, "failed", appName);
             if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
                 log.error("发送告警提醒");
             }

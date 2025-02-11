@@ -12,7 +12,7 @@ function build_image {
     local webhook_url=$4
     local env=$5
 
-    DOCKER_HOME=/usr/local/bin/docker
+    local DOCKER_HOME=/usr/bin/docker
     if [ ! -x "$DOCKER_HOME" ]; then
         echo "Docker not found"
         exit 1
@@ -36,7 +36,7 @@ function build_image {
     # 检查 Dockerfile_test 是否存在
     if [ ! -f "$dockerfile" ] || [ ! -r "$dockerfile" ]; then
         echo "错误: Dockerfile '$dockerfile' 不存在或不可读。"
-        send_notification "Dockerfile '$dockerfile' 不存在或不可读" "error" "$repo_name" "$webhook_url"
+        send_notification "Dockerfile '$dockerfile' 不存在或不可读" "failed" "$repo_name" "$webhook_url"
         exit 1
     fi
 
