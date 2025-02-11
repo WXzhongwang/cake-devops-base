@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk-alpine
 # 定义构建参数 ENV
-ARG ENV=production
+ARG ENV=prod
 
 ENV APP_NAME=cake-devops-base
 
