@@ -22,13 +22,6 @@ IN_DOCKER=$(command -v docker &> /dev/null && echo true || echo false)
 
 # 定义日志文件
 DEPLOY_LOG="/home/admin/${APP_NAME}/deploy.log"
-APP_OUT_LOG="/home/admin/${APP_NAME}/app.out"
-PID_FILE="/home/admin/${APP_NAME}/app.pid"
-
-# 确保日志目录存在
-mkdir -p "$(dirname "$DEPLOY_LOG")"
-mkdir -p "$(dirname "$APP_OUT_LOG")"
-mkdir -p "$(dirname "$PID_FILE")"
 
 # 定义 Java 主类和 jar 文件路径
 MAIN_CLASS="com.rany.cake.devops.base.CakeDevopsBaseApplication"
@@ -76,11 +69,10 @@ start_app() {
     if is_running; then
         echo "Application is already running." | tee -a "$DEPLOY_LOG"
     else
-        # 使用 nohup 让 Java 应用在后台运行，并重定向输出到日志文件
-        nohup $START_CMD > "$APP_OUT_LOG" 2>&1 &
-        local pid=$!
-        echo "Application started with PID $pid" | tee -a "$DEPLOY_LOG"
-        echo $pid > "$PID_FILE"
+        # 使用nohup来让Java应用在后台运行
+        # 注意：这里不再重定向到日志文件，而是直接启动应用
+        exec $START_CMD
+        echo "Application started with PID $$." | tee -a "$DEPLOY_LOG"
     fi
 }
 
@@ -91,13 +83,7 @@ stop_app() {
         if [[ $IN_DOCKER == true ]]; then
             pkill -f "$MAIN_CLASS"
         else
-            if [ -f "$PID_FILE" ]; then
-                pid=$(cat "$PID_FILE")
-                kill "$pid" 2>/dev/null || true
-                rm -f "$PID_FILE"
-            else
-                ps aux | grep "[j]ava.*$MAIN_CLASS" | awk '{print $2}' | xargs kill
-            fi
+            ps aux | grep "[j]ava.*$MAIN_CLASS" | awk '{print $2}' | xargs kill
         fi
         echo "Application stopped." | tee -a "$DEPLOY_LOG"
     else
