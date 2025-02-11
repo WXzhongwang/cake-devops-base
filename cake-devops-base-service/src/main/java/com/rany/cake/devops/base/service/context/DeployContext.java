@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.rany.cake.devops.base.domain.aggregate.*;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
 import com.rany.cake.devops.base.domain.entity.DeployHistory;
+import com.rany.cake.devops.base.util.enums.DeployHistoryStatusEnum;
 import com.rany.cake.devops.base.util.enums.ReleaseStatus;
 import com.rany.cake.toolkit.net.remote.channel.SessionStore;
 import lombok.Data;
@@ -203,7 +204,7 @@ public class DeployContext implements Serializable {
         this.release.setGmtModified(new Date());
         this.progress.setStatus("error");
         if (this.deployHistory != null) {
-            this.deployHistory.setDeployStatus(ReleaseStatus.FAILED.name());
+            this.deployHistory.setDeployStatus(DeployHistoryStatusEnum.FAILED.getValue());
             this.deployHistory.setGmtModified(this.release.getGmtModified());
         }
     }
@@ -213,7 +214,7 @@ public class DeployContext implements Serializable {
         this.release.setGmtModified(new Date());
         this.progress.setStatus("finish");
         if (this.deployHistory != null) {
-            this.deployHistory.setDeployStatus(ReleaseStatus.FINISHED.name());
+            this.deployHistory.setDeployStatus(DeployHistoryStatusEnum.SUCCESS.getValue());
             this.deployHistory.setGmtModified(this.release.getGmtModified());
         }
     }
