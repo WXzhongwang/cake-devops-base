@@ -55,8 +55,15 @@ start_app() {
     else
         # 直接输出到标准输出和标准错误
         $START_CMD &
-        echo $! > "$PID_FILE"
-        echo "Application started with PID $(cat $PID_FILE)."
+        APP_PID=$!
+        echo $APP_PID > "$PID_FILE"
+        echo "Application started with PID $APP_PID."
+        sleep 5  # 给应用一些时间启动
+        if is_running; then
+            echo "Application is running and has PID $(cat $PID_FILE)."
+        else
+            echo "Application failed to start. Check logs in Kubernetes."
+        fi
     fi
 }
 
