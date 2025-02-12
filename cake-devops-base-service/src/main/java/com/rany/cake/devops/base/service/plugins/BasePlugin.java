@@ -73,8 +73,12 @@ public abstract class BasePlugin implements Plugin {
             String webHook = context.getApp().getWebhook();
             String appName = context.getApp().getAppName().getName();
             // "$message" "$webhook_url" "$status" "$app_name"
+//            local message=$1
+//            local status=$2
+//            local app_name=$3
+//            local webhook_url=$4
             String executeCommand = String.format(" sh send_notification.sh '%s' '%s' '%s' '%s'",
-                    comment, webHook, "failed", appName);
+                    comment, "failed", appName, webHook);
             if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
                 log.error("发送告警提醒");
             }
