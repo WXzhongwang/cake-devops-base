@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -33,22 +33,11 @@ if [ ! -f "$JAR_FILE" ]; then
     exit 1
 fi
 
-# 定义 JVM 选项
-JAVA_OPTS=(
-    "-Xms512m -Xmx1024m"
-    "-Xloggc:/home/admin/gc.log"
-    "-XX:+PrintGCDetails"
-    "-XX:+PrintGCDateStamps"
-    "-XX:+PrintGCTimeStamps"
-    "-XX:+PrintGCCause"
-    "-XX:+PrintGCApplicationStoppedTime"
-    "-XX:+UseGCLogFileRotation"
-    "-XX:NumberOfGCLogFiles=10"
-    "-XX:GCLogFileSize=100M"
-)
+# 定义 JVM 选项（使用字符串而不是数组）
+JAVA_OPTS="-Xms512m -Xmx1024m -Xloggc:/home/admin/gc.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+PrintGCCause -XX:+PrintGCApplicationStoppedTime -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M"
 
 # 定义启动命令
-START_CMD="java ${JAVA_OPTS[*]} -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
+START_CMD="java $JAVA_OPTS -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
 
 echo "开始启动: $START_CMD"
 

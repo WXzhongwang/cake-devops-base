@@ -1,22 +1,19 @@
 FROM openjdk:8-jdk-alpine
 # 定义构建参数 ENV
-ARG ENV=test
+ARG BUILD_ENV=test
 
 ENV APP_NAME=cake-devops-base
 
 RUN mkdir -p /home/admin/$APP_NAME && \
-    mkdir -p /home/admin/$APP_NAME/logs && \
-    chmod 755 /home/admin/$APP_NAME/logs
+    mkdir -p /home/admin/$APP_NAME/logs
 
 # 添加 appctl.sh 脚本
-ADD /APP-META/appctl.sh /home/admin/appctl.sh
+# 添加 appctl.sh 脚本
+COPY APP-META/appctl.sh /home/admin/appctl.sh
 RUN chmod +x /home/admin/appctl.sh
 
-# 挂载目录
-VOLUME /tmp
-
 # 添加 JAR 文件
-ADD /start/target/cake-devops-service.jar /home/admin/cake-devops-base/cake-devops-service.jar
+COPY start/target/cake-devops-service.jar /home/admin/cake-devops-base/cake-devops-service.jar
 
 # 设置 ENTRYPOINT
 # 注意：ACTION 应该是第一个参数，APP_NAME 是第二个参数
