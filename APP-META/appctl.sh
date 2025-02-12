@@ -55,7 +55,7 @@ start_app() {
     else
        echo "Starting application, exec java cmd..."
         # 直接运行 Java 应用，保持前台进程
-       $START_CMD
+       exec $START_CMD
     fi
 }
 
