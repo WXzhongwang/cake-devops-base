@@ -53,17 +53,9 @@ start_app() {
     if is_running; then
         echo "Application is already running."
     else
-        # 直接输出到标准输出和标准错误
-        $START_CMD &
-        APP_PID=$!
-        echo $APP_PID > "$PID_FILE"
-        echo "Application started with PID $APP_PID."
-        sleep 5  # 给应用一些时间启动
-        if is_running; then
-            echo "Application is running and has PID $(cat $PID_FILE)."
-        else
-            echo "Application failed to start. Check logs in Kubernetes."
-        fi
+       echo "Starting application, exec java cmd..."
+        # 直接运行 Java 应用，保持前台进程
+       $START_CMD
     fi
 }
 

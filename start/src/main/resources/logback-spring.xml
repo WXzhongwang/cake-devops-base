@@ -111,7 +111,7 @@
             <appender-ref ref="FILE"/>
         </root>
         <logger name="RabbitMq" level="debug">
-            <appender-ref ref="CONSOLE"/>
+            <!--            <appender-ref ref="CONSOLE"/>-->
             <appender-ref ref="RABBITMQ"/>
             <appender-ref ref="SLS"/>
         </logger>
