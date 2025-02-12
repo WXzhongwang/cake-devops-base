@@ -6,7 +6,8 @@ ENV APP_NAME=cake-devops-base
 
 RUN apk add --no-cache bash curl wget netcat-openbsd && \
     mkdir -p /home/admin/$APP_NAME && \
-    mkdir -p /home/admin/$APP_NAME/logs
+    mkdir -p /home/admin/$APP_NAME/logs && \
+    chmod 755 /home/admin/$APP_NAME/logs
 
 # 添加 appctl.sh 脚本
 ADD /APP-META/appctl.sh /home/admin/appctl.sh
@@ -15,7 +16,9 @@ RUN chmod +x /home/admin/appctl.sh
 # 挂载目录
 VOLUME /tmp
 
+# 添加 JAR 文件
 ADD /start/target/cake-devops-service.jar /home/admin/cake-devops-base/cake-devops-service.jar
 
 # 设置 ENTRYPOINT
-ENTRYPOINT ["/home/admin/appctl.sh", "cake-devops-base", "start", "test"]
+# 注意：ACTION 应该是第一个参数，APP_NAME 是第二个参数
+ENTRYPOINT ["/home/admin/appctl.sh", "start", "cake-devops-base", "test"]

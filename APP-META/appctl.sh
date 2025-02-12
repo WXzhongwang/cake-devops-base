@@ -4,24 +4,24 @@ set -e
 
 # 检查命令行参数
 if [ $# -lt 2 ] || [ $# -gt 3 ]; then
-    echo "Usage: $0 {start|stop|restart} [spring_profiles_active]" >&2
+    echo "Usage: $0 {start|stop|restart} <app_name> [spring_profiles_active]" >&2
     exit 2 # bad usage
 fi
 
 # 操作
-APP_NAME=$1
-ACTION=$2
+ACTION=$1
+APP_NAME=$2
 SPRING_PROFILES_ACTIVE=${3:-dev}
 
 echo "APP_NAME: ${APP_NAME}"
 echo "ACTION: ${ACTION}"
 echo "Spring Profiles Active: ${SPRING_PROFILES_ACTIVE}"
 
-# 检查是否运行在容器内
-IN_DOCKER=$(command -v docker &> /dev/null && echo true || echo false)
+# 定义 PID 文件路径
+PID_FILE="/home/admin/${APP_NAME}/app.pid"
 
-# 定义日志文件
-DEPLOY_LOG="/home/admin/${APP_NAME}/deploy.log"
+# 确保 PID 文件目录存在
+mkdir -p "$(dirname "$PID_FILE")"
 
 # 定义 Java 主类和 jar 文件路径
 MAIN_CLASS="com.rany.cake.devops.base.CakeDevopsBaseApplication"
@@ -54,40 +54,32 @@ echo "开始启动: $START_CMD"
 
 # 检查应用是否正在运行
 is_running() {
-    if [[ $IN_DOCKER == true ]]; then
-        pgrep -f "$MAIN_CLASS" > /dev/null
-        return $?
-    else
-        ps aux | grep -q "[j]ava.*$MAIN_CLASS"
-        return $?
-    fi
+    pgrep -f "$MAIN_CLASS" > /dev/null
+    return $?
 }
 
 # 启动应用
 start_app() {
-    echo "Starting application..." | tee -a "$DEPLOY_LOG"
+    echo "Starting application..."
     if is_running; then
-        echo "Application is already running." | tee -a "$DEPLOY_LOG"
+        echo "Application is already running."
     else
-        # 使用nohup来让Java应用在后台运行
-        # 注意：这里不再重定向到日志文件，而是直接启动应用
-        exec $START_CMD
-        echo "Application started with PID $$." | tee -a "$DEPLOY_LOG"
+        # 直接输出到标准输出和标准错误
+        $START_CMD &
+        echo $! > "$PID_FILE"
+        echo "Application started with PID $(cat $PID_FILE)."
     fi
 }
 
 # 停止应用
 stop_app() {
-    echo "Stopping application..." | tee -a "$DEPLOY_LOG"
+    echo "Stopping application..."
     if is_running; then
-        if [[ $IN_DOCKER == true ]]; then
-            pkill -f "$MAIN_CLASS"
-        else
-            ps aux | grep "[j]ava.*$MAIN_CLASS" | awk '{print $2}' | xargs kill
-        fi
-        echo "Application stopped." | tee -a "$DEPLOY_LOG"
+        pkill -f "$MAIN_CLASS"
+        rm -f "$PID_FILE"
+        echo "Application stopped."
     else
-        echo "Application is not running." | tee -a "$DEPLOY_LOG"
+        echo "Application is not running."
     fi
 }
 
@@ -109,7 +101,7 @@ case "$ACTION" in
         restart_app
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart}" >&2
+        echo "Usage: $0 {start|stop|restart} <app_name> [spring_profiles_active]" >&2
         exit 1
         ;;
 esac
