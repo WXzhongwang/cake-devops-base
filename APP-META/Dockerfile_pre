@@ -4,8 +4,7 @@ ARG ENV=pre
 
 ENV APP_NAME=cake-devops-base
 
-RUN apk add --no-cache bash curl wget netcat-openbsd && \
-    mkdir -p /home/admin/$APP_NAME && \
+RUN mkdir -p /home/admin/$APP_NAME && \
     mkdir -p /home/admin/$APP_NAME/logs && \
     chmod 755 /home/admin/$APP_NAME/logs
 
