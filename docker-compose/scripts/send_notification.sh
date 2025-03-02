@@ -4,9 +4,9 @@
 # 通过钉钉发送通知
 function send_dingding_notification {
     local message=$1
-    local webhook_url=$2
-    local status=$3
-    local app_name=$4
+    local status=$2
+    local app_name=$3
+    local webhook_url=$4
     # shellcheck disable=SC2155
     local date_suffix=$(date "+%Y-%m-%d %H:%M:%S")
 
@@ -35,8 +35,8 @@ function send_notification {
     local app_name=$3
     local webhook_url=$4
 
-    send_dingding_notification "$message" "$webhook_url" "$status" "$app_name"
+    send_dingding_notification "$message" "$status" "$app_name" "$webhook_url"
 }
 
 # 示例用法
-send_notification "$1" "$2" "$3" "$4"
+# send_notification "$1" "$2" "$3" "$4"

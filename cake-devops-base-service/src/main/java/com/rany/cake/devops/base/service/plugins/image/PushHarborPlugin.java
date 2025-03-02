@@ -46,16 +46,18 @@ public class PushHarborPlugin extends BasePlugin {
 //            local namespace=$2
 //            local project=$3
 //            local version=$4
-//            local webhook_url=$5
-//            local HARBOR_URL=$6
+
+//            local HARBOR_URL=$5
 //            # shellcheck disable=SC2034
-//            local HARBOR_USERNAME=$7
-//            local HARBOR_PASSWORD=$8
+//            local HARBOR_USERNAME=$6
+//            local HARBOR_PASSWORD=$7
+//            local webhook_url=$8
             String executeCommand = String.format(" sh push_harbor.sh '%s' %s %s %s '%s' '%s' '%s' '%s'",
-                    repo, appName, appName, releaseVersion, webHook,
+                    repo, appName, appName, releaseVersion,
                     crConfig.getHarbor().getHarborUrl(),
                     crConfig.getHarbor().getHarborUser(),
-                    crConfig.getHarbor().getHarborPassword()
+                    crConfig.getHarbor().getHarborPassword(),
+                    webHook
             );
             if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
                 log.error("推送harbor失败");

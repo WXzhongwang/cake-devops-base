@@ -9,11 +9,12 @@ function push_harbor_image {
     local namespace=$2
     local project=$3
     local version=$4
-    local webhook_url=$5
-    local HARBOR_URL=$6
+
+    local HARBOR_URL=$5
     # shellcheck disable=SC2034
-    local HARBOR_USERNAME=$7
-    local HARBOR_PASSWORD=$8
+    local HARBOR_USERNAME=$6
+    local HARBOR_PASSWORD=$7
+    local webhook_url=$8
 
     DOCKER_HOME=/usr/local/bin/docker
     if [ ! -x "$DOCKER_HOME" ]; then
@@ -44,4 +45,4 @@ function push_harbor_image {
 }
 
 # 示例用法
-push_harbor_image "$1" "$2" "$3" "$4" "$5"
+push_harbor_image "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8"

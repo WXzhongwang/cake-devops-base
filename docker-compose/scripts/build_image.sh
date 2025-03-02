@@ -9,8 +9,8 @@ function build_image {
     local repo_url=$1
     local project=$2
     local version=$3
-    local webhook_url=$4
-    local env=$5
+    local env=$4
+    local webhook_url=$5
 
     local DOCKER_HOME=/usr/bin/docker
     if [ ! -x "$DOCKER_HOME" ]; then

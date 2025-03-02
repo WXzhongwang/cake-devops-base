@@ -41,4 +41,4 @@ function sonar_scan {
 }
 
 # 示例用法
-sonar_scan "$1" "$2"
+sonar_scan "$1" "$2" "$3" "$4"

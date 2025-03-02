@@ -46,20 +46,20 @@ public class PushAcrPlugin extends BasePlugin {
 //            local namespace=$2
 //            local project=$3
 //            local version=$4
-//            local webhook_url=$5
-//            local ALIYUN_ACR_URL=$6
-//            local ALIYUN_ACR_USER_NAME=$7
-//            local ALIYUN_ACR_USER_PASSWORD=$8
+//            local ALIYUN_ACR_URL=$5
+//            local ALIYUN_ACR_USER_NAME=$6
+//            local ALIYUN_ACR_USER_PASSWORD=$7
+//            local webhook_url=$8
             String executeCommand = String.format(" sh %s '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'",
                     crConfig.getShellName(),
                     repo,
                     crConfig.getNameSpace(),
                     appName,
                     releaseVersion,
-                    webHook,
                     crConfig.getAliyun().getHost(),
                     crConfig.getAliyun().getUsername(),
-                    crConfig.getAliyun().getPassword()
+                    crConfig.getAliyun().getPassword(),
+                    webHook
             );
             if (!JSCHTool.remoteExecute(session, "cd " + workspace + "; " + executeCommand)) {
                 log.error("推送阿里云失败");

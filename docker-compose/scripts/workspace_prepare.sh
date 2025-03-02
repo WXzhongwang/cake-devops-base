@@ -223,8 +223,8 @@ check_docker() {
 
 # 检查并安装 SonarScanner 到固定路径
 check_sonar_scanner() {
-    local sonar_version="5.0.1.3006"
-    SONAR_SCANNER_PATH="$INSTALL_PATH/sonar-scanner_$sonar_version"
+    local sonar_version="sonar-3.1.1"
+    SONAR_SCANNER_PATH="$INSTALL_PATH/$sonar_version"
     if [[ ! -d "$SONAR_SCANNER_PATH" ]]; then
         echo "SonarScanner $sonar_version 未安装，正在安装到 $SONAR_SCANNER_PATH..."
         if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -237,16 +237,11 @@ check_sonar_scanner() {
             sudo mkdir -p "$INSTALL_PATH"
             cd "$INSTALL_PATH" || exit 1
 
-            wget -O "sonar-scanner-cli-$sonar_version-macosx.zip" "https://rany-ops.oss-cn-hangzhou.aliyuncs.com/sonar/sonar-scanner-cli-5.0.1.3006-macosx.zip"
-            sudo unzip "sonar-scanner-cli-$sonar_version-macosx.zip"
-            # 获取解压后的目录名称
-            # shellcheck disable=SC2155
-            local extracted_dir=$(unzip -l "sonar-scanner-cli-$sonar_version-macosx.zip" | grep sonar-scanner | head -1 | awk '{print $4}' | cut -d'/' -f1)
-            sudo mv "$extracted_dir" "$SONAR_SCANNER_PATH"
+            wget -O "$sonar_version.zip" "https://rany-ops.oss-cn-hangzhou.aliyuncs.com/sonar/$sonar_version.zip"
+            sudo unzip "$sonar_version.zip"
+
+            sudo mv "$sonar_version" "$SONAR_SCANNER_PATH"
             echo "SonarScanner $sonar_version 已安装到 $SONAR_SCANNER_PATH"
-        else
-            echo "不支持的操作系统。"
-            exit 1
         fi
     else
         echo "SonarScanner $sonar_version 已安装在 $SONAR_SCANNER_PATH"

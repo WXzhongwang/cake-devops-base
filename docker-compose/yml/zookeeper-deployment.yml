@@ -28,7 +28,7 @@ spec:
             - name: ZOOKEEPER_CLIENT_PORT
               value: "2181"
             - name: ZOOKEEPER_TICK_TIME
-              value: "2000"
+              value: "10000"
             - name: ZOOKEEPER_INIT_LIMIT
               value: "5"
             - name: ZOOKEEPER_SYNC_LIMIT
