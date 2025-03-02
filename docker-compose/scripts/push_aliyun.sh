@@ -32,18 +32,20 @@ function push_aliyun_image {
     echo "$repo_name"
 
     # 登录ACR
-    $DOCKER_HOME login -u "$ALIYUN_ACR_USER_NAME" -p "$ALIYUN_ACR_USER_PASSWORD" "$ALIYUN_ACR_URL"  | tee -a push_aliyun.log
+    $DOCKER_HOME login -u "$ALIYUN_ACR_USER_NAME" -p "$ALIYUN_ACR_USER_PASSWORD" "$ALIYUN_ACR_URL"
 
     # 标记镜像
-    $DOCKER_HOME tag "$project:$version" "$ALIYUN_ACR_URL/$namespace/$project:$version"  | tee -a push_aliyun.log
+    $DOCKER_HOME tag "$project:$version" "$ALIYUN_ACR_URL/$namespace/$project:$version"
 
     # 推送镜像到阿里云
-    if $DOCKER_HOME push "$ALIYUN_ACR_URL/$namespace/$project:$version" | tee -a push_aliyun.log; then
-        echo "【PushAliyunImage】推送阿里云镜像成功..."
-    else
+    $DOCKER_HOME push "$ALIYUN_ACR_URL/$namespace/$project:$version"
+
+
+    # 判断镜像推送是否成功
+    # shellcheck disable=SC2181
+    if [ $? -ne 0 ]; then
         echo "推送镜像失败"
-        echo "调用 send_notification: message='推送镜像失败', status='failed', app_name='$project', webhook_url='$webhook_url'"
-        send_notification "推送镜像失败" "failed" "$project" "$webhook_url"
+         send_notification "推送镜像失败" "failed" "$repo_name" "$webhook_url"
         exit 1
     fi
     echo "【PushAliyunImage】推送阿里云镜像成功..."

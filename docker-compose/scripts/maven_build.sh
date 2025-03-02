@@ -25,7 +25,6 @@ function mvn_build {
     if [ -n "$JAVA_HOME" ] && [ -d "$JAVA_HOME" ]; then
         echo "JAVA_HOME 已存在，无需临时设置"
     else
-        echo "临时设置JAVA_HOME"
         export JAVA_HOME="$INSTALL_PATH/jdk_$java_version"
         export PATH="$JAVA_HOME/bin:$PATH"
     fi
