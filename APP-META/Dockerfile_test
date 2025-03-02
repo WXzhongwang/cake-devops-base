@@ -1,9 +1,12 @@
-FROM registry.cn-hangzhou.aliyuncs.com/cake-devops-base/jdks:0.0.1
+FROM registry.cn-hangzhou.aliyuncs.com/cake-devops-base/jdks:0.0.2
+# FROM openjdk:8-jdk-alpine
+
 # 定义构建参数 ENV
 ARG ENV=test
 
 ENV APP_NAME=cake-devops-base
 
+# 安装常用的工具
 RUN mkdir -p /home/admin/$APP_NAME && \
     mkdir -p /home/admin/$APP_NAME/logs
 
