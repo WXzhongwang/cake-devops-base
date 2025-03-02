@@ -12,7 +12,6 @@ fi
 ACTION=$1
 APP_NAME=$2
 SPRING_PROFILES_ACTIVE=${3:-dev}
-JDK_VERSION=${4:-8}
 
 echo "APP_NAME: ${APP_NAME}"
 echo "ACTION: ${ACTION}"
@@ -32,14 +31,6 @@ JAR_FILE="/home/admin/${APP_NAME}/cake-devops-service.jar"
 if [ ! -f "$JAR_FILE" ]; then
     echo "JAR file does not exist at path: $JAR_FILE" >&2
     exit 1
-fi
-
-echo "临时设置JAVA_HOME"
-if [ -n "$JAVA_HOME" ] && [ -d "$JAVA_HOME" ]; then
-    echo "JAVA_HOME 已存在，无需临时设置"
-else
-    export JAVA_HOME="$INSTALL_PATH/jdk_$JDK_VERSION"
-    export PATH="$JAVA_HOME/bin:$PATH"
 fi
 
 # 定义 JVM 选项（使用字符串而不是数组）
