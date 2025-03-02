@@ -20,4 +20,4 @@ COPY start/target/cake-devops-service.jar /home/admin/cake-devops-base/cake-devo
 
 # 设置 ENTRYPOINT
 # 注意：ACTION 应该是第一个参数，APP_NAME 是第二个参数
-ENTRYPOINT ["/home/admin/appctl.sh", "start", "cake-devops-base", "test"]
+ENTRYPOINT ["/bin/sh", "/home/admin/appctl.sh", "start", "cake-devops-base", "test"]
