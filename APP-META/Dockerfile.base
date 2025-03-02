@@ -1,0 +1,5 @@
+# 使用官方的 openjdk:8-jdk-alpine
+FROM openjdk:8-jdk-alpine
+
+# 安装常用的工具
+RUN apk add --no-cache bash curl wget netcat-openbsd

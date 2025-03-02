@@ -1,12 +1,8 @@
-FROM openjdk:8-jdk-alpine
+FROM registry.cn-hangzhou.aliyuncs.com/cake-devops-base/jdks:0.0.1
 # 定义构建参数 ENV
 ARG ENV=test
 
 ENV APP_NAME=cake-devops-base
-
-
-RUN apk add --no-cache bash curl wget netcat-openbsd
-
 
 RUN mkdir -p /home/admin/$APP_NAME && \
     mkdir -p /home/admin/$APP_NAME/logs

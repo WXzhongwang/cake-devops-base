@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM registry.cn-hangzhou.aliyuncs.com/cake-devops-base/jdks:0.0.1
 # 定义构建参数 ENV
 ARG ENV=prod
 
