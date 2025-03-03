@@ -24,7 +24,7 @@ PID_FILE="/home/admin/${APP_NAME}/app.pid"
 mkdir -p "$(dirname "$PID_FILE")"
 
 # 定义 Java 主类和 jar 文件路径
-MAIN_CLASS="com.rany.cake.devops.base.CakeDevopsBaseApplication"
+# MAIN_CLASS="com.rany.cake.devops.base.CakeDevopsBaseApplication"
 JAR_FILE="/home/admin/${APP_NAME}/cake-devops-service.jar"
 
 # 检查 JAR 文件是否存在
@@ -33,18 +33,23 @@ if [ ! -f "$JAR_FILE" ]; then
     exit 1
 fi
 
-# 定义 JVM 选项（使用字符串而不是数组）
-JAVA_OPTS="-Xms512m -Xmx1024m -Xloggc:/home/admin/gc.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+PrintGCCause -XX:+PrintGCApplicationStoppedTime -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M"
+# 定义 JVM 选项
+JAVA_OPTS="-Xms512m -Xmx1024m -Xloggc:/home/admin/${APP_NAME}/gc.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+PrintGCCause -XX:+PrintGCApplicationStoppedTime -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M"
 
 # 定义启动命令
-START_CMD="java $JAVA_OPTS -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
-
-echo "开始启动: $START_CMD"
+START_CMD="$JAVA_HOME/bin/java $JAVA_OPTS -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar $JAR_FILE"
 
 # 检查应用是否正在运行
 is_running() {
-    pgrep -f "$MAIN_CLASS" > /dev/null
-    return $?
+    if [ -f "$PID_FILE" ]; then
+        pid=$(cat "$PID_FILE")
+        if ps -p "$pid" > /dev/null; then
+            return 0
+        else
+            rm -f "$PID_FILE"
+        fi
+    fi
+    return 1
 }
 
 # 启动应用
@@ -53,9 +58,10 @@ start_app() {
     if is_running; then
         echo "Application is already running."
     else
-       echo "Starting application, exec java cmd..."
-        # 直接运行 Java 应用，保持前台进程
-       exec $START_CMD
+        echo "Starting application, exec java cmd..."
+        nohup $START_CMD > /dev/stdout 2>&1 &
+        echo $! > "$PID_FILE"
+        echo "Application started with PID $(cat $PID_FILE)."
     fi
 }
 
@@ -63,7 +69,8 @@ start_app() {
 stop_app() {
     echo "Stopping application..."
     if is_running; then
-        pkill -f "$MAIN_CLASS"
+        # shellcheck disable=SC2046
+        kill $(cat "$PID_FILE")
         rm -f "$PID_FILE"
         echo "Application stopped."
     else
