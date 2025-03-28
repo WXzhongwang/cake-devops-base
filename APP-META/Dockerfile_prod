@@ -1,12 +1,13 @@
-FROM registry.cn-hangzhou.aliyuncs.com/cake-devops-base/jdks:0.0.1
-# 定义构建参数 ENV
+# 使用 openjdk:8 作为基础镜像
+FROM openjdk:8
+
+# 定义构建参数和环境变量
 ARG ENV=prod
-
 ENV APP_NAME=cake-devops-base
+ENV APP_HOME=/home/admin/$APP_NAME
 
-RUN mkdir -p /home/admin/$APP_NAME && \
-    mkdir -p /home/admin/$APP_NAME/logs && \
-    chmod 755 /home/admin/$APP_NAME/logs
+# 创建目录
+RUN mkdir -p $APP_HOME/logs
 
 # 添加 appctl.sh 脚本
 ADD /APP-META/appctl.sh /home/admin/appctl.sh
@@ -16,8 +17,8 @@ RUN chmod +x /home/admin/appctl.sh
 VOLUME /tmp
 
 # 添加 JAR 文件
-ADD /start/target/cake-devops-service.jar /home/admin/cake-devops-base/cake-devops-service.jar
+ADD start/target/cake-devops-service.jar /home/admin/cake-devops-base/cake-devops-service.jar
 
 # 设置 ENTRYPOINT
-# 注意：ACTION 应该是第一个参数，APP_NAME 是第二个参数
-ENTRYPOINT ["/home/admin/appctl.sh", "start", "cake-devops-base", "prod"]
+ENTRYPOINT ["/home/admin/appctl.sh"]
+CMD ["cake-devops-base", "start", "prod"]
