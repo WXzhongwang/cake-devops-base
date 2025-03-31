@@ -26,6 +26,8 @@ public interface AppRepository extends Repository<App, AppId> {
 
     AppEnv getAppEnv(String envId);
 
+    App getAppByName(String appName);
+
     List<AppEnv> listAppEnv(String appId);
 
     Page<App> pageApp(AppQueryParam appQueryParam);

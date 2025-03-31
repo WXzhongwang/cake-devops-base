@@ -61,6 +61,10 @@ public class AppDomainService {
         return appRepository.find(appId);
     }
 
+    public App getAppByName(String appName) {
+        return appRepository.getAppByName(appName);
+    }
+
     public AppEnv getAppEnv(String envId) {
         return appRepository.getAppEnv(envId);
     }

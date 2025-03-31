@@ -38,6 +38,13 @@
         where app_id = #{appId}
     </select>
 
+    <select id="selectByAppName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from app
+        where app_name = #{appName}
+    </select>
+
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.aggregate.App">
         insert into app (app_id, app_name, description,
                          repo, default_branch, language,

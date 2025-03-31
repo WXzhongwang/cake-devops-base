@@ -158,6 +158,17 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    public AppDTO getAppByName(AppNameBasicQuery appNameBasicQuery) {
+        App app = appDomainService.getAppByName(appNameBasicQuery.getAppName());
+        if (app == null) {
+            return null;
+        }
+        List<AppEnv> appEnvs = appDomainService.listAppEnv(app.getAppId());
+        app.setAppEnvList(appEnvs);
+        return appDataAdapter.sourceToTarget(app);
+    }
+
+    @Override
     public Page<AppDTO> pageApp(AppPageQuery appPageQuery) {
         AppQueryParam appQueryParam = appDataAdapter.convertParam(appPageQuery);
         Page<App> page = appDomainService.pageApp(appQueryParam);

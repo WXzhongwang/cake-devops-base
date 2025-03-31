@@ -2,7 +2,6 @@ package com.rany.cake.devops.base.infra.dao;
 
 import com.rany.cake.devops.base.domain.aggregate.App;
 import com.rany.cake.devops.base.domain.repository.param.AppQueryParam;
-import com.rany.cake.devops.base.infra.po.AppEnvPO;
 import com.rany.cake.devops.base.infra.po.AppPO;
 import org.apache.ibatis.annotations.Param;
 
@@ -39,5 +38,8 @@ public interface AppDao {
 
 
     AppPO selectByAppId(@Param("appId") String appId);
+
+
+    AppPO selectByAppName(@Param("appName") String appName);
 
 }

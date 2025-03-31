@@ -57,6 +57,7 @@
         where env_id = #{envId}
     </select>
 
+
     <insert id="save" parameterType="com.rany.cake.devops.base.domain.entity.AppEnv">
         insert into app_env (env_id,
                              cluster_id, app_id,

@@ -33,9 +33,17 @@ public interface AppService {
      * 获取应用详情
      *
      * @param appBasicQuery 应用详情
-     * @return
+     * @return 应用详情
      */
     AppDTO getApp(AppBasicQuery appBasicQuery);
+
+    /**
+     * 获取应用详情，根据名称
+     *
+     * @param appBasicQuery 应用详情
+     * @return 应用详情
+     */
+    AppDTO getAppByName(AppNameBasicQuery appBasicQuery);
 
 
     /**
@@ -119,6 +127,12 @@ public interface AppService {
      */
     Boolean modifyAppEnvResource(ModifyEnvResourceCommand modifyEnvResourceCommand);
 
+    /**
+     * 扩缩容
+     *
+     * @param scaleEnvCommand 扩缩容
+     * @return 是否成功
+     */
     Boolean scale(ScaleEnvCommand scaleEnvCommand);
 
     /**

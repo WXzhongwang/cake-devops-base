@@ -91,6 +91,12 @@ public class AppRepositoryImpl implements AppRepository {
     }
 
     @Override
+    public App getAppByName(String appName) {
+        AppPO appPO = appDao.selectByAppName(appName);
+        return appDataConvertor.targetToSource(appPO);
+    }
+
+    @Override
     public List<AppEnv> listAppEnv(String appId) {
         List<AppEnvPO> appEnvPOS = appEnvDao.selectByAppId(appId);
         return appEnvDataConvertor.targetToSource(appEnvPOS);

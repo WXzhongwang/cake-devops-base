@@ -28,7 +28,17 @@ public class AppEnvDTO extends DTO {
     private String envName;
     private List<String> domains;
     private ResourceStrategyDTO resourceStrategy;
+    /**
+     * configMap
+     */
     private Map<String, String> configMap;
+    /**
+     * secretMap
+     */
+    private Map<String, String> secretMap;
+    /**
+     * 环境变量
+     */
     private Map<String, String> envVars;
     private String deployment;
     private String service;
