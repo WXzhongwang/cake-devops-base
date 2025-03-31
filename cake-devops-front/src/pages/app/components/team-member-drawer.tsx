@@ -17,7 +17,9 @@ import {
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AppMemberDTO } from "@/models/app";
-import { AppAccountDTO } from "@/models/user";
+import { AppAccountDTO, AppAccountPage } from "@/models/user";
+import { AppMemberPage } from "../app-detail";
+import { mapRoleToChinese } from "@/utils/release-utils";
 
 const { Option } = Select;
 
@@ -25,58 +27,38 @@ interface TeamMembersDrawerProps {
   dispatch: Dispatch;
   onClose: () => void;
   open: boolean;
-  // 其他需要的 props
-  appMembers: {
-    total: number;
-    list: AppMemberDTO[];
-  };
-  userList: AppAccountDTO[];
+  appMembers: AppMemberPage | undefined;
 }
-
-const mapRoleToChinese = (role: string) => {
-  switch (role) {
-    case "OWNER":
-      return "拥有者";
-    case "DEVELOPER":
-      return "开发";
-    case "TESTER":
-      return "测试";
-    case "OPERATOR":
-      return "运维";
-    case "ARCHITECT":
-      return "架构师";
-    case "REPORTER":
-      return "告警接收";
-    case "CHECKER":
-      return "部署审批";
-    default:
-      return role;
-  }
-};
 
 const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
   dispatch,
   onClose,
   open,
   appMembers,
-  userList,
 }) => {
   const [editRoleModalVisible, setEditRoleModalVisible] = useState(false);
-  const [addMemberModalVisible, setAddMemberModalVisible] = useState(false); // 新增人员模态窗状态
+  const [addMemberModalVisible, setAddMemberModalVisible] = useState(false);
   const { id } = useParams();
+  const [userList, setUserList] = useState<AppAccountDTO[]>([]);
 
   const [editRoleForm] = Form.useForm();
   const [addMemberForm] = Form.useForm();
 
   useEffect(() => {
     // 在组件挂载时获取用户列表
+    fetchUserList();
+  }, []);
+
+  const fetchUserList = () => {
     dispatch({
       type: "user/queryMembers",
       payload: {},
+      callback: (res: AppAccountPage) => {
+        setUserList(res.items);
+      },
     });
-  }, []);
+  };
 
-  console.log("appMembers", appMembers);
   const columns = [
     {
       title: "人员名称",
@@ -200,7 +182,7 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
       }
     >
       <Table
-        dataSource={appMembers.list}
+        dataSource={appMembers?.items}
         columns={columns}
         rowKey="memberId"
         pagination={false}
@@ -254,7 +236,7 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
             ]}
           >
             <Select style={{ width: "100%" }}>
-              {userList.map((user: AppAccountDTO) => (
+              {userList?.map((user: AppAccountDTO) => (
                 <Option key={user.id} value={user.id}>
                   {user.accountName}
                 </Option>
@@ -287,8 +269,4 @@ const TeamMembersDrawer: React.FC<TeamMembersDrawerProps> = ({
   );
 };
 
-export default connect(({ user }) => {
-  return {
-    userList: user.members,
-  };
-})(TeamMembersDrawer);
+export default connect()(TeamMembersDrawer);

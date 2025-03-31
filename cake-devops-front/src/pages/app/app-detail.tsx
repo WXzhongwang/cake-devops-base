@@ -27,12 +27,11 @@ const { Paragraph } = Typography;
 const { Option } = Select;
 interface AppDetailProps {
   dispatch: Dispatch;
-  appDetail: AppInfo;
-  appMembers: {
-    total: number;
-    list: AppMemberDTO[];
-  };
-  clusterList: ClusterInfo[] | [];
+}
+
+export interface AppMemberPage {
+  total: number;
+  items: AppMemberDTO[];
 }
 
 interface CreateEnvFormProps {
@@ -49,17 +48,15 @@ interface CreateEnvFormProps {
   maxMemory: string;
 }
 
-const AppDetail: React.FC<AppDetailProps> = ({
-  dispatch,
-  appDetail,
-  clusterList,
-  appMembers,
-}) => {
+const AppDetail: React.FC<AppDetailProps> = ({ dispatch }) => {
   const { id } = useParams();
+  const [appDetail, setAppDetail] = useState<AppInfo>();
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [teamMembersDrawerVisible, setTeamMembersDrawerVisible] =
     useState(false);
+  const [clusterList, setClusterList] = useState<ClusterInfo[]>([]);
+  const [appMemberPage, setAppMemberPage] = useState<AppMemberPage>();
 
   const [form] = Form.useForm<CreateEnvFormProps>();
 
@@ -68,21 +65,34 @@ const AppDetail: React.FC<AppDetailProps> = ({
     dispatch({
       type: "app/getAppDetail",
       payload: { id },
+      callback: (res: AppInfo) => {
+        setAppDetail(res);
+      },
     });
   }, [dispatch, id]);
 
   useEffect(() => {
     // 在组件挂载时，调用 model 的获取应用详情接口
     pageAppMembers();
+    fetchClusterList();
+  }, [teamMembersDrawerVisible]);
+
+  const fetchClusterList = () => {
     dispatch({
       type: "cluster/listAll",
+      callback: (res: ClusterInfo[]) => {
+        setClusterList(res);
+      },
     });
-  }, [dispatch, teamMembersDrawerVisible]);
+  };
 
   const pageAppMembers = () => {
     dispatch({
       type: "app/pageAppMembers",
       payload: { ...pagination, appId: id },
+      callback: (res: AppMemberPage) => {
+        setAppMemberPage(res);
+      },
     });
   };
 
@@ -134,8 +144,6 @@ const AppDetail: React.FC<AppDetailProps> = ({
     history.push(`/apps/app/deploy/${id}`);
   };
 
-  console.log("clusters", clusterList);
-
   return (
     <Space style={{ width: "100%" }} direction="vertical" size="large">
       {appDetail && (
@@ -143,7 +151,12 @@ const AppDetail: React.FC<AppDetailProps> = ({
           title={`${appDetail.appName} 详情页`}
           extra={
             <div>
-              <Button onClick={handleDeploy}>立即部署</Button>
+              <Button
+                disabled={appDetail.appEnvList.length == 0}
+                onClick={handleDeploy}
+              >
+                立即部署
+              </Button>
               <Button onClick={switchMemberDrawer} style={{ marginLeft: 16 }}>
                 项目成员
               </Button>
@@ -189,20 +202,17 @@ const AppDetail: React.FC<AppDetailProps> = ({
               <Descriptions.Item label="更新时间">
                 {dayjs(appDetail.gmtModified).format("YYYY-MM-DD HH:mm:ss")}
               </Descriptions.Item>
-              {/* 添加其他属性 */}
             </Descriptions>
           </Space>
 
-          {/* 添加抽屉 */}
           <CreateEnvDrawer
             onClose={switchDrawer}
             onFinish={onFinish}
             open={drawerVisible}
             clusterList={clusterList}
           />
-          {/* 团队抽屉成员 */}
           <TeamMembersDrawer
-            appMembers={appMembers}
+            appMembers={appMemberPage}
             onClose={switchMemberDrawer}
             open={teamMembersDrawerVisible}
           />
@@ -270,13 +280,11 @@ export default connect(
   }: {
     app: {
       appMembers: any;
-      appDetail: AppInfo;
     };
     cluster: {
       clusterList: ClusterInfo[];
     };
   }) => ({
-    appDetail: app.appDetail,
     appMembers: app.appMembers,
     clusterList: cluster.clusterList,
   })

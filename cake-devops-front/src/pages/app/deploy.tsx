@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { nanoid } from "nanoid";
 
-import { PageContainer } from "@ant-design/pro-components";
+import { PageContainer, PageLoading } from "@ant-design/pro-components";
 import {
   Table,
   Space,
@@ -28,6 +28,7 @@ import {
   Collapse,
   TabsProps,
   Tabs,
+  Result,
 } from "antd";
 import { connect, Dispatch, useParams, history } from "umi";
 import {
@@ -50,80 +51,33 @@ import EnvVarConfigPanel from "./components/env-vars-panel";
 import ConfigMapConfigPanel from "./components/config-map-panel";
 import EnvResourcePanel from "./components/env-resource-panel";
 import DomainHostConfigPanel from "./components/domain-host-config-panel";
+import ReleaseDetailsDrawer from "./components/release-detail-drawer";
+import DeployHistoryLogsDrawer from "./components/deploy-history-logs-drawer";
+import {
+  getReleaseStatusText,
+  getDeployStatusText,
+  getApprovalStatusText,
+} from "@/utils/release-utils";
+import CreateReleaseDrawer from "./components/create-release-crawer";
 
 const { Paragraph } = Typography;
 const { Option } = Select;
 
-// 在组件中定义 getReleaseStatusText 函数
-const getReleaseStatusText = (status: string) => {
-  switch (status) {
-    case "AWAIT_APPROVAL":
-      return "审批中";
-    case "READY":
-      return "待发布";
-    case "PENDING":
-      return "发布中";
-    case "FINISHED":
-      return "已完成";
-    case "FAILED":
-      return "发布失败";
-    case "CLOSED":
-      return "已关闭";
-    default:
-      return "未知状态";
-  }
-};
-
-const getDeployStatusText = (status: string) => {
-  switch (status) {
-    case "0":
-      return "发布中";
-    case "1":
-      return "发布失败";
-    case "2":
-      return "发布成功";
-    default:
-      return "未知状态";
-  }
-};
-
-const getApprovalStatusText = (status: string) => {
-  switch (status) {
-    case "PENDING":
-      return "审批中";
-    case "APPROVED":
-      return "已同意";
-    case "AUTO_APPROVED":
-      return "免批通过";
-    case "REPEALED":
-      return "已撤销";
-    case "REJECTED":
-      return "已驳回";
-    default:
-      return "未知状态";
-  }
-};
-
 interface ReleasePageProps {
-  appDetail: AppInfo;
-  releases: {
-    total: number;
-    list: ReleaseRecord[];
-  };
-  deployHistory: {
-    total: number;
-    list: DeployHistoryDTO[];
-  };
-  appEnv: AppEnv;
   dispatch: Dispatch;
 }
-const DeployPage: React.FC<ReleasePageProps> = ({
-  dispatch,
-  appDetail,
-  releases,
-  deployHistory,
-  appEnv,
-}) => {
+
+interface ReleasePage {
+  total: number;
+  items: ReleaseRecord[];
+}
+
+interface DeployHistoryPage {
+  total: number;
+  items: DeployHistoryDTO[];
+}
+
+const DeployPage: React.FC<ReleasePageProps> = ({ dispatch }) => {
   const { id } = useParams();
   // 发布单详情抽屉
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -132,11 +86,13 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     pageNo: 1,
     pageSize: 10,
   });
+  const [appDetail, setAppDetail] = useState<AppInfo>();
   const [deployDisabled, setDeployDisabled] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [selectedEnvironment, setSelectedEnvironment] = useState<
-    string | undefined | null
-  >(appEnv?.envId);
+  const [selectedEnvironment, setSelectedEnvironment] = useState<string | null>(
+    null
+  );
 
   // 使用 useRef 创建一个变量来存储定时器的引用
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -158,8 +114,12 @@ const DeployPage: React.FC<ReleasePageProps> = ({
 
   const [form] = Form.useForm();
   const [pods, setPods] = useState<PodDTO[]>([]);
+  const [appEnv, setAppEnv] = useState<AppEnv>();
   const [deployHistoryLogs, setDeployHistoryLog] = useState<DeployLogDTO[]>([]);
   const [branches, setBranches] = useState<BranchInfo[]>([]);
+  const [releaseRecordPage, setReleaseRecordPage] = useState<ReleasePage>();
+  const [deployHistoryPage, setDeployHistoryPage] =
+    useState<DeployHistoryPage>();
 
   // 配置项数据
   const [configMapData, setConfigMapData] = useState<
@@ -169,7 +129,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     { id: string; label: string; value: string; editable?: boolean }[]
   >([]);
 
-  const columns = [
+  const releaseRecordColumns = [
     {
       title: "发布单号",
       dataIndex: "releaseNo",
@@ -312,6 +272,75 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     },
   ];
 
+  const deployHistoryColumns = [
+    {
+      title: "pipeKey",
+      dataIndex: "pipeKey",
+      key: "pipeKey",
+      render: (text: any, record: DeployHistoryDTO) => {
+        return (
+          <Paragraph
+            copyable={{ tooltips: ["点击复制", "复制成功"] }}
+            style={{ display: "inline" }}
+          >
+            {record?.pipeKey}
+          </Paragraph>
+        );
+      },
+    },
+    {
+      title: "开始时间",
+      dataIndex: "startTime",
+      key: "releaseDate",
+      render: (text: any, record: DeployHistoryDTO) => {
+        return (
+          <div>{dayjs(record?.startTime).format("YYYY-MM-DD HH:mm:ss")}</div>
+        );
+      },
+    },
+    {
+      title: "结束时间",
+      dataIndex: "gmtModified",
+      key: "gmtModified",
+      render: (text: any, record: DeployHistoryDTO) => {
+        return (
+          <div>
+            {record?.endTime &&
+              dayjs(record?.endTime).format("YYYY-MM-DD HH:mm:ss")}
+          </div>
+        );
+      },
+    },
+    {
+      title: "发布内容",
+      dataIndex: "content",
+      key: "content",
+    },
+    {
+      title: "发布人",
+      dataIndex: "creatorName",
+      key: "creatorName",
+    },
+    {
+      title: "发布状态",
+      dataIndex: "deployStatus",
+      key: "deployStatus",
+      render: (text: any, record: DeployHistoryDTO) => {
+        let statusText = getDeployStatusText(record.deployStatus);
+        return statusText;
+      },
+    },
+    {
+      title: "操作",
+      key: "action",
+      render: (text: any, record: DeployHistoryDTO) => (
+        <Space size="middle">
+          <a onClick={() => handleViewHistoryLog(record.pipeKey)}>查看日志</a>
+        </Space>
+      ),
+    },
+  ];
+
   // 处理关闭按钮的点击事件
   const handleConfirmClose = (record: ReleaseRecord) => {
     // 弹出二次确认框
@@ -350,6 +379,9 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   };
 
   const listAppBranch = (search: string) => {
+    if (!appDetail) {
+      return;
+    }
     dispatch({
       type: "app/listBranch",
       payload: {
@@ -357,85 +389,134 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         search: search || "",
       },
       callback: (content: BranchInfo[]) => {
-        console.log(content);
         setBranches(content);
       },
     });
   };
 
-  const pageRelease = useCallback(() => {
-    if (selectedEnvironment) {
-      console.log("开始调用环境信息", selectedEnvironment);
-      dispatch({
-        type: "app/getAppEnv",
-        payload: { envId: selectedEnvironment },
-      });
-      dispatch({
-        type: "app/listAppPods",
-        payload: { envId: selectedEnvironment },
-        callback: (res: PodDTO[]) => {
-          console.log("pods", res);
-          setPods(res);
-        },
-      });
+  const getAppDetail = (id: string | undefined) => {
+    if (!id) {
+      return;
+    }
+    dispatch({
+      type: "app/getAppDetail",
+      payload: { id },
+      callback: (res: AppInfo) => {
+        setAppDetail(res);
+        if (res.appEnvList && res.appEnvList.length > 0) {
+          setSelectedEnvironment(res.appEnvList[0].envId);
+        }
+      },
+    });
+  };
 
-      dispatch({
-        type: "release/pageRelease",
-        payload: {
-          ...pagination,
-          appId: id,
-          envId: selectedEnvironment,
-        },
-      });
+  const getCurrentAppEnv = (selectedEnvironment: string | null) => {
+    if (!selectedEnvironment) {
+      return;
+    }
+    dispatch({
+      type: "app/getAppEnv",
+      payload: {
+        envId: selectedEnvironment,
+      },
+      callback: (content: AppEnv) => {
+        setAppEnv(content);
+      },
+    });
+  };
+
+  const listAppPods = (selectedEnvironment: string | null) => {
+    if (!selectedEnvironment) {
+      return;
+    }
+    dispatch({
+      type: "app/listAppPods",
+      payload: { envId: selectedEnvironment },
+      callback: (res: PodDTO[]) => {
+        setPods(res);
+      },
+    });
+  };
+
+  const pageReleaseRecord = (
+    appId: string,
+    pageNo: number,
+    pageSize: number,
+    envId: string
+  ) => {
+    dispatch({
+      type: "release/pageReleaseRecord",
+      payload: {
+        appId: appId,
+        pageNo: pageNo,
+        pageSize: pageSize,
+        envId: envId,
+      },
+      callback: (res: ReleasePage) => {
+        setReleaseRecordPage(res);
+      },
+    });
+  };
+
+  const pageDeployHistoryRecord = (
+    appId: string,
+    pageNo: number,
+    pageSize: number,
+    envId: string
+  ) => {
+    dispatch({
+      type: "release/pageDeployHistory",
+      payload: {
+        pageNo: pageNo,
+        pageSize: pageSize,
+        appId: appId,
+        envId: envId,
+      },
+      callback: (res: DeployHistoryPage) => {
+        setDeployHistoryPage(res);
+      },
+    });
+  };
+
+  const pageRelease = useCallback(() => {
+    if (selectedEnvironment && id) {
+      getCurrentAppEnv(selectedEnvironment);
+      listAppPods(selectedEnvironment);
+      pageReleaseRecord(
+        id,
+        pagination.pageNo,
+        pagination.pageSize,
+        selectedEnvironment
+      );
 
       const deployStatus = appEnv?.deployStatus;
       if (deployStatus?.toString() === "1") {
         setDeployDisabled(true);
         // 设置定时器，每 3 秒调用一次获取环境详情接口
         timerRef.current = setInterval(() => {
-          dispatch({
-            type: "app/getAppEnv",
-            payload: { envId: selectedEnvironment },
-          });
+          getCurrentAppEnv(selectedEnvironment);
         }, 3000);
       } else {
         setDeployDisabled(false);
       }
     }
-  }, [dispatch, pagination, id, selectedEnvironment, appEnv?.deployStatus]);
+  }, [pagination, id, selectedEnvironment, appEnv?.deployStatus]);
 
   useEffect(() => {
-    dispatch({
-      type: "app/getAppDetail",
-      payload: { id },
-    });
-  }, [dispatch, id]);
+    getAppDetail(id);
+    setLoading(false);
+  }, [id]);
 
   const pageDeployHistory = useCallback(() => {
-    if (selectedEnvironment) {
-      console.log("开始调用环境信息", selectedEnvironment);
-      dispatch({
-        type: "release/pageDeployHistory",
-        payload: {
-          ...pagination,
-          appId: id,
-          envId: selectedEnvironment,
-        },
-      });
+    if (selectedEnvironment && id) {
+      pageDeployHistoryRecord(
+        id,
+        historyPagination.pageNo,
+        historyPagination.pageSize,
+        selectedEnvironment
+      );
     }
-  }, [dispatch, historyPagination, id, selectedEnvironment]);
-
-  useEffect(() => {
-    dispatch({
-      type: "app/getAppDetail",
-      payload: { id },
-    });
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    pageRelease();
-    pageDeployHistory();
-  }, [pageRelease, pageDeployHistory]);
+  }, [historyPagination, id, selectedEnvironment]);
 
   useEffect(() => {
     if (appEnv) {
@@ -464,11 +545,15 @@ const DeployPage: React.FC<ReleasePageProps> = ({
   }, [appEnv]);
 
   useEffect(() => {
-    // 在appDetail更新时，如果selectedEnvironment为undefined，则设置默认值
-    if (!selectedEnvironment && appDetail?.appEnvList) {
-      setSelectedEnvironment(appDetail?.appEnvList?.[0].envId);
+    if (selectedEnvironment) {
+      getCurrentAppEnv(selectedEnvironment);
     }
-  }, [selectedEnvironment, appDetail]);
+  }, [selectedEnvironment]);
+
+  useEffect(() => {
+    pageRelease();
+    pageDeployHistory();
+  }, [pageRelease, pageDeployHistory]);
 
   // 在组件卸载时清除定时器
   useEffect(() => {
@@ -525,15 +610,8 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     console.log("env change", value);
   };
 
-  const handlePaginationChange = (page: number, pageSize?: number) => {
-    setPagination({ pageNo: page, pageSize: pageSize || 10 });
-  };
-
   const handleAddRelease = (values: any) => {
-    // 处理添加发布单的逻辑，可以在这里提交表单等
     console.log("Form Values:", values);
-    // 提交表单后关闭抽屉
-    // 在这里可以调用相应的接口或 dispatch 创建应用的 action
     dispatch({
       type: "release/createRelease",
       payload: { ...values, appId: id, envId: selectedEnvironment },
@@ -560,6 +638,10 @@ const DeployPage: React.FC<ReleasePageProps> = ({
     return null;
   }, [appEnv]);
 
+  if (loading) {
+    return <PageLoading />;
+  }
+
   return (
     <PageContainer
       title="应用中心"
@@ -578,8 +660,37 @@ const DeployPage: React.FC<ReleasePageProps> = ({
         </Select>,
       ]}
     >
-      {appDetail && (
-        <Space size="middle" direction="vertical" style={{ width: "100%" }}>
+      {!appDetail && (
+        <Result
+          status="error"
+          title="警告"
+          subTitle="未找到应用"
+          extra={
+            <Button type="primary" onClick={() => history.push(`/apps`)}>
+              创建应用
+            </Button>
+          }
+        />
+      )}
+
+      {appDetail && appDetail.appEnvList?.length == 0 && (
+        <Result
+          status="warning"
+          title="警告"
+          subTitle="当前应用没有环境，请创建环境。"
+          extra={
+            <Button
+              type="primary"
+              onClick={() => history.push(`/apps/app/info/${id}`)}
+            >
+              创建环境
+            </Button>
+          }
+        />
+      )}
+
+      {appDetail && appDetail.appEnvList?.length > 0 && (
+        <Space size="small" direction="vertical" style={{ width: "100%" }}>
           <Card
             title={`${appDetail?.appName}:[${appEnv?.envName}(${appEnv?.env})]`}
             extra={
@@ -684,7 +795,6 @@ const DeployPage: React.FC<ReleasePageProps> = ({
             ))}
           </Collapse>
 
-          {/* 发布单 */}
           <Card
             title="发布单"
             extra={
@@ -700,324 +810,83 @@ const DeployPage: React.FC<ReleasePageProps> = ({
               </Space>
             }
           >
-            <Table
-              columns={columns}
-              dataSource={releases.list}
-              rowKey={"releaseId"}
-              rowSelection={{
-                ...rowSelection,
-              }}
-              pagination={{
-                total: releases.total,
-                current: pagination.pageNo,
-                pageSize: pagination.pageSize,
-                onChange: handlePaginationChange,
-              }}
-            />
+            {releaseRecordPage && (
+              <Table
+                columns={releaseRecordColumns}
+                dataSource={releaseRecordPage.items}
+                rowKey={"releaseId"}
+                rowSelection={{
+                  ...rowSelection,
+                }}
+                pagination={{
+                  total: releaseRecordPage.total,
+                  current: pagination.pageNo,
+                  pageSize: pagination.pageSize,
+                  onChange: (page, pageSize) => {
+                    setPagination({
+                      pageNo: page,
+                      pageSize: pageSize || 10,
+                    });
+                  },
+                }}
+              />
+            )}
           </Card>
 
           <Card title="发布历史">
-            <Table
-              columns={[
-                {
-                  title: "pipeKey",
-                  dataIndex: "pipeKey",
-                  key: "pipeKey",
-                  render: (text: any, record: DeployHistoryDTO) => {
-                    return (
-                      <Paragraph
-                        copyable={{ tooltips: ["点击复制", "复制成功"] }}
-                        style={{ display: "inline" }}
-                      >
-                        {record?.pipeKey}
-                      </Paragraph>
-                    );
+            {deployHistoryPage && (
+              <Table
+                columns={deployHistoryColumns}
+                dataSource={deployHistoryPage.items}
+                rowKey={"pipeKey"}
+                pagination={{
+                  total: deployHistoryPage.total,
+                  current: historyPagination.pageNo,
+                  pageSize: historyPagination.pageSize,
+                  onChange: (page, pageSize) => {
+                    setHistoryPagination({
+                      pageNo: page,
+                      pageSize: pageSize || 10,
+                    });
                   },
-                },
-                {
-                  title: "开始时间",
-                  dataIndex: "startTime",
-                  key: "releaseDate",
-                  render: (text: any, record: DeployHistoryDTO) => {
-                    return (
-                      <div>
-                        {dayjs(record?.startTime).format("YYYY-MM-DD HH:mm:ss")}
-                      </div>
-                    );
-                  },
-                },
-                {
-                  title: "结束时间",
-                  dataIndex: "gmtModified",
-                  key: "gmtModified",
-                  render: (text: any, record: DeployHistoryDTO) => {
-                    return (
-                      <div>
-                        {record?.endTime &&
-                          dayjs(record?.endTime).format("YYYY-MM-DD HH:mm:ss")}
-                      </div>
-                    );
-                  },
-                },
-                {
-                  title: "发布内容",
-                  dataIndex: "content",
-                  key: "content",
-                },
-                {
-                  title: "发布人",
-                  dataIndex: "creatorName",
-                  key: "creatorName",
-                },
-                {
-                  title: "发布状态",
-                  dataIndex: "deployStatus",
-                  key: "deployStatus",
-                  render: (text: any, record: DeployHistoryDTO) => {
-                    let statusText = getDeployStatusText(record.deployStatus);
-                    return statusText;
-                  },
-                },
-                {
-                  title: "操作",
-                  key: "action",
-                  render: (text: any, record: DeployHistoryDTO) => (
-                    <Space size="middle">
-                      <a onClick={() => handleViewHistoryLog(record.pipeKey)}>
-                        查看日志
-                      </a>
-                    </Space>
-                  ),
-                },
-              ]}
-              dataSource={deployHistory.list}
-              rowKey={"pipeKey"}
-              pagination={{
-                total: deployHistory.total,
-                current: historyPagination.pageNo,
-                pageSize: historyPagination.pageSize,
-                onChange: (page, pageSize) => {
-                  setHistoryPagination({
-                    pageNo: page,
-                    pageSize: pageSize || 10,
-                  });
-                },
-              }}
-            />
+                }}
+              />
+            )}
           </Card>
+
+          <CreateReleaseDrawer
+            visible={drawerVisible}
+            onClose={handleCreateReleaseDrawer}
+            appId={id}
+            selectedEnvironment={selectedEnvironment}
+            listAppBranch={listAppBranch}
+            branches={branches}
+            handleAddRelease={handleAddRelease}
+          />
+
+          <ReleaseDetailsDrawer
+            visible={viewDrawerVisible}
+            onClose={() => setViewDrawerVisible(false)}
+            release={currentViewRelease}
+          />
+
+          <DeployHistoryLogsDrawer
+            visible={historyLogDrawerVisible}
+            onClose={() => setHistoryLogDrawerVisible(false)}
+            deployHistoryLogs={deployHistoryLogs}
+          />
+
+          <DeployLogDrawer
+            open={logDrawerVisible}
+            onClose={() => {
+              setLogDrawerVisible(false);
+            }}
+            pipeKey={pipeKey}
+          />
         </Space>
       )}
-      {/* 新建发布单抽屉 */}
-      <Drawer
-        title="添加发布单"
-        width={600}
-        onClose={handleCreateReleaseDrawer}
-        open={drawerVisible}
-      >
-        {/* 表单 */}
-        <Form
-          layout="vertical"
-          form={form}
-          initialValues={{
-            releaseDate: "",
-            releaseBranch: "",
-            docAddress: "",
-            appId: id,
-            envId: selectedEnvironment,
-          }}
-          onFinish={(values) => handleAddRelease(values)}
-        >
-          <Form.Item label="预计发布日期" name="releaseDate">
-            <DatePicker showTime defaultValue={moment()} />
-          </Form.Item>
-          <Form.Item
-            label="发布分支"
-            name="releaseBranch"
-            rules={[{ required: true, message: "请输入发布分支" }]}
-          >
-            <Select placeholder="请选择分支">
-              {branches?.map((branch) => (
-                <Option key={branch.name} value={branch.name}>
-                  {branch.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="发布版本"
-            name="releaseVersion"
-            rules={[{ required: true, message: "请输入发布版本" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="文档地址"
-            name="docAddress"
-            rules={[{ required: true, message: "请输入文档地址" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="备注"
-            name="comment"
-            rules={[{ required: true, message: "请输入发布分支" }]}
-          >
-            <Input.TextArea />
-          </Form.Item>
-          <Button type="primary" htmlType="submit">
-            提交
-          </Button>
-        </Form>
-      </Drawer>
-
-      {/* 发布单详情抽屉 */}
-      <Drawer
-        title="发布单详情"
-        width={600}
-        onClose={() => setViewDrawerVisible(false)}
-        open={viewDrawerVisible}
-      >
-        {currentViewRelease && (
-          <Space style={{ width: "100%" }} direction="vertical" size="small">
-            <Descriptions
-              labelStyle={{ width: "160px" }}
-              column={1}
-              bordered
-              title="基础信息"
-            >
-              <Descriptions.Item label="发布单号">
-                <Paragraph
-                  copyable={{ tooltips: ["点击复制", "复制成功"] }}
-                  style={{ display: "inline" }}
-                >
-                  {currentViewRelease.releaseNo}
-                </Paragraph>
-              </Descriptions.Item>
-              <Descriptions.Item label="预计发布时间">
-                {dayjs(currentViewRelease?.releaseDate).format(
-                  "YYYY-MM-DD HH:mm:ss"
-                )}
-              </Descriptions.Item>
-              <Descriptions.Item label="发布分支">
-                {currentViewRelease.releaseBranch}
-              </Descriptions.Item>
-              <Descriptions.Item label="发布版本">
-                {currentViewRelease.releaseVersion}
-              </Descriptions.Item>
-              <Descriptions.Item label="创建时间">
-                {dayjs(currentViewRelease?.gmtCreate).format(
-                  "YYYY-MM-DD HH:mm:ss"
-                )}
-              </Descriptions.Item>
-              <Descriptions.Item label="更新时间">
-                {dayjs(currentViewRelease?.gmtModified).format(
-                  "YYYY-MM-DD HH:mm:ss"
-                )}
-              </Descriptions.Item>
-              <Descriptions.Item label="发布状态">
-                {getReleaseStatusText(currentViewRelease.releaseStatus)}
-              </Descriptions.Item>
-              {/* 其他字段按照需要添加 */}
-            </Descriptions>
-
-            {/* 审批详情 */}
-            {currentViewRelease.approvalDTO && (
-              <Descriptions
-                labelStyle={{ width: "160px" }}
-                column={1}
-                bordered
-                title="审批单详情"
-              >
-                <Descriptions.Item label="发布单号">
-                  <Paragraph
-                    copyable={{ tooltips: ["点击复制", "复制成功"] }}
-                    style={{ display: "inline" }}
-                  >
-                    {currentViewRelease.approvalDTO.approvalId}
-                  </Paragraph>
-                </Descriptions.Item>
-                <Descriptions.Item label="发起时间">
-                  {dayjs(currentViewRelease.approvalDTO?.changeDate).format(
-                    "YYYY-MM-DD HH:mm:ss"
-                  )}
-                </Descriptions.Item>
-
-                <Descriptions.Item label="文档地址">
-                  {currentViewRelease.approvalDTO?.docAddress}
-                </Descriptions.Item>
-                <Descriptions.Item label="审批状态">
-                  {getApprovalStatusText(
-                    currentViewRelease.approvalDTO.approvalStatus
-                  )}
-                </Descriptions.Item>
-              </Descriptions>
-            )}
-
-            <Button
-              onClick={() => setViewDrawerVisible(false)}
-              style={{ marginTop: 16 }}
-            >
-              关闭
-            </Button>
-          </Space>
-        )}
-      </Drawer>
-
-      {/* 发布单详情抽屉 */}
-      <Drawer
-        title="发布记录日志"
-        width={1200}
-        onClose={() => setHistoryLogDrawerVisible(false)}
-        open={historyLogDrawerVisible}
-      >
-        {/* 发布单详情 */}
-        {deployHistoryLogs?.map((log: DeployLogDTO) => (
-          <div>
-            {log.time} {log.message}
-          </div>
-        ))}
-      </Drawer>
-
-      <DeployLogDrawer
-        open={logDrawerVisible}
-        onClose={() => {
-          setLogDrawerVisible(false);
-        }}
-        pipeKey={pipeKey}
-      ></DeployLogDrawer>
     </PageContainer>
   );
 };
 
-export default connect(
-  ({
-    app,
-    release,
-  }: {
-    app: {
-      appDetail: AppInfo;
-      appEnv: AppEnv;
-    };
-    release: {
-      releases: {
-        total: number;
-        list: ReleaseRecord[];
-      };
-      deployHistory: {
-        total: number;
-        list: DeployHistoryDTO[];
-      };
-    };
-  }) => ({
-    appDetail: app.appDetail,
-    appEnv: app.appEnv,
-    releases: {
-      total: release.releases.total,
-      list: release.releases.list,
-    },
-    deployHistory: {
-      total: release.deployHistory.total,
-      list: release.deployHistory.list,
-    },
-  })
-)(DeployPage);
+export default connect()(DeployPage);

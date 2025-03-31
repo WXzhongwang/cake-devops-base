@@ -47,6 +47,9 @@ public class AppRepositoryImpl implements AppRepository {
     @Override
     public App find(@NotNull AppId appId) {
         AppPO appPO = appDao.selectByAppId(appId.getAppId());
+        if (appPO == null) {
+            return null;
+        }
         App app = appDataConvertor.targetToSource(appPO);
         List<AppEnvPO> appEnvPOS = appEnvDao.selectByAppId(appId.getAppId());
         List<AppEnv> appEnvs = appEnvDataConvertor.targetToSource(appEnvPOS);

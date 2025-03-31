@@ -9,15 +9,14 @@ const { Option } = Select;
 
 interface AppListProps {
   dispatch: Dispatch;
-  appList: { list: AppInfo[]; total: number };
-  departments: Department[];
 }
 
-const AppList: React.FC<AppListProps> = ({
-  dispatch,
-  appList,
-  departments,
-}) => {
+export interface AppPage {
+  items: AppInfo[];
+  total: number;
+}
+
+const AppList: React.FC<AppListProps> = ({ dispatch }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [formattedDepartments, setFormattedDepartments] = useState<
     { label: string; value: string }[]
@@ -29,6 +28,8 @@ const AppList: React.FC<AppListProps> = ({
   });
 
   const [createAppDrawerVisible, setCreateAppDrawerVisible] = useState(false);
+  const [appPage, setAppPage] = useState<AppPage>();
+  const [departments, setDepartments] = useState<Department[]>([]);
 
   const showCreateAppDrawer = () => {
     setCreateAppDrawerVisible(true);
@@ -53,12 +54,18 @@ const AppList: React.FC<AppListProps> = ({
     dispatch({
       type: "app/getAppList",
       payload: { ...pagination, ...filters },
+      callback: (res: AppPage) => {
+        setAppPage(res);
+      },
     });
   };
 
   const getDepartments = () => {
     dispatch({
       type: "app/getDepartments",
+      callback: (res: Department[]) => {
+        setDepartments(res);
+      },
     });
   };
 
@@ -124,6 +131,11 @@ const AppList: React.FC<AppListProps> = ({
       ),
     },
   ];
+
+  useEffect(() => {
+    getAppList();
+    getDepartments();
+  }, []);
 
   useEffect(() => {
     // 当部门列表更新时，格式化并设置Select的选项
@@ -203,12 +215,10 @@ const AppList: React.FC<AppListProps> = ({
             </Form.Item>
           </Form>
 
-          {/* 创建应用按钮 */}
           <Button type="primary" onClick={showCreateAppDrawer}>
             创建应用
           </Button>
 
-          {/* 添加应用抽屉 */}
           <CreateAppDrawer
             open={createAppDrawerVisible}
             onClose={hideCreateAppDrawer}
@@ -217,10 +227,10 @@ const AppList: React.FC<AppListProps> = ({
 
           <Table
             columns={columns}
-            dataSource={appList.list}
+            dataSource={appPage?.items}
             rowKey={"appId"}
             pagination={{
-              total: appList.total,
+              total: appPage?.total,
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               onChange: handlePaginationChange,
@@ -232,18 +242,4 @@ const AppList: React.FC<AppListProps> = ({
   );
 };
 
-export default connect(
-  ({
-    app,
-  }: {
-    app: {
-      appList: { list: AppInfo[]; total: number };
-      departments: Department[];
-    };
-  }) => {
-    return {
-      appList: app.appList,
-      departments: app.departments,
-    };
-  }
-)(AppList);
+export default connect()(AppList);

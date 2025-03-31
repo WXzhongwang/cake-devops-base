@@ -1,5 +1,7 @@
 // src/models/app.ts
 import * as clusterService from "@/services/cluster";
+import { message } from "antd";
+import { BaseAction } from "typings";
 import { Effect, Reducer } from "umi";
 
 // 应用信息
@@ -23,16 +25,16 @@ export interface ClusterState {
   clusterList: ClusterInfo[];
 }
 
-interface QueryClusterAction {
+interface QueryClusterAction extends BaseAction {
   type: "cluster/listAll";
 }
 
-interface CreateClusterAction {
+interface CreateClusterAction extends BaseAction {
   type: "cluster/createCluster";
   payload: CreateClusterPayload;
 }
 
-interface ConnectClusterAction {
+interface ConnectClusterAction extends BaseAction {
   type: "cluster/connectCluster";
   payload: ConnectClusterPayload;
 }
@@ -56,9 +58,7 @@ export interface ClusterModelType {
     createCluster: Effect;
     connectCluster: Effect;
   };
-  reducers: {
-    setClusterList: Reducer<ClusterState>;
-  };
+  reducers: {};
 }
 
 const ClusterModel: ClusterModelType = {
@@ -67,26 +67,44 @@ const ClusterModel: ClusterModelType = {
     clusterList: [],
   },
   effects: {
-    *listAll(_: QueryClusterAction, { call, put }) {
+    *listAll({ callback }: QueryClusterAction, { call, put }) {
       const response = yield call(clusterService.listAll);
-      yield put({
-        type: "setClusterList",
-        payload: response.content,
-      });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
-    *createCluster({ payload }: CreateClusterAction, { call, put }) {
+    *createCluster({ payload, callback }: CreateClusterAction, { call, put }) {
       const response = yield call(clusterService.createCluster, payload);
-      yield put({ type: "setClusterList" });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
-    *connectCluster({ payload }: ConnectClusterAction, { call, put }) {
+    *connectCluster(
+      { payload, callback }: ConnectClusterAction,
+      { call, put }
+    ) {
       const response = yield call(clusterService.connect);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
   },
-  reducers: {
-    setClusterList(state, action) {
-      return { ...state, clusterList: action.payload };
-    },
-  },
+  reducers: {},
 };
 
 export default ClusterModel;

@@ -151,7 +151,8 @@ public class AppServiceImpl implements AppService {
     public AppDTO getApp(AppBasicQuery appBasicQuery) {
         App app = appDomainService.getApp(new AppId(appBasicQuery.getAppId()));
         if (app == null) {
-            throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
+//            throw new DevOpsException(DevOpsErrorMessage.APP_NOT_FOUND);
+            return null;
         }
         return appDataAdapter.sourceToTarget(app);
     }

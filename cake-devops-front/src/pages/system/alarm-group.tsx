@@ -6,14 +6,14 @@ import dayjs from "dayjs";
 import CreateAlarmGroupForm from "./components/create-alarm-group";
 import { AlarmGroupDTO } from "@/models/alarm-group";
 import { WebhookConfig } from "@/models/webhook";
-import { AppAccountDTO } from "@/models/user";
+import { AppAccountDTO, AppAccountPage } from "@/models/user";
 
 interface AlarmGroupListProps {
   dispatch: Dispatch;
   alarmGroups: AlarmGroupDTO[];
   total: number;
   webhooks: WebhookConfig[];
-  members: AppAccountDTO[];
+  // members: AppAccountDTO[];
 }
 
 const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
@@ -21,7 +21,7 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
   alarmGroups,
   total,
   webhooks,
-  members,
+  // members,
 }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
@@ -32,6 +32,7 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
     AlarmGroupDTO | undefined
   >(undefined);
   const [form] = Form.useForm();
+  const [userList, setUserList] = useState<AppAccountDTO[]>([]);
 
   useEffect(() => {
     getAlarmGroups();
@@ -45,14 +46,18 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
         pageSize: 10,
       },
     });
+    fetchUserList();
+  }, []);
+
+  const fetchUserList = () => {
     dispatch({
       type: "user/queryMembers",
-      payload: {
-        pageNo: 1,
-        pageSize: 10,
+      payload: {},
+      callback: (res: AppAccountPage) => {
+        setUserList(res.items);
       },
     });
-  }, [dispatch]);
+  };
 
   const getAlarmGroups = () => {
     dispatch({
@@ -235,7 +240,7 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
           onUpdate={handleSave}
           onCancel={handleCloseDrawer}
           webhooks={webhooks}
-          members={members}
+          members={userList}
         />
       </Drawer>
     </PageContainer>
@@ -246,5 +251,5 @@ export default connect(({ alarmGroup, webhook, user }) => ({
   alarmGroups: alarmGroup.alarmGroups,
   total: alarmGroup.total,
   webhooks: webhook.webhooks,
-  members: user.members,
+  // members: user.members,
 }))(AlarmGroupList);

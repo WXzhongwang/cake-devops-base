@@ -105,6 +105,8 @@ export default defineConfig({
         },
       ],
     },
+    { path: "/404", component: "system/not-found" }, // 显式声明 /404 路由
+    { path: "/*", redirect: "/404" }, // 通配符路由，重定向到 /404 路由
   ],
   npmClient: "pnpm",
   dva: {},

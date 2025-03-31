@@ -2,7 +2,7 @@
 import * as appService from "@/services/app";
 import { Effect, Reducer } from "umi";
 import { AppAccountDTO } from "./user";
-import { BaseAction } from "typings";
+import { API, BaseAction } from "typings";
 import { message } from "antd";
 
 // 定义创建应用的参数类型
@@ -337,13 +337,6 @@ export interface AppModelType {
     deleteService: Effect;
     saveIngress: Effect;
   };
-  reducers: {
-    setAppList: Reducer<AppState>;
-    setAppDetail: Reducer<AppState>;
-    setDepartments: Reducer<AppState>;
-    setAppMembers: Reducer<AppState>;
-    setAppEnv: Reducer<AppState>;
-  };
 }
 
 const AppModel: AppModelType = {
@@ -362,22 +355,22 @@ const AppModel: AppModelType = {
     appEnv: null,
   },
   effects: {
-    *getAppList({ payload }: QueryAppAction, { call, put }) {
+    *getAppList({ payload, callback }: QueryAppAction, { call, put }) {
       const response = yield call(appService.pageAppList, payload);
-      console.log(response);
-
-      if (response?.content) {
-        yield put({
-          type: "setAppList",
-          payload: {
-            list: response.content.items,
-            total: response.content.total,
-          },
-        });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
       }
     },
     *createApp({ payload, callback }: CreateAppAction, { call, put }) {
-      const response = yield call(appService.createApp, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        appService.createApp,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
@@ -436,7 +429,6 @@ const AppModel: AppModelType = {
 
     *createAppEnv({ payload, callback }: CreateAppEnvAction, { call, put }) {
       const response = yield call(appService.createAppEnv, payload);
-      // yield put({ type: "getAppDetail" });
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
@@ -504,20 +496,28 @@ const AppModel: AppModelType = {
       }
     },
 
-    *getAppDetail({ payload }: GetAppDetailAction, { call, put }) {
+    *getAppDetail({ payload, callback }: GetAppDetailAction, { call, put }) {
       const response = yield call(appService.getAppDetail, payload.id);
-      yield put({
-        type: "setAppDetail",
-        payload: response.content,
-      });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *getAppEnv({ payload }: GetAppEnvAction, { call, put }) {
+    *getAppEnv({ payload, callback }: GetAppEnvAction, { call, put }) {
       const response = yield call(appService.getAppEnv, payload);
-      yield put({
-        type: "setAppEnv",
-        payload: response.content,
-      });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *listAppPods({ payload, callback }: ListAppPodsAction, { call, put }) {
@@ -532,28 +532,30 @@ const AppModel: AppModelType = {
       }
     },
 
-    *getDepartments({}: QueryDepartmentAction, { call, put }) {
+    *getDepartments({ callback }: QueryDepartmentAction, { call, put }) {
       const response = yield call(appService.getDepartments);
-      if (response?.content) {
-        yield put({
-          type: "setDepartments",
-          payload: response.content,
-        });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
       }
     },
 
-    *pageAppMembers({ payload }: PageAppMembersAction, { call, put }) {
+    *pageAppMembers(
+      { payload, callback }: PageAppMembersAction,
+      { call, put }
+    ) {
       const response = yield call(appService.pageAppMembers, payload);
-      console.log(response);
-
-      if (response?.content) {
-        yield put({
-          type: "setAppMembers",
-          payload: {
-            list: response.content.items,
-            total: response.content.total,
-          },
-        });
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
       }
     },
 
@@ -606,26 +608,6 @@ const AppModel: AppModelType = {
       } else {
         message.error(msg);
       }
-    },
-  },
-  reducers: {
-    setAppList(state, action) {
-      return { ...state, appList: { ...state.appList, ...action.payload } };
-    },
-    setAppDetail(state: any, action: { payload: any }) {
-      return { ...state, appDetail: action.payload };
-    },
-    setDepartments(state: any, action: { payload: any }) {
-      return { ...state, departments: action.payload };
-    },
-    setAppMembers(state: any, action: { payload: any }) {
-      return {
-        ...state,
-        appMembers: { ...state.appMembers, ...action.payload },
-      };
-    },
-    setAppEnv(state: any, action: { payload: any }) {
-      return { ...state, appEnv: action.payload };
     },
   },
 };

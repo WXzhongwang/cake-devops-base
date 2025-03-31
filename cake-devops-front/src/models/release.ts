@@ -28,6 +28,10 @@ export interface PageDeployHistoryPayload {
   pageSize: number;
 }
 
+export interface QueryPipeLogPayLoad {
+  pipeKey: string;
+}
+
 export interface QueryDeployLogPayload {
   pipeKey: string;
 }
@@ -103,7 +107,7 @@ export interface DeployAction extends BaseAction {
 }
 
 export interface PageReleaseAction extends BaseAction {
-  type: "release/pageRelease";
+  type: "release/pageReleaseRecord";
   payload: PageReleasePayload;
 }
 
@@ -139,10 +143,10 @@ export interface ReleaseModelType {
     pageDeployHistory: Effect;
     queryDeployLog: Effect;
   };
-  reducers: {
-    setReleaseList: Reducer<ReleaseState>;
-    setDeployHistoryList: Reducer<ReleaseState>;
-  };
+  // reducers: {
+  //   setReleaseList: Reducer<ReleaseState>;
+  //   setDeployHistoryList: Reducer<ReleaseState>;
+  // };
 }
 
 const ReleaseModel: ReleaseModelType = {
@@ -158,35 +162,29 @@ const ReleaseModel: ReleaseModelType = {
     },
   },
   effects: {
-    *pageDeployHistory({ payload }: PageDeployHistoryAction, { call, put }) {
+    *pageDeployHistory(
+      { payload, callback }: PageDeployHistoryAction,
+      { call, put }
+    ) {
       const response = yield call(releaseService.pageDeployHistory, payload);
       const { success, msg } = response;
       if (success) {
-        if (response?.content) {
-          yield put({
-            type: "setDeployHistoryList",
-            payload: {
-              list: response.content.items,
-              total: response.content.total,
-            },
-          });
+        if (callback && typeof callback === "function") {
+          callback(response.content);
         }
       } else {
         message.error(msg);
       }
     },
-    *pageRelease({ payload }: PageReleaseAction, { call, put }) {
+    *pageReleaseRecord(
+      { payload, callback }: PageReleaseAction,
+      { call, put }
+    ) {
       const response = yield call(releaseService.page, payload);
       const { success, msg } = response;
       if (success) {
-        if (response?.content) {
-          yield put({
-            type: "setReleaseList",
-            payload: {
-              list: response.content.items,
-              total: response.content.total,
-            },
-          });
+        if (callback && typeof callback === "function") {
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -219,26 +217,30 @@ const ReleaseModel: ReleaseModelType = {
         message.error(msg);
       }
     },
-    *deploy({ payload }: DeployAction, { call, put }) {
-      yield call(releaseService.deploy, payload);
-      yield put({ type: "setReleaseList" });
+    *deploy({ payload, callback }: DeployAction, { call, put }) {
+      const response = yield call(releaseService.deploy, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
-    *close({ payload }: CloseReleaseAction, { call, put }) {
-      yield call(releaseService.close, payload);
-      yield put({ type: "setReleaseList" });
+    *close({ payload, callback }: CloseReleaseAction, { call, put }) {
+      const response = yield call(releaseService.close, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      } else {
+        message.error(msg);
+      }
     },
   },
-  reducers: {
-    setReleaseList(state, action) {
-      return { ...state, releases: { ...state.releases, ...action.payload } };
-    },
-    setDeployHistoryList(state, action) {
-      return {
-        ...state,
-        deployHistory: { ...state.deployHistory, ...action.payload },
-      };
-    },
-  },
+  reducers: {},
 };
 
 export default ReleaseModel;

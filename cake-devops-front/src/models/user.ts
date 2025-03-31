@@ -11,16 +11,16 @@ type UserModelState = {
   menu: UserRoleMenuDTO | null;
 };
 
-interface QueryCurrentUserAction {
+interface QueryCurrentUserAction extends BaseAction {
   type: "user/getUserInfo";
 }
 
-interface QueryUsersAction {
+interface QueryUsersAction extends BaseAction {
   type: "user/queryMembers";
   payload: QueryAccountPayload;
 }
 
-interface QueryAppMembersAction {
+interface QueryAppMembersAction extends BaseAction {
   type: "user/queryAppMembers";
   payload: QueryAppAccountPayload;
 }
@@ -68,6 +68,11 @@ export interface MenuTreeDTO {
   children?: MenuTreeDTO[];
 }
 
+export interface AppAccountPage {
+  total: number;
+  items: AppAccountDTO[];
+}
+
 export interface AppAccountDTO {
   id: string;
   accountName: string;
@@ -102,7 +107,7 @@ type UserModelType = {
     queryMenu: Effect;
   };
   reducers: {
-    setUserInfo: Reducer<UserModelState>;
+    // setUserInfo: Reducer<UserModelState>;
     setAppMembers: Reducer<UserModelState>;
     setMembers: Reducer<UserModelState>;
     setMenu: Reducer<UserModelState>;
@@ -112,7 +117,7 @@ type UserModelType = {
 const UserModel: UserModelType = {
   namespace: "user",
   state: {
-    isLogin: false,
+    // isLogin: false,
     userData: {
       userId: "",
       userName: "",
@@ -133,39 +138,46 @@ const UserModel: UserModelType = {
         },
       });
     },
-    *getUserInfo(_: QueryCurrentUserAction, { call, put }) {
-      const res: API.UserInfoResponse = yield call(userService.getUserInfo);
-      console.log("res", res);
-      console.log("content", res.content);
-      yield put({
-        type: "setUserInfo",
-        payload: {
-          isLogin: true,
-          userData: res.content,
-        },
-      });
+    *getUserInfo({ callback }: QueryCurrentUserAction, { call, put }) {
+      const response: API.UserInfoResponse = yield call(
+        userService.getUserInfo
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
-    *queryMembers({ payload }: QueryUsersAction, { call, put }) {
-      const res = yield call(userService.queryMembers, payload);
-      yield put({
-        type: "setMembers",
-        payload: res.content?.items,
-      });
+    *queryMembers({ payload, callback }: QueryUsersAction, { call, put }) {
+      const response = yield call(userService.queryMembers, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
-    *queryAppMembers({ payload }: QueryAppMembersAction, { call, put }) {
-      const res = yield call(userService.queryAppMembers, payload);
-      yield put({
-        type: "setAppMembers",
-        payload: res.content?.items,
-      });
+    *queryAppMembers(
+      { payload, callback }: QueryAppMembersAction,
+      { call, put }
+    ) {
+      const response = yield call(userService.queryAppMembers, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
     *queryMenu({ callback }: QueryMenuAction, { call, put }) {
       const response = yield call(userService.queryUserMenu);
-      yield put({
-        type: "setMenu",
-        payload: response.content,
-      });
-
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
@@ -177,12 +189,12 @@ const UserModel: UserModelType = {
     },
   },
   reducers: {
-    setUserInfo(state, action) {
-      return {
-        ...state,
-        ...action.payload,
-      };
-    },
+    // setUserInfo(state, action) {
+    //   return {
+    //     ...state,
+    //     ...action.payload,
+    //   };
+    // },
     setMembers(state, action) {
       return {
         ...state,
