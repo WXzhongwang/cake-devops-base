@@ -49,7 +49,7 @@ public class OpenConfigController {
                 }
             }
         }
-        return XorUtil.decrypt(JSON.toJSONString(result));
+        return XorUtil.encrypt(JSON.toJSONString(result));
     }
 
 
@@ -73,7 +73,7 @@ public class OpenConfigController {
                 }
             }
         }
-        return XorUtil.decrypt(JSON.toJSONString(result));
+        return XorUtil.encrypt(JSON.toJSONString(result));
     }
 
     /**
@@ -96,6 +96,6 @@ public class OpenConfigController {
                 }
             }
         }
-        return XorUtil.decrypt(JSON.toJSONString(result));
+        return XorUtil.encrypt(JSON.toJSONString(result));
     }
 }
