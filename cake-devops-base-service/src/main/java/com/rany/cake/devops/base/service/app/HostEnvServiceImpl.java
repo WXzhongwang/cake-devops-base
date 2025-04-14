@@ -14,6 +14,7 @@ import com.rany.cake.devops.base.domain.repository.HostEnvRepository;
 import com.rany.cake.devops.base.domain.repository.param.HostEnvQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.HostEnvDataAdapter;
+import com.rany.cake.devops.base.util.EnvConst;
 import com.rany.cake.devops.base.util.EnvViewType;
 import com.rany.cake.toolkit.lang.collect.MutableLinkedHashMap;
 import com.rany.cake.toolkit.lang.utils.Maps;
@@ -22,10 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhongshengwang
@@ -117,6 +115,16 @@ public class HostEnvServiceImpl implements HostEnvService {
         List<HostEnv> list = hostEnvRepository.list(queryParam);
         list.forEach(e -> env.put(e.getAttrKey(), e.getAttrValue()));
         return viewType.toValue(env);
+    }
+
+    @Override
+    public LinkedHashMap<String, String> getMachineEnv(String hostId) {
+        LinkedHashMap<String, String> envMap = new LinkedHashMap<>();
+        HostEnvQueryParam queryParam = new HostEnvQueryParam();
+        queryParam.setHostId(hostId);
+        List<HostEnv> hostEnvList = hostEnvRepository.list(queryParam);
+        hostEnvList.forEach(e -> envMap.put(EnvConst.MACHINE_PREFIX + e.getAttrKey(), e.getAttrValue()));
+        return envMap;
     }
 
     @Override

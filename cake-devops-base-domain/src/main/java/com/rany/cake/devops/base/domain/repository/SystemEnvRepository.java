@@ -21,4 +21,6 @@ public interface SystemEnvRepository {
     void update(SystemEnv env);
 
     Page<SystemEnv> page(SystemEnvPageQueryParam queryParam);
+
+    List<SystemEnv> findAllSystemEnv(Integer systemEnv);
 }

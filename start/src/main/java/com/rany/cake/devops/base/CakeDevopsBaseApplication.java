@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableDubbo
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
-@SpringBootApplication(scanBasePackages = {"com.rany.cake.devops.base"}, exclude = {ParamLimitInterceptor.class,
+@SpringBootApplication(scanBasePackages = {"com.rany.cake.devops.base", "com.rany.ops.sms"}, exclude = {ParamLimitInterceptor.class,
         WebSocketMessagingAutoConfiguration.class
 })
 @ImportResource(locations = {"classpath:config/spring-*.xml"})

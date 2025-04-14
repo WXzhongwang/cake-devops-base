@@ -15,14 +15,13 @@ import com.rany.cake.devops.base.domain.repository.SystemEnvRepository;
 import com.rany.cake.devops.base.domain.repository.param.SystemEnvPageQueryParam;
 import com.rany.cake.devops.base.infra.aop.PageUtils;
 import com.rany.cake.devops.base.service.adapter.SystemEnvDataAdapter;
+import com.rany.cake.devops.base.util.Const;
+import com.rany.cake.devops.base.util.EnvConst;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhongshengwang
@@ -106,5 +105,13 @@ public class SystemEnvServiceImpl implements SystemEnvService {
         Collection<SystemEnv> items = page.getItems();
         List<SystemEnvDTO> systemEnvDTOList = systemEnvDataAdapter.sourceToTarget(new ArrayList<>(items));
         return PageUtils.build(page, systemEnvDTOList);
+    }
+
+    @Override
+    public LinkedHashMap<String, String> getFullSystemEnv() {
+        LinkedHashMap<String, String> envMap = new LinkedHashMap<>();
+        List<SystemEnv> systemEnvList = systemEnvRepository.findAllSystemEnv(Const.NOT_SYSTEM);
+        systemEnvList.forEach(e -> envMap.put(EnvConst.SYSTEM_PREFIX + e.getAttrKey(), e.getAttrValue()));
+        return envMap;
     }
 }

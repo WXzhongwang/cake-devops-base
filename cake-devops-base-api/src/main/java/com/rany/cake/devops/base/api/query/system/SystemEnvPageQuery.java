@@ -8,4 +8,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SystemEnvPageQuery extends BaseQuery {
     private String name;
+    private Integer systemEnv;
 }

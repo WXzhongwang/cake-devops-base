@@ -8,6 +8,7 @@ import com.rany.cake.devops.base.api.dto.SystemEnvDTO;
 import com.rany.cake.devops.base.api.query.system.SystemEnvBasicQuery;
 import com.rany.cake.devops.base.api.query.system.SystemEnvPageQuery;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -68,4 +69,11 @@ public interface SystemEnvService {
      * @return 分页结果
      */
     Page<SystemEnvDTO> pageSystemEnv(SystemEnvPageQuery query);
+
+    /**
+     * 获取系统环境变量
+     *
+     * @return map
+     */
+    LinkedHashMap<String, String> getFullSystemEnv();
 }

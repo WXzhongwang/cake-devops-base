@@ -12,6 +12,8 @@ public interface SystemEnvDao {
 
     List<SystemEnvPO> querySystemEnv(SystemEnvPageQueryParam systemEnvPageQueryParam);
 
+    List<SystemEnvPO> findAllSystemEnv(@Param("systemEnv") Integer systemEnv);
+
     SystemEnvPO selectByName(@Param("name") String name);
 
     List<SystemEnvPO> selectByNames(@Param("names") List<String> names);

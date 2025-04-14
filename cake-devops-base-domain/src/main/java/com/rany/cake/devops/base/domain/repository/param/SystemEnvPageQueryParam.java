@@ -7,4 +7,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SystemEnvPageQueryParam extends BasePageParam {
     private String name;
+    private Integer systemEnv;
 }

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rany.cake.devops.base.infra.dao.CommandExecDao">
+    <resultMap id="BaseResultMap" type="com.rany.cake.devops.base.infra.po.CommandExecPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="account_id" property="accountId" jdbcType="VARCHAR"/>
+        <result column="exec_type" property="execType" jdbcType="INTEGER"/>
+        <result column="host_id" property="hostId" jdbcType="VARCHAR"/>
+        <result column="exec_status" property="execStatus" jdbcType="INTEGER"/>
+        <result column="exit_code" property="exitCode" jdbcType="INTEGER"/>
+        <result column="exec_command" property="execCommand" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="log_path" property="logPath" jdbcType="VARCHAR"/>
+        <result column="start_date" property="startDate" jdbcType="TIMESTAMP"/>
+        <result column="end_date" property="endDate" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="CHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+
+        id
+        , account_id, exec_type, host_id, exec_status, exit_code, exec_command, description,
+    log_path, start_date, end_date, is_deleted, gmt_create, gmt_modified, creator, modifier, user_name
+    </sql>
+
+    <insert id="save" keyProperty="id" useGeneratedKeys="true"
+            parameterType="com.rany.cake.devops.base.domain.entity.CommandExec">
+        insert into command_exec (account_id, exec_type,
+                                  host_id, exec_status, exit_code,
+                                  exec_command, description, log_path,
+                                  start_date, end_date, is_deleted,
+                                  gmt_create, gmt_modified, creator,
+                                  modifier, user_name)
+        values (#{accountId,jdbcType=VARCHAR}, #{execType,jdbcType=INTEGER},
+                #{hostId,jdbcType=VARCHAR}, #{execStatus,jdbcType=INTEGER}, #{exitCode,jdbcType=INTEGER},
+                #{execCommand,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{logPath,jdbcType=VARCHAR},
+                #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=CHAR},
+                #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
+                #{modifier,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="queryCommandExec"
+            parameterType="com.rany.cake.devops.base.domain.repository.param.CommandExecQueryParam"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from command_exec
+        <where>
+            is_deleted = '0'
+            <if test="accountId != null">
+                and account_id = #{accountId,jdbcType=VARCHAR}
+            </if>
+            <if test="execType != null">
+                and exec_type = #{execType,jdbcType=INTEGER}
+            </if>
+            <if test="execStatus != null">
+                and exec_status = #{execStatus,jdbcType=INTEGER}
+            </if>
+            <if test="hostId != null">
+                and host_id = #{hostId,jdbcType=VARCHAR}
+            </if>
+            <if test="hostIds != null and hostIds.size() > 0">
+                and host_id in
+                <foreach collection="hostIds" item="hostId" open="(" close=")" separator=",">
+                    #{hostId,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.CommandExec">
+        update command_exec
+        <set>
+            <if test="accountId != null">
+                account_id = #{accountId,jdbcType=VARCHAR},
+            </if>
+            <if test="execType != null">
+                exec_type = #{execType,jdbcType=INTEGER},
+            </if>
+            <if test="hostId != null">
+                host_id = #{hostId,jdbcType=VARCHAR},
+            </if>
+            <if test="execStatus != null">
+                exec_status = #{execStatus,jdbcType=INTEGER},
+            </if>
+            <if test="exitCode != null">
+                exit_code = #{exitCode,jdbcType=INTEGER},
+            </if>
+            <if test="execCommand != null">
+                exec_command = #{execCommand,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="logPath != null">
+                log_path = #{logPath}
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=CHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

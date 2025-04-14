@@ -99,15 +99,13 @@
             <groupId>io.kubernetes</groupId>
             <artifactId>client-java</artifactId>
         </dependency>
+
         <!-- gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
         </dependency>
 
-
-        <!--   https://github.com/gitlab4j/gitlab4j-api   -->
         <dependency>
             <groupId>org.gitlab4j</groupId>
             <artifactId>gitlab4j-api</artifactId>
@@ -162,6 +160,16 @@
             <version>4.14.0</version>
         </dependency>
 
+        <!--短信-->
+        <dependency>
+            <groupId>com.rany.ops</groupId>
+            <artifactId>sms-aliyun</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.rany.cake.toolkit</groupId>
+            <artifactId>cake-toolkit-all</artifactId>
+        </dependency>
     </dependencies>
 
 

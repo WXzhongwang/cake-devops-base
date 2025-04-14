@@ -2,30 +2,36 @@
 
 **cake-devops-base** Java Devops实现。
 
-1. 后端采用SpringBoot 2.2.6.RELEASE
+1. 后端采用SpringBoot
 2. K8S 1.19.2
 3. shell
 4. 前端采用React
 
-## 依赖工具链
+## 特性
 
-- [x] **sonarqube**: 质量检测https://www.sonarsource.com/products/sonarqube/downloads/
-- [x] **sonar-scan-cli**: sonarqube提供的缺陷检测扫描工具
-- [x] **linux shell**: shell
-- [x] **GitLab**: 代码管理SCM https://docs.gitlab.cn/jh/api/api_resources.html
-- [x] **Harbor**: 容器镜像仓库 https://goharbor.io/
-- [x] **Docker**: 容器技术、虚拟化 https://www.docker.com/
-- [x] **Docker Compose**: docker工具 https://github.com/docker/compose
-- [x] **kubernetes**: 容器集群管理系统 http://docs.kubernetes.org.cn/
-- [x] **kubernetes on Docker Desktop**: Kubernetes On Docker Desktop
-- [x] **AliYun ACR容器镜像服务**: 容器镜像服务(镜像加速中心)https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
-- [x] **websocket+rabbitmq**: 日志推送
+- [x] **代码托管**: 支持多种代码源托管，支持二开拓展
+    - Gitlab: https://docs.gitlab.cn/jh/api/api_resources.html
+    - Github: https://docs.gitlab.cn/jh/api/api_resources.html
+    -
+  云效codeup: https://help.aliyun.com/zh/yunxiao/user-guide/code-management-2/?spm=a2c4g.11186623.help-menu-150040.d_2_4.51a81fa8nhfYEH
+- [x] **镜像仓库**:
+    - Harbor容器镜像仓库 https://goharbor.io/
+    - 阿里云容器服务（ACS）容器镜像服务 https://www.aliyun.com/product/acr
+- [x] **Docker on kubernetes**: 容器技术、虚拟化 https://www.docker.com/, 容器集群管理系统 http://docs.kubernetes.org.cn/
+- [x] **sonarqube&sonar-scan-cli**: sonarqube提供的缺陷检测扫描工具,
+  质量检测https://www.sonarsource.com/products/sonarqube/downloads/
+- [x] **websocket+rabbitmq+SLS**: 日志推送，实时查看部署进度，支持查看历史部署情况
+- [x] **应用成员**: 应用成员管理，可查看应用人员，不同角色不同职责
+- [x] **发布管控**: 发布审批、发布管控
+- [x] **多环境部署**: 一套代码多个环境部署
+
+## 技术层面
+
 - [x] **dingtalk**: 基于钉钉扫码登录实现的sso
 - [x] **OSS**: 基于cms-client实现的前端代码推送和部署（灰度&资源托管&CDN加速）
 - [x] **SLS**: pipeline构建日志写入SLS便于回溯，查询
 - [x] **cake-cms**: CDN+前端资源统一管理（多版本发布，可回滚，可灰度）
 - [x] **sheep**: 自己开发的前端资源推送CDN工具
-- [x] **云效codeup**: SCM代码管理
 
 ## 远景
 

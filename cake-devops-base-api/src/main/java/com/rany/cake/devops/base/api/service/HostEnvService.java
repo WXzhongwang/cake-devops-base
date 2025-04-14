@@ -7,6 +7,8 @@ import com.rany.cake.devops.base.api.query.host.env.HostEnvBasicQuery;
 import com.rany.cake.devops.base.api.query.host.env.HostEnvPageQuery;
 import com.rany.cake.devops.base.api.query.host.env.HostEnvViewQuery;
 
+import java.util.LinkedHashMap;
+
 /**
  * 环境变量服务
  *
@@ -72,6 +74,13 @@ public interface HostEnvService {
      * @return 结果
      */
     String view(HostEnvViewQuery query);
+
+    /**
+     * 获取系统环境变量
+     *
+     * @return map
+     */
+    LinkedHashMap<String, String> getMachineEnv(String hostId);
 
     /**
      * 保存视图

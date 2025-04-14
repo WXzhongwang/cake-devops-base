@@ -69,6 +69,15 @@ public class WebSideMessageServiceImpl implements WebSideMessageService {
     @Override
     public Boolean saveWebSideMessage(CreateWebSideMessageCommand command) {
         WebSideMessage webSideMessage = new WebSideMessage();
+        webSideMessage.setMessageClassify(command.getMessageClassify());
+        webSideMessage.setMessageType(command.getMessageType());
+        webSideMessage.setReadStatus(command.getReadStatus());
+        webSideMessage.setToUserId(command.getToUserId());
+        webSideMessage.setToUserName(command.getToUserName());
+        webSideMessage.setRelId(command.getRelId());
+        webSideMessage.setSendMessage(command.getSendMessage());
+        
+        webSideMessage.init(command.getUser());
         webSideMessageRepository.save(webSideMessage);
         return Boolean.TRUE;
     }

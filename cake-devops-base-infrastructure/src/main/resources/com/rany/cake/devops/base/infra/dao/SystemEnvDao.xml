@@ -28,6 +28,17 @@
         <if test="name != null and name != ''">
             and name = #{name}
         </if>
+        <if test="systemEnv != null">
+            and system_env = #{systemEnv}
+        </if>
+    </select>
+
+    <select id="findAllSystemEnv" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from system_env
+        where is_deleted = '0'
+        and system_env = #{systemEnv}
     </select>
 
     <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">

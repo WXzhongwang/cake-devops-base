@@ -87,13 +87,18 @@ spring:
     connection-timeout: 5000
     virtual-host: /
 
-enable:
-  sql:
-    print:
-      log: true
-warn:
-  sql:
-    time: 300
+rany:
+  ops:
+    message:
+      sms:
+        fakeAccount: 1528683621@qq.com
+        fakeIdd: "+86"
+
+
+cake:
+  mybatis:
+    tenant-limit: false
+    enable-print: true
 
 mybatis:
   mapper-locations: classpath:com/rany/cake/devops/base/infra/mapper/*.xml, classpath:com/rany/cake/devops/base/infra/dao/*.xml
@@ -157,7 +162,7 @@ easy:
       sso-server: http://127.0.0.1:8765/
       login-url: http://127.0.0.1:8765/sso/loginPage
       logout-url: /sso/logout
-      ignore-urls: /ok,/sso/loginPage,/sso/login,/oauth/login,/cake/expose-api/**,/api/keep-alive/**, /api/ws/**
+      ignore-urls: /ok,/sso/loginPage,/sso/login,/oauth/login,/cake/expose-api/**,/api/keep-alive/**, /api/ws/**,/api/config/**
       ignore-resources: .js, .css, .jpg, .png, .ico, .html
       ajax-failure-response:
         content-type: application/json

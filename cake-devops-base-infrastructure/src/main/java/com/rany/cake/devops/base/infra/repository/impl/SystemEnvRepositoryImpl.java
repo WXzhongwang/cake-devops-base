@@ -69,4 +69,10 @@ public class SystemEnvRepositoryImpl implements SystemEnvRepository {
         List<SystemEnv> configs = systemEnvDataConvertor.targetToSource(hostEnvPOS);
         return PageUtils.build(pageInfo, configs);
     }
+
+    @Override
+    public List<SystemEnv> findAllSystemEnv(Integer systemEnv) {
+        List<SystemEnvPO> hostEnvPOS = systemEnvDao.findAllSystemEnv(systemEnv);
+        return systemEnvDataConvertor.targetToSource(hostEnvPOS);
+    }
 }

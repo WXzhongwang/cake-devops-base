@@ -16,9 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
-        <!--        <spring-boot.version>2.7.3</spring-boot.version>-->
 
-        <fastjson.version>1.2.72</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <hutool-all.version>5.1.0</hutool-all.version>
         <guava.version>28.2-jre</guava.version>
         <guava-retrying.version>2.0.0</guava-retrying.version>
@@ -26,7 +25,6 @@
         <commons-io.version>2.6</commons-io.version>
         <mybatis-spring-boot-starter.version>2.1.4</mybatis-spring-boot-starter.version>
         <arthas-spring-boot-starter.version>3.4.8</arthas-spring-boot-starter.version>
-        <!--        <gson.version>2.8.5</gson.version>-->
         <gson.version>2.9.0</gson.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <okhttp.version>3.14.6</okhttp.version>
@@ -57,14 +55,16 @@
         <aliyun-log.version>0.6.111</aliyun-log.version>
         <protobuf.version>2.5.0</protobuf.version>
         <aliyun-log-appendeer.version>0.1.18</aliyun-log-appendeer.version>
+        <sms.aliyun.version>1.0.1</sms.aliyun.version>
         <!--        <github-api.verison>octokit-java</github-api.verison>-->
 
 
-        <cake-cms.version>1.0.4</cake-cms.version>
-        <cake-toolkit.version>1.0.0</cake-toolkit.version>
+        <cake-cms.version>1.0.3</cake-cms.version>
+        <cake-toolkit.version>1.0.3</cake-toolkit.version>
+        <cake-alert.version>1.0.3</cake-alert.version>
         <cake-sso.version>1.0-SNAPSHOT</cake-sso.version>
         <cake-ops-api.verison>1.0-SNAPSHOT</cake-ops-api.verison>
-        <cake-framework.version>1.0-SNAPSHOT</cake-framework.version>
+        <cake-framework.version>3.0.1</cake-framework.version>
 
     </properties>
 
@@ -306,6 +306,12 @@
                 <version>${cake-toolkit.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.rany.cake.toolkit</groupId>
+                <artifactId>cake-toolkit-alert</artifactId>
+                <version>${cake-alert.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.rany.cake.dingtalk.sso</groupId>
                 <artifactId>cake-dingtalk-sso-starter</artifactId>
                 <version>${cake-sso.version}</version>
@@ -386,7 +392,11 @@
                 <artifactId>aliyun-log-logback-appender</artifactId>
                 <version>${aliyun-log-appendeer.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.rany.ops</groupId>
+                <artifactId>sms-aliyun</artifactId>
+                <version>${sms.aliyun.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
