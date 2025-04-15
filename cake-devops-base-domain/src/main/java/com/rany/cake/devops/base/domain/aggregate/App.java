@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.domain.aggregate;
 
-import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.entity.AppEnv;
@@ -14,6 +13,7 @@ import com.rany.cake.devops.base.util.enums.CodeLanguageEnum;
 import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.util.enums.DevelopMode;
+import com.rany.cake.toolkit.lang.time.Dates;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -121,8 +121,8 @@ public class App extends BaseAggregateRoot implements IAggregate<AppId> {
     }
 
     public void sava(String user) {
-        this.gmtCreate = DateUtil.date();
-        this.gmtModified = DateUtil.date();
+        this.gmtCreate = Dates.date();
+        this.gmtModified = Dates.date();
         this.status = CommonStatusEnum.ENABLE.getValue();
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.creator = user;

@@ -1,11 +1,11 @@
 package com.rany.cake.devops.base.domain.aggregate;
 
-import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.pk.ApprovalId;
 import com.rany.cake.devops.base.util.enums.ApprovalStatus;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import com.rany.cake.toolkit.lang.time.Dates;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,28 +54,28 @@ public class Approval extends BaseAggregateRoot implements IAggregate<ApprovalId
     }
 
     public Boolean delete() {
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
         this.isDeleted = DeleteStatusEnum.YES.getValue();
         return Boolean.TRUE;
     }
 
     public Boolean modify() {
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
         return Boolean.TRUE;
     }
 
     public void approve() {
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
         this.approvalStatus = ApprovalStatus.APPROVED.name();
     }
 
     public void reject() {
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
         this.approvalStatus = ApprovalStatus.REJECTED.name();
     }
 
     public void repeal() {
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
         this.approvalStatus = ApprovalStatus.REPEALED.name();
     }
 

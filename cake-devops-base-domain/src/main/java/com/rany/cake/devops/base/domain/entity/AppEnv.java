@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.domain.entity;
 
-import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.cake.framework.common.base.BaseEntity;
 import com.rany.cake.devops.base.domain.pk.AppId;
@@ -12,6 +11,7 @@ import com.rany.cake.devops.base.util.enums.AppEnvEnum;
 import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
 import com.rany.cake.devops.base.util.enums.EnvDeployStatusEnum;
+import com.rany.cake.toolkit.lang.time.Dates;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
@@ -108,8 +108,8 @@ public class AppEnv extends BaseEntity<String> {
     }
 
     public void sava(String user) {
-        this.gmtCreate = DateUtil.date();
-        this.gmtModified = DateUtil.date();
+        this.gmtCreate = Dates.date();
+        this.gmtModified = Dates.date();
         this.status = CommonStatusEnum.ENABLE.getValue();
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.creator = user;

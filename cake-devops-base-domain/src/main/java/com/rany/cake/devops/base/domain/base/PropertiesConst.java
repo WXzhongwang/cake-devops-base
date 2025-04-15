@@ -18,7 +18,7 @@ public class PropertiesConst {
     /**
      * 当前版本
      */
-    public static String ORION_OPS_VERSION;
+    public static String CAKE_OPS_VERSION;
 
     /**
      * 登陆 token 请求头
@@ -37,7 +37,7 @@ public class PropertiesConst {
 
     @Value("${app.version:'1.0.0'}")
     private void setVersion(String version) {
-        PropertiesConst.ORION_OPS_VERSION = version;
+        PropertiesConst.CAKE_OPS_VERSION = version;
     }
 
     @Value("${login.token.header:'O-Login-Token'}")

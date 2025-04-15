@@ -56,6 +56,7 @@
         <protobuf.version>2.5.0</protobuf.version>
         <aliyun-log-appendeer.version>0.1.18</aliyun-log-appendeer.version>
         <sms.aliyun.version>1.0.1</sms.aliyun.version>
+        <swagger.version>2.9.2</swagger.version>
         <!--        <github-api.verison>octokit-java</github-api.verison>-->
 
 
@@ -396,6 +397,21 @@
                 <groupId>com.rany.ops</groupId>
                 <artifactId>sms-aliyun</artifactId>
                 <version>${sms.aliyun.version}</version>
+            </dependency>
+
+
+            <!-- Swagger Annotations -->
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>1.6.6</version>
+            </dependency>
+
+            <!-- Springfox 核心依赖 -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>3.0.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

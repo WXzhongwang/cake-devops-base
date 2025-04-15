@@ -63,6 +63,14 @@ public interface SystemEnvService {
     SystemEnvDTO getSystemEnv(String envName);
 
     /**
+     * 获取系统变量
+     *
+     * @param env envKey
+     * @return env
+     */
+    String getEnvValue(String env);
+
+    /**
      * 分页
      *
      * @param query 查询

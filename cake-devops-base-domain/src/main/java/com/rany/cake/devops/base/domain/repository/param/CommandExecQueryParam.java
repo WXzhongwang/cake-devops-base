@@ -10,6 +10,7 @@ import java.util.List;
 public class CommandExecQueryParam extends BasePageParam {
     private String hostId;
     private Integer execStatus;
+    private List<Integer> execStatusList;
     private Integer execType;
     private String accountId;
     private List<String> hostIds;

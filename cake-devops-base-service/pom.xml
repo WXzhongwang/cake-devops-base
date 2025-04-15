@@ -170,6 +170,17 @@
             <groupId>com.rany.cake.toolkit</groupId>
             <artifactId>cake-toolkit-all</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.rany.cake.toolkit</groupId>
+            <artifactId>cake-toolkit-alert</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rany.cake.devops</groupId>
+            <artifactId>cake-devops-base-plugin-agent</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 

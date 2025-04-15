@@ -54,29 +54,6 @@
             <artifactId>cake-devops-base-service</artifactId>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>io.springfox</groupId>-->
-        <!--            <artifactId>springfox-swagger2</artifactId>-->
-        <!--            <version>${swagger.version}</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>io.springfox</groupId>-->
-        <!--            <artifactId>springfox-swagger-ui</artifactId>-->
-        <!--            <version>${swagger.version}</version>-->
-        <!--        </dependency>-->
-
-        <!--        &lt;!&ndash; knife4j &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.github.xiaoymin</groupId>-->
-        <!--            <artifactId>knife4j-micro-spring-boot-starter</artifactId>-->
-        <!--            <version>${knife4j.version}</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.github.xiaoymin</groupId>-->
-        <!--            <artifactId>knife4j-spring-ui</artifactId>-->
-        <!--            <version>${knife4j.version}</version>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>com.rany.cake.dingtalk.sso</groupId>
             <artifactId>cake-dingtalk-sso-starter</artifactId>
@@ -85,6 +62,10 @@
         <dependency>
             <groupId>com.rany.cms</groupId>
             <artifactId>cake-cms-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,5 +1,6 @@
 package com.rany.cake.devops.base.service.utils;
 
+import com.rany.cake.devops.base.util.CnConst;
 import com.rany.cake.devops.base.util.Const;
 import com.rany.cake.devops.base.util.StainCode;
 import com.rany.cake.devops.base.util.system.SystemEnvAttr;
@@ -208,10 +209,10 @@ public class Utils {
      * @param ip ip
      * @return ip 位置
      */
-//    public static String getIpLocation(String ip) {
-//        if (ip == null) {
-//            return CnConst.UNKNOWN;
-//        }
+    public static String getIpLocation(String ip) {
+        if (ip == null) {
+            return CnConst.UNKNOWN;
+        }
 //        Region region;
 //        try {
 //            region = LocationRegions.getRegion(ip, 3);
@@ -236,8 +237,9 @@ public class Utils {
 //            location.append(" (").append(net).append(')');
 //            return location.toString();
 //        }
-//        return CnConst.UNKNOWN;
-//    }
+        // 编写一个方法获取IP对应的地理位置
+        return CnConst.UNKNOWN;
+    }
 
     /**
      * 转换控制字符 unicode

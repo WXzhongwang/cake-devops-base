@@ -27,6 +27,26 @@
     log_path, start_date, end_date, is_deleted, gmt_create, gmt_modified, creator, modifier, user_name
     </sql>
 
+    <select id="findByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from command_exec
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id,javaType=BIGINT}
+        </foreach>
+    </select>
+
+    <update id="deleteByIds">
+        update command_exec
+        set is_deleted = '1', modifier = #{modifier,jdbcType=VARCHAR},
+        gmt_modified = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id,javaType=BIGINT}
+        </foreach>
+    </update>
+
     <insert id="save" keyProperty="id" useGeneratedKeys="true"
             parameterType="com.rany.cake.devops.base.domain.entity.CommandExec">
         insert into command_exec (account_id, exec_type,
@@ -59,6 +79,12 @@
             </if>
             <if test="execStatus != null">
                 and exec_status = #{execStatus,jdbcType=INTEGER}
+            </if>
+            <if test="execStatusList != null and execStatusList.size() > 0">
+                and exec_status in
+                <foreach collection="execStatusList" item="execStatus" open="(" close=")" separator=",">
+                    #{execStatus,jdbcType=INTEGER}
+                </foreach>
             </if>
             <if test="hostId != null">
                 and host_id = #{hostId,jdbcType=VARCHAR}

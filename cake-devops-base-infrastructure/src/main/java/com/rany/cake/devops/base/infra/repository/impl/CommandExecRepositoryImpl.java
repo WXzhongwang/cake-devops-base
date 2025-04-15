@@ -35,6 +35,17 @@ public class CommandExecRepositoryImpl implements CommandExecRepository {
     }
 
     @Override
+    public List<CommandExec> findByIds(List<Long> ids) {
+        List<CommandExecPO> commandExecPOS = commandExecDao.findByIds(ids);
+        return commandExecDataConvertor.targetToSource(commandExecPOS);
+    }
+
+    @Override
+    public int deleteByIds(List<Long> ids, String modifier) {
+        return commandExecDao.deleteByIds(ids, modifier);
+    }
+
+    @Override
     public void remove(CommandExec commandExec) {
         commandExecDao.update(commandExec);
     }
@@ -47,6 +58,11 @@ public class CommandExecRepositoryImpl implements CommandExecRepository {
     @Override
     public int update(CommandExec scriptTemplate) {
         return commandExecDao.update(scriptTemplate);
+    }
+
+    public List<CommandExec> list(CommandExecQueryParam queryParam) {
+        List<CommandExecPO> commandExecPOS = commandExecDao.queryCommandExec(queryParam);
+        return commandExecDataConvertor.targetToSource(commandExecPOS);
     }
 
     @Override

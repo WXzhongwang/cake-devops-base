@@ -1,9 +1,9 @@
 package com.rany.cake.devops.base.api.service;
 
 import com.cake.framework.common.response.Page;
-import com.rany.cake.devops.base.api.command.exec.CreateCommandExecCommand;
-import com.rany.cake.devops.base.api.command.exec.DeleteCommandExecCommand;
+import com.rany.cake.devops.base.api.command.exec.*;
 import com.rany.cake.devops.base.api.dto.CommandExecDTO;
+import com.rany.cake.devops.base.api.dto.CommandExecStatusDTO;
 import com.rany.cake.devops.base.api.query.exec.CommandExecBasicQuery;
 import com.rany.cake.devops.base.api.query.exec.CommandExecPageQuery;
 
@@ -35,6 +35,30 @@ public interface CommandExecService {
      */
     Boolean deleteCommandExec(DeleteCommandExecCommand command);
 
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     */
+    void writeCommand(WriteCommandExecCommand command);
+
+    /**
+     * 终止任务
+     *
+     * @param command command
+     */
+    void terminateExec(TerminateCommandExecCommand command);
+
+
+    /**
+     * 删除任务
+     *
+     * @param commands commands
+     * @return effect
+     */
+    Integer deleteCommands(BatchDeleteCommandExecCommand commands);
+
     /**
      * 获取详情
      *
@@ -42,6 +66,14 @@ public interface CommandExecService {
      * @return 详情
      */
     CommandExecDTO getCommandExec(CommandExecBasicQuery basicQuery);
+
+    /**
+     * 获取详情
+     *
+     * @param basicQuery 详情
+     * @return 详情
+     */
+    List<CommandExecStatusDTO> batchGetCommandExecStatus(BatchGetCommandExecCommand basicQuery);
 
 
     /**

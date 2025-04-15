@@ -1,6 +1,5 @@
 package com.rany.cake.devops.base.domain.aggregate;
 
-import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
 import com.rany.cake.devops.base.domain.entity.GroupHost;
@@ -9,6 +8,7 @@ import com.rany.cake.devops.base.domain.entity.HostMonitor;
 import com.rany.cake.devops.base.domain.pk.HostId;
 import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import com.rany.cake.toolkit.lang.time.Dates;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -77,7 +77,7 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
 
     public void init(String user) {
         this.creator = user;
-        this.gmtCreate = DateUtil.date();
+        this.gmtCreate = Dates.date();
         this.gmtModified = this.gmtCreate;
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.status = CommonStatusEnum.ENABLE.getValue();
@@ -86,20 +86,20 @@ public class Host extends BaseAggregateRoot implements IAggregate<HostId> {
 
     public Boolean delete(String user) {
         this.modifier = user;
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
         this.isDeleted = DeleteStatusEnum.YES.getValue();
         return Boolean.TRUE;
     }
 
     public Boolean modify(String user) {
         this.modifier = user;
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
         return Boolean.TRUE;
     }
 
     public Boolean copy(HostId hostId, List<GroupHost> groupHosts, HostMonitor hostMonitor) {
-        this.gmtCreate = DateUtil.date();
-        this.gmtModified = DateUtil.date();
+        this.gmtCreate = Dates.date();
+        this.gmtModified = Dates.date();
         this.hostId = hostId;
         for (GroupHost groupHost : groupHosts) {
             groupHost.setHostId(this.hostId.getHostId());

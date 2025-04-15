@@ -2,6 +2,7 @@ package com.rany.cake.devops.base.web.config;
 
 import com.rany.cake.devops.base.service.interceptor.AuthInterceptor;
 import com.rany.cake.devops.base.service.interceptor.ExposeApiHeaderInterceptor;
+import com.rany.cake.devops.base.service.interceptor.IpFilterInterceptor;
 import com.rany.cake.devops.base.service.interceptor.LogInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -24,12 +25,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Resource
     private AuthInterceptor authInterceptor;
     @Resource
+    private IpFilterInterceptor ipFilterInterceptor;
+    @Resource
     private ExposeApiHeaderInterceptor exposeApiHeaderInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册自定义拦截器，添加拦截路径和排除拦截路径
         registry.addInterceptor(new LogInterceptor()).addPathPatterns("/**");
+        // IP拦截器
+        registry.addInterceptor(ipFilterInterceptor)
+                .addPathPatterns("/**")
+                .order(5);
         // 认证拦截器
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/api/devops/**")

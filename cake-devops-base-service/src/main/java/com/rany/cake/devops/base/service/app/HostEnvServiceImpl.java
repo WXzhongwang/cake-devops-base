@@ -21,7 +21,7 @@ import com.rany.cake.toolkit.lang.utils.Maps;
 import com.rany.cake.toolkit.lang.utils.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.Service;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 

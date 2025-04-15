@@ -1,13 +1,13 @@
 package com.rany.cake.devops.base.domain.aggregate;
 
-import cn.hutool.core.date.DateUtil;
 import com.cake.framework.common.base.BaseAggregateRoot;
 import com.cake.framework.common.base.IAggregate;
-import com.google.common.collect.Lists;
 import com.rany.cake.devops.base.domain.pk.AppId;
 import com.rany.cake.devops.base.domain.pk.MemberId;
 import com.rany.cake.devops.base.util.enums.CommonStatusEnum;
 import com.rany.cake.devops.base.util.enums.DeleteStatusEnum;
+import com.rany.cake.toolkit.lang.time.Dates;
+import com.rany.cake.toolkit.lang.utils.Lists;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,7 +58,7 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
 
     public void init(String user) {
         this.creator = user;
-        this.gmtCreate = DateUtil.date();
+        this.gmtCreate = Dates.date();
         this.gmtModified = this.gmtCreate;
         this.isDeleted = DeleteStatusEnum.NO.getValue();
         this.status = CommonStatusEnum.ENABLE.getValue();
@@ -74,7 +74,7 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
         if (StringUtils.isEmpty(roles)) {
             return;
         }
-        List<String> finalRoles = StringUtils.isNotEmpty(this.roles) ? Lists.newArrayList(this.roles.split(",")) : new ArrayList<>();
+        List<String> finalRoles = StringUtils.isNotEmpty(this.roles) ? Lists.of(this.roles.split(",")) : new ArrayList<>();
         String[] newRoles = roles.split(",");
         for (String newRole : newRoles) {
             if (!this.roles.contains(newRole)) {
@@ -82,19 +82,19 @@ public class AppMember extends BaseAggregateRoot implements IAggregate<MemberId>
             }
         }
         this.roles = String.join(",", finalRoles);
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
     }
 
 
     public void update(List<String> roles, String status, String user) {
         this.roles = String.join(",", roles);
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
         this.status = status;
         this.modifier = user;
     }
 
     public void delete(String user) {
-        this.gmtModified = DateUtil.date();
+        this.gmtModified = Dates.date();
         this.status = CommonStatusEnum.DISABLED.getValue();
         this.isDeleted = DeleteStatusEnum.YES.getValue();
         this.modifier = user;

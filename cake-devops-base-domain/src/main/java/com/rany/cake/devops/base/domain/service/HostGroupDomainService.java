@@ -1,11 +1,11 @@
 package com.rany.cake.devops.base.domain.service;
 
-import com.google.common.collect.Lists;
 import com.rany.cake.devops.base.domain.aggregate.Host;
 import com.rany.cake.devops.base.domain.aggregate.HostGroup;
 import com.rany.cake.devops.base.domain.pk.HostGroupId;
 import com.rany.cake.devops.base.domain.repository.HostGroupRepository;
 import com.rany.cake.devops.base.domain.repository.HostRepository;
+import com.rany.cake.toolkit.lang.utils.Lists;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +41,7 @@ public class HostGroupDomainService {
 
     public HostGroup getHostGroup(HostGroupId hostGroupId) {
         HostGroup hostGroup = hostGroupRepository.find(hostGroupId);
-        List<Host> hosts = hostRepository.getHostsByGroupIds(Lists.newArrayList(hostGroup.getBizID().getHostGroupId()));
+        List<Host> hosts = hostRepository.getHostsByGroupIds(Lists.of(hostGroup.getBizID().getHostGroupId()));
         hostGroup.setHosts(hosts);
         return hostGroup;
     }

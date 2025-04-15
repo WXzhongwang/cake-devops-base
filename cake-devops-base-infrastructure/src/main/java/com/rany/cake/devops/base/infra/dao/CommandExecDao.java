@@ -3,11 +3,15 @@ package com.rany.cake.devops.base.infra.dao;
 import com.rany.cake.devops.base.domain.entity.CommandExec;
 import com.rany.cake.devops.base.domain.repository.param.CommandExecQueryParam;
 import com.rany.cake.devops.base.infra.po.CommandExecPO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface CommandExecDao {
 
+    List<CommandExecPO> findByIds(@Param("ids") List<Long> ids);
+
+    int deleteByIds(@Param("ids") List<Long> ids, @Param("modifier") String modifier);
 
     /**
      * 新增

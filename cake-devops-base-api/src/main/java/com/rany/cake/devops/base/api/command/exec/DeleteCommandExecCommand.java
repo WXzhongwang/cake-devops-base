@@ -4,6 +4,8 @@ import com.rany.cake.devops.base.api.common.base.BaseCommand;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * @author zhongshengwang
  * @version 1.0
@@ -14,4 +16,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class DeleteCommandExecCommand extends BaseCommand {
     private Long id;
+    private List<Long> idList;
 }
