@@ -80,6 +80,14 @@
         <module>cake-devops-base-plugins</module>
     </modules>
 
+    <developers>
+        <developer>
+            <name>zhongshengwang</name>
+            <email>18668485565@163.com</email>
+            <url>https://github.com/WXzhongwang</url>
+        </developer>
+    </developers>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
