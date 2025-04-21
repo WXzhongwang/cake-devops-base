@@ -120,10 +120,11 @@
             <artifactId>httpclient</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.jcraft</groupId>-->
+        <!--            <artifactId>jsch</artifactId>-->
+        <!--        </dependency>-->
+        
         <dependency>
             <groupId>org.apache.sshd</groupId>
             <artifactId>sshd-core</artifactId>
@@ -175,12 +176,7 @@
             <groupId>com.rany.cake.toolkit</groupId>
             <artifactId>cake-toolkit-alert</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.rany.cake.devops</groupId>
-            <artifactId>cake-devops-base-plugin-agent</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
     </dependencies>
 
 

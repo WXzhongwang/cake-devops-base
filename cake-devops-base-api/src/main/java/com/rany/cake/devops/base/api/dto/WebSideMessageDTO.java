@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
@@ -17,4 +19,8 @@ public class WebSideMessageDTO extends DTO {
     private String toUserName;
     private Long relId;
     private String sendMessage;
+
+    protected Date gmtCreate;
+
+    protected Date gmtModified;
 }

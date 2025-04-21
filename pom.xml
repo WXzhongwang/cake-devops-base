@@ -43,7 +43,8 @@
         <dingding.service.version>2.0.0</dingding.service.version>
         <slf4j-api.version>1.7.36</slf4j-api.version>
         <http-client.version>4.5.13</http-client.version>
-        <jsch.version>0.1.55</jsch.version>
+        <!--        <jsch.version>0.1.55</jsch.version>-->
+        <jsch.version>0.2.7</jsch.version>
         <sshd-core.version>2.9.2</sshd-core.version>
         <aliyun-acr.version>0.0.4</aliyun-acr.version>
         <jline.version>3.23.0</jline.version>
@@ -304,8 +305,8 @@
             </dependency>
 
             <dependency>
-                <groupId>com.rany.cms</groupId>
-                <artifactId>cake-cms-client</artifactId>
+                <groupId>com.rany.cake.toolkit</groupId>
+                <artifactId>cake-toolkit-cms</artifactId>
                 <version>${cake-cms.version}</version>
             </dependency>
             <!-- cake-toolkit-all -->
@@ -380,11 +381,6 @@
                 <artifactId>gitlab4j-api</artifactId>
                 <version>${gitlab-api.verison}</version>
             </dependency>
-            <!--            <dependency>-->
-            <!--                <groupId>com.github octokit-java</groupId>-->
-            <!--                <artifactId>octokit-java</artifactId>-->
-            <!--                <version>${github-api.verison}</version>-->
-            <!--            </dependency>-->
 
             <dependency>
                 <groupId>com.aliyun.openservices</groupId>

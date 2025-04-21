@@ -132,9 +132,24 @@ const Layout: React.FC<LayoutProps> = ({ dispatch }) => {
               </Dropdown>
             ),
           }}
-          actionsRender={(props) =>
-            props.isMobile ? [] : [<Inbox key="Inbox" />]
-          }
+          actionsRender={(props) => {
+            if (props.isMobile) return [];
+            return [
+              <div
+                key="inbox"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: 10,
+                  padding: "0 8px",
+                  height: "100%",
+                  cursor: "pointer",
+                }}
+              >
+                <Inbox />
+              </div>,
+            ];
+          }}
           menuFooterRender={(props) =>
             props?.collapsed ? undefined : (
               <div style={{ textAlign: "center", paddingBlockStart: 12 }}>

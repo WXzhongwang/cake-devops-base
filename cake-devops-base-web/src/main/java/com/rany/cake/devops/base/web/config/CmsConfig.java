@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.web.config;
 
-import com.cake.cms.client.CmsClient;
+import com.rany.cake.toolkit.cms.client.CmsClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

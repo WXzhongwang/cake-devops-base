@@ -1,6 +1,6 @@
 package com.rany.cake.devops.base.web.controller;
 
-import com.cake.cms.client.CmsClient;
+import com.rany.cake.toolkit.cms.client.CmsClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;

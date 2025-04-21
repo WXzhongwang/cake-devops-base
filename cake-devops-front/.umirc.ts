@@ -99,6 +99,11 @@ export default defineConfig({
           name: "脚本管理",
         },
         {
+          path: "/apps/system/batch-exec",
+          component: "system/batch-exec",
+          name: "批量执行",
+        },
+        {
           path: "/apps/system/system-log",
           component: "system/system-log",
           name: "系统日志",

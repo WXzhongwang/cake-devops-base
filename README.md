@@ -12,20 +12,22 @@
 -------------------------------------------------------------------------------
 
 
-**cake-devops-base** Java Devops实现。
+**cake-devops-base** Java Devops实现，技术栈:
 
-1. 后端采用SpringBoot
-2. K8S 1.19.2
-3. shell
-4. 前端采用React
+1. SpringBoot
+2. RabbitMQ
+3. Redis
+4. SLS
+5. K8S 1.19.2
+6. shell
+7. 前端采用React
 
 ## 特性
 
 - [x] **代码托管**: 支持多种代码源托管，支持二开拓展
-    - Gitlab: https://docs.gitlab.cn/jh/api/api_resources.html
-    - Github: https://docs.gitlab.cn/jh/api/api_resources.html
-    -
-  云效codeup: https://help.aliyun.com/zh/yunxiao/user-guide/code-management-2/?spm=a2c4g.11186623.help-menu-150040.d_2_4.51a81fa8nhfYEH
+    - Gitlab
+    - Github
+    - CodeUp（阿里云云效）
 - [x] **镜像仓库**:
     - Harbor容器镜像仓库 https://goharbor.io/
     - 阿里云容器服务（ACS）容器镜像服务 https://www.aliyun.com/product/acr
@@ -70,15 +72,17 @@
     - [ ] **全局系统配置**: 系统配置创建，系统配置更新
     - [ ] **应用监控**: 服务指标监控，包括线程池、磁盘空间等
 
-## 待计划开始
+## _待计划开始
 
-- [ ] **前端主框架优化**: 前端主框架优化（loading， ts检查等）
+- [ ] **前端主框架优化**: 前端主框架优化重构（loading， ts检查等）
+- [ ] **按钮操作权限**: 按钮操作权限
 - [ ] **脚本调度**: 调度管理
 - [ ] **站内信**: 站内信
 - [ ] **全局系统配置**: 全局系统配置
-- [ ] **应用监控**: 应用监控
 - [ ] **工作台**: 工作台展示
 - [ ] **分批、回滚发布**: 分批发布、回滚发布
+- [ ] **应用监控**: 应用监控
+- [ ] **K8S POD运维**: K8S POD运维
 
 ## 部分系统截图
 

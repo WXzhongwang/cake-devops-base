@@ -38,11 +38,6 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   profiles:
     active: dev
-  redis:
-    url: redis://127.0.0.1:6379
-  #  shell:
-  #    interactive:
-  #      enabled: false
   datasource:
     druid:
       type: com.alibaba.druid.pool.DruidDataSource

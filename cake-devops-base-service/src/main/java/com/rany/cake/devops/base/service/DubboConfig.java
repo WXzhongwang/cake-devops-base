@@ -23,7 +23,7 @@ public class DubboConfig {
     @Reference(check = false)
     private ApplicationFacade applicationFacade;
 
-    @Reference(check = false)
+    @Reference(check = false, timeout = 30000)
     private RbacQueryFacade rbacQueryFacade;
 
     @Bean

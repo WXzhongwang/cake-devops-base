@@ -14,6 +14,8 @@ export interface WebSideMessageDTO {
   toUserName: string;
   relId: string;
   sendMessage: string;
+  gmtCreateTime: Date;
+  gmtModifiedTime: Date;
 }
 
 export interface WebSideMessageState {}

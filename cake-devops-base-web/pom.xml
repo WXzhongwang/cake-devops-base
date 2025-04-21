@@ -58,14 +58,10 @@
             <groupId>com.rany.cake.dingtalk.sso</groupId>
             <artifactId>cake-dingtalk-sso-starter</artifactId>
         </dependency>
-
+        
         <dependency>
-            <groupId>com.rany.cms</groupId>
-            <artifactId>cake-cms-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
+            <groupId>com.rany.cake.toolkit</groupId>
+            <artifactId>cake-toolkit-cms</artifactId>
         </dependency>
     </dependencies>
 
