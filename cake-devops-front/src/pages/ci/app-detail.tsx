@@ -141,7 +141,7 @@ const AppDetail: React.FC<AppDetailProps> = ({ dispatch }) => {
 
   const handleDeploy = () => {
     // 示例：跳转到详情页，使用 history.push
-    history.push(`/apps/app/deploy/${id}`);
+    history.push(`/devops/ci/app/deploy/${id}`);
   };
 
   return (

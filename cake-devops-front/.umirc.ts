@@ -31,86 +31,110 @@ export default defineConfig({
 
   // 全部路由配置
   routes: [
-    { path: "/", redirect: "/apps" },
-    { path: "/apps", component: "app/app-list", name: "应用中心" },
-    { path: "/apps/app/info/:id", component: "app/app-detail" },
-    { path: "/apps/app/deploy/:id", component: "app/deploy" },
-    { path: "/apps/host/detail/:id", component: "ops/host-detail" },
+    { path: "/", redirect: "/devops/ci/app-list" },
     {
-      path: "/apps/host/alarm/history/:id",
+      path: "/devops/ci",
+      name: "CICD",
+      routes: [
+        {
+          path: "/devops/ci/app-list",
+          component: "ci/app-list",
+          name: "应用中心",
+          wrappers: ["@/wrappers/auth"],
+        },
+      ],
+    },
+    { path: "/devops/ci/app/info/:id", component: "ci/app-detail" },
+    { path: "/devops/ci/app/deploy/:id", component: "ci/deploy" },
+    { path: "/devops/ops/host/detail/:id", component: "ops/host-detail" },
+    {
+      path: "/devops/ops/host/alarm/history/:id",
       component: "ops/host-alarm-history",
     },
     {
-      path: "/apps/ops",
+      path: "/devops/ops",
+      name: "运维中心",
       routes: [
         {
-          path: "/apps/ops/cluster",
+          path: "/devops/ops/cluster",
           component: "ops/cluster-list",
           name: "集群管理",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/ops/host",
+          path: "/devops/ops/host",
           component: "ops/host-list",
           name: "主机管理",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/ops/server-key",
+          path: "/devops/ops/server-key",
           component: "ops/server-key",
           name: "主机秘钥管理",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/ops/server-proxy",
+          path: "/devops/ops/server-proxy",
           component: "ops/server-proxy",
           name: "主机代理管理",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/ops/server-env",
+          path: "/devops/ops/server-env",
           component: "ops/server-env",
           name: "主机环境变量",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/ops/server-monitor",
+          path: "/devops/ops/server-monitor",
           component: "ops/server-monitor",
           name: "主机监控",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/ops/sftp-manage/:id",
+          path: "/devops/ops/sftp-manage/:id",
           component: "ops/sftp-manage",
           layout: false,
         },
       ],
     },
     {
-      path: "/apps/system",
+      path: "/devops/system",
       routes: [
         {
-          path: "/apps/system/webhook-config",
+          path: "/devops/system/webhook-config",
           component: "system/webhook-config",
           name: "Webhook配置",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/system/alarm-group",
+          path: "/devops/system/alarm-group",
           component: "system/alarm-group",
           name: "告警组",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/system/script-template",
+          path: "/devops/system/script-template",
           component: "system/script-template",
           name: "脚本管理",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/system/batch-exec",
+          path: "/devops/system/batch-exec",
           component: "system/batch-exec",
           name: "批量执行",
+          wrappers: ["@/wrappers/auth"],
         },
         {
-          path: "/apps/system/system-log",
+          path: "/devops/system/system-log",
           component: "system/system-log",
           name: "系统日志",
+          wrappers: ["@/wrappers/auth"],
         },
       ],
     },
     { path: "/404", component: "system/not-found" }, // 显式声明 /404 路由
+    { path: "/403", component: "system/not-authorized" }, // 显式声明 /403 路由
     { path: "/*", redirect: "/404" }, // 通配符路由，重定向到 /404 路由
   ],
   npmClient: "pnpm",

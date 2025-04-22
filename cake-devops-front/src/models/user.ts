@@ -2,10 +2,11 @@ import * as userService from "@/services/user";
 import { message } from "antd";
 import { API, BaseAction } from "typings";
 import { Effect, Reducer } from "umi";
+import { AppMemberDTO } from "./app";
 
 type UserModelState = {
   isLogin: boolean;
-  userData: API.UserInfo;
+  userData: UserInfo;
   members: AppAccountDTO[];
   appMembers: AppAccountDTO[];
   menu: UserRoleMenuDTO | null;
@@ -46,6 +47,13 @@ export interface UserRoleMenuDTO {
   roles: RoleDTO[];
   menuTree: MenuTreeDTO[];
 }
+/** 用户信息数据 */
+export interface UserInfo {
+  userId: string;
+  userName: string;
+  realName: string;
+}
+
 export interface RoleDTO {
   roleId: string;
   roleName: string;
@@ -107,7 +115,7 @@ type UserModelType = {
     queryMenu: Effect;
   };
   reducers: {
-    // setUserInfo: Reducer<UserModelState>;
+    setUserInfo: Reducer<UserModelState>;
     setAppMembers: Reducer<UserModelState>;
     setMembers: Reducer<UserModelState>;
     setMenu: Reducer<UserModelState>;
@@ -117,7 +125,7 @@ type UserModelType = {
 const UserModel: UserModelType = {
   namespace: "user",
   state: {
-    // isLogin: false,
+    isLogin: false,
     userData: {
       userId: "",
       userName: "",
@@ -129,7 +137,9 @@ const UserModel: UserModelType = {
   },
   effects: {
     *logout(_, { call, put }) {
-      const res: API.LogoutResponse = yield call(userService.logout);
+      const res: API.ResponseBody<Record<string, never>> = yield call(
+        userService.logout
+      );
       yield put({
         type: "setUserInfo",
         payload: {
@@ -139,7 +149,7 @@ const UserModel: UserModelType = {
       });
     },
     *getUserInfo({ callback }: QueryCurrentUserAction, { call, put }) {
-      const response: API.UserInfoResponse = yield call(
+      const response: API.ResponseBody<UserInfo> = yield call(
         userService.getUserInfo
       );
       const { success, msg } = response;
@@ -152,7 +162,10 @@ const UserModel: UserModelType = {
       }
     },
     *queryMembers({ payload, callback }: QueryUsersAction, { call, put }) {
-      const response = yield call(userService.queryMembers, payload);
+      const response: API.ResponseBody<API.Page<AppAccountDTO>> = yield call(
+        userService.queryMembers,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
@@ -166,7 +179,10 @@ const UserModel: UserModelType = {
       { payload, callback }: QueryAppMembersAction,
       { call, put }
     ) {
-      const response = yield call(userService.queryAppMembers, payload);
+      const response: API.ResponseBody<API.Page<AppMemberDTO>> = yield call(
+        userService.queryAppMembers,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
@@ -177,7 +193,19 @@ const UserModel: UserModelType = {
       }
     },
     *queryMenu({ callback }: QueryMenuAction, { call, put }) {
-      const response = yield call(userService.queryUserMenu);
+      const response: API.ResponseBody<UserRoleMenuDTO> = yield call(
+        userService.queryUserMenu
+      );
+
+      console.log(response.content);
+
+      yield put({
+        type: "setMenu",
+        payload: {
+          menu: response.content,
+        },
+      });
+
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
@@ -189,12 +217,12 @@ const UserModel: UserModelType = {
     },
   },
   reducers: {
-    // setUserInfo(state, action) {
-    //   return {
-    //     ...state,
-    //     ...action.payload,
-    //   };
-    // },
+    setUserInfo(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
     setMembers(state, action) {
       return {
         ...state,
@@ -208,9 +236,10 @@ const UserModel: UserModelType = {
       };
     },
     setMenu(state, action) {
+      console.log("action", action.payload);
       return {
         ...state,
-        menu: action.payload,
+        ...action.payload,
       };
     },
   },

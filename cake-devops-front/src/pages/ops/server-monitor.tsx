@@ -248,7 +248,7 @@ const HostPage: React.FC<HostListProps> = ({
 
   const handleView = (record: HostMonitorDTO) => {
     // 示例：跳转到详情页，使用 history.push
-    history.push(`/apps/host/alarm/history/${record.hostId}`);
+    history.push(`/devops/ops/host/alarm/history/${record.hostId}`);
   };
 
   const handleMonitorViewPanel = (record: HostMonitorDTO) => {

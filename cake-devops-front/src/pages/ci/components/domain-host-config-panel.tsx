@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Button, Form, Input, Space, Table, Tabs, Typography } from "antd";
+import React from "react";
+import { Space, Tabs } from "antd";
 import { connect, Dispatch } from "umi";
-import { API } from "typings";
-import { AppEnv, ServiceItem } from "@/models/app";
+import { AppEnv } from "@/models/app";
 import ServicePanel from "./service-panel";
-import IngressPanel from "@/pages/app/components/ingress-panel";
+import IngressPanel from "@/pages/ci/components/ingress-panel";
+import { UserInfo } from "@/models/user";
 
 interface DomainHostConfigPanelProps {
   appEnv: AppEnv | undefined;
@@ -56,7 +56,7 @@ const DomainHostConfigPanel: React.FC<DomainHostConfigPanelProps> = ({
     </Space>
   );
 };
-export default connect(({ user }: { user: { userData: API.UserInfo } }) => {
+export default connect(({ user }: { user: { userData: UserInfo } }) => {
   return {
     userData: user.userData,
   };

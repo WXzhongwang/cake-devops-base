@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Table, { ColumnsType } from "antd/lib/table";
+import Table from "antd/lib/table";
 import {
   Button,
   Form,
@@ -10,18 +10,19 @@ import {
   Typography,
 } from "antd";
 import { nanoid } from "nanoid";
-import { connect } from "umi";
+import { connect, Dispatch } from "umi";
 import { API } from "typings";
+import { UserInfo } from "@/models/user";
 
-interface ConfigMapItem {
+interface EnvVar {
   id: string;
   label: string;
   value: string;
   editable?: boolean;
 }
 
-interface ConfigMapConfigPanelProps {
-  initialConfigMap: ConfigMapItem[];
+interface EnvVarConfigPanelProps {
+  initialEnvVars: EnvVar[];
   selectedEnvironment: string | undefined | null;
   dispatch: Dispatch;
 }
@@ -31,7 +32,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   dataIndex: string;
   title: any;
   inputType: "text";
-  record: ConfigMapItem;
+  record: EnvVar;
   index: number;
   children: React.ReactNode;
 }
@@ -61,7 +62,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
               ? [
                   {
                     pattern: /^[a-zA-Z_][a-zA-Z0-9_.-]*$/,
-                    message: `配置项名称必须以字母或下划线开头，并且只能包含字母、数字、下划线、短横线或点`,
+                    message: `环境变量名称必须以字母或下划线开头，并且只能包含字母、数字、下划线、短横线或点`,
                   },
                 ]
               : []),
@@ -76,17 +77,17 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 
-const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
-  initialConfigMap,
+const EnvVarConfigPanel: React.FC<EnvVarConfigPanelProps> = ({
+  initialEnvVars,
   selectedEnvironment,
   dispatch,
 }) => {
   const [form] = Form.useForm();
-  const [data, setData] = useState<ConfigMapItem[]>(initialConfigMap);
-  const [editingKey, setEditingKey] = useState<String | undefined>("");
-  const isEditing = (record: ConfigMapItem) => record.id === editingKey;
+  const [data, setData] = useState<EnvVar[]>(initialEnvVars);
+  const [editingKey, setEditingKey] = useState<string | undefined>("");
+  const isEditing = (record: EnvVar) => record.id === editingKey;
 
-  const edit = (record: Partial<ConfigMapItem> & { id: React.Key }) => {
+  const edit = (record: Partial<EnvVar> & { id: React.Key }) => {
     form.setFieldsValue({ ...record });
     setEditingKey(record.id);
   };
@@ -95,7 +96,7 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
   };
 
   const addNewRow = () => {
-    const newRow: ConfigMapItem = {
+    const newRow: EnvVar = {
       id: nanoid(),
       label: "",
       value: "",
@@ -112,7 +113,7 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
 
   const save = async (id: React.Key) => {
     try {
-      const row = (await form.validateFields()) as ConfigMapItem;
+      const row = (await form.validateFields()) as EnvVar;
 
       const newData = [...data];
       const index = newData.findIndex((item) => id === item.id);
@@ -155,7 +156,7 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
       title: "操作",
       dataIndex: "operation",
       width: "200px",
-      render: (_: any, record: ConfigMapItem, index: number) => {
+      render: (_: any, record: EnvVar, index: number) => {
         const editable = isEditing(record);
         return editable ? (
           <Space size={"middle"}>
@@ -195,7 +196,7 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
     }
     return {
       ...col,
-      onCell: (record: ConfigMapItem) => ({
+      onCell: (record: EnvVar) => ({
         record,
         inputType: "text",
         dataIndex: col.dataIndex,
@@ -205,14 +206,15 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
     };
   });
 
-  const handleConfigMapSubmit = (data: ConfigMapItem[]) => {
-    // 提交配置项数据
+  const handleEnvVarSubmit = (data: EnvVar[]) => {
+    console.log("Environment Variables submitted:", data);
+    // 提交环境变量数据
     if (data.some((item) => !item.label || !item.value)) {
-      message.warning("配置项不能为空");
+      message.warning("环境变量不能为空");
       return;
     }
     // 将 configMapData 转换为对象
-    const configMap = data.reduce(
+    const envVars = data.reduce(
       (acc, { label, value }) => {
         if (label) acc[label] = value;
         return acc;
@@ -221,10 +223,10 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
     );
 
     dispatch({
-      type: "app/modifyAppEnvConfigMap",
+      type: "app/modifyAppEnvVars",
       payload: {
         envId: selectedEnvironment,
-        configMap: configMap,
+        envVars: envVars,
       },
     });
     message.success("更新成功");
@@ -241,16 +243,16 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
               cell: EditableCell,
             },
           }}
-          rowKey="id"
           dataSource={data}
           columns={mergedColumns}
           rowClassName="editable-row"
+          rowKey="id"
           style={{ marginBottom: 16 }}
           pagination={false}
         />
         <Space style={{ marginBottom: 16 }}>
-          <Button onClick={() => addNewRow()}>添加配置项</Button>
-          <Button type="primary" onClick={() => handleConfigMapSubmit(data)}>
+          <Button onClick={() => addNewRow()}>添加环境变量</Button>
+          <Button type="primary" onClick={() => handleEnvVarSubmit(data)}>
             提交
           </Button>
         </Space>
@@ -259,8 +261,8 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
   );
 };
 
-export default connect(({ user }: { user: { userData: API.UserInfo } }) => {
+export default connect(({ user }: { user: { userData: UserInfo } }) => {
   return {
     userData: user.userData,
   };
-})(ConfigMapConfigPanel);
+})(EnvVarConfigPanel);

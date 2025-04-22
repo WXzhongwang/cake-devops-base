@@ -81,7 +81,7 @@ const HostPage: React.FC<HostListProps> = ({
 
   const handleSftpView = (record: HostModel) => {
     // 示例：跳转到详情页，使用 history.push
-    history.push(`/apps/ops/sftp-manage/${record.hostId}`);
+    history.push(`/devops/ops/sftp-manage/${record.hostId}`);
   };
 
   const handleEdit = (host: HostModel) => {

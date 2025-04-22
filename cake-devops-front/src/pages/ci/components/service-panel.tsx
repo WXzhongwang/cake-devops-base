@@ -15,6 +15,7 @@ import { nanoid } from "nanoid";
 import { connect, Dispatch } from "umi";
 import { API } from "typings";
 import { ServiceItem } from "@/models/app";
+import { UserInfo } from "@/models/user";
 
 interface ServicePanelProps {
   initialServices: WrapServiceItem[];
@@ -201,7 +202,7 @@ const ServicePanel: React.FC<ServicePanelProps> = ({
   );
 };
 
-export default connect(({ user }: { user: { userData: API.UserInfo } }) => {
+export default connect(({ user }: { user: { userData: UserInfo } }) => {
   return {
     userData: user.userData,
   };

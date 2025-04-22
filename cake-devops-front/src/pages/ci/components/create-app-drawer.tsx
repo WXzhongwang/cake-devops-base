@@ -3,6 +3,7 @@ import { Drawer, Form, Input, Select, Button, message } from "antd";
 import { connect, Dispatch } from "umi";
 import { API } from "typings";
 import { Department } from "@/models/app";
+import { UserInfo } from "@/models/user";
 
 const { Option } = Select;
 
@@ -10,7 +11,7 @@ interface CreateAppDrawerProps {
   dispatch: Dispatch;
   open: boolean;
   onClose: () => void;
-  userData: API.UserInfo;
+  userData: UserInfo;
   departments: Department[] | [];
 }
 

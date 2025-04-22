@@ -22,6 +22,7 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import { UserInfo } from "@/models/user";
 
 const { Title } = Typography;
 
@@ -253,7 +254,7 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
   );
 };
 
-export default connect(({ user }: { user: { userData: API.UserInfo } }) => {
+export default connect(({ user }: { user: { userData: UserInfo } }) => {
   return {
     userData: user.userData,
   };

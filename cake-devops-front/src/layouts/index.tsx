@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { MenuDataItem, ProLayout, ProSettings } from "@ant-design/pro-layout";
-import { Dropdown } from "antd"; // 引入 Spin 用于加载指示器
+import { Dropdown, Spin } from "antd"; // 引入 Spin 用于加载指示器
 import { logout } from "@/services/user";
-import { connect, Dispatch, history, Link, Outlet } from "umi";
+import { connect, Dispatch, history, Link, Outlet, useLocation } from "umi"; // 使用 useLocation 钩子
 import * as allIcons from "@ant-design/icons";
 import { LogoutOutlined } from "@ant-design/icons";
 import defaultProps from "./_default";
-import { API } from "typings";
-import { MenuTreeDTO, UserRoleMenuDTO } from "@/models/user";
+import { MenuTreeDTO, UserInfo, UserRoleMenuDTO } from "@/models/user";
 import Inbox from "./index-box";
+import Loading from "@/wrappers/loading";
 
 interface LayoutProps {
   dispatch: Dispatch;
@@ -24,30 +24,34 @@ const Layout: React.FC<LayoutProps> = ({ dispatch }) => {
     colorPrimary: "#1677FF",
     siderMenuType: "sub",
   });
-  const [pathname, setPathname] = useState("/apps");
-  const [userData, setUserData] = useState<API.UserInfo>();
+  const location = useLocation(); // 获取当前路由信息
+  const [loading, setLoading] = useState(true); // 初始状态为 true
+  const [menuLoaded, setMenuLoaded] = useState(false);
+  const [userMenu, setUserMenu] = useState<MenuDataItem[]>([]);
+  const [userData, setUserData] = useState<UserInfo>();
+  const [pathname, setPathname] = useState<string>(location.pathname);
 
   const getUserInfo = () => {
     dispatch({
       type: "user/getUserInfo",
-      callback: (res: API.UserInfo) => {
-        setUserData(res);
+      callback: (user: UserInfo) => {
+        setUserData(user);
       },
     });
   };
 
-  const queryUserMenu = async () => {
-    return new Promise<MenuDataItem[]>((resolve) => {
-      dispatch({
-        type: "user/queryMenu",
-        callback: (content: UserRoleMenuDTO) => {
-          const convertedMenuData = convertMenuTreeToProLayoutMenu(
-            content.menuTree
-          );
-          console.log("converted:", convertedMenuData); // 确保这里打印出正确的菜单数据
-          resolve(convertedMenuData);
-        },
-      });
+  const queryUserMenuV2 = async () => {
+    setLoading(true);
+    dispatch({
+      type: "user/queryMenu",
+      callback: (content: UserRoleMenuDTO) => {
+        const convertedMenuData = convertMenuTreeToProLayoutMenu(
+          content.menuTree
+        );
+        setUserMenu(convertedMenuData);
+        setLoading(false);
+        setMenuLoaded(true); // 设置菜单已加载
+      },
     });
   };
 
@@ -74,18 +78,18 @@ const Layout: React.FC<LayoutProps> = ({ dispatch }) => {
       return <img src={icon} alt={icon} />;
     }
     let fixIconName = icon.slice(0, 1).toLocaleUpperCase() + icon.slice(1);
-    // @ts-ignore
-    // return React.createElement(allIcons[fixIconName] || allIcons[icon]);
-    // @ts-ignore
     const IconComponent = allIcons[fixIconName];
     return IconComponent ? <IconComponent /> : undefined;
   };
 
   useEffect(() => {
     getUserInfo();
+    queryUserMenuV2();
   }, []);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <div
       id="main-pro-layout"
       style={{
@@ -93,103 +97,114 @@ const Layout: React.FC<LayoutProps> = ({ dispatch }) => {
         overflow: "auto",
       }}
     >
-      {userData && (
-        <ProLayout
-          {...settings}
-          title="Cake"
-          menu={{
-            type: "group",
-            collapsedShowGroupTitle: true,
-            request: queryUserMenu,
-          }}
-          waterMarkProps={{
-            content: [userData.userName, userData.userId],
-          }}
-          {...defaultProps}
-          avatarProps={{
-            src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-            size: "small",
-            title: userData?.userName,
-            render: (props, dom) => (
-              <Dropdown
-                menu={{
-                  items: [
-                    {
-                      key: "logout",
-                      icon: <LogoutOutlined />,
-                      label: "退出登录",
-                      onClick: async () => {
-                        const res = await logout();
-                        if (res.success) {
-                          history.push("/apps");
-                        }
-                      },
+      <ProLayout
+        {...settings}
+        title="Cake"
+        menu={{
+          type: "group",
+          collapsedShowGroupTitle: true,
+          request: async () => {
+            if (menuLoaded) {
+              return userMenu;
+            }
+            return [];
+          },
+        }}
+        waterMarkProps={{
+          content: [
+            userData?.userName || "", // 如果 userName 为 undefined，则使用空字符串
+            userData?.userId || "", // 如果 userId 为 undefined，则使用空字符串
+          ],
+        }}
+        breadcrumbRender={false}
+        appList={defaultProps.appList}
+        avatarProps={{
+          src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
+          size: "small",
+          title: userData?.userName,
+          render: (props, dom) => (
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    key: "logout",
+                    icon: <LogoutOutlined />,
+                    label: "退出登录",
+                    onClick: async () => {
+                      const res = await logout();
+                      if (res.success) {
+                        history.push("/");
+                      }
                     },
-                  ],
-                }}
-              >
-                {dom}
-              </Dropdown>
-            ),
-          }}
-          actionsRender={(props) => {
-            if (props.isMobile) return [];
-            return [
-              <div
-                key="inbox"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginRight: 10,
-                  padding: "0 8px",
-                  height: "100%",
-                  cursor: "pointer",
-                }}
-              >
-                <Inbox />
-              </div>,
-            ];
-          }}
-          menuFooterRender={(props) =>
-            props?.collapsed ? undefined : (
-              <div style={{ textAlign: "center", paddingBlockStart: 12 }}>
-                <div>© 2024 Made with 钟望</div>
-                <div>by Cake</div>
-              </div>
-            )
+                  },
+                ],
+              }}
+            >
+              {dom}
+            </Dropdown>
+          ),
+        }}
+        actionsRender={(props) => {
+          if (props.isMobile) return [];
+          return [
+            <div
+              key="inbox"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: 10,
+                padding: "0 8px",
+                height: "100%",
+                cursor: "pointer",
+              }}
+            >
+              <Inbox />
+            </div>,
+          ];
+        }}
+        menuFooterRender={(props) =>
+          props?.collapsed ? undefined : (
+            <div style={{ textAlign: "center", paddingBlockStart: 12 }}>
+              <div>© 2024 Made with 钟望</div>
+              <div>by Cake</div>
+            </div>
+          )
+        }
+        menuItemRender={(menuItemProps, defaultDom) => {
+          if (menuItemProps.isUrl || menuItemProps.children) {
+            return defaultDom;
           }
-          menuItemRender={(menuItemProps, defaultDom) => {
-            if (menuItemProps.isUrl || menuItemProps.children) {
-              return defaultDom;
-            }
-            if (
-              menuItemProps.path &&
-              location.pathname !== menuItemProps.path
-            ) {
-              return (
-                <Link
-                  to={menuItemProps.path}
-                  target={menuItemProps.target}
-                  onClick={() => setPathname(menuItemProps.path || "/apps")}
-                >
-                  <div className="ant-pro-base-menu-horizontal-item-title">
-                    {menuItemProps.icon} &nbsp;&nbsp;
-                    {menuItemProps.name}
-                  </div>
-                </Link>
-              );
-            }
+          if (menuItemProps.path && location.pathname !== menuItemProps.path) {
+            // 动态匹配当前路径
             return (
-              <div className="ant-pro-base-menu-horizontal-item-title">
-                {menuItemProps.icon} &nbsp;&nbsp;
-                {menuItemProps.name}
-              </div>
+              <Link
+                to={menuItemProps.path}
+                target={menuItemProps.target}
+                onClick={() => setPathname(menuItemProps.path || "/")}
+              >
+                <div className="ant-pro-base-menu-horizontal-item-title">
+                  {menuItemProps.icon} &nbsp;&nbsp;
+                  {menuItemProps.name}
+                </div>
+              </Link>
             );
-          }}
-        >
-          <Outlet />
-        </ProLayout>
-      )}
+          }
+          return (
+            <div className="ant-pro-base-menu-horizontal-item-title">
+              {menuItemProps.icon} &nbsp;&nbsp;
+              {menuItemProps.name}
+            </div>
+          );
+        }}
+      >
+        {menuLoaded ? (
+          <>
+            <Outlet />
+          </>
+        ) : (
+          <Spin size="large" />
+        )}
+      </ProLayout>
     </div>
   );
 };

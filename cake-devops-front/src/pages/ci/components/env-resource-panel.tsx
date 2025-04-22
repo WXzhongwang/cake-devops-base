@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import Table, { ColumnsType } from "antd/lib/table";
 import { Button, Form, Input, message, Space, Tabs, Typography } from "antd";
 import { ResourceStrategyDTO } from "@/models/app";
 import { connect, Dispatch } from "umi";
-import { API } from "typings";
+import { UserInfo } from "@/models/user";
 
 interface EnvVarConfigPanelProps {
   resourceStrategy: ResourceStrategyDTO | undefined;
@@ -180,7 +179,7 @@ const EnvResourcePanel: React.FC<EnvVarConfigPanelProps> = ({
   );
 };
 
-export default connect(({ user }: { user: { userData: API.UserInfo } }) => {
+export default connect(({ user }: { user: { userData: UserInfo } }) => {
   return {
     userData: user.userData,
   };

@@ -666,7 +666,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({ dispatch }) => {
           title="警告"
           subTitle="未找到应用"
           extra={
-            <Button type="primary" onClick={() => history.push(`/apps`)}>
+            <Button type="primary" onClick={() => history.push(`/`)}>
               创建应用
             </Button>
           }
@@ -681,7 +681,7 @@ const DeployPage: React.FC<ReleasePageProps> = ({ dispatch }) => {
           extra={
             <Button
               type="primary"
-              onClick={() => history.push(`/apps/app/info/${id}`)}
+              onClick={() => history.push(`/devops/ci/app/info/${id}`)}
             >
               创建环境
             </Button>
