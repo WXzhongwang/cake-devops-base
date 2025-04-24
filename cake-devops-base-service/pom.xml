@@ -36,10 +36,6 @@
             <artifactId>cake-dingtalk-sso-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -124,7 +120,7 @@
         <!--            <groupId>com.jcraft</groupId>-->
         <!--            <artifactId>jsch</artifactId>-->
         <!--        </dependency>-->
-        
+
         <dependency>
             <groupId>org.apache.sshd</groupId>
             <artifactId>sshd-core</artifactId>

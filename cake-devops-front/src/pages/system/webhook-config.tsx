@@ -20,18 +20,13 @@ import {
 } from "@/services/webhook";
 import CreateWebHookForm from "./components/create-webhook-form";
 import { DingdingOutlined } from "@ant-design/icons"; // 引入钉钉图标
+import { API } from "typings";
 
 interface WebHookListProps {
   dispatch: Dispatch;
-  webhooks: WebhookConfig[];
-  total: number;
 }
 
-const WebHookList: React.FC<WebHookListProps> = ({
-  dispatch,
-  webhooks,
-  total,
-}) => {
+const WebHookList: React.FC<WebHookListProps> = ({ dispatch }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
     name: "",
@@ -40,6 +35,7 @@ const WebHookList: React.FC<WebHookListProps> = ({
   const [editingWebHook, setEditingWebHook] = useState<
     WebhookConfig | undefined
   >(undefined);
+  const [webhooks, setWebhooks] = useState<API.Page<WebhookConfig>>();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -50,6 +46,9 @@ const WebHookList: React.FC<WebHookListProps> = ({
     dispatch({
       type: "webhook/queryWebHooks",
       payload: { ...pagination, ...filters },
+      callback: (res: API.Page<WebhookConfig>) => {
+        setWebhooks(res);
+      },
     });
   };
 
@@ -132,6 +131,7 @@ const WebHookList: React.FC<WebHookListProps> = ({
     },
   ];
 
+  console.log(webhooks);
   return (
     <PageContainer title="WebHook列表">
       <Card>
@@ -170,10 +170,10 @@ const WebHookList: React.FC<WebHookListProps> = ({
           </Button>
           <Table
             columns={columns}
-            dataSource={webhooks}
+            dataSource={webhooks?.items}
             rowKey="id"
             pagination={{
-              total,
+              total: webhooks?.total,
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               onChange: handlePaginationChange,
@@ -200,16 +200,4 @@ const WebHookList: React.FC<WebHookListProps> = ({
   );
 };
 
-export default connect(
-  ({
-    webhook,
-  }: {
-    webhook: {
-      webhooks: WebhookConfig[];
-      total: number;
-    };
-  }) => ({
-    webhooks: webhook.webhooks,
-    total: webhook.total,
-  })
-)(WebHookList);
+export default connect()(WebHookList);

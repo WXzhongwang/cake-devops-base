@@ -3,7 +3,7 @@
 import { Effect, Reducer } from "umi";
 import * as api from "@/services/alarm-group";
 import { message } from "antd";
-import { BaseAction } from "typings";
+import { API, BaseAction } from "typings";
 
 export interface AlarmGroupDTO {
   id: number;
@@ -55,7 +55,7 @@ export interface AlarmGroupModelState {
   total: number;
 }
 
-interface QueryAlarmGroupAction {
+interface QueryAlarmGroupAction extends BaseAction {
   type: "alarmGroup/fetchAlarmGroups";
   payload: QueryAlarmGroupPayload;
 }
@@ -98,12 +98,22 @@ const AlarmGroupModel: AlarmGroupModelType = {
   },
 
   effects: {
-    *fetchAlarmGroups({ payload }: QueryAlarmGroupAction, { call, put }) {
-      const response = yield call(api.fetchAlarmGroup, payload);
-      yield put({
-        type: "saveAlarmGroup",
-        payload: response.content,
-      });
+    *fetchAlarmGroups(
+      { payload, callback }: QueryAlarmGroupAction,
+      { call, put }
+    ) {
+      const response: API.ResponseBody<API.Page<AlarmGroupDTO>> = yield call(
+        api.fetchAlarmGroup,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *create({ payload, callback }: CreateAlarmGroupAction, { call, put }) {

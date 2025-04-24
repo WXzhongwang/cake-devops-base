@@ -1,13 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Form, Input, Button, Select, Table, message } from "antd";
 import { PageContainer } from "@ant-design/pro-layout";
 
 const { TextArea } = Input;
+import { API, BaseAction } from "typings";
+import { CommandExecDTO } from "@/models/batch-exec";
+import { connect, Dispatch } from "umi";
+import { ScriptTemplateDTO } from "@/models/script-template";
 
-const BatchCommand: React.FC = () => {
+interface BatchCommandProps {
+  dispatch: Dispatch;
+}
+const BatchCommand: React.FC<BatchCommandProps> = ({ dispatch }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<any[]>([]);
+
+  const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
+  const [commandPagination, setCommandPagination] = useState({
+    pageNo: 1,
+    pageSize: 10,
+  });
+  const [filters, setFilters] = useState({ name: "" });
+  const [commandExecPage, setCommandExecPage] =
+    useState<API.Page<CommandExecDTO>>();
+  const [scriptPage, setScriptPage] = useState<API.Page<ScriptTemplateDTO>>();
+  const fetchCommandExec = () => {
+    dispatch({
+      type: "commandExec/fetchCommandExec",
+      payload: {
+        ...filters,
+        ...pagination,
+      },
+      callback: (res: API.Page<CommandExecDTO>) => {
+        setCommandExecPage(res);
+      },
+    });
+  };
+  const queryScripts = () => {
+    dispatch({
+      type: "script/queryScripts",
+      payload: { ...pagination, ...filters },
+      callback: (res: API.Page<ScriptTemplateDTO>) => {
+        setScriptPage(res);
+      },
+    });
+  };
+
+  useEffect(() => {
+    queryScripts();
+  }, [filters, pagination]);
+
+  useEffect(() => {
+    fetchCommandExec();
+  }, [filters, pagination]);
+
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    setCommandPagination({ pageNo: page, pageSize: pageSize || 10 });
+  };
 
   const handleExecute = async (values: any) => {
     setLoading(true);
@@ -53,7 +102,11 @@ const BatchCommand: React.FC = () => {
               placeholder="请选择要执行的主机"
               style={{ width: "100%" }}
             >
-              {/* TODO: 动态加载主机列表 */}
+              {/* {commandExecPage?.items.map((item) => (
+                <Select.Option key={item.id} value={item.id}>
+                  {item.host}
+                </Select.Option>
+              ))} */}
             </Select>
           </Form.Item>
 
@@ -74,13 +127,19 @@ const BatchCommand: React.FC = () => {
 
         <Table
           columns={columns}
-          dataSource={results}
+          dataSource={commandExecPage?.items}
           rowKey="host"
           style={{ marginTop: 24 }}
+          pagination={{
+            total: commandExecPage?.total,
+            current: commandPagination.pageNo,
+            pageSize: commandPagination.pageSize,
+            onChange: handlePaginationChange,
+          }}
         />
       </Card>
     </PageContainer>
   );
 };
 
-export default BatchCommand;
+export default connect()(BatchCommand);

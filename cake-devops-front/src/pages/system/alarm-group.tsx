@@ -7,22 +7,13 @@ import CreateAlarmGroupForm from "./components/create-alarm-group";
 import { AlarmGroupDTO } from "@/models/alarm-group";
 import { WebhookConfig } from "@/models/webhook";
 import { AppAccountDTO, AppAccountPage } from "@/models/user";
+import { API } from "typings";
 
 interface AlarmGroupListProps {
   dispatch: Dispatch;
-  alarmGroups: AlarmGroupDTO[];
-  total: number;
-  webhooks: WebhookConfig[];
-  // members: AppAccountDTO[];
 }
 
-const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
-  dispatch,
-  alarmGroups,
-  total,
-  webhooks,
-  // members,
-}) => {
+const AlarmGroupList: React.FC<AlarmGroupListProps> = ({ dispatch }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
     groupName: "",
@@ -33,6 +24,9 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
   >(undefined);
   const [form] = Form.useForm();
   const [userList, setUserList] = useState<AppAccountDTO[]>([]);
+  const [webhooks, setWebhooks] = useState<WebhookConfig[]>([]);
+  const [alarmGroupPage, setAlarmGroupPage] =
+    useState<API.Page<AlarmGroupDTO>>();
 
   useEffect(() => {
     getAlarmGroups();
@@ -45,8 +39,11 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
         pageNo: 1,
         pageSize: 10,
       },
+      callback: (res: API.Page<WebhookConfig>) => {
+        setWebhooks(res.items);
+        fetchUserList();
+      },
     });
-    fetchUserList();
   }, []);
 
   const fetchUserList = () => {
@@ -63,6 +60,9 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
     dispatch({
       type: "alarmGroup/fetchAlarmGroups",
       payload: { ...pagination, ...filters },
+      callback: (res: API.Page<AlarmGroupDTO>) => {
+        setAlarmGroupPage(res);
+      },
     });
   };
 
@@ -76,7 +76,6 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
       type: "alarmGroup/delete",
       payload: { alarmGroupId: alarmGroupId },
       callback: () => {
-        // 新增成功后，更新选中的主机 ID，重新加载环境变量数据
         getAlarmGroups();
       },
     });
@@ -215,10 +214,10 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
           </Button>
           <Table
             columns={columns}
-            dataSource={alarmGroups}
+            dataSource={alarmGroupPage?.items}
             rowKey="id"
             pagination={{
-              total,
+              total: alarmGroupPage?.total,
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               onChange: handlePaginationChange,
@@ -247,9 +246,4 @@ const AlarmGroupList: React.FC<AlarmGroupListProps> = ({
   );
 };
 
-export default connect(({ alarmGroup, webhook, user }) => ({
-  alarmGroups: alarmGroup.alarmGroups,
-  total: alarmGroup.total,
-  webhooks: webhook.webhooks,
-  // members: user.members,
-}))(AlarmGroupList);
+export default connect()(AlarmGroupList);

@@ -1,22 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { PageContainer } from "@ant-design/pro-components";
-import {
-  Button,
-  Card,
-  Form,
-  Input,
-  Space,
-  Table,
-  DatePicker,
-  message,
-  Drawer,
-} from "antd";
+import { Button, Card, Form, Input, Space, Table, message, Drawer } from "antd";
 import { connect, Dispatch } from "umi";
 import { ScriptTemplateDTO } from "@/models/script-template";
 import CreateScriptForm from "./components/create-script-form";
 import dayjs from "dayjs";
 
 const { TextArea } = Input;
+import { API, BaseAction } from "typings";
 
 interface ScriptListProps {
   dispatch: Dispatch;
@@ -24,11 +15,7 @@ interface ScriptListProps {
   total: number;
 }
 
-const ScriptList: React.FC<ScriptListProps> = ({
-  dispatch,
-  scripts,
-  total,
-}) => {
+const ScriptList: React.FC<ScriptListProps> = ({ dispatch }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
     name: "",
@@ -37,6 +24,8 @@ const ScriptList: React.FC<ScriptListProps> = ({
   const [editingScript, setEditingScript] = useState<
     ScriptTemplateDTO | undefined
   >(undefined);
+  const [scriptPage, setScriptPage] = useState<API.Page<ScriptTemplateDTO>>();
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -47,6 +36,9 @@ const ScriptList: React.FC<ScriptListProps> = ({
     dispatch({
       type: "script/queryScripts",
       payload: { ...pagination, ...filters },
+      callback: (res: API.Page<ScriptTemplateDTO>) => {
+        setScriptPage(res);
+      },
     });
   };
 
@@ -196,10 +188,10 @@ const ScriptList: React.FC<ScriptListProps> = ({
 
           <Table
             columns={columns}
-            dataSource={scripts}
+            dataSource={scriptPage?.items}
             rowKey={"id"} // 假设每个脚本对象都有一个唯一的 id 字段
             pagination={{
-              total,
+              total: scriptPage?.total,
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               onChange: handlePaginationChange,
@@ -226,7 +218,4 @@ const ScriptList: React.FC<ScriptListProps> = ({
   );
 };
 
-export default connect(({ script }) => ({
-  scripts: script.scripts,
-  total: script.total,
-}))(ScriptList);
+export default connect()(ScriptList);

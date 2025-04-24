@@ -2,7 +2,7 @@
 
 import { Effect, Reducer } from "umi";
 import * as api from "@/services/webhook";
-import { BaseAction } from "typings";
+import { API, BaseAction } from "typings";
 import { message } from "antd";
 
 export interface WebhookConfig {
@@ -34,11 +34,11 @@ export interface UpdateWebHookPayload extends CreateWebHookPayload {
 }
 
 export interface WebHookModelState {
-  webhooks: WebhookConfig[];
-  total: number;
+  // webhooks: WebhookConfig[];
+  // total: number;
 }
 
-interface QueryWebHooksAction {
+interface QueryWebHooksAction extends BaseAction {
   type: "webhook/queryWebHooks";
   payload: QueryWebHooksPayload;
 }
@@ -68,7 +68,7 @@ export interface WebHookModelType {
     deleteWebHook: Effect;
   };
   reducers: {
-    saveWebHooks: Reducer<WebHookModelState>;
+    // saveWebHooks: Reducer<WebHookModelState>;
   };
 }
 
@@ -76,22 +76,31 @@ const WebHookModel: WebHookModelType = {
   namespace: "webhook",
 
   state: {
-    webhooks: [],
-    total: 0,
+    // webhooks: [],
+    // total: 0,
   },
 
   effects: {
-    *queryWebHooks({ payload }: QueryWebHooksAction, { call, put }) {
-      const response = yield call(api.fetchWebhooks, payload);
-      yield put({
-        type: "saveWebHooks",
-        payload: response.content,
-      });
+    *queryWebHooks({ payload, callback }: QueryWebHooksAction, { call, put }) {
+      const response: API.ResponseBody<API.Page<WebhookConfig>> = yield call(
+        api.fetchWebhooks,
+        payload
+      );
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback(response.content);
+      } else {
+        message.error(msg);
+      }
     },
 
     *createWebHook({ payload, callback }: CreateWebHookAction, { call, put }) {
-      const response = yield call(api.createWebhook, payload);
-      //       yield put({ type: "fetchWebHooks" });
+      const response: API.ResponseBody<boolean> = yield call(
+        api.createWebhook,
+        payload
+      );
       const { success, msg } = response;
       // 如果传入了回调函数，则执行回调函数
       // 调用回调函数
@@ -103,7 +112,10 @@ const WebHookModel: WebHookModelType = {
     },
 
     *updateWebHook({ payload, callback }: UpdateWebHookAction, { call, put }) {
-      const response = yield call(api.updateWebhook, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.updateWebhook,
+        payload
+      );
       const { success, msg } = response;
       // 如果传入了回调函数，则执行回调函数
       // 调用回调函数
@@ -128,13 +140,13 @@ const WebHookModel: WebHookModelType = {
   },
 
   reducers: {
-    saveWebHooks(state, action) {
-      return {
-        ...state,
-        webhooks: action.payload.items,
-        total: action.payload.total,
-      };
-    },
+    // saveWebHooks(state, action) {
+    //   return {
+    //     ...state,
+    //     webhooks: action.payload.items,
+    //     total: action.payload.total,
+    //   };
+    // },
   },
 };
 

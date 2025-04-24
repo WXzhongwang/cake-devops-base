@@ -48,7 +48,7 @@ public class BatchExecCommandController {
         return ListResult.succeed(commandExec);
     }
 
-    @PostMapping("/list")
+    @PostMapping("/page")
     @ApiOperation(value = "获取执行列表")
     public PageResult<CommandExecDTO> list(@RequestBody CommandExecPageQuery query) {
         Page<CommandExecDTO> commandExecDTOPage = commandExecService.pageCommandExec(query);

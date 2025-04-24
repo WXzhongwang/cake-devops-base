@@ -2,7 +2,7 @@
 
 import { Effect, Reducer } from "umi";
 import * as api from "@/services/script-template";
-import { BaseAction } from "typings";
+import { API, BaseAction } from "typings";
 import { message } from "antd";
 
 export interface ScriptTemplateDTO {
@@ -39,7 +39,7 @@ export interface ScriptTemplateModelState {
   total: number;
 }
 
-interface QueryScriptAction {
+interface QueryScriptAction extends BaseAction {
   type: "script/queryScripts";
   payload: QueryScriptPayload;
 }
@@ -68,9 +68,7 @@ export interface ScriptTemplateModelType {
     updateScript: Effect;
     deleteScript: Effect;
   };
-  reducers: {
-    saveScripts: Reducer<ScriptTemplateModelType>;
-  };
+  reducers: {};
 }
 
 const ScriptTemplateModel: ScriptTemplateModelType = {
@@ -81,16 +79,24 @@ const ScriptTemplateModel: ScriptTemplateModelType = {
   },
 
   effects: {
-    *queryScripts({ payload }: QueryScriptAction, { call, put }) {
-      const response = yield call(api.fetchScripts, payload);
-      yield put({
-        type: "saveScripts",
-        payload: response.content,
-      });
+    *queryScripts({ payload, callback }: QueryScriptAction, { call, put }) {
+      const response: API.ResponseBody<API.Page<ScriptTemplateDTO>> =
+        yield call(api.fetchScripts, payload);
+      const { success, msg } = response;
+      // 如果传入了回调函数，则执行回调函数
+      // 调用回调函数
+      if (success && callback && typeof callback === "function") {
+        callback(response.content);
+      } else {
+        message.error(msg);
+      }
     },
 
     *createScript({ payload, callback }: CreateScriptAction, { call, put }) {
-      const response = yield call(api.createScript, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.createScript,
+        payload
+      );
       const { success, msg } = response;
       // 如果传入了回调函数，则执行回调函数
       // 调用回调函数
@@ -102,7 +108,10 @@ const ScriptTemplateModel: ScriptTemplateModelType = {
     },
 
     *updateScript({ payload, callback }: UpdateScriptAction, { call, put }) {
-      const response = yield call(api.updateScript, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.updateScript,
+        payload
+      );
       const { success, msg } = response;
       // 如果传入了回调函数，则执行回调函数
       // 调用回调函数
@@ -114,7 +123,10 @@ const ScriptTemplateModel: ScriptTemplateModelType = {
     },
 
     *deleteScript({ payload, callback }: DeleteScriptAction, { call, put }) {
-      const response = yield call(api.deleteScript, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.deleteScript,
+        payload
+      );
       const { success, msg } = response;
       // 如果传入了回调函数，则执行回调函数
       // 调用回调函数
@@ -126,15 +138,7 @@ const ScriptTemplateModel: ScriptTemplateModelType = {
     },
   },
 
-  reducers: {
-    saveScripts(state, action) {
-      return {
-        ...state,
-        scripts: action.payload.items,
-        total: action.payload.total,
-      };
-    },
-  },
+  reducers: {},
 };
 
 export default ScriptTemplateModel;

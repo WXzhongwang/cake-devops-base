@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.integration.lock.aspect;
 
 import com.rany.cake.devops.base.service.integration.lock.annotation.JLock;
-import com.rany.cake.devops.base.service.integration.lock.enums.LockModel;
+import com.rany.cake.toolkit.redis.LockModel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -92,19 +92,19 @@ public class DistributedLockHandler extends BaseAspect {
         String keyConstant = jLock.keyConstant();
         if (lockModel.equals(LockModel.AUTO)) {
             if (keys.length > 1) {
-                lockModel = LockModel.REDLOCK;
+                lockModel = LockModel.RED_LOCK;
             } else {
                 lockModel = LockModel.REENTRANT;
             }
         }
-        if (!lockModel.equals(LockModel.MULTIPLE) && !lockModel.equals(LockModel.REDLOCK) && keys.length > 1) {
+        if (!lockModel.equals(LockModel.MULTIPLE) && !lockModel.equals(LockModel.RED_LOCK) && keys.length > 1) {
             throw new RuntimeException("参数有多个,锁模式为->" + lockModel.name() + ".无法锁定");
         }
         switch (lockModel) {
             case FAIR:
                 rLock = redissonClient.getFairLock(getValueBySpEL(keys[0], parameterNames, args, keyConstant).get(0));
                 break;
-            case REDLOCK:
+            case RED_LOCK:
                 List<RLock> rLocks = new ArrayList<>();
                 for (String key : keys) {
                     List<String> valueBySpEL = getValueBySpEL(key, parameterNames, args, keyConstant);

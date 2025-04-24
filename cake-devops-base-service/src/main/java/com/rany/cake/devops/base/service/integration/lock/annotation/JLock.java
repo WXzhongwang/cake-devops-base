@@ -1,7 +1,7 @@
 package com.rany.cake.devops.base.service.integration.lock.annotation;
 
 
-import com.rany.cake.devops.base.service.integration.lock.enums.LockModel;
+import com.rany.cake.toolkit.redis.LockModel;
 
 import java.lang.annotation.*;
 

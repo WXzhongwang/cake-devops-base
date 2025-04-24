@@ -4,13 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.1</version>
-        <relativePath/>
+        <groupId>com.rany.cake.devops</groupId>
+        <artifactId>cake-devops-base</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.rany.cake.devops</groupId>
     <artifactId>cake-devops-base-plugins</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -24,6 +23,8 @@
         <common.version>1.0.0</common.version>
         <swagger.version>2.9.2</swagger.version>
         <knife4j.version>2.0.5</knife4j.version>
+        <cake.version>1.0.3</cake.version>
+        <jna.version>5.13.0</jna.version>
     </properties>
 
     <modules>
@@ -38,11 +39,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- devtools -->
+        <!-- web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
 
         <!-- tests -->
@@ -64,6 +64,7 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>${swagger.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
@@ -86,7 +87,7 @@
         <dependency>
             <groupId>com.rany.cake.toolkit</groupId>
             <artifactId>cake-toolkit-all</artifactId>
-            <version>1.0.0</version>
+            <version>${cake.version}</version>
         </dependency>
     </dependencies>
 
@@ -107,6 +108,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
                 <configuration>
                     <attach>true</attach>
                 </configuration>
