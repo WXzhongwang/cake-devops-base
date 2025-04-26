@@ -3,18 +3,17 @@ import { PageContainer } from "@ant-design/pro-components";
 import { Button, Card, Form, Input, Select, Space, Table, Drawer } from "antd";
 import { connect, Dispatch } from "umi";
 import { ProxyModel } from "@/models/proxy";
-import { createProxy, fetchProxies, updateProxy } from "@/services/proxy"; // 导入创建主机代理和查询主机代理列表的服务函数
+import { createProxy, fetchProxies, updateProxy } from "@/services/proxy";
 import CreateProxyForm from "./components/create-proxy-form";
+import { API } from "typings";
 
 const { Option } = Select;
 
 interface ProxyListProps {
   dispatch: Dispatch;
-  proxies: ProxyModel[];
-  total: number;
 }
 
-const ProxyList: React.FC<ProxyListProps> = ({ dispatch, proxies, total }) => {
+const ProxyList: React.FC<ProxyListProps> = ({ dispatch }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
     proxyHost: "",
@@ -27,6 +26,8 @@ const ProxyList: React.FC<ProxyListProps> = ({ dispatch, proxies, total }) => {
     undefined
   ); // 当前正在编辑的主机代理信息
 
+  const [proxyPage, setProxyPage] = useState<API.Page<ProxyModel>>();
+
   useEffect(() => {
     getProxies();
   }, [pagination, filters]);
@@ -35,6 +36,9 @@ const ProxyList: React.FC<ProxyListProps> = ({ dispatch, proxies, total }) => {
     dispatch({
       type: "proxy/queryProxies",
       payload: { ...pagination, ...filters },
+      callback: (data: API.Page<ProxyModel>) => {
+        setProxyPage(data);
+      },
     });
   };
 
@@ -180,10 +184,10 @@ const ProxyList: React.FC<ProxyListProps> = ({ dispatch, proxies, total }) => {
           </Button>
           <Table
             columns={columns}
-            dataSource={proxies}
+            dataSource={proxyPage?.items}
             rowKey="id"
             pagination={{
-              total,
+              total: proxyPage?.total,
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               onChange: handlePaginationChange,
@@ -211,16 +215,4 @@ const ProxyList: React.FC<ProxyListProps> = ({ dispatch, proxies, total }) => {
   );
 };
 
-export default connect(
-  ({
-    proxy,
-  }: {
-    proxy: {
-      proxies: ProxyModel[];
-      total: number;
-    };
-  }) => ({
-    proxies: proxy.proxies,
-    total: proxy.total,
-  })
-)(ProxyList);
+export default connect()(ProxyList);

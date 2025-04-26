@@ -11,8 +11,6 @@ import {
 } from "antd";
 import { nanoid } from "nanoid";
 import { connect, Dispatch } from "umi";
-import { API } from "typings";
-import { UserInfo } from "@/models/user";
 
 interface EnvVar {
   id: string;
@@ -261,8 +259,4 @@ const EnvVarConfigPanel: React.FC<EnvVarConfigPanelProps> = ({
   );
 };
 
-export default connect(({ user }: { user: { userData: UserInfo } }) => {
-  return {
-    userData: user.userData,
-  };
-})(EnvVarConfigPanel);
+export default connect()(EnvVarConfigPanel);

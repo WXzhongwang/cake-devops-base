@@ -36,20 +36,20 @@ public class HostAlarmGroupRepositoryImpl implements HostAlarmGroupRepository {
     @Override
     public void save(HostAlarmGroup alarmGroup) {
         HostAlarmGroupPO hostAlarmGroupPO = hostAlarmGroupDataConvertor.sourceToTarget(alarmGroup);
-        hostAlarmGroupPOMapper.insertSelective(hostAlarmGroupPO);
+        hostAlarmGroupPOMapper.insert(hostAlarmGroupPO);
     }
 
     @Override
     public void save(List<HostAlarmGroup> alarmGroupList) {
         List<HostAlarmGroupPO> hostAlarmGroupPOS = hostAlarmGroupDataConvertor.sourceToTarget(alarmGroupList);
         for (HostAlarmGroupPO hostAlarmGroupPO : hostAlarmGroupPOS) {
-            hostAlarmGroupPOMapper.insertSelective(hostAlarmGroupPO);
+            hostAlarmGroupPOMapper.insert(hostAlarmGroupPO);
         }
     }
 
     @Override
     public void update(HostAlarmGroup alarmGroup) {
         HostAlarmGroupPO hostAlarmGroupPO = hostAlarmGroupDataConvertor.sourceToTarget(alarmGroup);
-        hostAlarmGroupPOMapper.updateByPrimaryKeySelective(hostAlarmGroupPO);
+        hostAlarmGroupPOMapper.updateByPrimaryKey(hostAlarmGroupPO);
     }
 }

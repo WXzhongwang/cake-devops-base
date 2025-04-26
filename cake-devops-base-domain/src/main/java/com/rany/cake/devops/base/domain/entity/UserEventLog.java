@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class UserEventLog extends BaseEntity<Long> {
     protected Long id;
     private String userId;
-    private String username;
+    private String userName;
     private Integer eventClassify;
     private Integer eventType;
     private String logInfo;

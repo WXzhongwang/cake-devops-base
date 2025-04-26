@@ -14,42 +14,22 @@ import {
   Modal,
 } from "antd";
 import { PageContainer } from "@ant-design/pro-components";
-import type { DraggableData, DraggableEvent } from "react-draggable";
-import Draggable from "react-draggable";
 import { connect, Dispatch, history } from "umi";
 import HostGroupTree from "./components/host-group-tree";
-import {
-  HostModel,
-  HostGroupModel,
-  ServerKey,
-  AccessTokenRes,
-} from "@/models/host";
+import { HostModel, HostGroupModel, ServerKey } from "@/models/host";
 import { ProxyModel } from "@/models/proxy";
 import CreateHostForm from "./components/create-host-form";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import TerminalComponent, {
-  TERMINAL_STATUS,
-} from "./components/single-terminal-component";
+import TerminalComponent from "./components/single-terminal-component";
+import { API } from "typings";
 
 const { confirm } = Modal;
 
 interface HostListProps {
   dispatch: Dispatch;
-  hosts: HostModel[];
-  hostGroups: HostGroupModel[];
-  total: number;
-  machineProxies: ProxyModel[];
-  serverKeys: ServerKey[];
 }
 
-const HostPage: React.FC<HostListProps> = ({
-  dispatch,
-  hosts,
-  hostGroups,
-  total,
-  machineProxies,
-  serverKeys,
-}) => {
+const HostPage: React.FC<HostListProps> = ({ dispatch }) => {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false); // 控制抽屉显示状态
@@ -62,7 +42,10 @@ const HostPage: React.FC<HostListProps> = ({
   const sftpWsUrl = `ws://${window.location.host}/api/keep-alive/sftp/notify/`;
 
   // 对话框部分
-
+  const [hostPage, setHostPage] = useState<API.Page<HostModel>>();
+  const [proxyPage, setProxyPage] = useState<API.Page<ProxyModel>>();
+  const [serverKeys, setServerKeys] = useState<API.Page<ServerKey>>();
+  const [hostGroups, setHostGroups] = useState<HostGroupModel[]>([]);
   const [modalHost, setModalHost] = useState<HostModel | null>(null);
   const [filters, setFilters] = useState({
     name: "",
@@ -76,6 +59,9 @@ const HostPage: React.FC<HostListProps> = ({
     dispatch({
       type: "host/fetchHosts",
       payload: { ...pagination, ...filters },
+      callback: (res: API.Page<HostModel>) => {
+        setHostPage(res);
+      },
     });
   };
 
@@ -168,6 +154,7 @@ const HostPage: React.FC<HostListProps> = ({
       allGroupIds = getAllGroupIds(selectedGroup);
       console.log("choose group", allGroupIds);
     }
+
     dispatch({
       type: "host/fetchHosts",
       payload: {
@@ -176,6 +163,9 @@ const HostPage: React.FC<HostListProps> = ({
         name: filters.name,
         hostName: filters.hostName,
       },
+      callback: (res: API.Page<HostModel>) => {
+        setHostPage(res);
+      },
     });
   }, [pagination, selectedGroup, dispatch]);
 
@@ -183,6 +173,9 @@ const HostPage: React.FC<HostListProps> = ({
     dispatch({
       type: "host/fetchHostGroups",
       payload: {},
+      callback: (res: HostGroupModel[]) => {
+        setHostGroups(res);
+      },
     });
   };
 
@@ -190,6 +183,9 @@ const HostPage: React.FC<HostListProps> = ({
     dispatch({
       type: "proxy/queryProxies",
       payload: {},
+      callback: (res: API.Page<ProxyModel>) => {
+        setProxyPage(res);
+      },
     });
   };
 
@@ -197,6 +193,9 @@ const HostPage: React.FC<HostListProps> = ({
     dispatch({
       type: "host/queryServerKeys",
       payload: {},
+      callback: (res: API.Page<ServerKey>) => {
+        setServerKeys(res);
+      },
     });
   };
 
@@ -415,8 +414,8 @@ const HostPage: React.FC<HostListProps> = ({
                 <CreateHostForm
                   initialValues={editingHost}
                   hostGroups={hostGroups}
-                  machineProxies={machineProxies}
-                  serverKeys={serverKeys}
+                  machineProxies={proxyPage?.items || []}
+                  serverKeys={serverKeys?.items || []}
                   onSubmit={handleSaveHost}
                   onCancel={handleCloseDrawer}
                   onUpdate={handleUpdateHost}
@@ -425,10 +424,10 @@ const HostPage: React.FC<HostListProps> = ({
 
               <Table
                 columns={columns}
-                dataSource={hosts}
+                dataSource={hostPage?.items}
                 rowKey={"hostId"}
                 pagination={{
-                  total: total,
+                  total: hostPage?.total,
                   current: pagination.pageNo,
                   pageSize: pagination.pageSize,
                   onChange: handlePaginationChange,
@@ -449,10 +448,4 @@ const HostPage: React.FC<HostListProps> = ({
   );
 };
 
-export default connect(({ host, proxy }) => ({
-  hosts: host.hosts,
-  hostGroups: host.hostGroups,
-  total: host.total,
-  machineProxies: proxy.proxies,
-  serverKeys: host.serverKeys,
-}))(HostPage);
+export default connect()(HostPage);

@@ -259,8 +259,4 @@ const ConfigMapConfigPanel: React.FC<ConfigMapConfigPanelProps> = ({
   );
 };
 
-export default connect(({ user }: { user: { userData: UserInfo } }) => {
-  return {
-    userData: user.userData,
-  };
-})(ConfigMapConfigPanel);
+export default connect()(ConfigMapConfigPanel);

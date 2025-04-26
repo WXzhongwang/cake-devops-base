@@ -2,10 +2,7 @@
 import React from "react";
 import { Drawer, Form, Input, Select, Button, DatePicker, message } from "antd";
 import moment from "moment";
-import { nanoid } from "nanoid";
 import { BranchInfo } from "@/models/app";
-import { FormInstance } from "antd/lib/form";
-
 interface CreateReleaseDrawerProps {
   visible: boolean;
   onClose: () => void;

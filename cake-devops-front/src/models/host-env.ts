@@ -3,10 +3,7 @@
 import { Effect, Reducer } from "umi";
 import { message } from "antd";
 import * as api from "@/services/host-env";
-
-export interface BaseAction {
-  callback?: () => void;
-}
+import { API, BaseAction } from "typings";
 
 export interface HostEnvironmentVariable {
   id: string;
@@ -67,45 +64,36 @@ export interface HostEnvModelState {
   hostEnvsTotal: number;
 }
 
-export interface HostEnvModelType {
-  namespace: "hostEnv";
-  state: HostEnvModelState;
-  effects: {
-    fetchVariables: Effect;
-    addVariable: Effect;
-    updateVariable: Effect;
-    deleteVariable: Effect;
-  };
-  reducers: {
-    saveVariables: Reducer<HostEnvModelState>;
-  };
-}
-
-const HostEnvModel: HostEnvModelType = {
+const HostEnvModel = {
   namespace: "hostEnv",
-
-  state: {
-    hostEnvsTotal: 0,
-    hostEnvs: [],
-  },
-
+  state: {},
+  reducers: {},
   effects: {
-    *fetchVariables({ payload }: FetchVariablesAction, { call, put }) {
-      const response = yield call(api.fetchVariables, payload);
-      // 触发保存主机数据的 reducer
-      yield put({
-        type: "saveVariables",
-        payload: response.content,
-      });
+    *fetchVariables(
+      { payload, callback }: FetchVariablesAction,
+      { call, put }
+    ) {
+      const response: API.ResponseBody<API.Page<HostEnvironmentVariable>> =
+        yield call(api.fetchVariables, payload);
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *addVariable({ payload, callback }: CreateVariablesAction, { call, put }) {
-      const response = yield call(api.addVariable, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.addVariable,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
-        message.success("添加成功");
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -116,12 +104,14 @@ const HostEnvModel: HostEnvModelType = {
       { payload, callback }: UpdateVariablesAction,
       { call, put }
     ) {
-      const response = yield call(api.updateVariable, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.updateVariable,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
-        message.success("修改成功");
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -132,26 +122,18 @@ const HostEnvModel: HostEnvModelType = {
       { payload, callback }: DeleteVariablesAction,
       { call, put }
     ) {
-      const response = yield call(api.deleteVariable, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.deleteVariable,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
-        message.success("删除成功");
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
       }
-    },
-  },
-
-  reducers: {
-    saveVariables(state, action) {
-      return {
-        ...state,
-        hostEnvs: action.payload.items,
-        hostEnvsTotal: action.payload.total,
-      };
     },
   },
 };

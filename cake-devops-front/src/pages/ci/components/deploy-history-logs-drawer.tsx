@@ -2,11 +2,6 @@
 import React from "react";
 import { Drawer } from "antd";
 import { DeployLogDTO } from "@/models/release";
-import {
-  getReleaseStatusText,
-  getDeployStatusText,
-  getApprovalStatusText,
-} from "@/utils/release-utils";
 
 interface DeployHistoryLogsDrawerProps {
   visible: boolean;

@@ -6,15 +6,12 @@ import ReactEcharts from "echarts-for-react";
 
 import {
   Table,
-  Tooltip,
   Button,
   Typography,
   Space,
   Col,
   Row,
   Statistic,
-  TabsProps,
-  Tabs,
   Form,
   DatePicker,
   Select,
@@ -51,8 +48,6 @@ interface SystemProcessPros {
 const SystemProcessTable: React.FC<SystemProcessPros> = ({
   dispatch,
   hostId,
-  data,
-  load,
   disks,
   basicMetricVO,
 }) => {
@@ -225,8 +220,6 @@ const SystemProcessTable: React.FC<SystemProcessPros> = ({
       },
     });
   };
-
-  console.log(hostId);
 
   useEffect(() => {
     console.log("monitorFilter", monitorFilter);
@@ -548,4 +541,4 @@ const SystemProcessTable: React.FC<SystemProcessPros> = ({
   );
 };
 
-export default connect(({ host }) => ({}))(SystemProcessTable);
+export default connect()(SystemProcessTable);

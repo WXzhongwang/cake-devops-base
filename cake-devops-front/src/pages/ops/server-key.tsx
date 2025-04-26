@@ -10,26 +10,20 @@ import {
   Table,
   Tag,
   Drawer,
+  message,
 } from "antd";
 import { connect, Dispatch, history } from "umi";
 import { HostModel, ServerKey } from "@/models/host";
 import CreateServerKeyForm from "./components/create-server-key-form"; // 导入编辑服务器秘钥表单组件
+import { API } from "typings";
 
 const { Option } = Select;
 
 interface ServerAccountListProps {
   dispatch: Dispatch;
-  hosts: HostModel[];
-  serverKeys: ServerKey[];
-  serverKeyTotal: number;
 }
 
-const ServerAccountList: React.FC<ServerAccountListProps> = ({
-  dispatch,
-  serverKeys,
-  serverKeyTotal,
-  hosts,
-}) => {
+const ServerAccountList: React.FC<ServerAccountListProps> = ({ dispatch }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
     displayName: "",
@@ -40,7 +34,22 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
     ServerKey | undefined
   >(undefined); // 用于存储当前编辑的服务器秘钥信息
   const [form] = Form.useForm();
+  const [serverKeys, setServerKeys] = useState<API.Page<ServerKey>>(); // 用于存储服务器秘钥列表
+  const [hosts, setHosts] = useState<API.Page<HostModel[]>>();
 
+  const getHosts = () => {
+    dispatch({
+      type: "host/fetchHosts",
+      payload: { ...pagination, ...filters },
+      callback: (data: API.Page<HostModel[]>) => {
+        setHosts(data);
+      },
+    });
+  };
+
+  useEffect(() => {
+    getHosts();
+  }, []);
   const handleAddKey = () => {
     setDrawerVisible(true);
   };
@@ -78,6 +87,10 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
       payload: {
         serverKeyId: serverKeyId,
       },
+      callback: (res: boolean) => {
+        message.success("删除成功");
+        getServerKeys();
+      },
     });
   };
 
@@ -89,6 +102,9 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
     dispatch({
       type: "host/queryServerKeys",
       payload: { ...pagination, ...filters },
+      callback: (data: API.Page<ServerKey>) => {
+        setServerKeys(data);
+      },
     });
   };
 
@@ -140,8 +156,8 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
   };
 
   const handleEdit = (record: ServerKey) => {
-    setEditingServerKey(record); // 设置当前编辑的服务器秘钥信息
-    setDrawerVisible(true); // 打开抽屉
+    setEditingServerKey(record);
+    setDrawerVisible(true);
   };
 
   return (
@@ -191,10 +207,10 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
 
           <Table
             columns={columns}
-            dataSource={serverKeys}
+            dataSource={serverKeys?.items}
             rowKey={"id"}
             pagination={{
-              total: serverKeyTotal,
+              total: serverKeys?.total,
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               onChange: handlePaginationChange,
@@ -221,20 +237,4 @@ const ServerAccountList: React.FC<ServerAccountListProps> = ({
   );
 };
 
-export default connect(
-  ({
-    host,
-  }: {
-    host: {
-      serverKeys: ServerKey[];
-      serverKeyTotal: number;
-      hosts: HostModel[];
-    };
-  }) => {
-    return {
-      hosts: host.hosts,
-      serverKeys: host.serverKeys,
-      serverKeyTotal: host.serverKeyTotal,
-    };
-  }
-)(ServerAccountList);
+export default connect()(ServerAccountList);

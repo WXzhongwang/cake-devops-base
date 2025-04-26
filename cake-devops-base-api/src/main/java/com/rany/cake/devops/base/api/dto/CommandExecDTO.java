@@ -38,13 +38,10 @@ public class CommandExecDTO extends DTO {
     private String hostId;
 
     @ApiModelProperty(value = "执行机器名称")
-    private String machineName;
+    private String hostName;
 
     @ApiModelProperty(value = "执行机器主机")
-    private String machineHost;
-
-    @ApiModelProperty(value = "机器唯一标识")
-    private String machineTag;
+    private String host;
 
     @ApiModelProperty(value = "执行退出码")
     private Integer exitCode;

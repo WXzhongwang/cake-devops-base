@@ -13,7 +13,7 @@ const { TabPane } = Tabs;
 const { Option } = Select;
 
 interface Props {
-  initialValues: HostAlarmConfigWrapperDTO; // 修改Props，接收initialValues
+  initialValues: HostAlarmConfigWrapperDTO;
   onSubmit: (values: any) => void;
   onCancel: () => void;
   alarmGroups: AlarmGroupDTO[];

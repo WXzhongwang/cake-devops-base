@@ -15,7 +15,7 @@ import java.util.Date;
 public class CommandExec extends BaseEntity<Long> {
 
     private String accountId;
-    private String username;
+    private String userName;
     private String hostId;
     private Integer execType;
     private Integer execStatus;

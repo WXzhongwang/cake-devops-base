@@ -4,7 +4,6 @@ import { connect, Dispatch } from "umi";
 import { AppEnv } from "@/models/app";
 import ServicePanel from "./service-panel";
 import IngressPanel from "@/pages/ci/components/ingress-panel";
-import { UserInfo } from "@/models/user";
 
 interface DomainHostConfigPanelProps {
   appEnv: AppEnv | undefined;
@@ -56,8 +55,4 @@ const DomainHostConfigPanel: React.FC<DomainHostConfigPanelProps> = ({
     </Space>
   );
 };
-export default connect(({ user }: { user: { userData: UserInfo } }) => {
-  return {
-    userData: user.userData,
-  };
-})(DomainHostConfigPanel);
+export default connect()(DomainHostConfigPanel);

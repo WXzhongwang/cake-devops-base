@@ -3,7 +3,7 @@
 import { Effect, Reducer, Subscription } from "umi";
 import * as api from "@/services/host";
 import { message } from "antd";
-import { BaseAction } from "typings";
+import { API, BaseAction } from "typings";
 
 export interface ServerKey {
   id: number;
@@ -159,15 +159,7 @@ export interface UpdateHostGroupPayload {
   sort?: number;
 }
 
-export interface HostModelState {
-  hosts: HostModel[];
-  hostGroups: HostGroupModel[];
-  total: number;
-  serverKeys: ServerKey[];
-  serverKeyTotal: number;
-}
-
-interface QueryHostAction {
+interface QueryHostAction extends BaseAction {
   type: "host/fetchHosts";
   payload: QueryHostPayload;
 }
@@ -195,85 +187,58 @@ interface DeleteHostAction extends BaseAction {
   payload: DeleteHostPayload;
 }
 
-interface CreateServerKeyAction {
+interface CreateServerKeyAction extends BaseAction {
   type: "host/createServerAccount";
   payload: CreateServerKeyPayload;
 }
 
-interface UpdateServerKeyAction {
+interface UpdateServerKeyAction extends BaseAction {
   type: "host/updateServerAccount";
   payload: UpdateServerKeyPayload;
 }
 
-interface DeleteServerKeyAction {
+interface DeleteServerKeyAction extends BaseAction {
   type: "host/deleteServerAccount";
   payload: DeleteServerKeyPayload;
 }
 
-interface QueryServerKeysAction {
+interface QueryServerKeysAction extends BaseAction {
   type: "host/queryServerAccounts";
   payload: QueryServerKeysPayload;
 }
 
-export interface HostModelType {
-  namespace: "host";
-  state: HostModelState;
-  effects: {
-    fetchHosts: Effect;
-    createHost: Effect;
-    updateHost: Effect;
-    pingHost: Effect;
-    copyHost: Effect;
-    fetchHostGroups: Effect;
-    createHostGroup: Effect;
-    updateHostGroup: Effect;
-    createServerKey: Effect;
-    updateServerKey: Effect;
-    deleteServerKey: Effect;
-    queryServerKeys: Effect;
-    getTerminalAccessToken: Effect;
-    getTerminalConfig: Effect;
-    updateTerminalConfig: Effect;
-    queryLog: Effect;
-    getSupportedPty: Effect;
-    getScreenPath: Effect;
-  };
-  reducers: {
-    saveHosts: Reducer<HostModelState>;
-    saveHostGroups: Reducer<HostModelState>;
-    saveServerKeys: Reducer<HostModelState>;
-  };
-}
-
-const HostModel: HostModelType = {
+const HostModel = {
   namespace: "host",
-
-  state: {
-    hosts: [],
-    total: 0,
-    hostGroups: [],
-    serverKeys: [],
-    serverKeyTotal: 0,
-  },
+  state: {},
 
   effects: {
-    *fetchHosts({ payload }: QueryHostAction, { call, put }) {
+    *fetchHosts({ payload, callback }: QueryHostAction, { call, put }) {
       // 调用 API 获取主机数据
-      const response = yield call(api.fetchHosts, payload);
-      // 触发保存主机数据的 reducer
-      yield put({
-        type: "saveHosts",
-        payload: response.content,
-      });
+      const response: API.ResponseBody<API.Page<HostModel>> = yield call(
+        api.fetchHosts,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *createHost({ payload, callback }: CreateHostAction, { call, put }) {
       // 调用 API 创建主机
-      const response = yield call(api.createHost, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.createHost,
+        payload
+      );
       const { success, msg } = response;
-      // 创建成功后重新获取主机数据
       if (success) {
-        yield put({ type: "fetchHosts" });
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
       } else {
         message.error(msg);
       }
@@ -281,12 +246,15 @@ const HostModel: HostModelType = {
 
     *pingHost({ payload, callback }: PingHostAction, { call, put }) {
       // 调用 API 创建主机
-      const response = yield call(api.pingHost, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.pingHost,
+        payload
+      );
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
-      if (success && callback && typeof callback === "function") {
-        callback();
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
       } else {
         message.error(msg);
       }
@@ -294,15 +262,14 @@ const HostModel: HostModelType = {
 
     *copyHost({ payload, callback }: CopyHostAction, { call, put }) {
       // 调用 API 创建主机
-      const response = yield call(api.copyHost, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.copyHost,
+        payload
+      );
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
       if (success) {
-        // 更新成功后重新获取主机数据
-        yield put({ type: "fetchHosts" });
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -311,11 +278,14 @@ const HostModel: HostModelType = {
 
     *deleteHost({ payload, callback }: DeleteHostAction, { call, put }) {
       // 调用 API 创建主机
-      const response = yield call(api.deleteHost, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.deleteHost,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -324,81 +294,149 @@ const HostModel: HostModelType = {
 
     *updateHost({ payload, callback }: UpdateHostAction, { call, put }) {
       // 调用 API 更新主机
-      const response = yield call(api.updateHost, payload);
+      const response: API.ResponseBody<boolean> = yield call(
+        api.updateHost,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
       }
     },
 
-    *fetchHostGroups(_, { call, put }) {
+    *fetchHostGroups({ callback }, { call, put }) {
       // 调用 API 获取主机分组数据
-      const response = yield call(api.fetchHostGroups);
-      // 触发保存主机分组数据的 reducer
-      yield put({
-        type: "saveHostGroups",
-        payload: response.content,
-      });
+      const response: API.ResponseBody<HostGroupModel[]> = yield call(
+        api.fetchHostGroups
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *createHostGroup({ payload }, { call, put }) {
+    *createHostGroup({ payload, callback }, { call, put }) {
       // 调用 API 创建主机分组
-      yield call(api.createHostGroup, payload);
-      // 创建成功后重新获取主机分组数据
-      yield put({ type: "fetchHostGroups" });
+      const response: API.ResponseBody<boolean> = yield call(
+        api.createHostGroup,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *updateHostGroup({ payload }, { call, put }) {
+    *updateHostGroup({ payload, callback }, { call, put }) {
       // 调用 API 更新主机分组
-      yield call(api.updateHostGroup, payload);
-      // 更新成功后重新获取主机分组数据
-      yield put({ type: "fetchHostGroups" });
+      const response: API.ResponseBody<boolean> = yield call(
+        api.updateHostGroup,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *createServerKey({ payload }, { call, put }) {
+    *createServerKey(
+      { payload, callback }: CreateServerKeyAction,
+      { call, put }
+    ) {
       // 调用 API 创建主机账号
-      yield call(api.createServerKey, payload);
-      // 创建成功后重新获取主机账号数据
-      yield put({
-        type: "queryServerKeys",
-        payload: { pageNo: 1, pageSize: 10 },
-      });
+      const response: API.ResponseBody<boolean> = yield call(
+        api.createServerKey,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *updateServerKey({ payload }, { call, put }) {
+    *updateServerKey(
+      { payload, callback }: UpdateServerKeyAction,
+      { call, put }
+    ) {
       // 调用 API 更新主机账号
-      yield call(api.updateServerKey, payload);
-      // 更新成功后重新获取主机账号数据
-      yield put({
-        type: "queryServerKeys",
-        payload: { pageNo: 1, pageSize: 10 },
-      });
+      const response: API.ResponseBody<boolean> = yield call(
+        api.updateServerKey,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *deleteServerKey({ payload }, { call, put }) {
+    *deleteServerKey(
+      { payload, callback }: DeleteServerKeyAction,
+      { call, put }
+    ) {
       // 调用 API 删除主机账号
-      yield call(api.deleteServerKey, payload);
-      // 删除成功后重新获取主机账号数据
-      yield put({
-        type: "queryServerKeys",
-        payload: { pageNo: 1, pageSize: 10 },
-      });
+      const response: API.ResponseBody<boolean> = yield call(
+        api.deleteServerKey,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *queryServerKeys({ payload }, { call, put }) {
+    *queryServerKeys(
+      { payload, callback }: QueryServerKeysAction,
+      { call, put }
+    ) {
       // 调用 API 分页查询主机账号
-      const response = yield call(api.queryServerKeys, payload);
-      // 触发保存主机账号数据的 reducer
-      yield put({ type: "saveServerKeys", payload: response.content });
+      const response: API.ResponseBody<API.Page<ServerKey>> = yield call(
+        api.queryServerKeys,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
     *getTerminalAccessToken({ payload, callback }: any, { call, put }) {
       // 调用 API 更新主机
-      const response = yield call(api.getTerminalAccessToken, payload);
+      const response: API.ResponseBody<string> = yield call(
+        api.getTerminalAccessToken,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
         if (callback && typeof callback === "function") {
@@ -470,26 +508,7 @@ const HostModel: HostModelType = {
     },
   },
 
-  reducers: {
-    saveHosts(state, action) {
-      return {
-        ...state,
-        hosts: action.payload.items,
-        total: action.payload.total,
-      };
-    },
-
-    saveHostGroups(state, action) {
-      return { ...state, hostGroups: action.payload };
-    },
-    saveServerKeys(state, action) {
-      return {
-        ...state,
-        serverKeys: action.payload.items,
-        serverKeyTotal: action.payload.total,
-      };
-    },
-  },
+  reducers: {},
 };
 
 export default HostModel;

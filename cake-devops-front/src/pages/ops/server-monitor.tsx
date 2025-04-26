@@ -11,47 +11,29 @@ import {
   Drawer,
   message,
   Modal,
-  Tooltip, // 引入 Tooltip 组件
-  Popover, // 引入 Popover 组件
 } from "antd";
 import { PageContainer } from "@ant-design/pro-components";
 import { connect, Dispatch, history } from "umi";
 import {
   HostMonitorDTO,
-  LoadVO,
-  SystemProcessVO,
   DiskNameVO,
   BaseMetricVO,
 } from "@/models/host-monitor";
-import CreateHostForm from "./components/create-host-form";
-import { CopyOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import HostMonitorConfigForm from "./components/host-monitor-config-form";
 import AlarmConfigurationForm from "./components/alarm-configure-form";
 import { AlarmGroupDTO } from "@/models/alarm-group";
-import {
-  AlarmConfigDTO,
-  HostAlarmConfigWrapperDTO,
-} from "@/models/host-alarm-config";
+import { HostAlarmConfigWrapperDTO } from "@/models/host-alarm-config";
 import SystemProcessTable from "./components/top-progress-table";
+import { API } from "typings";
 
 const { confirm } = Modal;
 const { Paragraph } = Typography;
 
 interface HostListProps {
   dispatch: Dispatch;
-  hosts: HostMonitorDTO[];
-  total: number;
-  alarmGroups: AlarmGroupDTO[];
-  currentAlarmConfig: HostAlarmConfigWrapperDTO;
 }
 
-const HostPage: React.FC<HostListProps> = ({
-  dispatch,
-  hosts,
-  total,
-  alarmGroups,
-  currentAlarmConfig,
-}) => {
+const HostPage: React.FC<HostListProps> = ({ dispatch }) => {
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [alarmDrawerVisible, setAlarmDrawerVisible] = useState(false);
@@ -64,14 +46,15 @@ const HostPage: React.FC<HostListProps> = ({
     name: "",
     hostName: "",
   });
+  const [alarmConfig, setAlarmConfig] = useState<HostAlarmConfigWrapperDTO>();
   const [editingHost, setEditingHost] = useState<HostMonitorDTO | undefined>(
     undefined
   );
 
-  const [topProgress, setTopProgress] = useState<SystemProcessVO[]>([]);
   const [disks, setDisks] = useState<DiskNameVO[]>([]);
   const [basicMetricVO, setBasicMetricVO] = useState<BaseMetricVO>();
-  const [load, setLoad] = useState<LoadVO | undefined>();
+  const [alarmGroups, setAlarmGroups] = useState<API.Page<AlarmGroupDTO>>();
+  const [hosts, setHosts] = useState<API.Page<HostMonitorDTO>>();
 
   const handleOpenAlarmDrawer = (host: HostMonitorDTO) => {
     dispatch({
@@ -79,7 +62,8 @@ const HostPage: React.FC<HostListProps> = ({
       payload: {
         hostId: host.hostId,
       },
-      callback: () => {
+      callback: (res: HostAlarmConfigWrapperDTO) => {
+        setAlarmConfig(res);
         setAlarmDrawerVisible(true); // 打开抽屉
         setEditingHostForAlarm(host);
       },
@@ -128,6 +112,9 @@ const HostPage: React.FC<HostListProps> = ({
     dispatch({
       type: "hostMonitor/fetch",
       payload: { ...pagination, ...filters },
+      callback: (res: API.Page<HostMonitorDTO>) => {
+        setHosts(res);
+      },
     });
   };
 
@@ -135,6 +122,9 @@ const HostPage: React.FC<HostListProps> = ({
     dispatch({
       type: "alarmGroup/fetchAlarmGroups",
       payload: { pageNo: 1, pageSize: 50 },
+      callback: (res: API.Page<AlarmGroupDTO>) => {
+        setAlarmGroups(res);
+      },
     });
   };
 
@@ -158,7 +148,7 @@ const HostPage: React.FC<HostListProps> = ({
         accessToken: host.accessToken,
         url: host.monitorUrl,
       },
-      callback: () => {
+      callback: (res: boolean) => {
         message.success("连接成功");
       },
     });
@@ -170,7 +160,7 @@ const HostPage: React.FC<HostListProps> = ({
       payload: {
         hostId: host.hostId,
       },
-      callback: () => {
+      callback: (res: boolean) => {
         message.success("连接成功");
         getHosts();
       },
@@ -184,7 +174,7 @@ const HostPage: React.FC<HostListProps> = ({
         hostId,
         upgrade: false,
       },
-      callback: () => {
+      callback: (res: boolean) => {
         message.success("安装成功");
         getHosts();
       },
@@ -199,7 +189,7 @@ const HostPage: React.FC<HostListProps> = ({
         url: host.monitorUrl,
         hostId: host.hostId,
       },
-      callback: () => {
+      callback: (res: boolean) => {
         message.success("操作成功");
         getHosts();
       },
@@ -237,7 +227,7 @@ const HostPage: React.FC<HostListProps> = ({
         accessToken: values.accessToken,
         url: values.monitorUrl,
       },
-      callback: () => {
+      callback: (res: boolean) => {
         message.success("操作成功");
         getHosts();
       },
@@ -257,11 +247,12 @@ const HostPage: React.FC<HostListProps> = ({
   };
 
   const loadMetricData = (record: HostMonitorDTO) => {
-    //setEditingHostForAlarm(undefined);
     dispatch({
       type: "hostMonitor/ping",
       payload: { hostId: record.hostId },
-      callback: () => {},
+      callback: (res: boolean) => {
+        message.success("操作成功");
+      },
     });
 
     dispatch({
@@ -453,12 +444,14 @@ const HostPage: React.FC<HostListProps> = ({
             onClose={handleCloseAlarmDrawer}
             destroyOnClose={true}
           >
-            <AlarmConfigurationForm
-              initialValues={currentAlarmConfig}
-              alarmGroups={alarmGroups}
-              onSubmit={handleAlarmFormSubmit}
-              onCancel={handleCloseAlarmDrawer}
-            />
+            {alarmConfig && (
+              <AlarmConfigurationForm
+                initialValues={alarmConfig}
+                alarmGroups={alarmGroups?.items || []}
+                onSubmit={handleAlarmFormSubmit}
+                onCancel={handleCloseAlarmDrawer}
+              />
+            )}
           </Drawer>
 
           <Drawer
@@ -472,8 +465,6 @@ const HostPage: React.FC<HostListProps> = ({
           >
             <SystemProcessTable
               hostId={basicMetricVO?.machineId}
-              data={basicMetricVO?.processes}
-              load={load}
               disks={disks}
               basicMetricVO={basicMetricVO}
             ></SystemProcessTable>
@@ -481,10 +472,10 @@ const HostPage: React.FC<HostListProps> = ({
 
           <Table
             columns={columns}
-            dataSource={hosts}
+            dataSource={hosts?.items}
             rowKey={"hostId"}
             pagination={{
-              total: total,
+              total: hosts?.total,
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               onChange: handlePaginationChange,
@@ -496,9 +487,4 @@ const HostPage: React.FC<HostListProps> = ({
   );
 };
 
-export default connect(({ hostMonitor, alarmGroup, hostAlarmConfig }) => ({
-  hosts: hostMonitor.hosts,
-  total: hostMonitor.total,
-  alarmGroups: alarmGroup.alarmGroups,
-  currentAlarmConfig: hostAlarmConfig.hostAlarmConfig,
-}))(HostPage);
+export default connect()(HostPage);

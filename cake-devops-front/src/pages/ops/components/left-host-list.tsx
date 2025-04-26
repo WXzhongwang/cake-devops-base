@@ -2,31 +2,27 @@ import React, { useEffect, useState } from "react";
 import { Input, List, Pagination } from "antd";
 import { HostModel } from "@/models/host";
 import { Dispatch, connect } from "umi";
+import { API } from "typings";
 
 interface LeftHostListProps {
   dispatch: Dispatch;
-  hosts: HostModel[];
-  hostsTotal: number;
   onItemClick: (hostId: string) => void;
 }
 
 const LeftHostList: React.FC<LeftHostListProps> = ({
   dispatch,
   onItemClick,
-  hosts,
-  hostsTotal,
 }) => {
   const [searchText, setSearchText] = useState<string>("");
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
-  // 获取第一个主机的 ID 作为初始的选中主机 ID
-  const initialSelectedHostId = hosts.length > 0 ? hosts[0].hostId : null;
-  // 定义状态保存当前选中的主机 ID
-  const [selectedHostId, setSelectedHostId] = useState<string | null>(
-    initialSelectedHostId
-  );
+  const [selectedHostId, setSelectedHostId] = useState<string>("");
+  const [hosts, setHosts] = useState<API.Page<HostModel>>();
 
   useEffect(() => {
-    // 页面加载时发起主机数据的获取请求
+    fetchHosts();
+  }, []);
+
+  const fetchHosts = () => {
     dispatch({
       type: "host/fetchHosts",
       payload: {
@@ -34,12 +30,22 @@ const LeftHostList: React.FC<LeftHostListProps> = ({
         pageSize: pagination.pageSize,
         name: searchText,
       },
+      callback: (res: API.Page<HostModel>) => {
+        setHosts(res);
+      },
     });
+  };
+
+  useEffect(() => {
+    fetchHosts();
   }, [dispatch, pagination, searchText]);
 
   useEffect(() => {
-    if (hosts.length > 0) {
-      onItemClick(hosts[0].hostId);
+    if (hosts) {
+      if (hosts?.items.length > 0) {
+        setSelectedHostId(hosts?.items[0].hostId);
+        onItemClick(hosts?.items[0].hostId);
+      }
     }
   }, [hosts]);
 
@@ -61,9 +67,9 @@ const LeftHostList: React.FC<LeftHostListProps> = ({
         style={{ marginBottom: 16 }}
       />
       <List
-        dataSource={hosts}
+        dataSource={hosts?.items}
         pagination={{
-          total: hostsTotal,
+          total: hosts?.total,
           current: pagination.pageNo,
           pageSize: pagination.pageSize,
           onChange: handlePageChange,
@@ -91,7 +97,4 @@ const LeftHostList: React.FC<LeftHostListProps> = ({
   );
 };
 
-export default connect(({ host }) => ({
-  hosts: host.hosts,
-  hostsTotal: host.total,
-}))(LeftHostList);
+export default connect()(LeftHostList);

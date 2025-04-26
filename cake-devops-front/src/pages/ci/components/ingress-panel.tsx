@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Table, { ColumnsType } from "antd/lib/table";
 import {
   Button,
   Card,
@@ -7,22 +6,13 @@ import {
   Input,
   message,
   Modal,
-  Popconfirm,
   Select,
   Space,
   Typography,
 } from "antd";
-import { nanoid } from "nanoid";
 import { connect, Dispatch } from "umi";
-import { API } from "typings";
-import appDetail from "../app-detail";
-import { AppInfo, IngressDTO } from "@/models/app";
-import {
-  CloseOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { UserInfo } from "@/models/user";
+import { IngressDTO } from "@/models/app";
+import { CloseOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -254,8 +244,4 @@ const IngressPanel: React.FC<IngressPanelProps> = ({
   );
 };
 
-export default connect(({ user }: { user: { userData: UserInfo } }) => {
-  return {
-    userData: user.userData,
-  };
-})(IngressPanel);
+export default connect()(IngressPanel);

@@ -23,7 +23,7 @@
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from system_env
+        from system_attr
         where is_deleted = '0'
         <if test="name != null and name != ''">
             and name = #{name}
@@ -36,7 +36,7 @@
     <select id="findAllSystemEnv" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from system_env
+        from system_attr
         where is_deleted = '0'
         and system_env = #{systemEnv}
     </select>
@@ -45,14 +45,14 @@
 
         select
         <include refid="Base_Column_List"/>
-        from system_env
+        from system_attr
         where attr_key = #{name}
     </select>
 
     <select id="selectByNames" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from system_env
+        from system_attr
         where attr_key in
         <foreach collection="names" close=")" open="(" separator="," item="name">
             #{name}
@@ -62,9 +62,9 @@
     <insert id="save" parameterType="com.rany.cake.devops.base.infra.po.SystemEnvPO"
             useGeneratedKeys="true" keyProperty="id">
 
-        insert into system_env (attr_key, attr_value,
-                                system_env, description, is_deleted,
-                                gmt_create, gmt_modified)
+        insert into system_attr (attr_key, attr_value,
+                                 system_env, description, is_deleted,
+                                 gmt_create, gmt_modified)
         values (#{attrKey,jdbcType=VARCHAR}, #{attrValue,jdbcType=VARCHAR},
                 #{systemEnv,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{isDeleted,jdbcType=VARCHAR},
                 #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
@@ -72,7 +72,7 @@
 
     <update id="update" parameterType="com.rany.cake.devops.base.domain.entity.SystemEnv">
 
-        update system_env
+        update system_attr
         <set>
             <if test="attrKey != null">
                 attr_key = #{attrKey,jdbcType=VARCHAR},

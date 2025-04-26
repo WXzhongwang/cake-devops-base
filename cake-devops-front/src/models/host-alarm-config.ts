@@ -3,7 +3,7 @@
 import { Effect, Reducer } from "umi";
 import * as api from "@/services/host-alarm-config";
 import { message } from "antd";
-import { BaseAction } from "typings";
+import { API, BaseAction } from "typings";
 
 export interface AlarmInfo {
   id: number;
@@ -89,7 +89,6 @@ export interface HostAlarmConfigModelType {
     pageAlarms: Effect;
   };
   reducers: {
-    saveAlarmConfig: Reducer<HostAlarmConfigModelState>;
     saveAlarms: Reducer<HostAlarmConfigModelState>;
   };
 }
@@ -97,21 +96,19 @@ export interface HostAlarmConfigModelType {
 const AlarmGroupModel: HostAlarmConfigModelType = {
   namespace: "hostAlarmConfig",
   state: {
-    hostAlarmConfig: undefined,
     alarms: [],
     alarmTotal: 0,
   },
   effects: {
     *getConfig({ payload, callback }: GetHostAlarmConfigAction, { call, put }) {
-      const response = yield call(api.getAlarmConfig, payload);
+      const response: API.ResponseBody<HostAlarmConfigWrapperDTO> = yield call(
+        api.getAlarmConfig,
+        payload
+      );
       const { success, msg } = response;
       if (success) {
-        yield put({
-          type: "saveAlarmConfig",
-          payload: response.content,
-        });
         if (callback && typeof callback === "function") {
-          callback();
+          callback(response.content);
         }
       } else {
         message.error(msg);
@@ -136,7 +133,6 @@ const AlarmGroupModel: HostAlarmConfigModelType = {
     *pageAlarms({ payload }: PageHostAlarmHistoryAction, { call, put }) {
       // 调用 API 获取数据
       const response = yield call(api.pageAlarms, payload);
-      console.log(response.content);
       yield put({
         type: "saveAlarms",
         payload: response.content,
@@ -145,12 +141,6 @@ const AlarmGroupModel: HostAlarmConfigModelType = {
   },
 
   reducers: {
-    saveAlarmConfig(state, action) {
-      return {
-        ...state,
-        hostAlarmConfig: action.payload,
-      };
-    },
     saveAlarms(state, action) {
       return {
         ...state,

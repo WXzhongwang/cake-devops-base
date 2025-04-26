@@ -101,7 +101,7 @@ public class AlarmGroupRepositoryImpl implements AlarmGroupRepository {
     @Transactional(rollbackFor = Exception.class)
     public void update(AlarmGroup group) {
         AlarmGroupPO alarmGroupPO = alarmGroupDataConvertor.sourceToTarget(group);
-        alarmGroupPOMapper.updateByPrimaryKeySelective(alarmGroupPO);
+        alarmGroupPOMapper.updateByPrimaryKey(alarmGroupPO);
 
         alarmGroupDao.deleteUsers(alarmGroupPO.getId());
         alarmGroupDao.deleteNotifies(alarmGroupPO.getId());

@@ -3,6 +3,7 @@ import {
   BatchDeleteCommandExecPayload,
   BatchListStatusCommandExecPayload,
   CreateCommandExecPayload,
+  GetCommandExecPayload,
   QueryCommandExecPayload,
   TerminalCommandExecPayload,
   WriteCommandExecPayload,
@@ -39,6 +40,13 @@ export async function terminal(data: TerminalCommandExecPayload) {
 
 export async function listStatus(data: BatchListStatusCommandExecPayload) {
   return request("/api/devops/batch-exec/list-status", {
+    method: "POST",
+    data,
+  });
+}
+
+export async function detail(data: GetCommandExecPayload) {
+  return request("/api/devops/batch-exec/detail", {
     method: "POST",
     data,
   });

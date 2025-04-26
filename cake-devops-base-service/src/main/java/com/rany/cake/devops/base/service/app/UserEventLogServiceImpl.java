@@ -53,7 +53,7 @@ public class UserEventLogServiceImpl implements UserEventLogService {
         // 设置对象
         UserEventLog log = new UserEventLog();
         log.setUserId(paramsMap.getString(EventKeys.INNER_USER_ID));
-        log.setUsername(paramsMap.getString(EventKeys.INNER_USER_NAME));
+        log.setUserName(paramsMap.getString(EventKeys.INNER_USER_NAME));
         log.setEventClassify(eventType.getClassify().getClassify());
         log.setEventType(eventType.getType());
         log.setLogInfo(Strings.format(template, paramsMap));

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Drawer, Form, Input, Select, Button, message } from "antd";
 import { connect, Dispatch } from "umi";
-import { API } from "typings";
 import { Department } from "@/models/app";
 import { UserInfo } from "@/models/user";
 
@@ -180,7 +179,7 @@ const CreateAppDrawer: React.FC<CreateAppDrawerProps> = ({
   );
 };
 
-export default connect(({ user }: { user: { userData: API.UserInfo } }) => {
+export default connect(({ user }: { user: { userData: UserInfo } }) => {
   return {
     userData: user.userData,
   };

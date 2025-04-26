@@ -128,8 +128,6 @@ const ScriptTemplateModel: ScriptTemplateModelType = {
         payload
       );
       const { success, msg } = response;
-      // 如果传入了回调函数，则执行回调函数
-      // 调用回调函数
       if (success && callback && typeof callback === "function") {
         callback();
       } else {

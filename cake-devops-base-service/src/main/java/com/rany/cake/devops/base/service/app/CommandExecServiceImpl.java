@@ -76,7 +76,7 @@ public class CommandExecServiceImpl implements CommandExecService {
             CommandExec commandExec = new CommandExec();
             commandExec.setAccountId(command.getUser());
             commandExec.setHostId(hostId);
-            commandExec.setUsername(account.getAccountName());
+            commandExec.setUserName(account.getAccountName());
             commandExec.setExecType(ExecType.BATCH_EXEC.getType());
             if (containsEnv) {
                 // 查询机器环境变量

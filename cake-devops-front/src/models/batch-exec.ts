@@ -1,16 +1,36 @@
 // src/models/app.ts
 import * as batchExecService from "@/services/batch-exec";
-import { Effect, Reducer } from "umi";
-import { AppAccountDTO } from "./user";
 import { API, BaseAction } from "typings";
 import { message } from "antd";
 
-export interface CommandExecDTO {
+export interface CommandExecStatusDTO {
   id: number;
   exitCode: number;
   status: number;
   used: number;
   keepTime: string;
+}
+
+export interface CommandExecDTO {
+  id: number;
+  accountId: string;
+  username: number;
+  execType: number;
+  execStatus: number;
+  description: string;
+  hostId: string;
+  hostName: string;
+  host: string;
+  exitCode: number;
+  execCommand: string;
+  startDate: Date;
+  startDateAgo: string;
+  endDate: Date;
+  endDateAgo: string;
+  used: number;
+  keepTime: string;
+  gmtCreate: Date;
+  gmtModified: Date;
 }
 
 export interface CommandExecState {}
@@ -28,6 +48,11 @@ export interface CreateCommandExecAction extends BaseAction {
 export interface WriteAction extends BaseAction {
   type: "commandExec/write";
   payload: WriteCommandExecPayload;
+}
+
+export interface GetCommandAction extends BaseAction {
+  type: "commandExec/detail";
+  payload: GetCommandExecPayload;
 }
 
 export interface TerminalAction extends BaseAction {
@@ -54,6 +79,10 @@ export interface CreateCommandExecPayload {
 export interface WriteCommandExecPayload {
   id: number;
   command: string;
+}
+
+export interface GetCommandExecPayload {
+  id: number;
 }
 
 export interface TerminalCommandExecPayload {
@@ -151,8 +180,23 @@ const CommandExecModel = {
       { callback, payload }: BatchListStatusCommandAction,
       { call, put }
     ) {
-      const response: API.ResponseBody<boolean> = yield call(
+      const response: API.ResponseBody<CommandExecStatusDTO[]> = yield call(
         batchExecService.listStatus,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
+    },
+
+    *detail({ callback, payload }: GetCommandAction, { call, put }) {
+      const response: API.ResponseBody<CommandExecDTO> = yield call(
+        batchExecService.detail,
         payload
       );
       const { success, msg } = response;

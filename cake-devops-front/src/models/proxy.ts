@@ -2,6 +2,8 @@
 
 import { Effect, Reducer } from "umi";
 import * as api from "@/services/proxy";
+import { API, BaseAction } from "typings";
+import { message } from "antd";
 
 export interface ProxyModel {
   id: number;
@@ -50,22 +52,22 @@ export interface ProxyModelState {
   total: number;
 }
 
-interface QueryProxiesAction {
+interface QueryProxiesAction extends BaseAction {
   type: "proxy/queryProxies";
   payload: QueryProxiesPayload;
 }
 
-interface CreateProxyAction {
+interface CreateProxyAction extends BaseAction {
   type: "proxy/createProxy";
   payload: CreateProxyPayload;
 }
 
-interface UpdateProxyAction {
+interface UpdateProxyAction extends BaseAction {
   type: "proxy/updateProxy";
   payload: UpdateProxyPayload;
 }
 
-interface DeleteProxyAction {
+interface DeleteProxyAction extends BaseAction {
   type: "proxy/deleteProxy";
   payload: DeleteProxyPayload;
 }
@@ -80,7 +82,7 @@ export interface ProxyModelType {
     deleteProxy: Effect;
   };
   reducers: {
-    saveProxies: Reducer<ProxyModelState>;
+    // saveProxies: Reducer<ProxyModelState>;
   };
 }
 
@@ -93,39 +95,68 @@ const ProxyModel: ProxyModelType = {
   },
 
   effects: {
-    *queryProxies({ payload }, { call, put }) {
-      const response = yield call(api.fetchProxies, payload);
-      yield put({
-        type: "saveProxies",
-        payload: response.content,
-      });
+    *queryProxies({ payload, callback }: QueryProxiesAction, { call, put }) {
+      const response: API.ResponseBody<API.Page<ProxyModel>> = yield call(
+        api.fetchProxies,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *createProxy({ payload }, { call, put }) {
-      yield call(api.createProxy, payload);
-      yield put({ type: "fetchProxies" });
+    *createProxy({ payload, callback }: CreateProxyAction, { call, put }) {
+      const response: API.ResponseBody<boolean> = yield call(
+        api.createProxy,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *updateProxy({ payload }, { call, put }) {
-      yield call(api.updateProxy, payload);
-      yield put({ type: "fetchProxies" });
+    *updateProxy({ payload, callback }: UpdateProxyAction, { call, put }) {
+      const response: API.ResponseBody<boolean> = yield call(
+        api.updateProxy,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
 
-    *deleteProxy({ payload }, { call, put }) {
-      yield call(api.deleteProxy, payload);
-      yield put({ type: "fetchProxies" });
+    *deleteProxy({ payload, callback }: DeleteProxyAction, { call, put }) {
+      const response: API.ResponseBody<boolean> = yield call(
+        api.deleteProxy,
+        payload
+      );
+      const { success, msg } = response;
+      if (success) {
+        if (callback && typeof callback === "function") {
+          callback(response.content);
+        }
+      } else {
+        message.error(msg);
+      }
     },
   },
 
-  reducers: {
-    saveProxies(state, action) {
-      return {
-        ...state,
-        proxies: action.payload.items,
-        total: action.payload.total,
-      };
-    },
-  },
+  reducers: {},
 };
 
 export default ProxyModel;

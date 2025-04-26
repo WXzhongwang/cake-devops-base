@@ -67,9 +67,7 @@ export interface WebHookModelType {
     updateWebHook: Effect;
     deleteWebHook: Effect;
   };
-  reducers: {
-    // saveWebHooks: Reducer<WebHookModelState>;
-  };
+  reducers: {};
 }
 
 const WebHookModel: WebHookModelType = {
@@ -139,15 +137,7 @@ const WebHookModel: WebHookModelType = {
     },
   },
 
-  reducers: {
-    // saveWebHooks(state, action) {
-    //   return {
-    //     ...state,
-    //     webhooks: action.payload.items,
-    //     total: action.payload.total,
-    //   };
-    // },
-  },
+  reducers: {},
 };
 
 export default WebHookModel;

@@ -9,31 +9,32 @@ import {
   Form,
   Input,
   Drawer,
+  message,
 } from "antd";
 import { HostEnvironmentVariable } from "@/models/host-env";
 import { Dispatch, connect } from "umi";
-import { HostModel } from "@/models/host";
 import LeftHostList from "./components/left-host-list";
 import CreateHostEnvironmentVariableForm from "./components/create-host-env-form";
 import dayjs from "dayjs";
 import { PageContainer } from "@ant-design/pro-layout";
+import { API } from "typings";
 
 const { Option } = Select;
 
 interface HostEnvironmentVariableListProps {
   dispatch: Dispatch;
-  hostEnvs: HostEnvironmentVariable[];
-  hostEnvsTotal: number;
 }
 
 const HostEnvironmentVariablesPage: React.FC<
   HostEnvironmentVariableListProps
-> = ({ dispatch, hostEnvs, hostEnvsTotal }) => {
+> = ({ dispatch }) => {
   const [selectedMachine, setSelectedMachine] = useState<string>("");
   const [pagination, setPagination] = useState({ pageNo: 1, pageSize: 10 });
   const [filters, setFilters] = useState({
     name: "",
   });
+
+  const [hostEnvs, setHostEnvs] = useState<API.Page<HostEnvironmentVariable>>(); // 用于存储服务器秘钥列表
 
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [selectedEnv, setSelectedEnv] = useState<
@@ -44,6 +45,9 @@ const HostEnvironmentVariablesPage: React.FC<
     dispatch({
       type: "hostEnv/fetchVariables",
       payload: { ...pagination, ...filters, hostId: hostId },
+      callback: (res: API.Page<HostEnvironmentVariable>) => {
+        setHostEnvs(res);
+      },
     });
   };
 
@@ -79,7 +83,8 @@ const HostEnvironmentVariablesPage: React.FC<
     dispatch({
       type: "hostEnv/deleteVariable",
       payload: { envId: envId },
-      callback: () => {
+      callback: (res: boolean) => {
+        message.success("删除成功");
         fetchVariables(selectedMachine);
       },
     });
@@ -93,7 +98,8 @@ const HostEnvironmentVariablesPage: React.FC<
     dispatch({
       type: "hostEnv/addVariable",
       payload: data,
-      callback: () => {
+      callback: (res: boolean) => {
+        message.success("新增成功");
         // 新增成功后，更新选中的主机 ID，重新加载环境变量数据
         fetchVariables(selectedMachine);
       },
@@ -109,7 +115,8 @@ const HostEnvironmentVariablesPage: React.FC<
     dispatch({
       type: "hostEnv/updateVariable",
       payload: data,
-      callback: () => {
+      callback: (res: boolean) => {
+        message.success("更新成功");
         fetchVariables(selectedMachine);
       },
     });
@@ -163,7 +170,6 @@ const HostEnvironmentVariablesPage: React.FC<
     <PageContainer title="主机环境变量">
       <Row gutter={16}>
         <Col span={6}>
-          {/* 左侧主机列表 */}
           <LeftHostList onItemClick={handleHostItemClick} />
         </Col>
         <Col span={18}>
@@ -171,7 +177,6 @@ const HostEnvironmentVariablesPage: React.FC<
             <Form
               layout="inline"
               onFinish={(values) => {
-                // 将表单的搜索条件发送给后端进行过滤
                 setFilters(values);
               }}
             >
@@ -202,10 +207,10 @@ const HostEnvironmentVariablesPage: React.FC<
             </Button>
             <Table
               columns={columns}
-              dataSource={hostEnvs}
+              dataSource={hostEnvs?.items}
               rowKey={"id"}
               pagination={{
-                total: hostEnvsTotal,
+                total: hostEnvs?.total,
                 current: pagination.pageNo,
                 pageSize: pagination.pageSize,
                 onChange: handlePaginationChange,
@@ -233,9 +238,4 @@ const HostEnvironmentVariablesPage: React.FC<
   );
 };
 
-export default connect(({ host, hostEnv }) => ({
-  hosts: host.hosts,
-  hostsTotal: host.total,
-  hostEnvs: hostEnv.hostEnvs,
-  hostEnvsTotal: hostEnv.hostEnvsTotal,
-}))(HostEnvironmentVariablesPage);
+export default connect()(HostEnvironmentVariablesPage);

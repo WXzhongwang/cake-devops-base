@@ -101,10 +101,7 @@ public class SystemEnvServiceImpl implements SystemEnvService {
     @Override
     public String getEnvValue(String envName) {
         SystemEnv env = systemEnvRepository.findByName(envName);
-        if (env == null) {
-            throw new DevOpsException(DevOpsErrorMessage.SYSTEM_ENV_NOT_FOUND);
-        }
-        return env.getAttrValue();
+        return env == null ? null : env.getAttrValue();
     }
 
     @Override
